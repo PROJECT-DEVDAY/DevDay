@@ -1,0 +1,27 @@
+:root {
+  --color-chunsik: #fff962;
+  --color-kiyoon: #5669ff;
+  --color-guembi: #ffaf14;
+  --color-taehwan: #e6e6fa;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

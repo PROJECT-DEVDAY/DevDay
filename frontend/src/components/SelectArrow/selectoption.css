@@ -1,0 +1,43 @@
+:root {
+  --color-chunsik: #fff962;
+  --color-kiyoon: #5669ff;
+  --color-guembi: #ffaf14;
+  --color-taehwan: #e6e6fa;
+}
+.SelectArrow {
+  width: 100%;
+  border-radius: 10px;
+  box-sizing: border-box;
+  background-color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  border: 2px solid #c9c9c9;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+}
+.SelectArrow.SelectArrow-background-fill {
+  background-color: var(--color-kiyoon);
+  color: white;
+}
+.arrowtitle {
+  font-size: x-large;
+  font-weight: bolder;
+  margin: 0;
+  margin: 15px 0px 0 0px;
+}
+
+.arrowcontent {
+  margin: 0;
+  font-size: small;
+  margin: 0 0 15px 0;
+}
+.arrow {
+  width: 100%;
+  height: 100%;
+  align-items: center;
+}
+.arrowdiv {
+  display: grid;
+  /* width: 10%; */
+}
