@@ -1,0 +1,21 @@
+.Footer {
+  width: 100%;
+  background-color: #fff;
+  font-size: 1rem;
+  display: flex;
+  cursor: pointer;
+}
+
+.FooterBox {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.BackgroundRound {
+  &:after {
+    width: 30px;
+  }
+}
