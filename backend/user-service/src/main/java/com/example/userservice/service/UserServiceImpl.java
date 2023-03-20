@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService{
             throw new ApiException(ExceptionEnum.PASSWORD_NOT_MATCHED_EXCEPTION);
         }
 
-        String accessToken = jwtUtil.createToken(email);
+        String accessToken = jwtUtil.createToken(user.getId());
 
         return TokenResponseDto.builder()
                 .accessToken(accessToken)
