@@ -25,6 +25,5 @@ InputBox.propTypes = {
 };
 
 InputBox.defaultProps = {
-  content: null,
   placeholder: null,
 };
