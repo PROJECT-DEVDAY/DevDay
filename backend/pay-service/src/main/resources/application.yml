@@ -23,3 +23,12 @@ eureka:
     register-with-eureka: true
     service-url:
       defaultZone: http://localhost:8761/eureka
+
+
+payment:
+  toss:
+    baseUrl: https://api.tosspayments.com
+    secret: Basic dGVzdF9za19qa1lHNTdFYmEzR1JCWGcxbUs2OHBXRE94bUExOg==
+    path:
+      confirm: /v1/payments/confirm
+      cancel: /v1/payments/%s/cancel
