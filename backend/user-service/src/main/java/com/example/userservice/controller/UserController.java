@@ -1,5 +1,6 @@
 package com.example.userservice.controller;
 
+import com.example.userservice.dto.FindIdRequestDto;
 import com.example.userservice.dto.LoginRequestDto;
 import com.example.userservice.dto.SignUpRequestDto;
 import com.example.userservice.dto.TokenResponseDto;
@@ -37,5 +38,10 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<TokenResponseDto> login(@RequestBody LoginRequestDto requestDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.login(requestDto));
+    }
+
+    @PostMapping("/username")
+    public ResponseEntity<String> findId(@RequestBody FindIdRequestDto requestDto) {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.findId(requestDto));
     }
 }
