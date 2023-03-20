@@ -38,4 +38,7 @@ logging:
 
 token:
   secret: dyAeHubOOc8KaOfYB6XEQoEj1QzRlVgtjNL8PYs1A1tymZvvqkcEU7L1imkKHeDa
-  expiration_time: 864000000
+#  expiration_time: 864000000
+
+gateway:
+  ip: 192.168.100.144

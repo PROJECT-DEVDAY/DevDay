@@ -31,11 +31,21 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false, length = 20, unique = true)
+    private String nickname;
+
+    private String github;
+
+    private String baekjoon;
+
     public static User from(SignUpRequestDto requestDto) {
         return User.builder()
                 .email(requestDto.getEmail())
                 .name(requestDto.getName())
                 .password(new BCryptPasswordEncoder().encode(requestDto.getPassword()))
+                .nickname(requestDto.getNickname())
+                .github(requestDto.getGithub())
+                .baekjoon(requestDto.getBaekjoon())
                 .build();
     }
 }

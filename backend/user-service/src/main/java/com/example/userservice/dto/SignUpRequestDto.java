@@ -25,4 +25,12 @@ public class SignUpRequestDto {
     @NotNull(message = "Password cannot be null")
     @Size(min = 8, message = "Password must be equal or grater than 8 characters")
     private String password;
+
+    @NotNull(message = "Nickname cannot be null")
+    @Size(min = 2, message = "Nickname not be less than two characters")
+    private String nickname;
+
+    private String github;
+
+    private String baekjoon;
 }
