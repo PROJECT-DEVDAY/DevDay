@@ -47,7 +47,5 @@ SelectOption.propTypes = {
 
 SelectOption.defaultProps = {
   fill: true,
-  title: null,
-  content: null,
   onClick: undefined,
 };
