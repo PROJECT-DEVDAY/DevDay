@@ -11,4 +11,6 @@ public interface UserService {
     TokenResponseDto login(LoginRequestDto requestDto);
 
     String findId(FindIdRequestDto requestDto);
+
+    void emailCheck(String email);
 }

@@ -64,4 +64,11 @@ public class UserServiceImpl implements UserService{
         if (!user.getName().equals(requestDto.getName())) throw new ApiException(ExceptionEnum.MEMBER_NOT_EXIST_EXCEPTION);
         return user.getEmail();
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public void emailCheck(String email) {
+        Optional<User> user = userRepository.findByEmail(email);
+        if (user.isPresent()) throw new ApiException(ExceptionEnum.MEMBER_EXIST_EXCEPTION);
+    }
 }
