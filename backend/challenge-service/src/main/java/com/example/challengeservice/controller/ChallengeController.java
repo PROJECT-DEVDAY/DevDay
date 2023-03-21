@@ -26,6 +26,7 @@ public class ChallengeController {
 
     /** 챌린지 조회  **/
 
+
     /** 챌린지 상세 조회 ** (입장 페이지)*/
 
     /** 챌린지 참가하기 **/

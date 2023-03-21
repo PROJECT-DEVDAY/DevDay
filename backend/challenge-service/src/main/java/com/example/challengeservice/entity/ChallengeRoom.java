@@ -23,7 +23,7 @@ public class ChallengeRoom {
 
     /** 방장ID **/
     @Column(nullable = false)
-    private Long host;
+    private Long hostId;
 
     /** 참가비용 **/
     @Column(nullable = false)
