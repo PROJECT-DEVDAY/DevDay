@@ -1,17 +1,14 @@
 package com.example.userservice.entity;
 
 import com.example.userservice.dto.SignUpRequestDto;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
 @Table(name = "users")
@@ -48,4 +45,5 @@ public class User {
                 .baekjoon(requestDto.getBaekjoon())
                 .build();
     }
+
 }
