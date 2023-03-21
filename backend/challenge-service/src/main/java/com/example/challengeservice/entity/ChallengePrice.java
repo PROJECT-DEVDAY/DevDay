@@ -15,13 +15,14 @@ public class ChallengePrice{
     @Column(name = "PRICE_ID")
     private Long id;
 
+    /** 금액 **/
     @Column(nullable = false)
     private Long price;
 
+    /** 정산 날짜 **/
     @Column(nullable = false)
     private Date culcDate;
 
-
-
-
+    @Column(nullable = false)
+    private Date userChallengeId;
 }
