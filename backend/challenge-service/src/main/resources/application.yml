@@ -1,7 +1,17 @@
 
 server:
   port: 0
-
+cloud:
+  aws:
+    region:
+      static: ap-northeast-2
+    s3:
+      bucket: devday-bucket
+    credentials:
+      access-key: AKIAXEUXRPXD3GDITUSE
+      secret-key: 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
+    stack:
+      auto: false
 spring:
   application:
     name: challenge-service
