@@ -8,8 +8,8 @@ cloud:
     s3:
       bucket: devday-bucket
     credentials:
-      access-key: AKIAXEUXRPXD3GDITUSE
-      secret-key: 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
+      access-key: AKIAXEUXRPXDUUVY2A5E
+      secret-key: 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
     stack:
       auto: false
 spring:

@@ -1,13 +1,17 @@
 package com.example.challengeservice.entity;
 
 
-import lombok.Getter;
+import com.example.challengeservice.dto.request.ChallengeRequestDto;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
 @Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 
 public class ChallengeRoom {
 
@@ -57,34 +61,51 @@ public class ChallengeRoom {
 
     /** 시작기간 **/
     @Column(nullable = false)
-    private Date startDate;
+    private String startDate;
 
     /** 종료 기간 **/
     @Column(nullable = false)
-    private Date endDate;
+    private String endDate;
 
     /** 상태 **/
-
     private String status;
 
     /** 최소 커밋 수 **/
-    @Column(nullable = true)
+
     private int commitCount;
 
     /** 최소 알고리즘 문제 수 **/
-    @Column(nullable = true)
     private int algorithmCount;
 
 
     /** 첼린지 이미지 **/
-    @Column(nullable = false, length = 100)
+    @Column(columnDefinition = "VARCHAR(500) DEFAULT 'default_value'")
     private String backGroundUrl;
 
 
+    public static ChallengeRoom from(ChallengeRequestDto dto){
+         return ChallengeRoom.builder()
+                 .title(dto.getTitle())
+                 .hostId(dto.getHostId())
+                 .entryFee(dto.getEntryFee())
+                 .userCount(dto.getUserCount())
+                 .desc(dto.getDesc())
+                 .type(dto.getType())
+                 .startDate(dto.getStartDate())
+                 .endDate(dto.getEndDate())
+                 .commitCount(dto.getCommitCount())
+                 .algorithmCount(dto.getAlgorithmCount())
+                 .build();
+     }
 
+     public void setCertificationUrl (String successUrl ,String failUrl){
+        this.successUrl = successUrl;
+        this.failUrl = failUrl;
+     }
 
-
-
+    public void setBackGroundUrl (String backGroundUrl){
+        this.backGroundUrl = backGroundUrl;
+    }
 
 
 }

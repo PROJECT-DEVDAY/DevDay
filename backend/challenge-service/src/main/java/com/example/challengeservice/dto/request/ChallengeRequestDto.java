@@ -1,10 +1,14 @@
 package com.example.challengeservice.dto.request;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
 
 @Getter
+@Setter
+@RequiredArgsConstructor
 public class ChallengeRequestDto {
 
 
@@ -17,11 +21,6 @@ public class ChallengeRequestDto {
     /** 참가비용 **/
     private int entryFee;
 
-    /** 성공 인증 이미지 파일 **/
-   private MultipartFile certSuccessFile;
-
-    /** 실패 인증 이미지 파일 **/
-    private MultipartFile certFailFile;
 
     /** 인원 수 **/
     private int userCount;
@@ -43,6 +42,12 @@ public class ChallengeRequestDto {
     private int commitCount;
     /** 최소 알고리즘 수 **/
     private int algorithmCount;
+
+    /** 성공 인증 이미지 파일 **/
+    private MultipartFile certSuccessFile;
+
+    /** 실패 인증 이미지 파일 **/
+    private MultipartFile certFailFile;
 
     /** 첼린지 이미지 **/
     private MultipartFile backGroundFile;

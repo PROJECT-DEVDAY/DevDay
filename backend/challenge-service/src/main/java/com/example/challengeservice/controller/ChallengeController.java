@@ -7,18 +7,26 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 @RestController
 @RequestMapping("/challenges")
 public class ChallengeController {
 
+
+    private ChallengeServiceImpl challengeService;
     @Autowired
-    ChallengeServiceImpl challengeService;
+    public ChallengeController(ChallengeServiceImpl challengeService) {
+        this.challengeService = challengeService;
+    }
 
     /** 챌린지 생성 **/
     @PostMapping()
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<String> createChallenge(@RequestBody ChallengeRequestDto challengeRequestDto){
+    public ResponseEntity<String> createChallenge(@ModelAttribute ChallengeRequestDto challengeRequestDto) throws IOException {
 
+        System.out.println(challengeRequestDto.getTitle()+"제목 출력");
+
+        challengeService.createChallenge(challengeRequestDto);
 
 
         return ResponseEntity.status(HttpStatus.CREATED).body("[Success] 챌린지 방이 생성되었습니다.");
