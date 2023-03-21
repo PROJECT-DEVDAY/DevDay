@@ -1,8 +1,6 @@
 package com.example.userservice.controller;
 
-import com.example.userservice.dto.LoginRequestDto;
-import com.example.userservice.dto.SignUpRequestDto;
-import com.example.userservice.dto.TokenResponseDto;
+import com.example.userservice.dto.*;
 import com.example.userservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -37,5 +35,16 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<TokenResponseDto> login(@RequestBody LoginRequestDto requestDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.login(requestDto));
+    }
+
+    @PostMapping("/email-check")
+    public ResponseEntity<String> emailCheck(@RequestBody EmailRequestDto requestDto) {
+        userService.emailCheck(requestDto.getEmail());
+        return ResponseEntity.status(HttpStatus.OK).body("사용가능한 이메일입니다.");
+    }
+
+    @PostMapping("/username")
+    public ResponseEntity<String> findId(@RequestBody FindIdRequestDto requestDto) {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.findId(requestDto));
     }
 }

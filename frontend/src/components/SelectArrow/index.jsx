@@ -41,7 +41,5 @@ SelectArrow.propTypes = {
 
 SelectArrow.defaultProps = {
   fill: true,
-  title: null,
-  content: null,
   onClick: undefined,
 };
