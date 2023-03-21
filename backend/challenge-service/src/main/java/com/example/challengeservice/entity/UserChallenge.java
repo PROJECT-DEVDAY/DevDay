@@ -26,12 +26,13 @@ public class UserChallenge {
     @Column(nullable = false)
     private Long userId;
     @Column(nullable = false)
-    @ColumnDefault("0")
+//    @ColumnDefault("0")
     private Long diffPrice;
 
     public static UserChallenge from(Long challengeId, Long userId) {
         return UserChallenge.builder()
                 .challengeId(challengeId)
+                .diffPrice(Long.parseLong("0"))
                 .userId(userId)
                 .build();
     }

@@ -3,7 +3,6 @@ package com.example.challengeservice.service;
 import com.example.challengeservice.entity.UserChallenge;
 import com.example.challengeservice.exception.ApiException;
 import com.example.challengeservice.exception.ExceptionEnum;
-import com.example.challengeservice.repository.ChallengeRepository;
 import com.example.challengeservice.repository.UserChallengeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
