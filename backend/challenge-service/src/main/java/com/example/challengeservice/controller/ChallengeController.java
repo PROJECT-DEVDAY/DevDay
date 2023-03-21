@@ -31,9 +31,9 @@ public class ChallengeController {
 
     /** 챌린지 참가하기 **/
     @PostMapping("/{challengeId}/{userId}")
-    public ResponseEntity<String> enterChallenge(@PathVariable("challengeId") Long challengeId, @PathVariable("userId") Long userId){
-        challengeService.joinChallenge(challengeId, userId);
-        return null;
+    public ResponseEntity<String> enterChallenge(@PathVariable("challengeId") String challengeId, @PathVariable("userId") String userId){
+        challengeService.joinChallenge(Long.parseLong(challengeId), Long.parseLong(userId));
+        return ResponseEntity.status(HttpStatus.CREATED).body("[Success] 챌린지 방 입장 완료.");
     }
 
 
