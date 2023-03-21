@@ -75,6 +75,18 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    @Transactional
+    public void findPw(FindPwRequestDto requestDto) {
+        User user = userRepository.findByNameAndNicknameAndEmail(requestDto.getName(), requestDto.getNickname(), requestDto.getEmail())
+                .orElseThrow(() -> new ApiException(ExceptionEnum.MEMBER_INFO_NOT_MATCHED_EXCEPTION));
+
+        String tempPw = UUID.randomUUID().toString();
+
+        user.updatePassword(passwordEncoder.encode(tempPw));
+        emailService.send(user.getEmail(), "임시 비밀번호 발송", tempPw);
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public Long emailCheck(String email) {
 
@@ -90,7 +102,7 @@ public class UserServiceImpl implements UserService{
         EmailAuth saveEmailAuth = emailAuthRepository.save(emailAuth);
 
         // 인증 이메일 보내기
-        emailService.send(email, saveEmailAuth.getAuthToken());
+        emailService.send(email, "이메일 인증 코드 발송", saveEmailAuth.getAuthToken());
 
         return saveEmailAuth.getId();
     }
@@ -113,4 +125,5 @@ public class UserServiceImpl implements UserService{
 
         emailAuth.check();
     }
+
 }
