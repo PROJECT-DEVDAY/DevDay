@@ -78,7 +78,7 @@ public class ChallengeRoom {
 
     /** 첼린지 이미지 **/
     @Column(nullable = false, length = 100)
-    private String backGroudUrl;
+    private String backGroundUrl;
 
 
 
