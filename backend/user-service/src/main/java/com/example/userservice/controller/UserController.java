@@ -26,9 +26,9 @@ public class UserController {
         return request.getHeader("userId");
     }
 
-    @PostMapping("/join")
-    public ResponseEntity<String> createUser(@RequestBody SignUpRequestDto requestDto) {
-        userService.createUser(requestDto);
+    @PostMapping("/join/{emailAuthId}")
+    public ResponseEntity<String> join(@PathVariable Long emailAuthId, @RequestBody SignUpRequestDto requestDto) {
+        userService.join(emailAuthId, requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body("회원가입 성공");
     }
 
@@ -37,14 +37,20 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.login(requestDto));
     }
 
-    @PostMapping("/email-check")
-    public ResponseEntity<String> emailCheck(@RequestBody EmailRequestDto requestDto) {
-        userService.emailCheck(requestDto.getEmail());
-        return ResponseEntity.status(HttpStatus.OK).body("사용가능한 이메일입니다.");
-    }
-
     @PostMapping("/username")
     public ResponseEntity<String> findId(@RequestBody FindIdRequestDto requestDto) {
         return ResponseEntity.status(HttpStatus.OK).body(userService.findId(requestDto));
     }
+
+    @PostMapping("/email")
+    public ResponseEntity<Long> emailCheck(@RequestBody EmailRequestDto requestDto) {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.emailCheck(requestDto.getEmail()));
+    }
+
+    @PatchMapping("/confirm-email")
+    public ResponseEntity<String> confirmEmail(@RequestBody EmailAuthRequestDto requestDto) {
+        userService.confirmEmail(requestDto);
+        return ResponseEntity.status(HttpStatus.OK).body("인증되었습니다.");
+    }
+
 }

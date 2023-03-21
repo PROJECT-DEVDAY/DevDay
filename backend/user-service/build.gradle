@@ -43,6 +43,12 @@ dependencies {
 
     // Feign Client
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '4.0.1'
+
+    // STMP
+    implementation group: 'com.sun.mail', name: 'smtp', version: '1.4.5'
+
+    // javax
+    implementation group: 'com.sun.mail', name: 'javax.mail', version: '1.6.2'
 }
 
 dependencyManagement {
