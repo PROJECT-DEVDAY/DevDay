@@ -1,6 +1,7 @@
 package com.example.userservice.service;
 
-import com.example.userservice.dto.*;
+import com.example.userservice.dto.request.*;
+import com.example.userservice.dto.response.TokenResponseDto;
 import com.example.userservice.entity.EmailAuth;
 import com.example.userservice.entity.User;
 import com.example.userservice.exception.ApiException;
@@ -31,12 +32,14 @@ public class UserServiceImpl implements UserService{
 
     private final JWTUtil jwtUtil;
 
+    private final RedisService redisService;
+
     @Override
     @Transactional
     public void join(Long emailAuthId, SignUpRequestDto requestDto) {
 
         EmailAuth emailAuth = emailAuthRepository.findById(emailAuthId)
-                .orElseThrow(() -> new ApiException(ExceptionEnum.EMAIL_AUTH_NOT_FOUNT_EXCEPTION));
+                .orElseThrow(() -> new ApiException(ExceptionEnum.EMAIL_NOT_ACCEPT_EXCEPTION));
 
         if (!emailAuth.getIsChecked()) throw new ApiException(ExceptionEnum.EMAIL_NOT_ACCEPT_EXCEPTION);
 
@@ -47,37 +50,40 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional(readOnly = true)
     public TokenResponseDto login(LoginRequestDto requestDto) {
-        String email = requestDto.getEmail();
-        String password = requestDto.getPassword();
-
-        User user = userRepository.findByEmail(email)
+        User user = userRepository.findByEmail(requestDto.getEmail())
                 .orElseThrow(() -> new ApiException(ExceptionEnum.MEMBER_NOT_EXIST_EXCEPTION));
 
-        if (!passwordEncoder.matches(password, user.getPassword())) {
+        if (!passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {
             throw new ApiException(ExceptionEnum.PASSWORD_NOT_MATCHED_EXCEPTION);
         }
 
         String accessToken = jwtUtil.createToken(user.getId());
+        String refreshToken = jwtUtil.createRefreshToken(user.getId());
+
+        redisService.setValues(refreshToken, user.getId());
 
         return TokenResponseDto.builder()
                 .accessToken(accessToken)
-                .refreshToken("refreshToken")
+                .refreshToken(refreshToken)
                 .build();
     }
 
     @Override
     @Transactional(readOnly = true)
     public String findId(FindIdRequestDto requestDto) {
-        User user = userRepository.findByNickname(requestDto.getNickname())
+        User user = userRepository.findByNameAndNickname(requestDto.getName(), requestDto.getNickname())
                 .orElseThrow(() -> new ApiException(ExceptionEnum.MEMBER_NOT_EXIST_EXCEPTION));
-        if (!user.getName().equals(requestDto.getName())) throw new ApiException(ExceptionEnum.MEMBER_NOT_EXIST_EXCEPTION);
         return user.getEmail();
     }
 
     @Override
     @Transactional
     public void findPw(FindPwRequestDto requestDto) {
-        User user = userRepository.findByNameAndNicknameAndEmail(requestDto.getName(), requestDto.getNickname(), requestDto.getEmail())
+        User user = userRepository.findByNameAndNicknameAndEmail(
+                        requestDto.getName(),
+                        requestDto.getNickname(),
+                        requestDto.getEmail()
+                )
                 .orElseThrow(() -> new ApiException(ExceptionEnum.MEMBER_INFO_NOT_MATCHED_EXCEPTION));
 
         String tempPw = UUID.randomUUID().toString();

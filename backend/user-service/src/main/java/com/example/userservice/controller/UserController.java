@@ -1,6 +1,7 @@
 package com.example.userservice.controller;
 
-import com.example.userservice.dto.*;
+import com.example.userservice.dto.request.*;
+import com.example.userservice.dto.response.TokenResponseDto;
 import com.example.userservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
