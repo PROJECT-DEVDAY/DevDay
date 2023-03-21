@@ -49,6 +49,9 @@ dependencies {
 
     // javax
     implementation group: 'com.sun.mail', name: 'javax.mail', version: '1.6.2'
+
+    // redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 }
 
 dependencyManagement {

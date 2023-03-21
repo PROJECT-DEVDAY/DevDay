@@ -1,4 +1,4 @@
-package com.example.userservice.dto;
+package com.example.userservice.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,26 +11,14 @@ import javax.validation.constraints.Size;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SignUpRequestDto {
+public class LoginRequestDto {
 
     @NotNull(message = "Email cannot be null")
     @Size(min = 2, message = "Email not be less than two characters")
     @Email
     private String email;
 
-    @NotNull(message = "Name cannot be null")
-    @Size(min = 2, message = "Name not be less than two characters")
-    private String name;
-
     @NotNull(message = "Password cannot be null")
-    @Size(min = 8, message = "Password must be equal or grater than 8 characters")
+    @Size(min = 8, message = "Password must be equals or grater than 8 characters")
     private String password;
-
-    @NotNull(message = "Nickname cannot be null")
-    @Size(min = 2, message = "Nickname not be less than two characters")
-    private String nickname;
-
-    private String github;
-
-    private String baekjoon;
 }

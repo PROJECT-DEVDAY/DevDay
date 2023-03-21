@@ -1,6 +1,7 @@
 package com.example.userservice.service;
 
-import com.example.userservice.dto.*;
+import com.example.userservice.dto.request.*;
+import com.example.userservice.dto.response.TokenResponseDto;
 
 public interface UserService {
     void join(Long emailAuthId, SignUpRequestDto requestDto);
