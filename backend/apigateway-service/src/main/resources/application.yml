@@ -12,6 +12,8 @@ eureka:
       defaultZone: http://localhost:8761/eureka
 
 spring:
+  profiles:
+    include: jwt
   application:
     name: apigateway-service
   cloud:
@@ -45,7 +47,7 @@ spring:
         - id: user-service
           uri: lb://USER-SERVICE
           predicates:
-            - Path=/user-service/join
+            - Path=/user-service/join/**
             - Method=POST
           filters:
             - RemoveRequestHeader=Cookie
@@ -75,7 +77,19 @@ spring:
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
-
-token:
-  secret: dyAeHubOOc8KaOfYB6XEQoEj1QzRlVgtjNL8PYs1A1tymZvvqkcEU7L1imkKHeDa
-  expiration_time: 864000000
+        - id: challenge-service
+          uri: lb://CHALLENGE-SERVICE
+          predicates:
+            - Path=/challenge-service/**
+            - Method=GET, POST, PATCH, DELETE
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/challenge-service/(?<segment>.*), /$\{segment}
+        - id: pay-service
+          uri: lb://PAY-SERVICE
+          predicates:
+            - Path=/pay-service/**
+            - Method=GET, POST, PATCH, DELETE
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/pay-service/(?<segment>.*), /$\{segment}
