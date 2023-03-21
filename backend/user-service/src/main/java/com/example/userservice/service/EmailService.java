@@ -15,11 +15,11 @@ public class EmailService {
     private final JavaMailSender javaMailSender;
 
     @Async
-    public void send(String email, String authToken) {
+    public void send(String email, String title, String message) {
         SimpleMailMessage smm = new SimpleMailMessage();
         smm.setTo(email);
-        smm.setSubject("회원가입 이메일 인증");
-        smm.setText(authToken);
+        smm.setSubject(title);
+        smm.setText(message);
 
         javaMailSender.send(smm);
     }
