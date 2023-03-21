@@ -42,6 +42,12 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(userService.findId(requestDto));
     }
 
+    @PatchMapping("/password")
+    public ResponseEntity<String> findPw(@RequestBody FindPwRequestDto requestDto) {
+        userService.findPw(requestDto);
+        return ResponseEntity.status(HttpStatus.OK).body("임시 비밀번호가 메일로 전송되었습니다.");
+    }
+
     @PostMapping("/email")
     public ResponseEntity<Long> emailCheck(@RequestBody EmailRequestDto requestDto) {
         return ResponseEntity.status(HttpStatus.OK).body(userService.emailCheck(requestDto.getEmail()));

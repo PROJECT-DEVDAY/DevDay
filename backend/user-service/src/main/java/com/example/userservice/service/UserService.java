@@ -9,7 +9,10 @@ public interface UserService {
 
     String findId(FindIdRequestDto requestDto);
 
+    void findPw(FindPwRequestDto requestDto);
+
     Long emailCheck(String email);
 
     void confirmEmail(EmailAuthRequestDto requestDto);
+
 }
