@@ -1,6 +1,8 @@
 package com.example.challengeservice.controller;
 
 import com.example.challengeservice.dto.request.ChallengeRequestDto;
+import com.example.challengeservice.service.ChallengeServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -8,6 +10,9 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/challenges")
 public class ChallengeController {
+
+    @Autowired
+    ChallengeServiceImpl challengeService;
 
     /** 챌린지 생성 **/
     @PostMapping()
@@ -22,6 +27,14 @@ public class ChallengeController {
     /** 챌린지 조회  **/
 
     /** 챌린지 상세 조회 ** (입장 페이지)*/
+
+    /** 챌린지 참가하기 **/
+    @PostMapping("/{challengeId}/{userId}")
+    public ResponseEntity<String> enterChallenge(@PathVariable("challengeId") Long challengeId, @PathVariable("userId") Long userId){
+        challengeService.joinChallenge(challengeId, userId);
+        return null;
+    }
+
 
 
 
