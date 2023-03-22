@@ -24,15 +24,12 @@ public class ChallengeController {
     @PostMapping()
     public ResponseEntity<String> createChallenge(@ModelAttribute ChallengeRequestDto challengeRequestDto) throws IOException {
 
-        System.out.println(challengeRequestDto.getTitle()+"제목 출력");
-
         challengeService.createChallenge(challengeRequestDto);
-
 
         return ResponseEntity.status(HttpStatus.CREATED).body("[Success] 챌린지 방이 생성되었습니다.");
     }
 
-    /** 챌린지 조회  **/
+    /**챌린지 조회 **/
 
 
     /** 챌린지 상세 조회 ** (입장 페이지)*/
