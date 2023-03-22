@@ -12,9 +12,18 @@ spring:
       enabled: true
   datasource:
     driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:testdb
+    url: jdbc:h2:mem:pay-service
     username: sa
     password: 1234
+
+  jpa:
+    generate-ddl: true
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    defer-datasource-initialization: true
+
+
 eureka:
   instance:
     instance-id: ${spring.application.name}:${spirng.application.instance_id:${random.value}}
@@ -32,3 +41,8 @@ payment:
     path:
       confirm: /v1/payments/confirm
       cancel: /v1/payments/%s/cancel
+
+
+logging:
+  level:
+    com.example.payservice: debug

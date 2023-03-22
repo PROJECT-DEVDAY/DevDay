@@ -1,7 +1,14 @@
 package com.example.payservice.service;
 
+import com.example.payservice.dto.PayUserDto;
+import com.example.payservice.entity.UserEntity;
+import com.example.payservice.repository.UserRepository;
 import com.example.payservice.vo.tosspayments.Payment;
 import com.example.payservice.vo.tosspayments.SuccessRequest;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
@@ -10,15 +17,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Service
+@AllArgsConstructor
 public class PayServiceImpl implements PayService {
 
+    private final UserRepository userRepository;
+    private final Environment env;
 
-    Environment env;
-
-    @Autowired
-    public PayServiceImpl(Environment env) {
-        this.env = env;
-    }
 
     @Override
     public Payment confirm(SuccessRequest request) {
@@ -38,5 +42,16 @@ public class PayServiceImpl implements PayService {
     @Override
     public Payment cancel() {
         return null;
+    }
+
+    @Override
+    public PayUserDto getPayUserInfo(Long userId) {
+        UserEntity user = userRepository.findByUserId(userId);
+
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        PayUserDto payUserDto = modelMapper.map(user, PayUserDto.class);
+
+        return payUserDto;
     }
 }
