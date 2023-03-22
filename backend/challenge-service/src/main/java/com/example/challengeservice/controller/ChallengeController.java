@@ -3,6 +3,7 @@ package com.example.challengeservice.controller;
 import com.example.challengeservice.dto.request.ChallengeRoomRequestDto;
 import com.example.challengeservice.dto.response.ChallengeCreateResponseDto;
 import com.example.challengeservice.dto.response.ChallengeRoomResponseDto;
+import com.example.challengeservice.dto.response.SimpleChallengeResponseDto;
 import com.example.challengeservice.service.ChallengeServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/challenges")
@@ -26,6 +28,7 @@ public class ChallengeController {
     /** 챌린지 생성 **/
     @PostMapping()
     public ResponseEntity<ChallengeCreateResponseDto> createChallenge(@ModelAttribute ChallengeRoomRequestDto challengeRoomRequestDto) throws IOException {
+        log.info(challengeRoomRequestDto.getType()+"어떤타입");
         Long id=challengeService.createChallenge(challengeRoomRequestDto);
         String message="[Success] 챌린지 방이 생성되었습니다.";
         return ResponseEntity.status(HttpStatus.CREATED).body(ChallengeCreateResponseDto.from(id, message));
@@ -50,6 +53,16 @@ public class ChallengeController {
     }
 
 
+
+    /** 메인 페이지 조회 **/
+    @GetMapping("")
+    public  ResponseEntity<List<SimpleChallengeResponseDto>> getListSimpleChallenge (@RequestParam ("type") String type, @RequestParam (value = "offset", required = false) Long offset , @RequestParam (value = "search" ,required = false) String search , @RequestParam ("size") int size){
+
+        List<SimpleChallengeResponseDto> list = challengeService.getListSimpleChallenge(type,search,size,offset);
+        return  ResponseEntity.status(HttpStatus.OK).body(list);
+
+
+    }
 
 
 
