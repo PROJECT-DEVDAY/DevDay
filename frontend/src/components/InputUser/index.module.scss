@@ -1,0 +1,28 @@
+.Button {
+  width: 100%;
+  height: 50px;
+  border-radius: 10px;
+  background-color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.Button-background-fill {
+  color: #fff !important;
+}
+
+.Button-primary {
+  color: var(--color-kiyoon);
+  border: 1.5px solid var(--color-kiyoon);
+}
+.Button-primary.Button-background-fill {
+  background-color: var(--color-kiyoon);
+}
+
+.Button-warning {
+  color: var(--color-guembi);
+  border: 1.5px solid var(--color-guembi);
+}
+.Button-warning.Button-background-fill {
+  background-color: var(--color-guembi);
+}
