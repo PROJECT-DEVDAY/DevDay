@@ -37,10 +37,19 @@ eureka:
 payment:
   toss:
     baseUrl: https://api.tosspayments.com
-    secret: Basic dGVzdF9za19qa1lHNTdFYmEzR1JCWGcxbUs2OHBXRE94bUExOg==
+    secret:
     path:
       confirm: /v1/payments/confirm
       cancel: /v1/payments/%s/cancel
+
+openapi:
+  nonghyup:
+    baseUrl: https://developers.nonghyup.com
+    accessToken:
+    iscd:
+    fintechApsno:
+    apiSvcCd: ReceivedTransferA
+    otlt: Devday 상금
 
 
 logging:

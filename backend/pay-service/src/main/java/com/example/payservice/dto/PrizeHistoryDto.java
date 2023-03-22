@@ -1,6 +1,6 @@
 package com.example.payservice.dto;
 
-import com.example.payservice.vo.prize.PrizeHistoryType;
+import com.example.payservice.enums.PrizeHistoryType;
 import lombok.Data;
 
 @Data
