@@ -76,6 +76,9 @@ public class ChallengeRoom {
     /** 최소 알고리즘 문제 수 **/
     private int algorithmCount;
 
+    /** 현재 참여자 수 **/
+    private int participantsSize;
+
 
     /** 첼린지 이미지 **/
     @Column(columnDefinition = "VARCHAR(500) DEFAULT 'default_value'")
