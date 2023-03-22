@@ -1,9 +1,10 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { SlArrowRight } from 'react-icons/sl';
+
 import classnames from 'classnames';
+import PropTypes from 'prop-types';
 
 import './selectoption.css';
-import { SlArrowRight } from 'react-icons/sl';
 
 export const SelectArrow = ({
   fill,

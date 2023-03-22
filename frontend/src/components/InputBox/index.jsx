@@ -1,9 +1,10 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { CiMail } from 'react-icons/ci';
+
 import classnames from 'classnames';
+import PropTypes from 'prop-types';
 
 import './inputbox.css';
-import { CiMail } from 'react-icons/ci';
 
 export const InputBox = ({ className, content, placeholder, ...props }) => {
   return (

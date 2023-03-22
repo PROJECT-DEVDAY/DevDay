@@ -1,7 +1,7 @@
 import React from 'react';
-import classnames from 'classnames';
-
 import { FiHome, FiCamera, FiUser } from 'react-icons/fi';
+
+import classnames from 'classnames';
 
 import style from './footer.module.scss';
 
