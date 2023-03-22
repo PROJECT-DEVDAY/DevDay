@@ -74,11 +74,11 @@ public class ChallengeServiceImpl implements ChallengeService{
     public ChallengeRoomResponseDto readChallenge(Long challengeId){
         ChallengeRoom challengeRoom=challengeRoomRepository.findChallengeRoomById(challengeId)
                 .orElseThrow(() -> new ApiException(ExceptionEnum.CHALLENGE_NOT_EXIST_EXCEPTION));
+        // 현재 참여자 수 조회
+        challengeRoom.setParticipantsSize(userChallengeRepository.countByChallengeRoomId(challengeId));
 
         ModelMapper mapper=new ModelMapper();
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-
-
         return mapper.map(challengeRoom, ChallengeRoomResponseDto.class);
      }
 
