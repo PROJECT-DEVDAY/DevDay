@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -49,6 +50,9 @@ public class UserServiceImpl implements UserService{
 
         User user = User.from(requestDto);
         userRepository.save(user);
+
+        List<EmailAuth> emailAuthList = emailAuthRepository.findAllByEmail(user.getEmail());
+        emailAuthRepository.deleteAll(emailAuthList);
     }
 
     @Override
