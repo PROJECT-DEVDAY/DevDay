@@ -1,0 +1,13 @@
+.ContentInput {
+  width: 100%;
+  border-radius: 10px;
+  background-color: #EFEFEF;
+  font-size: 1rem;
+  cursor: pointer;
+  border: 2px solid #c9c9c9;
+  padding: 10px;
+  height: 62px;
+}
+.ContentInput::-webkit-scrollbar {
+  display: none;
+}
