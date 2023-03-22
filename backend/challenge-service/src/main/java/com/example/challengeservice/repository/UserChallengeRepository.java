@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface UserChallengeRepository extends JpaRepository<UserChallenge,Long> {
-    Optional<UserChallenge> findByChallengeIdAndUserId(Long challengeId, Long userId);
+    Optional<UserChallenge> findByChallengeRoomIdAndUserId(Long challengeId, Long userId);
 
 }
