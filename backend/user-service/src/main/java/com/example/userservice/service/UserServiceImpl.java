@@ -171,14 +171,6 @@ public class UserServiceImpl implements UserService{
             throw new ApiException(ExceptionEnum.MEMBER_ACCESS_EXCEPTION);
         }
 
-        Long accessTokenPk = Long.parseLong(jwtUtil.getUserPk(accessToken));
-        Long refreshTokenPk = Long.parseLong(jwtUtil.getUserPk(refreshToken));
-
-        // 리프레쉬 토큰 pk값이랑 액세스 토큰 pk값이 같은지 비교
-        if (!accessTokenPk.equals(refreshTokenPk)) {
-            log.error("accessTokenPk and refreshTokenPk not equals");
-            throw new ApiException(ExceptionEnum.MEMBER_ACCESS_EXCEPTION);
-        }
 
         // 리프레쉬 토큰 유효성 검사 - 만료시 에러
         if (!jwtUtil.validateToken(refreshToken)) {
@@ -186,6 +178,7 @@ public class UserServiceImpl implements UserService{
             throw new ApiException(ExceptionEnum.MEMBER_ACCESS_EXCEPTION);
         }
 
+        Long refreshTokenPk = Long.parseLong(jwtUtil.getUserPk(refreshToken));
         String refreshTokenRedis = redisService.getValues(refreshTokenPk);
 
         // 헤더 리프레쉬 토큰과 레디스 리프레쉬 토큰 동등성 비교
@@ -200,7 +193,7 @@ public class UserServiceImpl implements UserService{
             throw new ApiException(ExceptionEnum.MEMBER_ACCESS_EXCEPTION);
         }
 
-        return accessTokenPk;
+        return refreshTokenPk;
     }
 
 }
