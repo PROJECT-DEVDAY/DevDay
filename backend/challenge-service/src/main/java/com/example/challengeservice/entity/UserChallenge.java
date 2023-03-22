@@ -21,17 +21,20 @@ public class UserChallenge {
     @Column(name="USER_CHALLENGE_ID", nullable = false)
     private Long id;
 
-    @Column(nullable = false)
-    private Long challengeId;
+    @ManyToOne(targetEntity = ChallengeRoom.class, fetch=FetchType.LAZY)
+    @JoinColumn(name="CHALLENGE_ID")
+    private ChallengeRoom challengeRoom;
+
+
     @Column(nullable = false)
     private Long userId;
     @Column(nullable = false)
 //    @ColumnDefault("0")
     private Long diffPrice;
 
-    public static UserChallenge from(Long challengeId, Long userId) {
+    public static UserChallenge from(ChallengeRoom challengeRoom, Long userId) {
         return UserChallenge.builder()
-                .challengeId(challengeId)
+                .challengeRoom(challengeRoom)
                 .diffPrice(Long.parseLong("0"))
                 .userId(userId)
                 .build();
