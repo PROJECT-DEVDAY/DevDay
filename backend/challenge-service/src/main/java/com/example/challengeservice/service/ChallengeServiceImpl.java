@@ -50,7 +50,6 @@ public class ChallengeServiceImpl implements ChallengeService{
             //인증 성공,실패의 사진을 업로드
             successUrl = amazonS3Service.upload(challengeRequestDto.getCertSuccessFile(),"ChallengeRoom");
             failUrl = amazonS3Service.upload(challengeRequestDto.getCertFailFile(),"ChallengeRoom");
-            // 백그라운드 업로드
 
         }
 
@@ -62,7 +61,12 @@ public class ChallengeServiceImpl implements ChallengeService{
         challengeRoom.setBackGroundUrl(backgroundUrl);
 
 
-        challengeRoomRepository.save(challengeRoom);
+        Long id = challengeRoomRepository.save(challengeRoom).getId();
+
+
+
+        //챌린지 방이 잘 생성 되었다면 방을 만든 방장은 방에 참가해야한다.
+
 
 
 
