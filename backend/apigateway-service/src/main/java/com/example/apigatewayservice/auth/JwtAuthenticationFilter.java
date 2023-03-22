@@ -1,6 +1,9 @@
 package com.example.apigatewayservice.auth;
 
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler;
@@ -17,6 +20,7 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.net.ConnectException;
 import java.nio.charset.StandardCharsets;
 
 @Component
@@ -70,9 +74,15 @@ public class JwtAuthenticationFilter extends AbstractGatewayFilterFactory<JwtAut
                 ServerWebExchange exchange, Throwable ex) {
             int errorCode = 500;
             if (ex.getClass() == NullPointerException.class) {
-                errorCode = 100;
+                errorCode = 401;
             } else if (ex.getClass() == ExpiredJwtException.class) {
-                errorCode = 200;
+                errorCode = 402;
+            } else if (ex.getClass() == MalformedJwtException.class) {
+                errorCode = 403;
+            } else if (ex.getClass() == SignatureException.class) {
+                errorCode = 404;
+            } else if (ex.getClass() == UnsupportedJwtException.class) {
+                errorCode = 405;
             }
 
             byte[] bytes = getErrorCode(errorCode).getBytes(StandardCharsets.UTF_8);
