@@ -2,6 +2,7 @@ package com.example.userservice.controller;
 
 import com.example.userservice.dto.request.*;
 import com.example.userservice.dto.response.TokenResponseDto;
+import com.example.userservice.dto.response.UserResponseDto;
 import com.example.userservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -58,6 +59,18 @@ public class UserController {
     public ResponseEntity<String> confirmEmail(@RequestBody EmailAuthRequestDto requestDto) {
         userService.confirmEmail(requestDto);
         return ResponseEntity.status(HttpStatus.OK).body("인증되었습니다.");
+    }
+
+    @GetMapping("/refresh")
+    public ResponseEntity<TokenResponseDto> refresh(HttpServletRequest request) {
+
+        return ResponseEntity.status(HttpStatus.OK).body(userService.refresh(request));
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<UserResponseDto> getUserInfo(@PathVariable Long userId) {
+
+        return ResponseEntity.status(HttpStatus.OK).body(userService.getUserInfo(userId));
     }
 
 }

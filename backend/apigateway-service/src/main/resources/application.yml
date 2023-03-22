@@ -39,6 +39,23 @@ spring:
         - id: user-service
           uri: lb://USER-SERVICE
           predicates:
+            - Path=/user-service/welcome
+            - Method=GET
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/welcome/auth
+            - Method=GET
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+            - JwtAuthenticationFilter
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
             - Path=/user-service/login
             - Method=POST
           filters:
@@ -55,7 +72,7 @@ spring:
         - id: user-service
           uri: lb://USER-SERVICE
           predicates:
-            - Path=/user-service/welcome
+            - Path=/user-service/refresh
             - Method=GET
           filters:
             - RemoveRequestHeader=Cookie
@@ -63,8 +80,8 @@ spring:
         - id: user-service
           uri: lb://USER-SERVICE
           predicates:
-            - Path=/user-service/welcome/auth
-            - Method=GET
+            - Path=/user-service/auth/**
+            - Method=GET, POST, PATCH, DELETE
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
