@@ -8,23 +8,31 @@ import com.example.payservice.entity.bank.AccountEntity;
 import com.example.payservice.entity.prize.PrizeHistoryEntity;
 import com.example.payservice.repository.PrizeHistoryRepository;
 import com.example.payservice.repository.UserRepository;
-import com.example.payservice.vo.internal.ResponseUser;
-import com.example.payservice.vo.prize.PrizeHistoryType;
-import feign.FeignException;
+import com.example.payservice.enums.PrizeHistoryType;
+import com.example.payservice.vo.nhbank.Header;
+import com.example.payservice.vo.nhbank.RequestTransfer;
+
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.MatchingStrategies;
+import org.springframework.core.env.Environment;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import javax.transaction.Transactional;
-import java.time.LocalDateTime;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @Slf4j
 @Service
 @AllArgsConstructor
 public class PrizeServiceImpl implements PrizeService {
 
+    private final Environment env;
     private final UserServiceClient userServiceClient;
     private final UserRepository userRepository;
     private final PrizeHistoryRepository prizeHistoryRepository;
@@ -53,8 +61,8 @@ public class PrizeServiceImpl implements PrizeService {
             계좌 유효 검사 시에 주민등록 앞자리가 필요함
         */
 
-        // TODO: 출금을 반영합니다.
-
+        // 출금을 반영합니다.
+        transferMoney(account, money);
 
         // 출금이력을 기록합니다.
         PrizeHistoryEntity prizeHistory = PrizeHistoryEntity.builder()
@@ -99,5 +107,76 @@ public class PrizeServiceImpl implements PrizeService {
         // transaction 반영
         userEntity.setPrize(userEntity.getPrize() + rewardSaveDto.getAmount());
         prizeHistoryRepository.save(prizeHistory);
+    }
+
+    private boolean transferMoney(AccountDto accountDto, int money) {
+        WebClient client = WebClient.builder()
+                .baseUrl(env.getProperty("openapi.nonghyup.baseUrl"))
+                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .build();
+
+        String bankCode = accountDto.getBankCode();
+        if("011".equals(bankCode) || "012".equals(bankCode)) {
+            return transferMoneyNH(client, accountDto, money);
+        }
+
+        return transferMoneyNotNH(client, accountDto, money);
+
+    }
+    private boolean transferMoneyNH(WebClient client, AccountDto account, int money) {
+        RequestTransfer transfer = createNHApiRequestTransfer(
+                createNHApiHeader("ReceivedTransferOtherBank"),
+                money,
+                account
+        );
+
+        Header header = client.post().uri("/ReceivedTransferAccountNumber.nh")
+                .bodyValue(transfer).retrieve().bodyToMono(Header.class).block();
+
+        return true;
+    }
+    private boolean transferMoneyNotNH(WebClient client, AccountDto account, int money) {
+        RequestTransfer transfer = createNHApiRequestTransfer(
+                createNHApiHeader("ReceivedTransferOtherBank"),
+                money,
+                account
+        );
+        log.info("transferMoneyNotNH -> {}", transfer);
+        Header header = client.post().uri("/ReceivedTransferOtherBank.nh").bodyValue(transfer)
+                .retrieve().onStatus(HttpStatus::isError, response ->
+                    response.bodyToMono(String.class) // error body as String or other class
+                            .flatMap(error -> Mono.error(new RuntimeException(error)))
+                ).bodyToMono(Header.class).block();
+        return true;
+    }
+    private Header createNHApiHeader(String apiNm) {
+        Date now = new Date();
+        String dateTime = new SimpleDateFormat("yyyyMMddHHmmssSSSS")
+                .format(now);
+        return Header.builder()
+                .apiNm(apiNm)
+                .tsymd(dateTime.substring(0, 8))
+                .trtm(dateTime.substring(8, 14))
+                .iscd(env.getProperty("openapi.nonghyup.iscd"))
+                .fintechApsno(env.getProperty("openapi.nonghyup.fintechApsno"))
+                .apiSvcCd(env.getProperty("openapi.nonghyup.apiSvcCd"))
+                .isTuno(String.valueOf(now.getTime()))
+                .accessToken(env.getProperty("openapi.nonghyup.accessToken"))
+                .build();
+    }
+
+    private RequestTransfer createNHApiRequestTransfer(
+            Header header,
+            int money,
+            AccountDto accountDto
+    ) {
+        return RequestTransfer.builder()
+                .header(header)
+                .bncd(accountDto.getBankCode())
+                .acno(accountDto.getNumber())
+                .tram(String.valueOf(money))
+                .dractOtlt(env.getProperty("openapi.nonghyup.otlt") + " " + money + "원")
+                .mractOtlt(env.getProperty("openapi.nonghyup.otlt") + " " + money + "원")
+                .build();
     }
 }
