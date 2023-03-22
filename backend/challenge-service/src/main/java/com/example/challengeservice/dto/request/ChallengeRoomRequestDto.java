@@ -9,7 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Getter
 @Setter
 @RequiredArgsConstructor
-public class ChallengeRequestDto {
+public class ChallengeRoomRequestDto {
 
 
     /** 제목 **/
