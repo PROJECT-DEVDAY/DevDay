@@ -2,37 +2,78 @@ package com.example.challengeservice.service;
 
 import com.example.challengeservice.dto.request.ChallengeRoomRequestDto;
 import com.example.challengeservice.dto.response.ChallengeRoomResponseDto;
+import com.example.challengeservice.dto.response.SimpleChallengeResponseDto;
 import com.example.challengeservice.entity.ChallengeRoom;
 import com.example.challengeservice.entity.UserChallenge;
 import com.example.challengeservice.exception.ApiException;
 import com.example.challengeservice.exception.ExceptionEnum;
+import com.example.challengeservice.infra.amazons3.querydsl.SearchParam;
 import com.example.challengeservice.infra.amazons3.service.AmazonS3Service;
+import com.example.challengeservice.repository.ChallengeRoomRepoCustomImpl;
 import com.example.challengeservice.repository.ChallengeRoomRepository;
 import com.example.challengeservice.repository.UserChallengeRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class ChallengeServiceImpl implements ChallengeService{
 
     private  UserChallengeRepository userChallengeRepository;
     private ChallengeRoomRepository challengeRoomRepository;
     private AmazonS3Service amazonS3Service;
 
+    private ChallengeRoomRepoCustomImpl challengeRoomRepoCustom;
+
     @Autowired
-    public ChallengeServiceImpl(UserChallengeRepository userChallengeRepository, ChallengeRoomRepository challengeRoomRepository, AmazonS3Service amazonS3Service) {
+    public ChallengeServiceImpl(UserChallengeRepository userChallengeRepository, ChallengeRoomRepository challengeRoomRepository, AmazonS3Service amazonS3Service, ChallengeRoomRepoCustomImpl challengeRoomRepoCustom) {
         this.userChallengeRepository = userChallengeRepository;
         this.challengeRoomRepository = challengeRoomRepository;
         this.amazonS3Service = amazonS3Service;
+        this.challengeRoomRepoCustom = challengeRoomRepoCustom;
     }
 
 
+    @Override
+    public List<SimpleChallengeResponseDto> getListSimpleChallenge(String type, String search, int size, Long offset ) {
+
+        //쿼리 dsl만드라꺼임
+
+
+        Date date = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+
+        log.info(formatter.format(date)+"오늘날짜");
+        SearchParam searchParam = new SearchParam(type,search,size,offset,formatter.format(date));
+       List<ChallengeRoom> challengeRooms = challengeRoomRepoCustom.getSimpleChallengeList(searchParam);
+
+        for (ChallengeRoom challengeRoom : challengeRooms) {
+            // 현재 참여자 수 조회
+            log.info("가져온 챌린지 id"+ challengeRoom.getId());
+            challengeRoom.setParticipantsSize(userChallengeRepository.countByChallengeRoomId(challengeRoom.getId()));
+        }
+
+
+
+
+        ModelMapper modelMapper = new ModelMapper();
+        Type listType = new TypeToken<List<SimpleChallengeResponseDto>>() {}.getType(); // 리스트 타입 지정
+        List<SimpleChallengeResponseDto> dtoList = modelMapper.map(challengeRooms, listType); // 변환
+
+        return dtoList;
+    }
 
     @Override
     public Long createChallenge(ChallengeRoomRequestDto challengeRoomRequestDto)  throws IOException {
