@@ -1,18 +1,17 @@
 package com.example.challengeservice.entity;
 
 
-import com.example.challengeservice.dto.request.ChallengeRequestDto;
+import com.example.challengeservice.dto.request.ChallengeRoomRequestDto;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Date;
 
 @Entity
 @Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-
 public class ChallengeRoom {
 
     @Id
@@ -83,7 +82,7 @@ public class ChallengeRoom {
     private String backGroundUrl;
 
 
-    public static ChallengeRoom from(ChallengeRequestDto dto){
+    public static ChallengeRoom from(ChallengeRoomRequestDto dto){
          return ChallengeRoom.builder()
                  .title(dto.getTitle())
                  .hostId(dto.getHostId())
