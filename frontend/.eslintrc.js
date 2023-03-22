@@ -13,7 +13,7 @@ module.exports = {
   plugins: ['prettier'],
   // eslint-plugin-prettier를 적용시켜줍니다
   rules: {
-    'prettier/prettier': 'error',
+    'prettier/prettier': ['error', { endOfLine: 'auto' }],
     'react/react-in-jsx-scope': 0,
     'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx'] }],
     'react/jsx-props-no-spreading': 'off',
