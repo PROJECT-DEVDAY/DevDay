@@ -35,6 +35,8 @@ public class User {
 
     private String baekjoon;
 
+    private String profileImg;
+
     public static User from(SignUpRequestDto requestDto) {
         return User.builder()
                 .email(requestDto.getEmail())
@@ -50,4 +52,16 @@ public class User {
         this.password = password;
     }
 
+    public void updateProfileImg(String profileImg) {
+        this.profileImg = profileImg;
+    }
+
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void updateEmail(String github, String baekjoon) {
+        this.github = github;
+        this.baekjoon = baekjoon;
+    }
 }

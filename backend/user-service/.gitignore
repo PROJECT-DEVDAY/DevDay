@@ -7,6 +7,7 @@ build/
 /src/main/resources/application-email.yml
 /src/main/resources/application-gateway.yml
 /src/main/resources/application-jwt.yml
+/src/main/resources/application-s3.yml
 
 ### STS ###
 .apt_generated

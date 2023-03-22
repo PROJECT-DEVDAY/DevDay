@@ -4,7 +4,7 @@ server:
 
 spring:
   profiles:
-    include: email, gateway, jwt
+    include: email, gateway, jwt, s3
   application:
     name: user-service
   h2:
