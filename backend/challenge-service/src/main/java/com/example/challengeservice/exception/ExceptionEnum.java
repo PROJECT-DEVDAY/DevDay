@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor
 public enum ExceptionEnum {
     USER_CHALLENGE_EXIST_EXCEPTION(HttpStatus.BAD_REQUEST,"UC0001","이미 이 챌린지에 존재하는 유저입니다."),
+    CHALLENGE_BAD_REQUEST(HttpStatus.BAD_REQUEST ,"UC002" ,"요청한 값이 유효하지 않습니다."),
 
 
     RUNTIME_EXCEPTION(HttpStatus.BAD_REQUEST, "E0001", "내부 문제로 다음번에 다시 시도해주세요."),
@@ -23,6 +24,10 @@ public enum ExceptionEnum {
     EMAIL_AUTH_NOT_FOUNT_EXCEPTION(HttpStatus.NOT_FOUND, "E0001", "이메일 인증 요청이 존재하지 않습니다."),
     EMAIL_ACCEPT_TIMEOUT_EXCEPTION(HttpStatus.NOT_FOUND, "E0002", "이메일 인증 요청 시간이 만료되었습니다."),
     EMAIL_NOT_ACCEPT_EXCEPTION(HttpStatus.FORBIDDEN, "E0003", "이메일이 인증되지 않았습니다.");
+
+
+
+
     private final HttpStatus status;
     private final String code;
     private final String message;
