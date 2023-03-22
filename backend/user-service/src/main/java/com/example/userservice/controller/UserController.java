@@ -23,11 +23,6 @@ public class UserController {
         return "no jwt welcome";
     }
 
-    @GetMapping("/welcome/auth")
-    public String welcomeAuth(HttpServletRequest request) {
-        return request.getHeader("userId");
-    }
-
     @PostMapping("/join/{emailAuthId}")
     public ResponseEntity<String> join(@PathVariable Long emailAuthId, @RequestBody SignUpRequestDto requestDto) {
         userService.join(emailAuthId, requestDto);
