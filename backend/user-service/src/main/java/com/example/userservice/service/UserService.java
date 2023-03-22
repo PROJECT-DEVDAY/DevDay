@@ -1,0 +1,19 @@
+package com.example.userservice.service;
+
+import com.example.userservice.dto.request.*;
+import com.example.userservice.dto.response.TokenResponseDto;
+
+public interface UserService {
+    void join(Long emailAuthId, SignUpRequestDto requestDto);
+
+    TokenResponseDto login(LoginRequestDto requestDto);
+
+    String findId(FindIdRequestDto requestDto);
+
+    void findPw(FindPwRequestDto requestDto);
+
+    Long emailCheck(String email);
+
+    void confirmEmail(EmailAuthRequestDto requestDto);
+
+}
