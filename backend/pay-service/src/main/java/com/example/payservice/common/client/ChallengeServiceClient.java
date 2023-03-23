@@ -1,4 +1,4 @@
-package com.example.payservice.client;
+package com.example.payservice.common.client;
 
 import com.example.payservice.dto.response.ChallengeResponse;
 import org.springframework.cloud.openfeign.FeignClient;

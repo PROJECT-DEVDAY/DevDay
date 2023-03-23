@@ -1,5 +1,6 @@
-package com.example.payservice.dto;
+package com.example.payservice.dto.prize;
 
+import com.example.payservice.dto.bank.AccountDto;
 import com.example.payservice.entity.PrizeHistoryEntity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;

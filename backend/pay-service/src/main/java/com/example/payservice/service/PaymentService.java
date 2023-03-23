@@ -1,12 +1,14 @@
-package com.example.payservice.service.payment;
+package com.example.payservice.service;
 
-import com.example.payservice.dto.AccountDto;
-import com.example.payservice.dto.Bank;
+import com.example.payservice.dto.bank.AccountDto;
+import com.example.payservice.dto.bank.Bank;
 import com.example.payservice.dto.nhbank.Header;
 import com.example.payservice.dto.nhbank.ReceivedTransferType;
 import com.example.payservice.dto.nhbank.RequestTransfer;
 import com.example.payservice.dto.tosspayments.Payment;
 import com.example.payservice.dto.tosspayments.SuccessRequest;
+import com.example.payservice.exception.PaymentsConfirmException;
+import com.example.payservice.exception.PrizeWithdrawException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
@@ -44,7 +46,10 @@ public class PaymentService {
         return client.post().uri(env.getProperty("payment.toss.path.confirm"))
                 .bodyValue(request)
                 .retrieve()
-                .bodyToMono(Payment.class)
+                .onStatus(HttpStatus::isError, response ->
+                        response.bodyToMono(String.class) // error body as String or other class
+                                .flatMap(error -> Mono.error(new PaymentsConfirmException(error)))
+                ).bodyToMono(Payment.class)
                 .block();
     }
 
@@ -104,7 +109,7 @@ public class PaymentService {
         client.post().uri(transferType.getUri()).bodyValue(transfer)
                 .retrieve().onStatus(HttpStatus::isError, response ->
                         response.bodyToMono(String.class) // error body as String or other class
-                                .flatMap(error -> Mono.error(new RuntimeException(error)))
+                                .flatMap(error -> Mono.error(new PrizeWithdrawException(error)))
                 ).bodyToMono(Header.class).block();
         return true;
     }
