@@ -1,9 +1,3 @@
-:root {
-  --color-chunsik: #fff962;
-  --color-kiyoon: #5669ff;
-  --color-guembi: #ffaf14;
-  --color-taehwan: #e6e6fa;
-}
 .SelectArrow {
   width: 100%;
   border-radius: 10px;
@@ -11,7 +5,7 @@
   background-color: #fff;
   font-size: 1rem;
   cursor: pointer;
-  border: 2px solid #c9c9c9;
+  border: 2px solid var(--grey-border);
   display: flex;
   justify-content: space-between;
   padding: 10px;
