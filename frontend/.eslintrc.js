@@ -69,6 +69,7 @@ module.exports = {
     'react/jsx-props-no-spreading': 'off',
     'react/no-unused-prop-types': ['off'],
     'no-unused-vars': 'off',
+    'global-require': 'off',
     'react/prop-types': 'off',
     'react/require-default-props': 'off',
     'import/newline-after-import': 'error',
