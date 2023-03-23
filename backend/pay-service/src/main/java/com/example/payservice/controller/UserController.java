@@ -1,11 +1,16 @@
 package com.example.payservice.controller;
 
-import com.example.payservice.dto.AccountDto;
-import com.example.payservice.dto.PrizeHistoryDto;
+import com.example.payservice.common.response.ResponseService;
+import com.example.payservice.common.result.PageResult;
+import com.example.payservice.common.result.SingleResult;
+import com.example.payservice.dto.bank.AccountDto;
+import com.example.payservice.dto.prize.PrizeHistoryDto;
 import com.example.payservice.dto.request.WithdrawRequest;
+import com.example.payservice.dto.response.UserResponse;
 import com.example.payservice.dto.response.WithdrawResponse;
-import com.example.payservice.service.prize.PrizeService;
-import com.example.payservice.service.user.UserService;
+import com.example.payservice.dto.user.PayUserDto;
+import com.example.payservice.service.PrizeService;
+import com.example.payservice.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -25,31 +30,41 @@ public class UserController {
 
 	private final PrizeService prizeService;
 	private final UserService userService;
+	private final ResponseService responseService;
 
+	@PostMapping("/{userId}")
+	public SingleResult<PayUserDto> createUserInfo(@PathVariable Long userId) {
+		UserResponse user = userService.searchUserInDevDay(userId);
+		PayUserDto dto = userService.createPayUser(user.getUserId());
+
+		return responseService.getSingleResult(dto);
+	}
 	@GetMapping("/{userId}")
-	public ResponseEntity<?> getUserInfo(@PathVariable Long userId) {
-		return ResponseEntity.ok(userService.getPayUserInfo(userId));
+	public SingleResult<PayUserDto> getUserInfo(@PathVariable Long userId) {
+		return responseService.getSingleResult(userService.getPayUserInfo(userId));
 	}
 
 	@PostMapping("/{userId}/prize")
-	public ResponseEntity<?> withDrawPrize(@PathVariable Long userId,@RequestBody WithdrawRequest request) throws Exception {
+	public SingleResult<WithdrawResponse> withDrawPrize(
+			@PathVariable Long userId,
+			@RequestBody WithdrawRequest request
+	) {
 		ModelMapper mapper = new ModelMapper();
 		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 		AccountDto accountDto = mapper.map(request.getAccount(), AccountDto.class);
 
 		WithdrawResponse response = prizeService.withdraw(userId, request.getMoney(), accountDto);
-
-		return ResponseEntity.ok(response);
+		return responseService.getSingleResult(response);
 	}
 	@GetMapping("/{userId}/prize")
-	public ResponseEntity<?> getPrizeHistory(
+	public PageResult<PrizeHistoryDto> getPrizeHistory(
 			@PathVariable Long userId,
 			@RequestParam(required = false, defaultValue = "") String type,
 		    @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
 	) {
 		Page<PrizeHistoryDto> result = prizeService.searchHistories(userId, type, pageable);
 
-		return ResponseEntity.ok(result);
+		return responseService.getPageResult(result);
 	}
 
 	@PostMapping("/{userId}/deposit")

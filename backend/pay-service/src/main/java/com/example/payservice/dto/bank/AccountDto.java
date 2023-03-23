@@ -1,4 +1,4 @@
-package com.example.payservice.dto;
+package com.example.payservice.dto.bank;
 
 import lombok.Data;
 

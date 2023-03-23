@@ -1,6 +1,6 @@
 package com.example.payservice.dto.nhbank;
 
-import com.example.payservice.dto.AccountDto;
+import com.example.payservice.dto.bank.AccountDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
