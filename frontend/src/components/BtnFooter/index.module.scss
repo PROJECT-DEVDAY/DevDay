@@ -1,0 +1,18 @@
+.BfBox {
+  border-top: 2px solid gray;
+  padding: 15px;
+}
+.text {
+  display: flex;
+  width: fit-content;
+  align-items: end;
+  margin: auto;
+  padding-bottom: 15px;
+  user-select: none;
+  font-size: small;
+}
+.CheckBox {
+  height: fit-content;
+  margin-left: 5px;
+  height: 100%;
+}
