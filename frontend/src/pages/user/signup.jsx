@@ -2,15 +2,16 @@ import React from 'react';
 
 import style from './signup.module.scss';
 import { Button } from '../../components/Button';
-
 import { InputText } from '../../components/InputText';
 import { ReturnArrow } from '../../components/ReturnArrow';
 
 function signup(props) {
   return (
-    <div className="relative">
-      <ReturnArrow title="회원가입" />
-      <div className="p-7">
+    <div>
+      <div className="div-header sticky top-0 bg-white">
+        <ReturnArrow title="회원가입" />
+      </div>
+      <div className="div-body p-6">
         <InputText
           className="style.redInput"
           labelName="이메일"
@@ -24,7 +25,7 @@ function signup(props) {
         <InputText labelName="이름" content="홍길동" />
         <InputText labelName="닉네임" content="Devday챌린지" />
       </div>
-      <div className="text-center absolute inset-x-0 bottom-0">
+      <div className="div-footer text-center sticky bottom-0 p-4 bg-white">
         <Button color="primary" fill label="다음으로" />
         <span>회원 가입</span>
       </div>
