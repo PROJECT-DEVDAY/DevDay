@@ -26,7 +26,7 @@ public class ChallengeRoomRequestDto {
     private int userCount;
 
     /** 설명 **/
-    private String desc;
+    private String introduce;
 
 
     /** 챌린지 분류 **/

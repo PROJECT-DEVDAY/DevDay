@@ -46,7 +46,7 @@ public class ChallengeRoom {
 
     /** 설명 **/
     @Column(nullable = false)
-    private String desc;
+    private String introduce;
 
     /** 공개 / 비공개 여부(추후 추가) **/
 
@@ -91,7 +91,7 @@ public class ChallengeRoom {
                  .hostId(dto.getHostId())
                  .entryFee(dto.getEntryFee())
                  .userCount(dto.getUserCount())
-                 .desc(dto.getDesc())
+                 .introduce(dto.getIntroduce())
                  .type(dto.getType())
                  .startDate(dto.getStartDate())
                  .endDate(dto.getEndDate())
