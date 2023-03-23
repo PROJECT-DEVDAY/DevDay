@@ -7,11 +7,11 @@ pay-service:
     key: "${CI_JOB_NAME}"
     paths:
       - .sonar/cache
-  rules:
-    - if: true
-      changes:
-        - backend/pay-service/**/*
-      allow_failure: true
+  allow_failure: true
   script: cd backend/pay-service && gradle sonar
   only:
-    - develop
+    refs:
+      - develop
+    changes:
+      - backend/pay-service/**/*
+
