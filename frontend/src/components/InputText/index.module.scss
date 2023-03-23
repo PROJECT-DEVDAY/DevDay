@@ -2,7 +2,13 @@
   border-bottom: 2px solid #ff9b9b;
   width: 100%;
   margin-bottom: 8px;
-}
-.LabelName {
-  margin-bottom: 8px;
+
+  .LabelName {
+    font-size: 20px;
+    margin-bottom: 8px;
+  }
+
+  .content {
+    background-color: var(--grey-bg);
+  }
 }

@@ -11,7 +11,11 @@ export const InputText = ({ labelName, content }) => {
       <div className={classnames('font-bold', style.LabelName)}>
         {labelName}
       </div>
-      <input type="text" placeholder={content} className=" w-full h-6" />
+      <input
+        type="text"
+        placeholder={content}
+        className={classnames(style.content, `w-full h-6`)}
+      />
     </div>
   );
 };
