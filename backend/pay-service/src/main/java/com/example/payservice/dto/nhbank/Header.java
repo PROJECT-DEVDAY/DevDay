@@ -1,12 +1,14 @@
-package com.example.payservice.vo.nhbank;
+package com.example.payservice.dto.nhbank;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.core.env.Environment;
 
-import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * NH오픈플랫폼 간편결제(입금이체)를 위한 파라미터로 활용됩니다.
@@ -52,4 +54,26 @@ public class Header {
     // Access Token
     @JsonProperty("AccessToken")
     private String accessToken;
+
+    /**
+     * 농협 API로 사용될 헤더를 반환합니다.
+     * @param env
+     * @param apiNm
+     * @return
+     */
+    public static Header createNHApiHeader(Environment env, String apiNm) {
+        Date now = new Date();
+        String dateTime = new SimpleDateFormat("yyyyMMddHHmmssSSSS")
+                .format(now);
+        return Header.builder()
+                .apiNm(apiNm)
+                .tsymd(dateTime.substring(0, 8))
+                .trtm(dateTime.substring(8, 14))
+                .iscd(env.getProperty("openapi.nonghyup.iscd"))
+                .fintechApsno(env.getProperty("openapi.nonghyup.fintechApsno"))
+                .apiSvcCd(env.getProperty("openapi.nonghyup.apiSvcCd"))
+                .isTuno(String.valueOf(now.getTime()))
+                .accessToken(env.getProperty("openapi.nonghyup.accessToken"))
+                .build();
+    }
 }
