@@ -10,7 +10,7 @@
   background-color: #fff;
   font-size: 1rem;
   cursor: pointer;
-  border: 2px solid #c9c9c9;
+  border: 2px solid var(--grey-border);
   display: flex;
 }
 .icon {
