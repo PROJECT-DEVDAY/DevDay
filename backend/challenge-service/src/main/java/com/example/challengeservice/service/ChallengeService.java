@@ -1,5 +1,6 @@
 package com.example.challengeservice.service;
 
+import com.example.challengeservice.dto.request.ChallengeRecordRequestDto;
 import com.example.challengeservice.dto.request.ChallengeRoomRequestDto;
 import com.example.challengeservice.dto.response.ChallengeRoomResponseDto;
 import com.example.challengeservice.dto.response.SimpleChallengeResponseDto;
@@ -18,4 +19,7 @@ public interface ChallengeService {
     List<SimpleChallengeResponseDto> getListSimpleChallenge (String type , String search , int size , Long offset);
     /** 푼 문제 리스트 찾기 **/
     SolvedListResponseDto solvedProblemList(String baekjoonId);
+
+    /** 사진 인증 기록 생성하기 **/
+    void createPhotoRecord (ChallengeRecordRequestDto requestDto) throws IOException;
 }

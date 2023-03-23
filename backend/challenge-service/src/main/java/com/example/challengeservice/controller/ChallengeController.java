@@ -2,12 +2,14 @@ package com.example.challengeservice.controller;
 
 import com.example.challengeservice.common.response.ResponseService;
 import com.example.challengeservice.common.result.SingleResult;
+import com.example.challengeservice.dto.request.ChallengeRecordRequestDto;
 import com.example.challengeservice.dto.request.ChallengeRoomRequestDto;
 import com.example.challengeservice.dto.response.ChallengeCreateResponseDto;
 import com.example.challengeservice.dto.response.ChallengeRoomResponseDto;
 import com.example.challengeservice.dto.response.SimpleChallengeResponseDto;
 import com.example.challengeservice.dto.response.SolvedListResponseDto;
 import com.example.challengeservice.service.ChallengeServiceImpl;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
 
@@ -36,7 +39,6 @@ public class ChallengeController {
      * 챌린지 생성 **/
     @PostMapping()
     public ResponseEntity<ChallengeCreateResponseDto> createChallenge(@ModelAttribute ChallengeRoomRequestDto challengeRoomRequestDto) throws IOException {
-        log.info(challengeRoomRequestDto.getType()+"어떤타입");
         Long id=challengeService.createChallenge(challengeRoomRequestDto);
         String message="[Success] 챌린지 방이 생성되었습니다.";
         return ResponseEntity.status(HttpStatus.CREATED).body(ChallengeCreateResponseDto.from(id, message));
@@ -81,6 +83,31 @@ public class ChallengeController {
 
     }
 
+
+    /** 사진 인증 저장 **/
+    @PostMapping("record")
+    public ResponseEntity<String> createChallengeRecord(@ModelAttribute ChallengeRecordRequestDto requestDto) throws IOException{
+
+        challengeService.createPhotoRecord(requestDto);
+        return ResponseEntity.status(HttpStatus.OK).body("인증기록 저장완료");
+    }
+
+    /** 나의 인증 기록 불러오기 **/
+
+    @GetMapping("record/self")
+    public ResponseEntity<String> getSelfChallengeRecord(){
+
+        return null;
+    }
+
+
+    /** 팀원의 인증 기록 불러오기 **/
+
+    @GetMapping("record/team")
+    public ResponseEntity<String> getTeamChallengeRecord(){
+
+        return null;
+    }
 
 
 }

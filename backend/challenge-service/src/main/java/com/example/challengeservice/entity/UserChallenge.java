@@ -25,7 +25,6 @@ public class UserChallenge {
     @JoinColumn(name="CHALLENGE_ID")
     private ChallengeRoom challengeRoom;
 
-
     @Column(nullable = false)
     private Long userId;
     @Column(nullable = false)

@@ -12,6 +12,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.List;
 
+import static com.example.challengeservice.entity.QChallengeRoom.challengeRoom;
 import static org.springframework.data.domain.Sort.Order.desc;
 
 @RequiredArgsConstructor
@@ -19,21 +20,19 @@ import static org.springframework.data.domain.Sort.Order.desc;
 public class ChallengeRoomRepoCustomImpl  implements ChallengeRoomRepoCustom{
 
     private final JPAQueryFactory jpaQueryFactory;
-    private final QChallengeRoom qChallengeRoom = QChallengeRoom.challengeRoom;
 
     @Override
     public List<ChallengeRoom> getSimpleChallengeList(SearchParam searchParam) {
 
 
         return jpaQueryFactory
-                .selectFrom(qChallengeRoom)
+                .selectFrom(challengeRoom)
                 .where(hasSearch(searchParam.getSearch()),
                         hasOffset(searchParam.getOffset())
-                        ,qChallengeRoom.type.eq(searchParam.getType())
-                                ,qChallengeRoom.startDate.lt(searchParam.getNowDate())
+                        ,challengeRoom.type.eq(searchParam.getType())
+                                ,challengeRoom.startDate.lt(searchParam.getNowDate())
                         )
-                        .orderBy(qChallengeRoom.id.desc()).
-
+                        .orderBy(challengeRoom.id.desc()).
                 limit(searchParam.getSize()).
                 fetch();
 
@@ -46,7 +45,7 @@ public class ChallengeRoomRepoCustomImpl  implements ChallengeRoomRepoCustom{
             return null;
         }
         System.out.println("검색값있음"+search);
-        return qChallengeRoom.title.like("%"+search+"%");
+        return challengeRoom.title.like("%"+search+"%");
     }
     //offset이 존재하는지
 
@@ -54,7 +53,7 @@ public class ChallengeRoomRepoCustomImpl  implements ChallengeRoomRepoCustom{
         if (offset==null) {
             return null;
         }
-        return qChallengeRoom.id.lt(offset);
+        return challengeRoom.id.lt(offset);
     }
 
 }
