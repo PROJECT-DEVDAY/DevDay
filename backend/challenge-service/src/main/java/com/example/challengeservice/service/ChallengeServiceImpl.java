@@ -2,11 +2,8 @@ package com.example.challengeservice.service;
 
 import com.example.challengeservice.dto.request.ChallengeRoomRequestDto;
 import com.example.challengeservice.dto.response.ChallengeRoomResponseDto;
-<<<<<<< Updated upstream
 import com.example.challengeservice.dto.response.SimpleChallengeResponseDto;
-=======
 import com.example.challengeservice.dto.response.SolvedListResponseDto;
->>>>>>> Stashed changes
 import com.example.challengeservice.entity.ChallengeRoom;
 import com.example.challengeservice.entity.UserChallenge;
 import com.example.challengeservice.exception.ApiException;
@@ -16,15 +13,12 @@ import com.example.challengeservice.infra.amazons3.service.AmazonS3Service;
 import com.example.challengeservice.repository.ChallengeRoomRepoCustomImpl;
 import com.example.challengeservice.repository.ChallengeRoomRepository;
 import com.example.challengeservice.repository.UserChallengeRepository;
-<<<<<<< Updated upstream
 import lombok.extern.slf4j.Slf4j;
-=======
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
->>>>>>> Stashed changes
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.modelmapper.convention.MatchingStrategies;
@@ -33,13 +27,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-<<<<<<< Updated upstream
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-=======
 import java.util.ArrayList;
->>>>>>> Stashed changes
 import java.util.List;
 import java.util.Optional;
 

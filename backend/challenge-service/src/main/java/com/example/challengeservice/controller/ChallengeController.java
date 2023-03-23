@@ -5,11 +5,8 @@ import com.example.challengeservice.common.result.SingleResult;
 import com.example.challengeservice.dto.request.ChallengeRoomRequestDto;
 import com.example.challengeservice.dto.response.ChallengeCreateResponseDto;
 import com.example.challengeservice.dto.response.ChallengeRoomResponseDto;
-<<<<<<< Updated upstream
 import com.example.challengeservice.dto.response.SimpleChallengeResponseDto;
-=======
 import com.example.challengeservice.dto.response.SolvedListResponseDto;
->>>>>>> Stashed changes
 import com.example.challengeservice.service.ChallengeServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -83,7 +80,6 @@ public class ChallengeController {
 
 
     }
-
 
 
 
