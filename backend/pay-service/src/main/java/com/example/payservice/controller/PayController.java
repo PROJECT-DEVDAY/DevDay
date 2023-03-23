@@ -1,9 +1,9 @@
 package com.example.payservice.controller;
 
+import com.example.payservice.dto.tosspayments.FailRequest;
+import com.example.payservice.dto.tosspayments.Payment;
+import com.example.payservice.dto.tosspayments.SuccessRequest;
 import com.example.payservice.service.PayService;
-import com.example.payservice.vo.tosspayments.FailRequest;
-import com.example.payservice.vo.tosspayments.Payment;
-import com.example.payservice.vo.tosspayments.SuccessRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

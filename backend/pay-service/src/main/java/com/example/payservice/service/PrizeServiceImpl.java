@@ -1,23 +1,28 @@
 package com.example.payservice.service;
 
+import com.example.payservice.client.ChallengeServiceClient;
 import com.example.payservice.client.UserServiceClient;
 import com.example.payservice.dto.AccountDto;
+import com.example.payservice.dto.PrizeHistoryDto;
 import com.example.payservice.dto.RewardSaveDto;
-import com.example.payservice.entity.UserEntity;
-import com.example.payservice.entity.bank.AccountEntity;
-import com.example.payservice.entity.prize.PrizeHistoryEntity;
+import com.example.payservice.entity.PayUserEntity;
+import com.example.payservice.entity.AccountEntity;
+import com.example.payservice.entity.PrizeHistoryEntity;
 import com.example.payservice.enums.Bank;
+import com.example.payservice.repository.PayUserRepository;
 import com.example.payservice.repository.PrizeHistoryRepository;
-import com.example.payservice.repository.UserRepository;
+
 import com.example.payservice.enums.PrizeHistoryType;
-import com.example.payservice.vo.external.ResponseWithdraw;
-import com.example.payservice.vo.nhbank.Header;
-import com.example.payservice.vo.nhbank.RequestTransfer;
+import com.example.payservice.dto.response.WithdrawResponse;
+import com.example.payservice.dto.nhbank.Header;
+import com.example.payservice.dto.nhbank.RequestTransfer;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.core.env.Environment;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -28,6 +33,7 @@ import reactor.core.publisher.Mono;
 import javax.transaction.Transactional;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -35,13 +41,15 @@ import java.util.Date;
 public class PrizeServiceImpl implements PrizeService {
 
     private final Environment env;
+
+    private final ChallengeServiceClient challengeServiceClient;
     private final UserServiceClient userServiceClient;
-    private final UserRepository userRepository;
+    private final PayUserRepository payUserRepository;
     private final PrizeHistoryRepository prizeHistoryRepository;
 
     @Override
     @Transactional
-    public ResponseWithdraw withdraw(long userId, int money, AccountDto account) throws Exception {
+    public WithdrawResponse withdraw(long userId, int money, AccountDto account) throws Exception {
         log.info("accountDto 조회하기 -> {}", account);
         // 유저의 존재여부를 확인한다.
 //        ResponseUser responseUser = null;
@@ -54,8 +62,8 @@ public class PrizeServiceImpl implements PrizeService {
 //            throw new Exception("유저 서비스에서 정보를 가져오는데 실패했습니다.");
 //        }
         // 유저의 출금가능금액과 요청 금액을 비교해본다.
-        UserEntity userEntity = userRepository.findByUserId(userId);
-        if(userEntity.getPrize() < money) {
+        PayUserEntity payUserEntity = payUserRepository.findByUserId(userId);
+        if(payUserEntity.getPrize() < money) {
             throw new Exception("출금할 상금 금액이 저장된 금액보다 큽니다.");
         }
         /*
@@ -65,20 +73,19 @@ public class PrizeServiceImpl implements PrizeService {
 
         // 출금을 반영합니다.
         boolean result = transferMoney(account, money);
-
         // 출금이력을 기록합니다.
         PrizeHistoryEntity prizeHistory = PrizeHistoryEntity.builder()
-                .userId(userId)
+                .id(String.valueOf(UUID.randomUUID()))
                 .prizeHistoryType(PrizeHistoryType.OUT)
                 .amount(money)
                 .accountEntity(new ModelMapper().map(account, AccountEntity.class))
                 .build();
 
         // transaction 반영
-        userEntity.setPrize(userEntity.getPrize() - money);
+        prizeHistory.setUser(payUserEntity);
         prizeHistoryRepository.save(prizeHistory);
 
-        ResponseWithdraw response = new ResponseWithdraw(result, userEntity.getPrize());
+        WithdrawResponse response = new WithdrawResponse(result, payUserEntity.getPrize());
         return response;
     }
 
@@ -96,20 +103,32 @@ public class PrizeServiceImpl implements PrizeService {
 //            throw new Exception("유저 서비스에서 정보를 가져오는데 실패했습니다.");
 //        }
         // 유저의 출금가능금액과 요청 금액을 비교해본다.
-        UserEntity userEntity = userRepository.findByUserId(rewardSaveDto.getUserId());
+        PayUserEntity payUserEntity = payUserRepository.findByUserId(rewardSaveDto.getUserId());
 
         // TODO: 챌린지 ID가 존재하는 지
 
         PrizeHistoryEntity prizeHistory = PrizeHistoryEntity.builder()
-                .userId(userEntity.getUserId())
+                .id(String.valueOf(UUID.randomUUID()))
                 .challengeId(rewardSaveDto.getChallengeId())
                 .prizeHistoryType(PrizeHistoryType.IN)
                 .amount(rewardSaveDto.getAmount())
                 .build();
 
         // transaction 반영
-        userEntity.setPrize(userEntity.getPrize() + rewardSaveDto.getAmount());
+        prizeHistory.setUser(payUserEntity);
         prizeHistoryRepository.save(prizeHistory);
+    }
+
+    @Override
+    public Page<PrizeHistoryDto> searchHistories(Long userId, String type, Pageable pageable) {
+        PayUserEntity user = payUserRepository.findByUserId(userId);
+
+        // TODO: 챌린지 정보 반영하기
+        Page<PrizeHistoryDto> pages =  prizeHistoryRepository
+                .findAllByUserAndPrizeHistoryType(user, String.valueOf(type).isEmpty() ? null : type, pageable)
+                .map(PrizeHistoryDto::from);
+
+        return pages;
     }
 
     private boolean transferMoney(AccountDto accountDto, int money) {

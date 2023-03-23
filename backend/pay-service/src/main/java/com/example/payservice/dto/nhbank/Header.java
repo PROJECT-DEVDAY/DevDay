@@ -1,12 +1,10 @@
-package com.example.payservice.vo.nhbank;
+package com.example.payservice.dto.nhbank;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.io.Serializable;
 
 /**
  * NH오픈플랫폼 간편결제(입금이체)를 위한 파라미터로 활용됩니다.

@@ -1,4 +1,4 @@
-package com.example.payservice.vo.nhbank;
+package com.example.payservice.dto.nhbank;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;

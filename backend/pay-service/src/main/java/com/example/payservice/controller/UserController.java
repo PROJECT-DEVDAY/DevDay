@@ -1,12 +1,17 @@
 package com.example.payservice.controller;
 
 import com.example.payservice.dto.AccountDto;
+import com.example.payservice.dto.PrizeHistoryDto;
+import com.example.payservice.dto.request.WithdrawRequest;
 import com.example.payservice.service.PayService;
 import com.example.payservice.service.PrizeService;
-import com.example.payservice.vo.external.RequestWithdraw;
 
-import com.example.payservice.vo.external.ResponseWithdraw;
+import com.example.payservice.dto.response.WithdrawResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,18 +34,24 @@ public class UserController {
 	}
 
 	@PostMapping("/{userId}/prize")
-	public ResponseEntity<?> withDrawPrize(@PathVariable Long userId,@RequestBody RequestWithdraw request) throws Exception {
+	public ResponseEntity<?> withDrawPrize(@PathVariable Long userId,@RequestBody WithdrawRequest request) throws Exception {
 		ModelMapper mapper = new ModelMapper();
 		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 		AccountDto accountDto = mapper.map(request.getAccount(), AccountDto.class);
 
-		ResponseWithdraw response = prizeService.withdraw(userId, request.getMoney(), accountDto);
+		WithdrawResponse response = prizeService.withdraw(userId, request.getMoney(), accountDto);
 
 		return ResponseEntity.ok(response);
 	}
 	@GetMapping("/{userId}/prize")
-	public ResponseEntity<?> getPrizeHistory(@PathVariable String userId) {
-		return null;
+	public ResponseEntity<?> getPrizeHistory(
+			@PathVariable Long userId,
+			@RequestParam(required = false, defaultValue = "") String type,
+		    @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
+	) {
+		Page<PrizeHistoryDto> result = prizeService.searchHistories(userId, type, pageable);
+
+		return ResponseEntity.ok(result);
 	}
 
 	@PostMapping("/{userId}/deposit")
