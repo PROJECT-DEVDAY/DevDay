@@ -93,3 +93,6 @@ spring:
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/pay-service/(?<segment>.*), /$\{segment}
+
+token:
+  secret:
