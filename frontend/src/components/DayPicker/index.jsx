@@ -8,7 +8,7 @@ import style from './index.module.scss';
 
 import 'react-datepicker/dist/react-datepicker.css';
 
-export default function DayPicker() {
+export const DayPicker = () => {
   const [startDate, setStartDate] = useState(new Date());
   return (
     <label className={style.DateBox} htmlFor="dayPicker">
@@ -21,4 +21,4 @@ export default function DayPicker() {
       <FiCalendar className={style.Icon} />
     </label>
   );
-}
+};

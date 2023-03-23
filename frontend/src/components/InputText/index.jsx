@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 import style from './index.module.scss';
 
-export const InputUser = ({ labelName, content }) => {
+export const InputText = ({ labelName, content }) => {
   return (
     <div className="w-full mb-5">
       <div className={classnames(style.LabelName)}>{labelName}</div>
@@ -18,12 +18,12 @@ export const InputUser = ({ labelName, content }) => {
   );
 };
 
-InputUser.propTypes = {
+InputText.propTypes = {
   labelName: PropTypes.string,
   content: PropTypes.string,
 };
 
-InputUser.defaultProps = {
+InputText.defaultProps = {
   labelName: '비밀번호',
   content: null,
 };
