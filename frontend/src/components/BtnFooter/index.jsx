@@ -4,9 +4,9 @@ import classnames from 'classnames';
 import PropTypes from 'prop-types';
 
 import style from './index.module.scss';
-import Button from '../Button';
+import { Button } from '../Button';
 
-export const BtnFooter = ({ content, className, label, ...props }) => {
+export const BtnFooter = ({ content, className, label, color, ...props }) => {
   return (
     <div className={style.BfBox}>
       <label htmlFor="agree" className={style.text}>
@@ -17,15 +17,19 @@ export const BtnFooter = ({ content, className, label, ...props }) => {
           className={classnames(style.CheckBox, 'checked:bg-blue-500 ...')}
         />
       </label>
-      <Button />
+      <Button label={label} />
     </div>
   );
 };
 
 BtnFooter.propTypes = {
   content: PropTypes.string,
+  label: PropTypes.string,
+  color: PropTypes.string,
 };
 
 BtnFooter.defaultProps = {
   content: 'primary',
+  label: null,
+  color: null,
 };
