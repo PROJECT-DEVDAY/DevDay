@@ -1,10 +1,10 @@
 .ContentInput {
   width: 100%;
   border-radius: 10px;
-  background-color: #efefef;
+  background-color: var(--grey-bg);
   font-size: 1rem;
   cursor: pointer;
-  border: 2px solid #c9c9c9;
+  border: 2px solid var(--grey-border);
   padding: 10px;
   height: 62px;
 }
