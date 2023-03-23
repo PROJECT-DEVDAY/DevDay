@@ -38,9 +38,6 @@ public class PrizeHistoryEntity extends BaseEntity {
     @ColumnDefault("0")
     private Integer amount;
 
-//    @Column(name = "withdraw_id")
-//    private String withdrawId;
-
     @Embedded
     private AccountEntity accountEntity;
 }

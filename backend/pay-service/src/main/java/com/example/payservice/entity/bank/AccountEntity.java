@@ -2,7 +2,6 @@ package com.example.payservice.entity.bank;
 
 import lombok.*;
 import org.hibernate.annotations.Comment;
-
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 @Getter
