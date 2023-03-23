@@ -6,9 +6,11 @@ import com.example.payservice.dto.RewardSaveDto;
 import com.example.payservice.entity.UserEntity;
 import com.example.payservice.entity.bank.AccountEntity;
 import com.example.payservice.entity.prize.PrizeHistoryEntity;
+import com.example.payservice.enums.Bank;
 import com.example.payservice.repository.PrizeHistoryRepository;
 import com.example.payservice.repository.UserRepository;
 import com.example.payservice.enums.PrizeHistoryType;
+import com.example.payservice.vo.external.ResponseWithdraw;
 import com.example.payservice.vo.nhbank.Header;
 import com.example.payservice.vo.nhbank.RequestTransfer;
 
@@ -39,7 +41,7 @@ public class PrizeServiceImpl implements PrizeService {
 
     @Override
     @Transactional
-    public boolean withdraw(long userId, int money, AccountDto account) throws Exception {
+    public ResponseWithdraw withdraw(long userId, int money, AccountDto account) throws Exception {
         log.info("accountDto 조회하기 -> {}", account);
         // 유저의 존재여부를 확인한다.
 //        ResponseUser responseUser = null;
@@ -62,7 +64,7 @@ public class PrizeServiceImpl implements PrizeService {
         */
 
         // 출금을 반영합니다.
-        transferMoney(account, money);
+        boolean result = transferMoney(account, money);
 
         // 출금이력을 기록합니다.
         PrizeHistoryEntity prizeHistory = PrizeHistoryEntity.builder()
@@ -76,7 +78,8 @@ public class PrizeServiceImpl implements PrizeService {
         userEntity.setPrize(userEntity.getPrize() - money);
         prizeHistoryRepository.save(prizeHistory);
 
-        return true;
+        ResponseWithdraw response = new ResponseWithdraw(result, userEntity.getPrize());
+        return response;
     }
 
     @Override
@@ -116,7 +119,10 @@ public class PrizeServiceImpl implements PrizeService {
                 .build();
 
         String bankCode = accountDto.getBankCode();
-        if("011".equals(bankCode) || "012".equals(bankCode)) {
+        if(
+                Bank.NONGHYEOP.getCode().equals(bankCode) ||
+                Bank.LOCALNONGHYEOP.getCode().equals(bankCode)
+        ) {
             return transferMoneyNH(client, accountDto, money);
         }
 
