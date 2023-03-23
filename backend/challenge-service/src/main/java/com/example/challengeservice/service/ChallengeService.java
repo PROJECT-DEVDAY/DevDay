@@ -3,6 +3,7 @@ package com.example.challengeservice.service;
 import com.example.challengeservice.dto.request.ChallengeRecordRequestDto;
 import com.example.challengeservice.dto.request.ChallengeRoomRequestDto;
 import com.example.challengeservice.dto.response.ChallengeRoomResponseDto;
+import com.example.challengeservice.dto.response.PhotoRecordResponseDto;
 import com.example.challengeservice.dto.response.SimpleChallengeResponseDto;
 import com.example.challengeservice.dto.response.SolvedListResponseDto;
 
@@ -22,4 +23,8 @@ public interface ChallengeService {
 
     /** 사진 인증 기록 생성하기 **/
     void createPhotoRecord (ChallengeRecordRequestDto requestDto) throws IOException;
+
+    /** 개인 사진 인증 기록 가져오기 **/
+
+    List<PhotoRecordResponseDto> getSelfPhotoRecord(Long challengeId , Long userId , Integer size);
 }

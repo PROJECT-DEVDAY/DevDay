@@ -3,6 +3,7 @@ package com.example.challengeservice.service;
 import com.example.challengeservice.dto.request.ChallengeRecordRequestDto;
 import com.example.challengeservice.dto.request.ChallengeRoomRequestDto;
 import com.example.challengeservice.dto.response.ChallengeRoomResponseDto;
+import com.example.challengeservice.dto.response.PhotoRecordResponseDto;
 import com.example.challengeservice.dto.response.SimpleChallengeResponseDto;
 import com.example.challengeservice.dto.response.SolvedListResponseDto;
 import com.example.challengeservice.entity.ChallengeRecord;
@@ -12,10 +13,7 @@ import com.example.challengeservice.exception.ApiException;
 import com.example.challengeservice.exception.ExceptionEnum;
 import com.example.challengeservice.infra.amazons3.querydsl.SearchParam;
 import com.example.challengeservice.infra.amazons3.service.AmazonS3Service;
-import com.example.challengeservice.repository.ChallengeRecordRepository;
-import com.example.challengeservice.repository.ChallengeRoomRepoCustomImpl;
-import com.example.challengeservice.repository.ChallengeRoomRepository;
-import com.example.challengeservice.repository.UserChallengeRepository;
+import com.example.challengeservice.repository.*;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -31,8 +29,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -47,15 +43,17 @@ public class ChallengeServiceImpl implements ChallengeService{
     private ChallengeRoomRepoCustomImpl challengeRoomRepoCustom;
     private CommonServiceImpl commonService;
     private ChallengeRecordRepository challengeRecordRepository;
+    private ChallengeRecordRepoCustomImpl recordRepoCustom;
 
     @Autowired
-    public ChallengeServiceImpl(UserChallengeRepository userChallengeRepository, ChallengeRoomRepository challengeRoomRepository, AmazonS3Service amazonS3Service, ChallengeRoomRepoCustomImpl challengeRoomRepoCustom, CommonServiceImpl commonService,ChallengeRecordRepository challengeRecordRepository) {
+    public ChallengeServiceImpl(UserChallengeRepository userChallengeRepository, ChallengeRoomRepository challengeRoomRepository, AmazonS3Service amazonS3Service, ChallengeRoomRepoCustomImpl challengeRoomRepoCustom, CommonServiceImpl commonService,ChallengeRecordRepository challengeRecordRepository ,ChallengeRecordRepoCustomImpl recordRepoCustom) {
         this.userChallengeRepository = userChallengeRepository;
         this.challengeRoomRepository = challengeRoomRepository;
         this.amazonS3Service = amazonS3Service;
         this.challengeRoomRepoCustom = challengeRoomRepoCustom;
         this.commonService = commonService;
         this.challengeRecordRepository = challengeRecordRepository;
+        this.recordRepoCustom = recordRepoCustom;
     }
 
 
@@ -197,6 +195,21 @@ public class ChallengeServiceImpl implements ChallengeService{
 
     }
 
+    /** 사진 인증 개인 조회ㅏ  **/
+    @Override
+    public List<PhotoRecordResponseDto> getSelfPhotoRecord(Long challengeRoomId, Long userId, Integer size) {
 
+        //userChallenge 값을 찾아야함
+
+      UserChallenge userChallenge =  userChallengeRepository.findByChallengeRoomIdAndUserId(challengeRoomId , userId).orElseThrow(()->new ApiException(ExceptionEnum.USER_CHALLENGE_NOT_EXIST_EXCEPTION));
+
+
+        List<PhotoRecordResponseDto> challengeRecords = recordRepoCustom.getSelfPhotoRecord(userChallenge, size ,"20222");
+
+    /*    ModelMapper modelMapper = new ModelMapper();
+        Type listType = new TypeToken<List<PhotoRecordResponseDto>>() {}.getType(); // 리스트 타입 지정
+        List<PhotoRecordResponseDto> dtoList = modelMapper.map(challengeRecords, listType); // 변환*/
+        return challengeRecords;
+    }
     //인증 정보 저장 (알고리즘 , 커밋)
 }
