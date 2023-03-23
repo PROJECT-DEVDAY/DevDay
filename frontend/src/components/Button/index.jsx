@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 import style from './index.module.scss';
 
-export default function Button({ color, fill, className, label, ...props }) {
+export const Button = ({ color, fill, className, label, ...props }) => {
   return (
     <button
       type="button"
@@ -20,7 +20,7 @@ export default function Button({ color, fill, className, label, ...props }) {
       {label}
     </button>
   );
-}
+};
 
 Button.propTypes = {
   color: PropTypes.string,

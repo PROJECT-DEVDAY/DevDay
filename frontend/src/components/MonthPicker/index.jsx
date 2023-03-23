@@ -8,7 +8,7 @@ import style from './index.module.scss';
 
 import 'react-datepicker/dist/react-datepicker.css';
 
-export default function MonthPicker() {
+export const MonthPicker = () => {
   const [startDate, setStartDate] = useState(new Date());
   return (
     <label className={style.DateBox} htmlFor="month-picker">
@@ -22,4 +22,4 @@ export default function MonthPicker() {
       <FiCalendar className={style.Icon} />
     </label>
   );
-}
+};

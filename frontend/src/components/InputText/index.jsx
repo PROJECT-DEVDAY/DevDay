@@ -5,20 +5,20 @@ import PropTypes from 'prop-types';
 
 import style from './index.module.scss';
 
-export default function InputUser({
+export const InputText = ({
   labelName,
   content,
   className,
   label,
   ...props
-}) {
+}) => {
   return (
     <div>
       <div className="relative mb-3 xl:w-96" data-te-input-wrapper-init>
         <input
           type="text"
           className={classnames(
-            style.InputUser,
+            style.InputText,
             'peer block min-h-[auto] w-full bg-transparent py-[0.32rem] px-3 leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0',
           )}
           value={content}
@@ -36,14 +36,14 @@ export default function InputUser({
       </div>
     </div>
   );
-}
+};
 
-InputUser.propTypes = {
+InputText.propTypes = {
   labelName: PropTypes.string,
   content: PropTypes.string,
 };
 
-InputUser.defaultProps = {
+InputText.defaultProps = {
   labelName: '비밀번호',
   content: null,
 };

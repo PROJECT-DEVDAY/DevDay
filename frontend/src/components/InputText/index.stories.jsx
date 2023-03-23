@@ -1,11 +1,11 @@
 import React from 'react';
 
-import InputUser from '.';
+import { InputText } from '.';
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
-  title: 'DevDay/Atoms/InputUser',
-  component: InputUser,
+  title: 'DevDay/Atoms/InputText',
+  component: InputText,
   // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
   argTypes: {
     color: {
@@ -17,7 +17,7 @@ export default {
 };
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
-const Template = args => <InputUser {...args} />;
+const Template = args => <InputText {...args} />;
 
 export const Primary = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
