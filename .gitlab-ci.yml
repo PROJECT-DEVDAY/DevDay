@@ -10,6 +10,7 @@ pay-service:
   rules:
     - if: true
       changes:
+        paths:
           - backend/pay-service/**/*
   script: cd backend/pay-service && gradle sonar
   allow_failure: true
