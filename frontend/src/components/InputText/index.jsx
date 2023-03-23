@@ -8,10 +8,12 @@ import style from './index.module.scss';
 export const InputText = ({ labelName, content }) => {
   return (
     <div className="w-full mb-5">
-      <div className={classnames(style.LabelName)}>{labelName}</div>
+      <div className={classnames('font-bold', style.LabelName)}>
+        {labelName}
+      </div>
       <input
         type="text"
-        className={classnames(style.InputUser)}
+        className={classnames(style.InputText)}
         placeholder={content}
       />
     </div>
