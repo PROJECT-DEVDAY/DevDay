@@ -70,7 +70,6 @@ public class ChallengeRoom {
     private String status;
 
     /** 최소 커밋 수 **/
-
     private int commitCount;
 
     /** 최소 알고리즘 문제 수 **/

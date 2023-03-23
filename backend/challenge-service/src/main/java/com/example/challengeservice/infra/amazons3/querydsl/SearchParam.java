@@ -9,13 +9,8 @@ import lombok.Data;
 public class SearchParam {
     String type;
     String search;
-
     int size;
     Long offset;
-
     String nowDate;
-
-
-
 
 }

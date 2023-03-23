@@ -9,5 +9,7 @@ import java.util.Optional;
 public interface UserChallengeRepository extends JpaRepository<UserChallenge,Long> {
     Optional<UserChallenge> findByChallengeRoomIdAndUserId(Long challengeId, Long userId);
 //    List<UserChallenge> findAllByChallengeId(Long challengeId);
+
+    Optional<UserChallenge> findById(Long id);
     int countByChallengeRoomId(Long challengeId);
 }
