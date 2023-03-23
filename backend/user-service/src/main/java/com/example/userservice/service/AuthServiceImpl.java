@@ -1,8 +1,13 @@
 package com.example.userservice.service;
 
+import com.example.userservice.client.ChallengeServiceClient;
+import com.example.userservice.client.PayServiceClient;
 import com.example.userservice.dto.request.GithubBaekjoonRequestDto;
 import com.example.userservice.dto.request.NicknameRequestDto;
 import com.example.userservice.dto.request.PasswordRequestDto;
+import com.example.userservice.dto.response.ChallengeResponseDto;
+import com.example.userservice.dto.response.MoneyResponseDto;
+import com.example.userservice.dto.response.MypageResponseDto;
 import com.example.userservice.dto.response.ProfileResponseDto;
 import com.example.userservice.entity.User;
 import com.example.userservice.exception.ApiException;
@@ -25,6 +30,10 @@ public class AuthServiceImpl implements AuthService {
     private final AmazonS3Service amazonS3Service;
 
     private final PasswordEncoder passwordEncoder;
+
+    private final PayServiceClient payServiceClient;
+
+    private final ChallengeServiceClient challengeServiceClient;
 
     @Override
     @Transactional
@@ -96,6 +105,15 @@ public class AuthServiceImpl implements AuthService {
     public ProfileResponseDto getProfileDetail(Long userId) {
         User user = getUser(userId);
         return ProfileResponseDto.from(user);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public MypageResponseDto getMypageInfo(Long userId) {
+        User user = getUser(userId);
+        ChallengeResponseDto challengeResponseDto = challengeServiceClient.getChallengeInfo(userId);
+        MoneyResponseDto moneyResponseDto = payServiceClient.getMoneyInfo(userId);
+        return MypageResponseDto.of(user, challengeResponseDto, moneyResponseDto);
     }
 
     private String saveS3Img(MultipartFile profileImg) {
