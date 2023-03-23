@@ -70,10 +70,7 @@ public class UserServiceImpl implements UserService{
 
         redisService.setValues(refreshToken, user.getId());
 
-        return TokenResponseDto.builder()
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
-                .build();
+        return TokenResponseDto.of(accessToken, refreshToken);
     }
 
     @Override
@@ -108,10 +105,7 @@ public class UserServiceImpl implements UserService{
         Optional<User> user = userRepository.findByEmail(email);
         if (user.isPresent()) throw new ApiException(ExceptionEnum.MEMBER_EXIST_EXCEPTION);
 
-        EmailAuth emailAuth = EmailAuth.builder()
-                .email(email)
-                .authToken(UUID.randomUUID().toString())
-                .build();
+        EmailAuth emailAuth = EmailAuth.of(email, UUID.randomUUID().toString());
 
         EmailAuth saveEmailAuth = emailAuthRepository.save(emailAuth);
 
