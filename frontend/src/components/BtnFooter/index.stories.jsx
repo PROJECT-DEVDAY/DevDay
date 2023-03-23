@@ -23,4 +23,6 @@ export const Primary = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 Primary.args = {
   content: '결제 조건 및 서비스 약관에 동의합니다',
+  label: null,
+  color: null,
 };
