@@ -2,6 +2,8 @@ import React, { useEffect, useState, useRef } from 'react';
 
 import style from './index.module.scss';
 
+import { FiPlus } from 'react-icons/fi';
+
 export const UserAvatar = props => {
   const [imgFile, setImgeFile] = useState('');
 
@@ -16,9 +18,7 @@ export const UserAvatar = props => {
     if (e.target.files[0]) {
       setImgeFile(e.target.files[0]);
     } else {
-      setImgeFile(
-        'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
-      );
+      setImgeFile(require('../../image/default-user.png'));
       return;
     }
 
@@ -34,7 +34,12 @@ export const UserAvatar = props => {
 
   return (
     <div className={style.userAvatar}>
-      <image src={imgFile} alt="프로필 이미지" className={style.image} />
+      <img
+        src={imgFile ? imgFile : require('../../image/default-user.png')}
+        alt="프로필 이미지"
+        className={style.image}
+        onClick={onImgeInputBtnClick}
+      />
       <input
         style={{ display: 'none' }}
         ref={logoImgInput}
@@ -45,13 +50,6 @@ export const UserAvatar = props => {
         name="file"
         onChange={onChange}
       />
-      <button
-        type="button"
-        className={style.inputBtn}
-        onClick={onImgeInputBtnClick}
-      >
-        등록
-      </button>
     </div>
   );
 };
