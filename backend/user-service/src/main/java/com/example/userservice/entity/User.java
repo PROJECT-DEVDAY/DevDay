@@ -35,7 +35,9 @@ public class User {
 
     private String baekjoon;
 
-    private String profileImg;
+    private String profileImgKey;
+
+    private String profileImgUrl;
 
     public static User from(SignUpRequestDto requestDto) {
         return User.builder()
@@ -52,8 +54,12 @@ public class User {
         this.password = password;
     }
 
-    public void updateProfileImg(String profileImg) {
-        this.profileImg = profileImg;
+    public void updateProfileKey(String profileImgKey) {
+        this.profileImgKey = profileImgKey;
+    }
+
+    public void updateProfileImg(String profileImgUrl) {
+        this.profileImgUrl = profileImgUrl;
     }
 
     public void updateNickname(String nickname) {
