@@ -5,7 +5,7 @@ import { Button } from '../../components/Button';
 import { InputText } from '../../components/InputText';
 import { ReturnArrow } from '../../components/ReturnArrow';
 
-function signup(props) {
+const signup = props => {
   return (
     <div>
       <div className="div-header sticky top-0 bg-white">
@@ -31,6 +31,6 @@ function signup(props) {
       </div>
     </div>
   );
-}
+};
 
 export default signup;
