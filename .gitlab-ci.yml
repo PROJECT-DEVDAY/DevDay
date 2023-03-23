@@ -11,7 +11,7 @@ pay-service:
     - if: true
       changes:
         - backend/pay-service/**/*
-  script: cd backend/pay-service && gradle sonar
-  allow_failure: true
-  only:
-    - develop
+      allow_failure: true
+      script: cd backend/pay-service && gradle sonar
+      only:
+        - develop
