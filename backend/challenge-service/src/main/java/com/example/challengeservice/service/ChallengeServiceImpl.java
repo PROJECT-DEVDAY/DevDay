@@ -1,15 +1,18 @@
 package com.example.challengeservice.service;
 
+import com.example.challengeservice.dto.request.ChallengeRecordRequestDto;
 import com.example.challengeservice.dto.request.ChallengeRoomRequestDto;
 import com.example.challengeservice.dto.response.ChallengeRoomResponseDto;
 import com.example.challengeservice.dto.response.SimpleChallengeResponseDto;
 import com.example.challengeservice.dto.response.SolvedListResponseDto;
+import com.example.challengeservice.entity.ChallengeRecord;
 import com.example.challengeservice.entity.ChallengeRoom;
 import com.example.challengeservice.entity.UserChallenge;
 import com.example.challengeservice.exception.ApiException;
 import com.example.challengeservice.exception.ExceptionEnum;
 import com.example.challengeservice.infra.amazons3.querydsl.SearchParam;
 import com.example.challengeservice.infra.amazons3.service.AmazonS3Service;
+import com.example.challengeservice.repository.ChallengeRecordRepository;
 import com.example.challengeservice.repository.ChallengeRoomRepoCustomImpl;
 import com.example.challengeservice.repository.ChallengeRoomRepository;
 import com.example.challengeservice.repository.UserChallengeRepository;
@@ -41,39 +44,34 @@ public class ChallengeServiceImpl implements ChallengeService{
     private  UserChallengeRepository userChallengeRepository;
     private ChallengeRoomRepository challengeRoomRepository;
     private AmazonS3Service amazonS3Service;
-
     private ChallengeRoomRepoCustomImpl challengeRoomRepoCustom;
+    private CommonServiceImpl commonService;
+    private ChallengeRecordRepository challengeRecordRepository;
 
     @Autowired
-    public ChallengeServiceImpl(UserChallengeRepository userChallengeRepository, ChallengeRoomRepository challengeRoomRepository, AmazonS3Service amazonS3Service, ChallengeRoomRepoCustomImpl challengeRoomRepoCustom) {
+    public ChallengeServiceImpl(UserChallengeRepository userChallengeRepository, ChallengeRoomRepository challengeRoomRepository, AmazonS3Service amazonS3Service, ChallengeRoomRepoCustomImpl challengeRoomRepoCustom, CommonServiceImpl commonService,ChallengeRecordRepository challengeRecordRepository) {
         this.userChallengeRepository = userChallengeRepository;
         this.challengeRoomRepository = challengeRoomRepository;
         this.amazonS3Service = amazonS3Service;
         this.challengeRoomRepoCustom = challengeRoomRepoCustom;
+        this.commonService = commonService;
+        this.challengeRecordRepository = challengeRecordRepository;
     }
 
 
     @Override
     public List<SimpleChallengeResponseDto> getListSimpleChallenge(String type, String search, int size, Long offset ) {
 
-        //쿼리 dsl만드라꺼임
+        //검색에 필요한 조건을 담은 객체
+        SearchParam searchParam = new SearchParam(type,search,size,offset,commonService.getDate());
 
-
-        Date date = new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-
-        log.info(formatter.format(date)+"오늘날짜");
-        SearchParam searchParam = new SearchParam(type,search,size,offset,formatter.format(date));
-       List<ChallengeRoom> challengeRooms = challengeRoomRepoCustom.getSimpleChallengeList(searchParam);
+        List<ChallengeRoom> challengeRooms = challengeRoomRepoCustom.getSimpleChallengeList(searchParam);
 
         for (ChallengeRoom challengeRoom : challengeRooms) {
             // 현재 참여자 수 조회
             log.info("가져온 챌린지 id"+ challengeRoom.getId());
             challengeRoom.setParticipantsSize(userChallengeRepository.countByChallengeRoomId(challengeRoom.getId()));
         }
-
-
-
 
         ModelMapper modelMapper = new ModelMapper();
         Type listType = new TypeToken<List<SimpleChallengeResponseDto>>() {}.getType(); // 리스트 타입 지정
@@ -109,13 +107,14 @@ public class ChallengeServiceImpl implements ChallengeService{
         challengeRoom.setBackGroundUrl(backgroundUrl);
 
 
-        Long id = challengeRoomRepository.save(challengeRoom).getId();
+        Long challengeId = challengeRoomRepository.save(challengeRoom).getId();
 
 
         //챌린지 방이 잘 생성 되었다면 방을 만든 방장은 방에 참가해야한다.
+        joinChallenge(challengeId,challengeRoomRequestDto.getHostId());
 
 
-        return id;
+        return challengeId;
     }
 
     @Override
@@ -172,4 +171,32 @@ public class ChallengeServiceImpl implements ChallengeService{
         SolvedListResponseDto solvedListResponseDto = SolvedListResponseDto.from(solvedList, count);
         return solvedListResponseDto;
     }
+
+
+
+    /**인증 정보 저장 (사진)**/
+    @Override
+    public void createPhotoRecord(ChallengeRecordRequestDto requestDto) throws IOException {
+
+
+        //인증 사진이 없는경우 예외처리
+        if(requestDto.getPhotoCertFile()==null) throw new ApiException(ExceptionEnum.CHALLENGE_BAD_REQUEST);
+
+        //인증 사진이 정상적으로 온 경우 사진을 s3에 업로드한다.
+        String photoUrl = amazonS3Service.upload(requestDto.getPhotoCertFile(),"CertificationPhoto");
+
+        //오늘 날짜
+        String date = commonService.getDate();
+        // UserChallenge 조회
+
+        UserChallenge userChallenge = userChallengeRepository.findById(requestDto.getUserChallengeId()).orElseThrow(()-> new ApiException(ExceptionEnum.USER_CHALLENGE_NOT_EXIST_EXCEPTION) );
+        ChallengeRecord challengeRecord = ChallengeRecord.from(requestDto,date,photoUrl,userChallenge);
+
+        challengeRecordRepository.save(challengeRecord);
+
+
+    }
+
+
+    //인증 정보 저장 (알고리즘 , 커밋)
 }

@@ -11,6 +11,8 @@ public enum ExceptionEnum {
     CHALLENGE_BAD_REQUEST(HttpStatus.BAD_REQUEST ,"UC002" ,"요청한 값이 유효하지 않습니다."),
     CHALLENGE_NOT_EXIST_EXCEPTION(HttpStatus.NOT_FOUND, "C0003", "존재하지 않는 챌린지 입니다."),
 
+    USER_CHALLENGE_NOT_EXIST_EXCEPTION(HttpStatus.NOT_FOUND, "C0004", "해당 챌린지에 존재하지 참여자 입니다."),
+
 
     RUNTIME_EXCEPTION(HttpStatus.BAD_REQUEST, "E0001", "내부 문제로 다음번에 다시 시도해주세요."),
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "E0002", "내부 문제로 다음번에 다시 시도해주세요."),
