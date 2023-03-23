@@ -5,6 +5,7 @@ import com.example.payservice.service.PayService;
 import com.example.payservice.service.PrizeService;
 import com.example.payservice.vo.external.RequestWithdraw;
 
+import com.example.payservice.vo.external.ResponseWithdraw;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,9 +34,9 @@ public class UserController {
 		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 		AccountDto accountDto = mapper.map(request.getAccount(), AccountDto.class);
 
-		prizeService.withdraw(userId, request.getMoney(), accountDto);
+		ResponseWithdraw response = prizeService.withdraw(userId, request.getMoney(), accountDto);
 
-		return ResponseEntity.ok(true);
+		return ResponseEntity.ok(response);
 	}
 	@GetMapping("/{userId}/prize")
 	public ResponseEntity<?> getPrizeHistory(@PathVariable String userId) {
