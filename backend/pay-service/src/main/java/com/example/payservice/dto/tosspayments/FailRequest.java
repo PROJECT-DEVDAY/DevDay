@@ -1,4 +1,4 @@
-package com.example.payservice.vo.tosspayments;
+package com.example.payservice.dto.tosspayments;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
