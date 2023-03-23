@@ -12,6 +12,6 @@ pay-service:
       changes:
         - backend/pay-service/**/*
       allow_failure: true
-      script: cd backend/pay-service && gradle sonar
-      only:
-        - develop
+  script: cd backend/pay-service && gradle sonar
+  only:
+    - develop
