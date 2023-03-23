@@ -7,5 +7,7 @@ import java.util.Optional;
 
 public interface ChallengeRecordRepository extends JpaRepository<ChallengeRecord , Long> {
 
-    Optional<ChallengeRecord> findByUserChallengeId (Long userChallengeId);
+/*    Optional<ChallengeRecord> findByUserChallengeId (Long userChallengeId);
+
+    Optional<ChallengeRecord> findChallengeRecordByUserChallengeChallengeRoomId (Long challengeRoomId);*/
 }
