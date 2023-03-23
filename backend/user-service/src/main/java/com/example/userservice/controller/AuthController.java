@@ -3,6 +3,7 @@ package com.example.userservice.controller;
 import com.example.userservice.dto.request.GithubBaekjoonRequestDto;
 import com.example.userservice.dto.request.NicknameRequestDto;
 import com.example.userservice.dto.request.PasswordRequestDto;
+import com.example.userservice.dto.response.ProfileResponseDto;
 import com.example.userservice.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,10 +25,22 @@ public class AuthController {
         return request.getHeader("userId");
     }
 
+    @GetMapping("/user/detail")
+    public ResponseEntity<ProfileResponseDto> getProfileDetail(HttpServletRequest request) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(authService.getProfileDetail(Long.parseLong(request.getHeader("userId"))));
+    }
+
     @DeleteMapping("/user")
     public ResponseEntity<String> deleteUser(HttpServletRequest request) {
         authService.deleteUser(Long.parseLong(request.getHeader("userId")));
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("탈퇴 성공!!");
+    }
+
+    @PatchMapping("/user/defaultimg")
+    public ResponseEntity<String> updateProfileDefaultImg(HttpServletRequest request) {
+        authService.updateProfileDefaultImg(Long.parseLong(request.getHeader("userId")));
+        return ResponseEntity.status(HttpStatus.OK).body("프로필 기본 이미지 업데이트 성공");
     }
 
     @PatchMapping("/user/img")
