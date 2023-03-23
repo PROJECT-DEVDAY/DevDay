@@ -1,8 +1,8 @@
 package com.example.payservice.entity;
 
-import com.example.payservice.dto.AccountDto;
-import com.example.payservice.dto.PrizeHistoryType;
-import com.example.payservice.dto.RewardSaveDto;
+import com.example.payservice.dto.bank.AccountDto;
+import com.example.payservice.dto.prize.PrizeHistoryType;
+import com.example.payservice.dto.request.RewardSaveRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -61,12 +61,12 @@ public class PrizeHistoryEntity extends BaseEntity implements Serializable {
      * @param rewardSaveDto
      * @return
      */
-    public static PrizeHistoryEntity createInTypePrizeHistory(RewardSaveDto rewardSaveDto) {
+    public static PrizeHistoryEntity createInTypePrizeHistory(RewardSaveRequest request) {
         return PrizeHistoryEntity.builder()
                 .id(String.valueOf(UUID.randomUUID()))
-                .challengeId(rewardSaveDto.getChallengeId())
+                .challengeId(request.getChallengeId())
                 .prizeHistoryType(PrizeHistoryType.IN)
-                .amount(rewardSaveDto.getAmount())
+                .amount(request.getAmount())
                 .build();
     }
 

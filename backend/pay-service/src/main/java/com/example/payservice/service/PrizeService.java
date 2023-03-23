@@ -1,15 +1,13 @@
-package com.example.payservice.service.prize;
+package com.example.payservice.service;
 
-import com.example.payservice.dto.AccountDto;
-import com.example.payservice.dto.PrizeHistoryDto;
-import com.example.payservice.dto.RewardSaveDto;
+import com.example.payservice.dto.bank.AccountDto;
+import com.example.payservice.dto.prize.PrizeHistoryDto;
+import com.example.payservice.dto.request.RewardSaveRequest;
 import com.example.payservice.dto.response.WithdrawResponse;
 import com.example.payservice.entity.PayUserEntity;
 import com.example.payservice.entity.PrizeHistoryEntity;
-import com.example.payservice.repository.PayUserRepository;
+import com.example.payservice.exception.LackOfPrizeException;
 import com.example.payservice.repository.PrizeHistoryRepository;
-import com.example.payservice.service.payment.PaymentService;
-import com.example.payservice.service.user.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -22,7 +20,6 @@ import javax.transaction.Transactional;
 @Service
 @AllArgsConstructor
 public class PrizeService {
-    private final PayUserRepository payUserRepository;
     private final PrizeHistoryRepository prizeHistoryRepository;
     private final PaymentService paymentService;
     private final UserService userService;
@@ -36,7 +33,7 @@ public class PrizeService {
      * @throws Exception
      */
     @Transactional
-    public WithdrawResponse withdraw(long userId, int money, AccountDto account) throws Exception {
+    public WithdrawResponse withdraw(long userId, int money, AccountDto account) {
 
         // 유저의 출금가능금액과 요청 금액을 비교해본다.
         PayUserEntity payUserEntity = userService.getPayUserEntity(userId);
@@ -60,13 +57,13 @@ public class PrizeService {
 
     /**
      * 상금 획득 이력을 남깁니다.
-     * @param rewardSaveDto
+     * @param request
      */
     @Transactional
-    public void save(RewardSaveDto rewardSaveDto) {
-        PayUserEntity payUserEntity = userService.getPayUserEntity(rewardSaveDto.getUserId());
+    public void save(RewardSaveRequest request) {
+        PayUserEntity payUserEntity = userService.getPayUserEntity(request.getUserId());
         // TODO: 챌린지 ID가 존재하는 지
-        PrizeHistoryEntity prizeHistory = PrizeHistoryEntity.createInTypePrizeHistory(rewardSaveDto);
+        PrizeHistoryEntity prizeHistory = PrizeHistoryEntity.createInTypePrizeHistory(request);
 
         // transaction 반영
         prizeHistory.setUser(payUserEntity);
@@ -80,11 +77,12 @@ public class PrizeService {
      * @param pageable
      * @return
      */
-    public Page<PrizeHistoryDto> searchHistories(Long userId, String type, Pageable pageable) {
+    public Page<PrizeHistoryDto> searchHistories(long userId, String type, Pageable pageable) {
+        PayUserEntity payUserEntity = userService.getPayUserEntity(userId);
         String historyType = String.valueOf(type).isEmpty() ? null : type;
         // TODO: 챌린지 정보 반영하기
         Page<PrizeHistoryDto> pages =  prizeHistoryRepository
-                .findAllByUserIdAndPrizeHistoryType(userId, historyType, pageable)
+                .findAllByUserAndPrizeHistoryType(payUserEntity, historyType, pageable)
                 .map(PrizeHistoryDto::from);
 
         return pages;
@@ -96,9 +94,9 @@ public class PrizeService {
      * @param money
      * @throws Exception
      */
-    private void checkDrawMoney(PayUserEntity payUserEntity, int money) throws Exception {
+    private void checkDrawMoney(PayUserEntity payUserEntity, int money) {
         if(payUserEntity.getPrize() < money) {
-            throw new Exception("출금할 상금 금액이 저장된 금액보다 큽니다.");
+            throw new LackOfPrizeException("출금할 상금 금액이 저장된 금액보다 큽니다.");
         }
     }
 }

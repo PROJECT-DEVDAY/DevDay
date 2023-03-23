@@ -1,6 +1,6 @@
 package com.example.payservice.dto.request;
 
-import com.example.payservice.dto.AccountDto;
+import com.example.payservice.dto.bank.AccountDto;
 import lombok.Data;
 
 import javax.validation.constraints.Positive;
