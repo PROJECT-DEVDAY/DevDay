@@ -1,8 +1,10 @@
-package com.example.payservice.vo.nhbank;
+package com.example.payservice.dto.nhbank;
 
+import com.example.payservice.dto.AccountDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
+import org.springframework.core.env.Environment;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -29,4 +31,28 @@ public class RequestTransfer {
     @NotBlank(message = "입금계좌인자내용을 기입해주세요.")
     @JsonProperty("MractOtlt")
     private String mractOtlt;
+
+    /**
+     * 농협 전송 API body를 만듭니다.
+     * @param env
+     * @param header
+     * @param accountDto
+     * @param money
+     * @return
+     */
+    public static RequestTransfer createNHApiRequestTransfer(
+            Environment env,
+            Header header,
+            AccountDto accountDto,
+            int money
+    ) {
+        return RequestTransfer.builder()
+                .header(header)
+                .bncd(accountDto.getBankCode())
+                .acno(accountDto.getNumber())
+                .tram(String.valueOf(money))
+                .dractOtlt(env.getProperty("openapi.nonghyup.otlt") + " " + money + "원")
+                .mractOtlt(env.getProperty("openapi.nonghyup.otlt") + " " + money + "원")
+                .build();
+    }
 }

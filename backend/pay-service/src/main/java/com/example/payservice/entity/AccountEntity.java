@@ -1,4 +1,4 @@
-package com.example.payservice.entity.bank;
+package com.example.payservice.entity;
 
 import lombok.*;
 import org.hibernate.annotations.Comment;
