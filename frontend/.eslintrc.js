@@ -75,6 +75,7 @@ module.exports = {
     'import/newline-after-import': 'error',
     'import/prefer-default-export': 'off',
     'import/no-unresolved': 'off',
+    'import/extensions': 'off',
     'import/no-extraneous-dependencies': [
       1,
       {
