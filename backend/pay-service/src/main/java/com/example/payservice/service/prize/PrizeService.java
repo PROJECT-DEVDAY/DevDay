@@ -1,4 +1,4 @@
-package com.example.payservice.service;
+package com.example.payservice.service.prize;
 
 import com.example.payservice.client.ChallengeServiceClient;
 import com.example.payservice.client.UserServiceClient;
@@ -8,11 +8,11 @@ import com.example.payservice.dto.RewardSaveDto;
 import com.example.payservice.entity.PayUserEntity;
 import com.example.payservice.entity.AccountEntity;
 import com.example.payservice.entity.PrizeHistoryEntity;
-import com.example.payservice.enums.Bank;
+import com.example.payservice.dto.Bank;
 import com.example.payservice.repository.PayUserRepository;
 import com.example.payservice.repository.PrizeHistoryRepository;
 
-import com.example.payservice.enums.PrizeHistoryType;
+import com.example.payservice.dto.PrizeHistoryType;
 import com.example.payservice.dto.response.WithdrawResponse;
 import com.example.payservice.dto.nhbank.Header;
 import com.example.payservice.dto.nhbank.RequestTransfer;
@@ -38,7 +38,7 @@ import java.util.UUID;
 @Slf4j
 @Service
 @AllArgsConstructor
-public class PrizeServiceImpl implements PrizeService {
+public class PrizeService {
 
     private final Environment env;
 
@@ -47,7 +47,6 @@ public class PrizeServiceImpl implements PrizeService {
     private final PayUserRepository payUserRepository;
     private final PrizeHistoryRepository prizeHistoryRepository;
 
-    @Override
     @Transactional
     public WithdrawResponse withdraw(long userId, int money, AccountDto account) throws Exception {
         log.info("accountDto 조회하기 -> {}", account);
@@ -89,7 +88,6 @@ public class PrizeServiceImpl implements PrizeService {
         return response;
     }
 
-    @Override
     @Transactional
     public void save(RewardSaveDto rewardSaveDto) {
         // TODO: 유저 ID가 존재하는 지
@@ -119,7 +117,6 @@ public class PrizeServiceImpl implements PrizeService {
         prizeHistoryRepository.save(prizeHistory);
     }
 
-    @Override
     public Page<PrizeHistoryDto> searchHistories(Long userId, String type, Pageable pageable) {
         PayUserEntity user = payUserRepository.findByUserId(userId);
 

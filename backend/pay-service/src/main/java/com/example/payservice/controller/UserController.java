@@ -3,10 +3,10 @@ package com.example.payservice.controller;
 import com.example.payservice.dto.AccountDto;
 import com.example.payservice.dto.PrizeHistoryDto;
 import com.example.payservice.dto.request.WithdrawRequest;
-import com.example.payservice.service.PayService;
-import com.example.payservice.service.PrizeService;
 
 import com.example.payservice.dto.response.WithdrawResponse;
+import com.example.payservice.service.PayService;
+import com.example.payservice.service.prize.PrizeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

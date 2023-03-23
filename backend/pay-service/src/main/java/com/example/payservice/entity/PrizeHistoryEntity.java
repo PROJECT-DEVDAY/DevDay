@@ -1,9 +1,6 @@
 package com.example.payservice.entity;
 
-import com.example.payservice.entity.BaseEntity;
-import com.example.payservice.entity.PayUserEntity;
-import com.example.payservice.entity.AccountEntity;
-import com.example.payservice.enums.PrizeHistoryType;
+import com.example.payservice.dto.PrizeHistoryType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

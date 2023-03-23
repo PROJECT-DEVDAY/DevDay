@@ -1,7 +1,6 @@
 package com.example.payservice.dto;
 
 import com.example.payservice.entity.PrizeHistoryEntity;
-import com.example.payservice.enums.PrizeHistoryType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
