@@ -3,6 +3,7 @@ package com.example.userservice.controller;
 import com.example.userservice.dto.request.GithubBaekjoonRequestDto;
 import com.example.userservice.dto.request.NicknameRequestDto;
 import com.example.userservice.dto.request.PasswordRequestDto;
+import com.example.userservice.dto.response.MypageResponseDto;
 import com.example.userservice.dto.response.ProfileResponseDto;
 import com.example.userservice.service.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,12 @@ public class AuthController {
     @GetMapping("/welcome")
     public String welcomeAuth(HttpServletRequest request) {
         return request.getHeader("userId");
+    }
+
+    @GetMapping
+    public ResponseEntity<MypageResponseDto> getMypageInfo(HttpServletRequest request) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(authService.getMypageInfo(Long.parseLong(request.getHeader("userId"))));
     }
 
     @GetMapping("/user/detail")
