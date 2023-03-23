@@ -55,7 +55,7 @@ public class ExceptionAdviceController {
      * @return
      */
     @ExceptionHandler({LackOfPrizeException.class})
-    public ResponseEntity<ApiExceptionEntity> LackOfPrizeExceptionHandler() {
+    public ResponseEntity<ApiExceptionEntity> lackOfPrizeExceptionHandler() {
         return apiExceptionHandler(new ApiException(ExceptionEnum.PRIZE_LACK_OF_MONEY_EXCEPTION));
     }
 

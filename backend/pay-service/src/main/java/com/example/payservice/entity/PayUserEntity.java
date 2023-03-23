@@ -1,6 +1,7 @@
 package com.example.payservice.entity;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
@@ -10,6 +11,7 @@ import java.util.List;
 @Entity
 @Data
 @DynamicUpdate
+@EqualsAndHashCode(callSuper=false)
 @Table(name = "pay_users")
 public class PayUserEntity extends BaseEntity {
     @Id

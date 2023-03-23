@@ -3,10 +3,7 @@ package com.example.payservice.entity;
 import com.example.payservice.dto.bank.AccountDto;
 import com.example.payservice.dto.prize.PrizeHistoryType;
 import com.example.payservice.dto.request.RewardSaveRequest;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.modelmapper.ModelMapper;
@@ -21,6 +18,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @DynamicInsert
+@EqualsAndHashCode(callSuper=false)
 @Table(name ="prize_history")
 public class PrizeHistoryEntity extends BaseEntity implements Serializable {
 

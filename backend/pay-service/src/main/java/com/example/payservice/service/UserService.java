@@ -32,9 +32,7 @@ public class UserService {
         }
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-        PayUserDto payUserDto = modelMapper.map(user, PayUserDto.class);
-
-        return payUserDto;
+        return modelMapper.map(user, PayUserDto.class);
     }
     @Transactional
     public PayUserDto createPayUser(Long userId) {

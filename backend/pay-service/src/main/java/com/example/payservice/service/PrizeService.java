@@ -51,8 +51,7 @@ public class PrizeService {
         prizeHistory.setUser(payUserEntity);
         prizeHistoryRepository.save(prizeHistory);
 
-        WithdrawResponse response = new WithdrawResponse(result, payUserEntity.getPrize());
-        return response;
+        return new WithdrawResponse(result, payUserEntity.getPrize());
     }
 
     /**
@@ -81,11 +80,10 @@ public class PrizeService {
         PayUserEntity payUserEntity = userService.getPayUserEntity(userId);
         String historyType = String.valueOf(type).isEmpty() ? null : type;
         // TODO: 챌린지 정보 반영하기
-        Page<PrizeHistoryDto> pages =  prizeHistoryRepository
+
+        return prizeHistoryRepository
                 .findAllByUserAndPrizeHistoryType(payUserEntity, historyType, pageable)
                 .map(PrizeHistoryDto::from);
-
-        return pages;
     }
 
     /**

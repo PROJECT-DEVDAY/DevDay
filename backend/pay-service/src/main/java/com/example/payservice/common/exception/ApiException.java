@@ -1,7 +1,7 @@
 package com.example.payservice.common.exception;
 
 public class ApiException extends RuntimeException {
-    private ExceptionEnum error;
+    private final ExceptionEnum error;
 
     public ApiException(ExceptionEnum e) {
         super(e.getMessage());
