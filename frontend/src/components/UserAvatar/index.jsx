@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
 
-import style from './index.module.scss';
+import Image from 'next/image';
 
-import { FiPlus } from 'react-icons/fi';
+import style from './index.module.scss';
 
 export const UserAvatar = props => {
   const [imgFile, setImgeFile] = useState('');
@@ -34,8 +34,8 @@ export const UserAvatar = props => {
 
   return (
     <div className={style.userAvatar}>
-      <img
-        src={imgFile ? imgFile : require('../../image/default-user.png')}
+      <Image
+        src={imgFile || require('../../image/default-user.png')}
         alt="프로필 이미지"
         className={style.image}
         onClick={onImgeInputBtnClick}
