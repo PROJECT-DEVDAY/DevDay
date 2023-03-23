@@ -1,6 +1,7 @@
 package com.example.challengeservice.controller;
 
 import com.example.challengeservice.common.response.ResponseService;
+import com.example.challengeservice.common.result.ListResult;
 import com.example.challengeservice.common.result.SingleResult;
 import com.example.challengeservice.dto.request.ChallengeRecordRequestDto;
 import com.example.challengeservice.dto.request.ChallengeRoomRequestDto;
@@ -94,17 +95,19 @@ public class ChallengeController {
 
     /** 나의 인증 기록 불러오기 **/
 
-    @GetMapping("record/self")
-    public ResponseEntity<String> getSelfChallengeRecord(){
+    @GetMapping("{challengeId}/users/{userId}/record")
+    public ListResult<?> getSelfChallengeRecord(@PathVariable("challengeId") Long challengeRoomId ,@PathVariable("userId") Long userId,@RequestParam("size") Integer size){
 
-        return null;
+
+
+        return responseService.getListResult(challengeService.getSelfPhotoRecord(challengeRoomId,userId,size));
     }
 
 
     /** 팀원의 인증 기록 불러오기 **/
 
-    @GetMapping("record/team")
-    public ResponseEntity<String> getTeamChallengeRecord(){
+    @GetMapping("{challengeId}/record")
+    public SingleResult<?> getTeamChallengeRecord(){
 
         return null;
     }
