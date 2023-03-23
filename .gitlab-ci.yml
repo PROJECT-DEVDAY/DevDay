@@ -1,4 +1,4 @@
-sonarqube-check:
+pay-service:
   image: gradle:7.6.1-jdk11
   variables:
     SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Defines the location of the analysis task cache
@@ -7,7 +7,12 @@ sonarqube-check:
     key: "${CI_JOB_NAME}"
     paths:
       - .sonar/cache
-  script: cd ./backend/pay-service && gradle sonar
+  rules:
+    - if: true
+      changes:
+        paths:
+          - backend/pay-service/**/*
+  script: cd backend/pay-service && gradle sonar
   allow_failure: true
   only:
     - develop
