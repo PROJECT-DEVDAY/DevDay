@@ -60,7 +60,7 @@ public class AuthServiceImpl implements AuthService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ApiException(ExceptionEnum.MEMBER_NOT_EXIST_EXCEPTION));
 
-        if (!user.getPassword().equals(passwordEncoder.encode(requestDto.getPassword()))) {
+        if (!passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {
             throw new ApiException(ExceptionEnum.PASSWORD_NOT_MATCHED_EXCEPTION);
         }
 
@@ -73,11 +73,11 @@ public class AuthServiceImpl implements AuthService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ApiException(ExceptionEnum.MEMBER_NOT_EXIST_EXCEPTION));
 
-        if (!user.getPassword().equals(passwordEncoder.encode(requestDto.getPassword()))) {
+        if (!passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {
             throw new ApiException(ExceptionEnum.PASSWORD_NOT_MATCHED_EXCEPTION);
         }
 
-        user.updatePassword(requestDto.getNewPassword());
+        user.updatePassword(passwordEncoder.encode(requestDto.getNewPassword()));
     }
 
     @Override
