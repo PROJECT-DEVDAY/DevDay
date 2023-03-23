@@ -2,7 +2,11 @@ package com.example.challengeservice.service;
 
 import com.example.challengeservice.dto.request.ChallengeRoomRequestDto;
 import com.example.challengeservice.dto.response.ChallengeRoomResponseDto;
+<<<<<<< Updated upstream
 import com.example.challengeservice.dto.response.SimpleChallengeResponseDto;
+=======
+import com.example.challengeservice.dto.response.SolvedListResponseDto;
+>>>>>>> Stashed changes
 import com.example.challengeservice.entity.ChallengeRoom;
 import com.example.challengeservice.entity.UserChallenge;
 import com.example.challengeservice.exception.ApiException;
@@ -12,7 +16,15 @@ import com.example.challengeservice.infra.amazons3.service.AmazonS3Service;
 import com.example.challengeservice.repository.ChallengeRoomRepoCustomImpl;
 import com.example.challengeservice.repository.ChallengeRoomRepository;
 import com.example.challengeservice.repository.UserChallengeRepository;
+<<<<<<< Updated upstream
 import lombok.extern.slf4j.Slf4j;
+=======
+import org.jsoup.Connection;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+>>>>>>> Stashed changes
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.modelmapper.convention.MatchingStrategies;
@@ -21,9 +33,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+<<<<<<< Updated upstream
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+=======
+import java.util.ArrayList;
+>>>>>>> Stashed changes
 import java.util.List;
 import java.util.Optional;
 
@@ -125,7 +141,7 @@ public class ChallengeServiceImpl implements ChallengeService{
 
     @Override
     @Transactional
-    public void joinChallenge(Long challengeId, Long userId) {
+    public Long joinChallenge(Long challengeId, Long userId) {
         // 해당 방 정보 가져오기
         ChallengeRoomResponseDto challengeRoomResponseDto = readChallenge(challengeId);
         ModelMapper mapper=new ModelMapper();
@@ -139,6 +155,30 @@ public class ChallengeServiceImpl implements ChallengeService{
         // 없다면, 생성
         UserChallenge userChallenge = UserChallenge.from(challengeRoom, userId);
         userChallengeRepository.save(userChallenge);
+        return userChallenge.getId();
     }
 
+    @Override
+    public SolvedListResponseDto solvedProblemList(String baekjoonId) {
+        String baekJoonUrl = "https://www.acmicpc.net/user/";
+        baekJoonUrl+=baekjoonId;
+        Connection conn = Jsoup.connect(baekJoonUrl);
+        List<Integer> solvedList= new ArrayList<>();
+        int count=0;
+        try {
+            Document document = conn.get();
+            Elements imageUrlElements = document.getElementsByClass("problem-list");
+            Element element = imageUrlElements.get(0);
+            Elements problems= element.getElementsByTag("a");
+            for (Element problem : problems) {
+                solvedList.add(Integer.parseInt(problem.text()));
+                count++;
+            }
+            System.out.printf("총 %d 문제 풀이하셨습니다\n", count);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        SolvedListResponseDto solvedListResponseDto = SolvedListResponseDto.from(solvedList, count);
+        return solvedListResponseDto;
+    }
 }

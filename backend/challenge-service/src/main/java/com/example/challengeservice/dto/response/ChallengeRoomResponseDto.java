@@ -34,7 +34,7 @@ public class ChallengeRoomResponseDto {
     private int userCount;
 
     /** 설명 **/
-    private String desc;
+    private String introduce;
 
     /** 공개 / 비공개 여부(추후 추가) **/
 

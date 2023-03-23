@@ -24,6 +24,7 @@ ext {
 }
 
 dependencies {
+    implementation group: 'org.jsoup', name: 'jsoup', version:'1.11.3'
     implementation 'org.json:json:20211205'
     implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.3.8'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
