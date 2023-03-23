@@ -1,10 +1,14 @@
 package com.example.challengeservice.controller;
 
+import com.example.challengeservice.common.response.ResponseService;
+import com.example.challengeservice.common.result.SingleResult;
 import com.example.challengeservice.dto.request.ChallengeRoomRequestDto;
 import com.example.challengeservice.dto.response.ChallengeCreateResponseDto;
 import com.example.challengeservice.dto.response.ChallengeRoomResponseDto;
 import com.example.challengeservice.dto.response.SimpleChallengeResponseDto;
+import com.example.challengeservice.dto.response.SolvedListResponseDto;
 import com.example.challengeservice.service.ChallengeServiceImpl;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,7 +21,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/challenges")
 @Slf4j
+@RequiredArgsConstructor
 public class ChallengeController {
+    @Autowired
+    private ResponseService responseService;
     @Autowired
     private ChallengeServiceImpl challengeService;
     @Autowired
@@ -25,7 +32,8 @@ public class ChallengeController {
         this.challengeService = challengeService;
     }
 
-    /** 챌린지 생성 **/
+    /** 홍금비
+     * 챌린지 생성 **/
     @PostMapping()
     public ResponseEntity<ChallengeCreateResponseDto> createChallenge(@ModelAttribute ChallengeRoomRequestDto challengeRoomRequestDto) throws IOException {
         log.info(challengeRoomRequestDto.getType()+"어떤타입");
@@ -34,7 +42,8 @@ public class ChallengeController {
         return ResponseEntity.status(HttpStatus.CREATED).body(ChallengeCreateResponseDto.from(id, message));
     }
 
-    /**챌린지 조회 **/
+    /** 신대득
+     * 챌린지 조회 **/
     @GetMapping("/{challengeId}")
     public ResponseEntity<ChallengeRoomResponseDto> readChallenge(@PathVariable("challengeId") String challengeId){
         log.info("챌린지 조회 실행");
@@ -44,12 +53,20 @@ public class ChallengeController {
 
     /** 챌린지 상세 조회 ** (입장 페이지)*/
 
-    /** 챌린지 참가하기 **/
+    /** 신대득
+     * 챌린지 참가하기 **/
     @PostMapping("/{challengeId}/users/{userId}")
-    public ResponseEntity<String> joinChallenge(@PathVariable("challengeId") String challengeId, @PathVariable("userId") String userId){
-        // 방 확인 먼저
-        challengeService.joinChallenge(Long.parseLong(challengeId), Long.parseLong(userId));
-        return ResponseEntity.status(HttpStatus.CREATED).body("[Success] 챌린지 방 입장 완료.");
+    public SingleResult<Long> joinChallenge(@PathVariable("challengeId") Long challengeId, @PathVariable("userId") Long userId){
+        return responseService.getSingleResult(challengeService.joinChallenge(challengeId, userId));
+    }
+
+    /** 신대득
+     * 유저 백준 아이디를 통해 해당 유저의 푼 문제 리스트 찾기 (크롤링)
+     * 나온 결과를 계산해서 user에 넣어줘야한다.
+     */
+    @GetMapping("baekjoon/{baekjoonId}")
+    public ResponseEntity<SolvedListResponseDto> solvedProblemList(@PathVariable("baekjoonId") String baekjoonId){
+        return ResponseEntity.status(HttpStatus.OK).body(challengeService.solvedProblemList(baekjoonId));
     }
 
 
