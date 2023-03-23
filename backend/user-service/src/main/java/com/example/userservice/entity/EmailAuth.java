@@ -1,9 +1,6 @@
 package com.example.userservice.entity;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -11,6 +8,8 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 public class EmailAuth {
 
     private static final Long MAX_EXPIRE_TIME = 5L;
@@ -28,12 +27,13 @@ public class EmailAuth {
 
     private LocalDateTime expireDate;
 
-    @Builder
-    public EmailAuth(String email, String authToken) {
-        this.email = email;
-        this.authToken = authToken;
-        this.isChecked = false;
-        this.expireDate = LocalDateTime.now().plusMinutes(MAX_EXPIRE_TIME);
+    public static EmailAuth of (String email, String authToken) {
+        return EmailAuth.builder()
+                .email(email)
+                .authToken(authToken)
+                .isChecked(false)
+                .expireDate(LocalDateTime.now().plusMinutes(MAX_EXPIRE_TIME))
+                .build();
     }
 
     public void check() {
