@@ -16,13 +16,13 @@ public class UserResponseDto {
 
     private String email;
 
-    private String nane;
+    private String name;
 
     public static UserResponseDto from (User user) {
         return UserResponseDto.builder()
                 .userId(user.getId())
                 .email(user.getEmail())
-                .nane(user.getName())
+                .name(user.getName())
                 .build();
     }
 }

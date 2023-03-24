@@ -24,7 +24,6 @@ spring:
         corsConfigurations:
           '[/**]':
             allowedOrigins:
-#              - "https://k7c2031.p.ssafy.io/"
               - "http://localhost:8080/"
             allow-credentials: true
             allowedHeaders: '*'
@@ -93,6 +92,3 @@ spring:
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/pay-service/(?<segment>.*), /$\{segment}
-
-token:
-  secret:
