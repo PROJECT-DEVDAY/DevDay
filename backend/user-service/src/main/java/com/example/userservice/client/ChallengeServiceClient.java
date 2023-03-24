@@ -1,5 +1,6 @@
 package com.example.userservice.client;
 
+import com.example.userservice.dto.BaseResponseDto;
 import com.example.userservice.dto.response.ChallengeResponseDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,5 +10,5 @@ import org.springframework.web.bind.annotation.PathVariable;
 public interface ChallengeServiceClient {
 
     @GetMapping("/challenge-service/challenges/challengeInfo/users/{userId}")
-    ChallengeResponseDto getChallengeInfo(@PathVariable Long userId);
+    BaseResponseDto<ChallengeResponseDto> getChallengeInfo(@PathVariable Long userId);
 }
