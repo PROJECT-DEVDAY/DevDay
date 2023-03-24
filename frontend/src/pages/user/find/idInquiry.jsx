@@ -1,10 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 
+import style from './inquiry.module.scss';
+
 import { Button } from '@/components/Button';
 import { InputText } from '@/components/InputText';
 import { ReturnArrow } from '@/components/ReturnArrow';
 
-import style from './inquiry.module.scss';
 const idInquiry = () => {
   const [show, setShow] = useState(false);
   const bottomSheetRef = useRef(null);
