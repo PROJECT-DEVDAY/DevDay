@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PayUserRepository extends JpaRepository<PayUserEntity, Long> {
     PayUserEntity findByUserId(Long userId);
+
+	void deleteByUserId(Long userId);
 }
