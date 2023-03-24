@@ -14,24 +14,24 @@
   background-color: var(--color-kiyoon);
   color: white;
 }
-.arrowtitle {
+.ArrowTitle {
   font-size: x-large;
   font-weight: bolder;
   margin: 0;
   margin: 15px 0px 0 0px;
 }
 
-.arrowcontent {
+.ArrowContent {
   margin: 0;
   font-size: small;
   margin: 0 0 15px 0;
 }
-.arrow {
+.Arrow {
   width: 100%;
   height: 100%;
   align-items: center;
 }
-.arrowdiv {
+.ArrowDiv {
   display: grid;
   /* width: 10%; */
 }
