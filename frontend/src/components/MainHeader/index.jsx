@@ -3,10 +3,8 @@ import React from 'react';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 
-const index = props => {
+export const MainHeader = props => {
   return <div>index</div>;
 };
 
-index.propTypes = {};
-
-export default index;
+MainHeader.propTypes = {};

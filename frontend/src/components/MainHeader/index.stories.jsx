@@ -4,7 +4,7 @@ import { MainHeader } from '.';
 
 export default {
   title: 'DevDay/Atoms/MainHeader',
-  component: ReturnArrow,
+  component: MainHeader,
 };
 
 const Template = args => <MainHeader {...args} />;
