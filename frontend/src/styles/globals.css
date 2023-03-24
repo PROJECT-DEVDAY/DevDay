@@ -12,6 +12,7 @@
   --grey-border: #e7e7e7;
   --grey-hr: #dddddd;
   --grey-enabled: #d5d5d5;
+  --grey-extra: #a3a3a3;
 
   --red-border: #ff9b9b;
 }
@@ -49,7 +50,12 @@ a {
   background-color: #dddddd;
 }
 
-/* 미사용 버튼 , 부가설명*/
+/* 미사용 버튼 */
 .grey-enabled {
   background-color: #d5d5d5;
+}
+
+/* 부가설명 */
+.grey-extra {
+  background-color: #b4b4b4;
 }
