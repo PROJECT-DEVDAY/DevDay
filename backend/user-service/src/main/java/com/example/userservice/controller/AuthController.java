@@ -1,5 +1,6 @@
 package com.example.userservice.controller;
 
+import com.example.userservice.dto.BaseResponseDto;
 import com.example.userservice.dto.request.GithubBaekjoonRequestDto;
 import com.example.userservice.dto.request.NicknameRequestDto;
 import com.example.userservice.dto.request.PasswordRequestDto;
@@ -21,57 +22,62 @@ public class AuthController {
 
     private final AuthService authService;
 
-    @GetMapping("/welcome")
-    public String welcomeAuth(HttpServletRequest request) {
-        return request.getHeader("userId");
-    }
-
     @GetMapping
-    public ResponseEntity<MypageResponseDto> getMypageInfo(HttpServletRequest request) {
+    public ResponseEntity<BaseResponseDto<MypageResponseDto>> getMypageInfo(HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(authService.getMypageInfo(Long.parseLong(request.getHeader("userId"))));
+                .body(new BaseResponseDto<>(
+                        200,
+                        "success",
+                        authService.getMypageInfo(Long.parseLong(request.getHeader("userId")))
+                        )
+                );
     }
 
     @GetMapping("/user/detail")
-    public ResponseEntity<ProfileResponseDto> getProfileDetail(HttpServletRequest request) {
+    public ResponseEntity<BaseResponseDto<ProfileResponseDto>> getProfileDetail(HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(authService.getProfileDetail(Long.parseLong(request.getHeader("userId"))));
+                .body(new BaseResponseDto<>(
+                        200,
+                        "success",
+                        authService.getProfileDetail(Long.parseLong(request.getHeader("userId")))
+                        )
+                );
     }
 
     @DeleteMapping("/user")
-    public ResponseEntity<String> deleteUser(HttpServletRequest request) {
+    public ResponseEntity<BaseResponseDto> deleteUser(HttpServletRequest request) {
         authService.deleteUser(Long.parseLong(request.getHeader("userId")));
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("탈퇴 성공!!");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new BaseResponseDto<>(204, "success"));
     }
 
     @PatchMapping("/user/defaultimg")
-    public ResponseEntity<String> updateProfileDefaultImg(HttpServletRequest request) {
+    public ResponseEntity<BaseResponseDto> updateProfileDefaultImg(HttpServletRequest request) {
         authService.updateProfileDefaultImg(Long.parseLong(request.getHeader("userId")));
-        return ResponseEntity.status(HttpStatus.OK).body("프로필 기본 이미지 업데이트 성공");
+        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseDto<>(200, "success"));
     }
 
     @PatchMapping("/user/img")
-    public ResponseEntity<String> updateProfileImg(HttpServletRequest request, @RequestPart MultipartFile profileImg) {
+    public ResponseEntity<BaseResponseDto> updateProfileImg(HttpServletRequest request, @RequestPart MultipartFile profileImg) {
         authService.updateProfileImg(Long.parseLong(request.getHeader("userId")), profileImg);
-        return ResponseEntity.status(HttpStatus.OK).body("프로필 이미지 업데이트 성공");
+        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseDto<>(200, "success"));
     }
 
     @PatchMapping("/user/password")
-    public ResponseEntity<String> updatePassword(HttpServletRequest request, @RequestBody PasswordRequestDto requestDto) {
+    public ResponseEntity<BaseResponseDto> updatePassword(HttpServletRequest request, @RequestBody PasswordRequestDto requestDto) {
         authService.updatePassword(Long.parseLong(request.getHeader("userId")), requestDto);
-        return ResponseEntity.status(HttpStatus.OK).body("비밀번호 업데이트 성공");
+        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseDto<>(200, "success"));
     }
 
     @PatchMapping("/user/nickname")
-    public ResponseEntity<String> updateNickname(HttpServletRequest request, @RequestBody NicknameRequestDto requestDto) {
+    public ResponseEntity<BaseResponseDto> updateNickname(HttpServletRequest request, @RequestBody NicknameRequestDto requestDto) {
         authService.updateNickname(Long.parseLong(request.getHeader("userId")), requestDto);
-        return ResponseEntity.status(HttpStatus.OK).body("닉네임 업데이트 성공");
+        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseDto<>(200, "success"));
     }
 
     @PatchMapping("/user/githubandbaekjoon")
-    public ResponseEntity<String> updateGithubAndBaekjoon(HttpServletRequest request, @RequestBody GithubBaekjoonRequestDto requestDto) {
+    public ResponseEntity<BaseResponseDto> updateGithubAndBaekjoon(HttpServletRequest request, @RequestBody GithubBaekjoonRequestDto requestDto) {
         authService.updateGithubAndBaekjoon(Long.parseLong(request.getHeader("userId")), requestDto);
-        return ResponseEntity.status(HttpStatus.OK).body("깃허브, 백준 아이디 업데이트 성공");
+        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseDto(200, "success"));
     }
 
 }
