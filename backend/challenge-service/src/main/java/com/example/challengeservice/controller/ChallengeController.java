@@ -8,6 +8,7 @@ import com.example.challengeservice.dto.request.ChallengeRoomRequestDto;
 import com.example.challengeservice.dto.response.ChallengeCreateResponseDto;
 import com.example.challengeservice.dto.response.ChallengeRoomResponseDto;
 import com.example.challengeservice.dto.response.SimpleChallengeResponseDto;
+import com.example.challengeservice.dto.response.*;
 import com.example.challengeservice.dto.response.SolvedListResponseDto;
 import com.example.challengeservice.service.ChallengeServiceImpl;
 import lombok.Getter;
@@ -64,6 +65,15 @@ public class ChallengeController {
     }
 
     /** 신대득
+     * 현재 user가 참가중인 챌린지리스트 반환
+     */
+    @GetMapping("/challengeInfo/users/{userId}")
+    public SingleResult<UserChallengeInfoResponseDto> userChallengeInfo(@PathVariable Long userId){
+        return responseService.getSingleResult(challengeService.myChallengeList(userId));
+
+    }
+
+    /** 신대득
      * 유저 백준 아이디를 통해 해당 유저의 푼 문제 리스트 찾기 (크롤링)
      * 나온 결과를 계산해서 user에 넣어줘야한다.
      */
@@ -71,6 +81,11 @@ public class ChallengeController {
     public ResponseEntity<SolvedListResponseDto> solvedProblemList(@PathVariable("baekjoonId") String baekjoonId){
         return ResponseEntity.status(HttpStatus.OK).body(challengeService.solvedProblemList(baekjoonId));
     }
+
+    /**
+     * 신대득
+     * 유저가 푼 문제 리스트 갱신
+     */
 
 
 

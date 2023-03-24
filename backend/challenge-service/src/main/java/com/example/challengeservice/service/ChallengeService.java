@@ -6,6 +6,7 @@ import com.example.challengeservice.dto.response.ChallengeRoomResponseDto;
 import com.example.challengeservice.dto.response.PhotoRecordResponseDto;
 import com.example.challengeservice.dto.response.SimpleChallengeResponseDto;
 import com.example.challengeservice.dto.response.SolvedListResponseDto;
+import com.example.challengeservice.dto.response.UserChallengeInfoResponseDto;
 
 import java.io.IOException;
 import java.util.List;
@@ -17,6 +18,8 @@ public interface ChallengeService {
     ChallengeRoomResponseDto readChallenge(Long challengeId);
     /** 챌린지 참여 **/
     Long joinChallenge(Long challengeId, Long userId);
+    /** 해당 유저의 챌린지 리스트 조회 **/
+    UserChallengeInfoResponseDto myChallengeList(Long userId);
     List<SimpleChallengeResponseDto> getListSimpleChallenge (String type , String search , int size , Long offset);
     /** 푼 문제 리스트 찾기 **/
     SolvedListResponseDto solvedProblemList(String baekjoonId);
