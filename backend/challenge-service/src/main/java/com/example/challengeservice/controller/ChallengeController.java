@@ -11,7 +11,6 @@ import com.example.challengeservice.dto.response.SimpleChallengeResponseDto;
 import com.example.challengeservice.dto.response.*;
 import com.example.challengeservice.dto.response.SolvedListResponseDto;
 import com.example.challengeservice.service.ChallengeServiceImpl;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +18,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/challenges")
@@ -54,6 +53,15 @@ public class ChallengeController {
         return ResponseEntity.status(HttpStatus.OK).body(challengeService.readChallenge(Long.parseLong(challengeId)));
     }
 
+    /** 신대득
+     * 챌린지 리스트들의 정보 조회
+     */
+    @PostMapping("/listInfo")
+    public SingleResult<Map<Long, ChallengeInfoResponseDto>> challengeInfoList(@RequestBody Map<String, List<Long>> map){
+        List<Long> challengeIdList= map.get("challengeIdList");
+        return responseService.getSingleResult(challengeService.challengeInfoList(challengeIdList));
+    }
+
 
     /** 챌린지 상세 조회 ** (입장 페이지)*/
 
@@ -65,7 +73,7 @@ public class ChallengeController {
     }
 
     /** 신대득
-     * 현재 user가 참가중인 챌린지리스트 반환
+     * 현재 user가 참가중인 챌린지 개수 반환
      */
     @GetMapping("/challengeInfo/users/{userId}")
     public SingleResult<UserChallengeInfoResponseDto> userChallengeInfo(@PathVariable Long userId){
@@ -77,7 +85,7 @@ public class ChallengeController {
      * 유저 백준 아이디를 통해 해당 유저의 푼 문제 리스트 찾기 (크롤링)
      * 나온 결과를 계산해서 user에 넣어줘야한다.
      */
-    @GetMapping("baekjoon/{baekjoonId}")
+    @GetMapping("/baekjoon/{baekjoonId}")
     public ResponseEntity<SolvedListResponseDto> solvedProblemList(@PathVariable("baekjoonId") String baekjoonId){
         return ResponseEntity.status(HttpStatus.OK).body(challengeService.solvedProblemList(baekjoonId));
     }
@@ -85,6 +93,12 @@ public class ChallengeController {
     /**
      * 신대득
      * 유저가 푼 문제 리스트 갱신
+     */
+    /*
+    @GetMapping("baekjoon/{bakejoonId}/users/{userId}")
+    public ListResult<UserBaekjoonUpdateListResponseDto> updateUserBaekjoon(@PathVariable("baekjoonId") String baekjoonId, @PathVariable String userId){
+        return responseService.getListResult(challengeService.updateUserBaekjoon(String baekjoonId, String userId))
+    }
      */
 
 
@@ -110,21 +124,19 @@ public class ChallengeController {
 
     /** 나의 인증 기록 불러오기 **/
 
-    @GetMapping("{challengeId}/users/{userId}/record")
-    public ListResult<?> getSelfChallengeRecord(@PathVariable("challengeId") Long challengeRoomId ,@PathVariable("userId") Long userId,@RequestParam("size") Integer size){
+    @GetMapping("{challengeId}/record/users/{userId}")
+    public ListResult<?> getSelfChallengeRecord(@PathVariable("challengeId") Long challengeRoomId ,@PathVariable("userId") Long userId,@RequestParam("view") String viewType){
 
-
-
-        return responseService.getListResult(challengeService.getSelfPhotoRecord(challengeRoomId,userId,size));
+        return responseService.getListResult(challengeService.getSelfPhotoRecord(challengeRoomId,userId,viewType));
     }
 
 
     /** 팀원의 인증 기록 불러오기 **/
 
     @GetMapping("{challengeId}/record")
-    public SingleResult<?> getTeamChallengeRecord(){
+    public ListResult<?> getTeamChallengeRecord(@PathVariable("challengeId")Long challengeRoomId ,@RequestParam("view") String viewType){
 
-        return null;
+        return responseService.getListResult(challengeService.getTeamPhotoRecord(challengeRoomId,viewType));
     }
 
 

@@ -2,12 +2,8 @@ package com.example.challengeservice.service;
 
 import com.example.challengeservice.dto.request.ChallengeRecordRequestDto;
 import com.example.challengeservice.dto.request.ChallengeRoomRequestDto;
-import com.example.challengeservice.dto.response.ChallengeRoomResponseDto;
-import com.example.challengeservice.dto.response.PhotoRecordResponseDto;
-import com.example.challengeservice.dto.response.SimpleChallengeResponseDto;
-import com.example.challengeservice.dto.response.SolvedListResponseDto;
+import com.example.challengeservice.dto.response.*;
 import com.example.challengeservice.entity.ChallengeRecord;
-import com.example.challengeservice.dto.response.UserChallengeInfoResponseDto;
 import com.example.challengeservice.entity.ChallengeRoom;
 import com.example.challengeservice.entity.UserChallenge;
 import com.example.challengeservice.exception.ApiException;
@@ -30,9 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -126,7 +120,20 @@ public class ChallengeServiceImpl implements ChallengeService{
         ModelMapper mapper=new ModelMapper();
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         return mapper.map(challengeRoom, ChallengeRoomResponseDto.class);
-     }
+    }
+
+    public Map<Long, ChallengeInfoResponseDto> challengeInfoList(List<Long> challengeIdList){
+        Map<Long, ChallengeInfoResponseDto> challengeInfoResponseDtoMap=new HashMap<>();
+        for(Long challengeId: challengeIdList){
+            ChallengeRoom challengeRoom=challengeRoomRepository.findChallengeRoomById(challengeId)
+                    .orElseThrow(() -> new ApiException(ExceptionEnum.CHALLENGE_NOT_EXIST_EXCEPTION));
+            ModelMapper mapper=new ModelMapper();
+            mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+            ChallengeInfoResponseDto challengeInfoResponseDto= mapper.map(challengeRoom, ChallengeInfoResponseDto.class);
+            challengeInfoResponseDtoMap.put(challengeId, challengeInfoResponseDto);
+        }
+        return challengeInfoResponseDtoMap;
+    }
 
     @Override
     @Transactional
@@ -195,6 +202,7 @@ public class ChallengeServiceImpl implements ChallengeService{
     @Override
     public void createPhotoRecord(ChallengeRecordRequestDto requestDto) throws IOException {
 
+        log.info("챌린지id "+ requestDto.getChallengeRoomId()+"유저아이디id"+requestDto.getUserId());
 
         //인증 사진이 없는경우 예외처리
         if(requestDto.getPhotoCertFile()==null) throw new ApiException(ExceptionEnum.CHALLENGE_BAD_REQUEST);
@@ -204,9 +212,10 @@ public class ChallengeServiceImpl implements ChallengeService{
 
         //오늘 날짜
         String date = commonService.getDate();
-        // UserChallenge 조회
 
-        UserChallenge userChallenge = userChallengeRepository.findById(requestDto.getUserChallengeId()).orElseThrow(()-> new ApiException(ExceptionEnum.USER_CHALLENGE_NOT_EXIST_EXCEPTION) );
+        // UserChallenge 조회
+        UserChallenge userChallenge = userChallengeRepository.findByChallengeRoomIdAndUserId(requestDto.getChallengeRoomId(), requestDto.getUserId()).orElseThrow(()-> new ApiException(ExceptionEnum.USER_CHALLENGE_NOT_EXIST_EXCEPTION) );
+        log.info("[userChallenge id값]"+ userChallenge.getId());
         ChallengeRecord challengeRecord = ChallengeRecord.from(requestDto,date,photoUrl,userChallenge);
 
         challengeRecordRepository.save(challengeRecord);
@@ -216,19 +225,21 @@ public class ChallengeServiceImpl implements ChallengeService{
 
     /** 사진 인증 개인 조회ㅏ  **/
     @Override
-    public List<PhotoRecordResponseDto> getSelfPhotoRecord(Long challengeRoomId, Long userId, Integer size) {
+    public List<PhotoRecordResponseDto> getSelfPhotoRecord(Long challengeRoomId, Long userId, String viewType) {
 
         //userChallenge 값을 찾아야함
 
       UserChallenge userChallenge =  userChallengeRepository.findByChallengeRoomIdAndUserId(challengeRoomId , userId).orElseThrow(()->new ApiException(ExceptionEnum.USER_CHALLENGE_NOT_EXIST_EXCEPTION));
 
 
-        List<PhotoRecordResponseDto> challengeRecords = recordRepoCustom.getSelfPhotoRecord(userChallenge, size ,"20222");
-
-    /*    ModelMapper modelMapper = new ModelMapper();
-        Type listType = new TypeToken<List<PhotoRecordResponseDto>>() {}.getType(); // 리스트 타입 지정
-        List<PhotoRecordResponseDto> dtoList = modelMapper.map(challengeRecords, listType); // 변환*/
+        List<PhotoRecordResponseDto> challengeRecords = recordRepoCustom.getSelfPhotoRecord(userChallenge, viewType );
         return challengeRecords;
     }
-    //인증 정보 저장 (알고리즘 , 커밋)
+
+    @Override
+    public List<PhotoRecordResponseDto> getTeamPhotoRecord(Long challengeRoomId, String viewType) {
+        List<PhotoRecordResponseDto> challengeRecords = recordRepoCustom.getTeamPhotoRecord(challengeRoomId, viewType );
+        return challengeRecords;
+
+    }
 }

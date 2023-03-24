@@ -2,6 +2,7 @@ package com.example.userservice.controller;
 
 import com.example.userservice.dto.BaseResponseDto;
 import com.example.userservice.dto.request.*;
+import com.example.userservice.dto.response.BaekjoonListResponseDto;
 import com.example.userservice.dto.response.TokenResponseDto;
 import com.example.userservice.dto.response.UserResponseDto;
 import com.example.userservice.service.UserService;
@@ -67,6 +68,18 @@ public class UserController {
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new BaseResponseDto<>(200, "success", userService.getUserInfo(userId)));
+    }
+
+    @GetMapping("/user/baekjoon/{userId}")
+    public ResponseEntity<BaseResponseDto<BaekjoonListResponseDto>> getBaekjoonList(@PathVariable Long userId) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new BaseResponseDto<>(200, "success", userService.getBaekjoonList(userId)));
+    }
+
+    @PostMapping("/user/baekjoon/{userId}")
+    public ResponseEntity<BaseResponseDto> createProblem(@PathVariable Long userId, @RequestBody ProblemRequestDto requestDto) {
+        userService.createProblem(userId, requestDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(new BaseResponseDto<>(201, "success"));
     }
 
 }

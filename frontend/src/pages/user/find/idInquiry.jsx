@@ -1,16 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
-
-import { useRouter } from 'next/router';
+import { AiOutlineCloseCircle } from 'react-icons/Ai';
 
 import classnames from 'classnames';
+import { useRouter } from 'next/router';
+
+import style from './inquiry.module.scss';
 
 import { Button } from '@/components/Button';
 import { InputText } from '@/components/InputText';
 import { ReturnArrow } from '@/components/ReturnArrow';
 
-import { AiOutlineCloseCircle } from 'react-icons/Ai';
-
-import style from './inquiry.module.scss';
 const idInquiry = () => {
   const [show, setShow] = useState(false);
 

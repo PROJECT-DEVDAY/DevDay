@@ -1,13 +1,17 @@
 package com.example.userservice.service;
 
+import com.example.userservice.client.PayServiceClient;
 import com.example.userservice.dto.request.*;
+import com.example.userservice.dto.response.BaekjoonListResponseDto;
 import com.example.userservice.dto.response.TokenResponseDto;
 import com.example.userservice.dto.response.UserResponseDto;
 import com.example.userservice.entity.EmailAuth;
+import com.example.userservice.entity.Solvedac;
 import com.example.userservice.entity.User;
 import com.example.userservice.exception.ApiException;
 import com.example.userservice.exception.ExceptionEnum;
 import com.example.userservice.repository.EmailAuthRepository;
+import com.example.userservice.repository.SolvedacReporitory;
 import com.example.userservice.repository.UserRepository;
 import com.example.userservice.security.JWTUtil;
 import lombok.RequiredArgsConstructor;
@@ -17,10 +21,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -39,6 +43,10 @@ public class UserServiceImpl implements UserService{
 
     private final RedisService redisService;
 
+    private final PayServiceClient payServiceClient;
+
+    private final SolvedacReporitory solvedacReporitory;
+
     @Override
     @Transactional
     public void join(Long emailAuthId, SignUpRequestDto requestDto) {
@@ -48,11 +56,16 @@ public class UserServiceImpl implements UserService{
 
         if (!emailAuth.getIsChecked()) throw new ApiException(ExceptionEnum.EMAIL_NOT_ACCEPT_EXCEPTION);
 
+        // 회원 저장
         User user = User.from(requestDto);
-        userRepository.save(user);
+        User saveUser = userRepository.save(user);
 
-        List<EmailAuth> emailAuthList = emailAuthRepository.findAllByEmail(user.getEmail());
+        // 이메일 인증 기록 삭제
+        List<EmailAuth> emailAuthList = emailAuthRepository.findAllByEmail(saveUser.getEmail());
         emailAuthRepository.deleteAll(emailAuthList);
+
+        // pay-service 에 유저 정보 등록
+        payServiceClient.createUser(saveUser.getId());
     }
 
     @Override
@@ -137,8 +150,7 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional(readOnly = true)
     public UserResponseDto getUserInfo(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ApiException(ExceptionEnum.MEMBER_NOT_EXIST_EXCEPTION));
+        User user = getUser(userId);
         return UserResponseDto.from(user);
     }
 
@@ -161,6 +173,30 @@ public class UserServiceImpl implements UserService{
                 .build();
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public BaekjoonListResponseDto getBaekjoonList(Long userId) {
+        List<Solvedac> solvedList = solvedacReporitory.findAllByUserId(userId);
+        HashMap<String, String> hashMap = new HashMap<>();
+        solvedList.forEach((s) -> hashMap.put(s.getProblemId(), s.getSuccessDate()));
+
+        User user = getUser(userId);
+
+        return BaekjoonListResponseDto.of(user.getBaekjoon(), hashMap);
+    }
+
+    @Override
+    @Transactional
+    public void createProblem(Long userId, ProblemRequestDto requestDto) {
+        User user = getUser(userId);
+
+        String nowDate = getDate();
+
+        requestDto.getProblemList().forEach((p) -> {
+            solvedacReporitory.save(new Solvedac(p, user, nowDate));
+        });
+    }
+
     private Long tokenValidation(String accessToken, String refreshToken) {
 
         // 리프레쉬 토큰과 액세스 토큰 null 체크
@@ -168,7 +204,6 @@ public class UserServiceImpl implements UserService{
             log.error("accessToken or refreshToken null");
             throw new ApiException(ExceptionEnum.MEMBER_ACCESS_EXCEPTION);
         }
-
 
         // 리프레쉬 토큰 유효성 검사 - 만료시 에러
         if (!jwtUtil.validateToken(refreshToken)) {
@@ -192,6 +227,18 @@ public class UserServiceImpl implements UserService{
         }
 
         return refreshTokenPk;
+    }
+
+    private User getUser(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new ApiException(ExceptionEnum.MEMBER_NOT_EXIST_EXCEPTION));
+    }
+
+    private String getDate() {
+        Date date = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+
+        return formatter.format(date);
     }
 
 }

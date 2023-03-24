@@ -4,14 +4,14 @@ import { CiMail } from 'react-icons/ci';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 
-import './inputbox.css';
+import style from './index.module.scss';
 
 export const InputBox = ({ className, content, placeholder, ...props }) => {
   return (
-    <div className={classnames('box', className)} {...props}>
-      <CiMail className="icon" />
+    <div className={style.box} {...props}>
+      <CiMail className={style.icon} />
       <input
-        className="inputbox"
+        className={style.inputbox}
         value={content}
         type="text"
         placeholder={placeholder}

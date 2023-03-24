@@ -40,9 +40,14 @@ public class AuthServiceImpl implements AuthService {
     public void deleteUser(Long userId) {
         User user = getUser(userId);
 
+        // S3 서버에서 프로필 이미지 삭제
         deleteS3Img(user);
 
+        // 회원 탈퇴
         userRepository.delete(user);
+
+        // pay-service 에서 회원 정보 삭제
+        payServiceClient.deleteUser(userId);
     }
 
     @Override
@@ -111,8 +116,8 @@ public class AuthServiceImpl implements AuthService {
     @Transactional(readOnly = true)
     public MypageResponseDto getMypageInfo(Long userId) {
         User user = getUser(userId);
-        ChallengeResponseDto challengeResponseDto = challengeServiceClient.getChallengeInfo(userId);
-        MoneyResponseDto moneyResponseDto = payServiceClient.getMoneyInfo(userId);
+        ChallengeResponseDto challengeResponseDto = challengeServiceClient.getChallengeInfo(userId).getData();
+        MoneyResponseDto moneyResponseDto = payServiceClient.getMoneyInfo(userId).getData();
         return MypageResponseDto.of(user, challengeResponseDto, moneyResponseDto);
     }
 
