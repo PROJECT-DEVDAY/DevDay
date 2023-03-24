@@ -2,12 +2,8 @@ package com.example.challengeservice.service;
 
 import com.example.challengeservice.dto.request.ChallengeRecordRequestDto;
 import com.example.challengeservice.dto.request.ChallengeRoomRequestDto;
-import com.example.challengeservice.dto.response.ChallengeRoomResponseDto;
-import com.example.challengeservice.dto.response.PhotoRecordResponseDto;
-import com.example.challengeservice.dto.response.SimpleChallengeResponseDto;
-import com.example.challengeservice.dto.response.SolvedListResponseDto;
+import com.example.challengeservice.dto.response.*;
 import com.example.challengeservice.entity.ChallengeRecord;
-import com.example.challengeservice.dto.response.UserChallengeInfoResponseDto;
 import com.example.challengeservice.entity.ChallengeRoom;
 import com.example.challengeservice.entity.UserChallenge;
 import com.example.challengeservice.exception.ApiException;
@@ -30,9 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -126,7 +120,20 @@ public class ChallengeServiceImpl implements ChallengeService{
         ModelMapper mapper=new ModelMapper();
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         return mapper.map(challengeRoom, ChallengeRoomResponseDto.class);
-     }
+    }
+
+    public Map<Long, ChallengeInfoResponseDto> challengeInfoList(List<Long> challengeIdList){
+        Map<Long, ChallengeInfoResponseDto> challengeInfoResponseDtoMap=new HashMap<>();
+        for(Long challengeId: challengeIdList){
+            ChallengeRoom challengeRoom=challengeRoomRepository.findChallengeRoomById(challengeId)
+                    .orElseThrow(() -> new ApiException(ExceptionEnum.CHALLENGE_NOT_EXIST_EXCEPTION));
+            ModelMapper mapper=new ModelMapper();
+            mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+            ChallengeInfoResponseDto challengeInfoResponseDto= mapper.map(challengeRoom, ChallengeInfoResponseDto.class);
+            challengeInfoResponseDtoMap.put(challengeId, challengeInfoResponseDto);
+        }
+        return challengeInfoResponseDtoMap;
+    }
 
     @Override
     @Transactional
