@@ -1,10 +1,17 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 import { Button } from '@/components/Button';
 import { InputText } from '@/components/InputText';
 import { ReturnArrow } from '@/components/ReturnArrow';
 
+import style from './inquiry.module.scss';
 const idInquiry = () => {
+  const [show, setShow] = useState(false);
+  const bottomSheetRef = useRef(null);
+
+  const showModal = () => {
+    setShow(prev => !prev);
+  };
   return (
     <div>
       <div className="div-header sticky top-0">
@@ -19,7 +26,17 @@ const idInquiry = () => {
           color="primary"
           fill
           label="아이디 찾기"
+          onClick={showModal}
         />
+      </div>
+
+      <div
+        className={style[`bottom-sheet${show ? '.show' : ''}`]}
+        ref={bottomSheetRef}
+      >
+        <div className="bottom-sheet-content">
+          <p>Hello, I am your bottom sheet content.</p>
+        </div>
       </div>
     </div>
   );
