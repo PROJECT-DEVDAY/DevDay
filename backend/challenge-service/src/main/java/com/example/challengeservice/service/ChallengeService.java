@@ -30,5 +30,7 @@ public interface ChallengeService {
 
     /** 개인 사진 인증 기록 가져오기 **/
 
-    List<PhotoRecordResponseDto> getSelfPhotoRecord(Long challengeId , Long userId , Integer size);
+    List<PhotoRecordResponseDto> getSelfPhotoRecord(Long challengeId ,Long userId, String viewType );
+
+    List<PhotoRecordResponseDto> getTeamPhotoRecord(Long challengeRoomId , String viewType);
 }

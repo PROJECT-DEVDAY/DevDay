@@ -22,7 +22,7 @@ public class UserChallenge {
     private Long id;
 
     @ManyToOne(targetEntity = ChallengeRoom.class, fetch=FetchType.LAZY)
-    @JoinColumn(name="CHALLENGE_ID")
+    @JoinColumn(name="CHALLENGE_ROOM_ID")
     private ChallengeRoom challengeRoom;
 
     @Column(nullable = false)
