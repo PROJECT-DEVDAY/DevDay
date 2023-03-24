@@ -7,6 +7,7 @@ import com.example.challengeservice.dto.response.PhotoRecordResponseDto;
 import com.example.challengeservice.dto.response.SimpleChallengeResponseDto;
 import com.example.challengeservice.dto.response.SolvedListResponseDto;
 import com.example.challengeservice.entity.ChallengeRecord;
+import com.example.challengeservice.dto.response.UserChallengeInfoResponseDto;
 import com.example.challengeservice.entity.ChallengeRoom;
 import com.example.challengeservice.entity.UserChallenge;
 import com.example.challengeservice.exception.ApiException;
@@ -144,6 +145,24 @@ public class ChallengeServiceImpl implements ChallengeService{
         UserChallenge userChallenge = UserChallenge.from(challengeRoom, userId);
         userChallengeRepository.save(userChallenge);
         return userChallenge.getId();
+    }
+
+    @Override
+    public UserChallengeInfoResponseDto myChallengeList(Long userId) {
+        // 현재
+        List<UserChallenge> userChallengingList = userChallengeRepository.findUserChallengingByUserId(userId, commonService.getDate());
+        List<UserChallenge> userChallengedList = userChallengeRepository.findUserChallengedByUserId(userId, commonService.getDate());
+        List<UserChallenge> userHostChallengesList = userChallengeRepository.findUserHostChallengesUserId(userId);
+
+        System.out.println("userChallengingList = "+userChallengingList);
+        System.out.println("userChallengedList = "+userChallengedList);
+        System.out.println("userHostChallengesList = "+userHostChallengesList);
+        UserChallengeInfoResponseDto userChallengeInfoResponseDto=UserChallengeInfoResponseDto.from(
+                userChallengingList.size(),
+                userChallengedList.size(),
+                userHostChallengesList.size()
+        );
+        return userChallengeInfoResponseDto;
     }
 
     @Override
