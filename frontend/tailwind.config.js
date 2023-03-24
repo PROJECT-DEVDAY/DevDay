@@ -14,7 +14,13 @@ module.exports = {
       laptopl: '1440px',
       desktop: '1280px',
     },
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ['Gmarket-Sans-Light'],
+        medium: ['Gmarket-Sans-Medium'],
+        bold: ['Gmarket-Sans-Bold'],
+      },
+    },
   },
   plugins: [],
 };

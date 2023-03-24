@@ -24,5 +24,5 @@ export const Primary = Template.bind({});
 Primary.args = {
   color: 'primary',
   label: 'Button',
-  fill: false,
+  fill: true,
 };
