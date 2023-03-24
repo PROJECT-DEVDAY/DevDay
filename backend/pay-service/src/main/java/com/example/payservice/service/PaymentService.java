@@ -1,5 +1,9 @@
 package com.example.payservice.service;
 
+import java.util.UUID;
+
+import javax.transaction.Transactional;
+
 import com.example.payservice.dto.bank.AccountDto;
 import com.example.payservice.dto.bank.Bank;
 import com.example.payservice.dto.nhbank.Header;
@@ -7,8 +11,12 @@ import com.example.payservice.dto.nhbank.ReceivedTransferType;
 import com.example.payservice.dto.nhbank.RequestTransfer;
 import com.example.payservice.dto.tosspayments.Payment;
 import com.example.payservice.dto.tosspayments.SuccessRequest;
+import com.example.payservice.entity.DepositTransactionEntity;
 import com.example.payservice.exception.PaymentsConfirmException;
 import com.example.payservice.exception.PrizeWithdrawException;
+import com.example.payservice.repository.DepositTransactionHistoryRepository;
+import com.example.payservice.repository.DepositTransactionRepository;
+
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
@@ -30,7 +38,22 @@ public class PaymentService {
 
     private final Environment env;
 
+    private final UserService userService;
+    private final DepositTransactionRepository depositTransactionRepository;
+    private final DepositTransactionHistoryRepository depositTransactionHistoryRepository;
 
+    @Transactional
+    public Object saveTransaction(Payment payment, Long userId, Long challengeId) {
+        DepositTransactionEntity dtEntity = DepositTransactionEntity.builder()
+            .id(String.valueOf(UUID.randomUUID()))
+            .user(userService.getPayUserEntity(userId))
+            .paymentKey(payment.getPaymentKey())
+            .amount(payment.getTotalAmount())
+            .refundableAmount(payment.getTotalAmount())
+            .build();
+
+        return null;
+    };
     /**
      * 사용자로부터 결제정보를 받아 토스에 확인 메시지를 전달합니다.
      * @param request

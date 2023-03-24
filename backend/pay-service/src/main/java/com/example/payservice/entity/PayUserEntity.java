@@ -23,4 +23,7 @@ public class PayUserEntity extends BaseEntity {
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     List<PrizeHistoryEntity> prizeHistories = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    List<DepositTransactionHistoryEntity> depositTransactionHistories = new ArrayList<>();
 }
