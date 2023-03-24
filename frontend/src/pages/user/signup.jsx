@@ -9,7 +9,7 @@ import { ReturnArrow } from '../../components/ReturnArrow';
 
 const signup = props => {
   return (
-    <div>
+    <div className={style.signup}>
       <div className={classNames(`style.div-header`, `sticky top-0`)}>
         <ReturnArrow title="회원가입" />
       </div>
@@ -23,9 +23,9 @@ const signup = props => {
         <InputText labelName="이름" content="홍길동" />
         <InputText labelName="닉네임" content="Devday챌린지" />
       </div>
-      <div className="font-sans div-footer text-center sticky bottom-0 p-4">
+      <div className={classNames(`font-sans text-center sticky bottom-0 p-4`)}>
         <Button color="primary" fill label="다음으로" />
-        <span>회원 가입</span>
+        <div className="mt-2"> 회원 가입</div>
       </div>
     </div>
   );
