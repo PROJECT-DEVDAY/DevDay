@@ -14,13 +14,19 @@ import javax.persistence.Table;
 
 import com.example.payservice.dto.deposit.DepositTransactionType;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 @Setter
 @Getter
 @Entity
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "deposit_transaction_history")
 public class DepositTransactionHistoryEntity extends BaseEntity {
 
@@ -37,7 +43,7 @@ public class DepositTransactionHistoryEntity extends BaseEntity {
 	@Enumerated(EnumType.STRING)
 	private DepositTransactionType type;
 
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
 	@ToString.Exclude
 	private DepositTransactionEntity depositTransaction;
 }

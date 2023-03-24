@@ -2,6 +2,9 @@ package com.example.payservice.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.example.payservice.common.response.ResponseService;
+import com.example.payservice.common.result.SingleResult;
+import com.example.payservice.dto.response.ChallengeJoinResponse;
 import com.example.payservice.dto.tosspayments.FailRequest;
 import com.example.payservice.dto.tosspayments.Payment;
 import com.example.payservice.dto.tosspayments.SuccessRequest;
@@ -23,9 +26,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class PaymentsController {
 
 	private final PaymentService paymentService;
+	private final ResponseService responseService;
 
 	@GetMapping("/{challengeId}/success")
-	public ResponseEntity<?> paymentsSuccess(
+	public SingleResult<ChallengeJoinResponse> paymentsSuccess(
 			HttpServletRequest request,
 			@PathVariable Long challengeId,
 			SuccessRequest successRequest
@@ -34,8 +38,8 @@ public class PaymentsController {
 		Long userId = 2L; // Long.parseLong(request.getHeader("userId"));
 		log.info("클라이언트 toss 결제 완료 -> challengeId: {}, request: {}", challengeId, request);
 		Payment payment = paymentService.confirm(successRequest);
-
-		return null;
+		ChallengeJoinResponse joinResponse = paymentService.saveTransaction(payment, userId, challengeId);
+		return responseService.getSingleResult(joinResponse);
 	}
 
 	@GetMapping("/{userId}/fail")
