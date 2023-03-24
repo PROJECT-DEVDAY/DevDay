@@ -1,8 +1,8 @@
-import React from 'react';
-import { useState } from 'react';
+import React, { useState } from 'react';
+import { BiShow, BiHide } from 'react-icons/bi';
+
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
-import { BiShow, BiHide } from 'react-icons/bi';
 
 import style from './index.module.scss';
 
@@ -16,7 +16,7 @@ export const InputText = ({ labelName, content, icon, type, onClick }) => {
   let inputType = null;
   let buttonType = null;
 
-  if (type == 'password') {
+  if (type === 'password') {
     inputType = (
       <input
         type={showPassword ? 'text' : 'password'}
@@ -25,11 +25,11 @@ export const InputText = ({ labelName, content, icon, type, onClick }) => {
       />
     );
     buttonType = (
-      <button onClick={toggleShowPassword}>
+      <button type="button" onClick={toggleShowPassword}>
         {showPassword ? <BiShow /> : <BiHide />}
       </button>
     );
-  } else if (type == 'iconText') {
+  } else if (type === 'iconText') {
     inputType = (
       <input
         type="text"
@@ -38,7 +38,7 @@ export const InputText = ({ labelName, content, icon, type, onClick }) => {
       />
     );
     buttonType = (
-      <button className={style.RightBtn} onClick={onClick}>
+      <button type="button" className={style.RightBtn} onClick={onClick}>
         {icon}
       </button>
     );
