@@ -123,21 +123,20 @@ public class ChallengeController {
     }
 
     /** 나의 인증 기록 불러오기 **/
-    @GetMapping("{challengeId}/users/{userId}/record")
-    public ListResult<?> getSelfChallengeRecord(@PathVariable("challengeId") Long challengeRoomId ,@PathVariable("userId") Long userId,@RequestParam("size") Integer size){
 
+    @GetMapping("{challengeId}/record/users/{userId}")
+    public ListResult<?> getSelfChallengeRecord(@PathVariable("challengeId") Long challengeRoomId ,@PathVariable("userId") Long userId,@RequestParam("view") String viewType){
 
-
-        return responseService.getListResult(challengeService.getSelfPhotoRecord(challengeRoomId,userId,size));
+        return responseService.getListResult(challengeService.getSelfPhotoRecord(challengeRoomId,userId,viewType));
     }
 
 
     /** 팀원의 인증 기록 불러오기 **/
 
     @GetMapping("{challengeId}/record")
-    public SingleResult<?> getTeamChallengeRecord(){
+    public ListResult<?> getTeamChallengeRecord(@PathVariable("challengeId")Long challengeRoomId ,@RequestParam("view") String viewType){
 
-        return null;
+        return responseService.getListResult(challengeService.getTeamPhotoRecord(challengeRoomId,viewType));
     }
 
 
