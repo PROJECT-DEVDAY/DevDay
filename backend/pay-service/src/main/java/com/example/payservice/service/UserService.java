@@ -35,6 +35,10 @@ public class UserService {
         return modelMapper.map(user, PayUserDto.class);
     }
     @Transactional
+    public void deletePayUserInfo(Long userId) {
+        payUserRepository.deleteByUserId(userId);
+    }
+    @Transactional
     public PayUserDto createPayUser(Long userId) {
         PayUserEntity entity = payUserRepository.findByUserId(userId);
         ModelMapper mapper = new ModelMapper();
