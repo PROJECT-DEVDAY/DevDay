@@ -8,7 +8,7 @@ import style from './index.module.scss';
 export const InputText = ({ labelName, content }) => {
   return (
     <div className={classnames(style.InputText, 'w-full mb-5 pb-2 pt-2')}>
-      <div className={classnames('font-bold', style.LabelName)}>
+      <div className={classnames('font-medium', style.LabelName)}>
         {labelName}
       </div>
       <input
