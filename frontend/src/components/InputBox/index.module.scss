@@ -1,0 +1,23 @@
+.box {
+  width: 100%;
+  border-radius: 10px;
+  background-color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  border: 2px solid var(--grey-border);
+  display: flex;
+  padding: 8px;
+  height: 56px;
+  .icon {
+    margin: 10px;
+    box-sizing: border-box;
+  }
+  .inputbox {
+    border: 0;
+    width: 100%;
+    padding-left: 15px;
+  }
+  .inputbox:focus {
+    outline: none;
+  }
+}

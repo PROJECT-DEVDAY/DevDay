@@ -1,1 +1,9 @@
-
+.emailCheck {
+  display: flex;
+  background-color: var(--grey-border);
+  padding: 8px;
+  border-radius: 8px;
+}
+.emailInput {
+  background-color: transparent;
+}

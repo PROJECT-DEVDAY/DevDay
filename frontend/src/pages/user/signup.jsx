@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import classNames from 'classnames';
+import { useRouter } from 'next/router';
 
 import style from './signup.module.scss';
 import { Button } from '../../components/Button';
@@ -9,6 +10,7 @@ import { ReturnArrow } from '../../components/ReturnArrow';
 
 const signup = props => {
   const [emailValidCheck, setEmailValidCheck] = useState(false);
+  const router = useRouter();
   const onClickEmailValidation = () => {
     setEmailValidCheck(true);
     // TODO: 이메일 전송 API 구현
@@ -18,13 +20,42 @@ const signup = props => {
     setCheckValidCheck(true);
     // TODO: 이메일 전송 API 구현
   };
+  const Timer = () => {
+    const [minutes, setMinutes] = useState(parseInt(0, 10));
+    const [seconds, setSeconds] = useState(parseInt(5, 10));
+    useEffect(() => {
+      const countdown = setInterval(() => {
+        if (parseInt(seconds, 10) > parseInt(0, 10)) {
+          setSeconds(parseInt(seconds, 10) - parseInt(1, 10));
+        }
+        if (parseInt(seconds, 10) === parseInt(1, 10)) {
+          if (parseInt(minutes, 10) === parseInt(0, 10)) {
+            clearInterval(countdown);
+            setEmailValidCheck(false);
+          } else {
+            setMinutes(
+              parseInt(minutes, 10),
+              parseInt(seconds, 10) - parseInt(1, 10),
+            );
+            setSeconds(parseInt(59, 10));
+          }
+        }
+      }, 1000);
+      return () => clearInterval(countdown);
+    }, [minutes, seconds]);
+    return (
+      <div className="text-red-500">
+        {minutes}:{seconds < 10 ? `0${seconds}` : seconds}
+      </div>
+    );
+  };
 
   return (
     <div className={style.signup}>
       <div className={classNames(`style.div-header`, `sticky top-0`)}>
         <ReturnArrow title="회원가입" />
       </div>
-      <div className="div-body p-6">
+      <div className="div-body p-6 pb-32">
         <InputText
           type="iconText"
           labelName="이메일"
@@ -32,7 +63,21 @@ const signup = props => {
           icon="인증하기"
           onClick={onClickEmailValidation}
         />
-        {emailValidCheck && <div>가즈아</div>}
+        {emailValidCheck && (
+          <div className={style.emailCheck}>
+            <input
+              type="text"
+              className={classNames(
+                'w-full focus:outline-none',
+                style.emailInput,
+              )}
+            />
+            <Timer />
+            <button type="button" className="ml-2 whitespace-nowrap">
+              확인
+            </button>
+          </div>
+        )}
         <InputText
           type="password"
           labelName="비밀번호"
@@ -53,8 +98,17 @@ const signup = props => {
         />
         {checkValidCheck && <div>가즈아</div>}
       </div>
-      <div className={classNames(`font-sans text-center sticky bottom-0 p-4`)}>
-        <Button color="primary" fill label="다음으로" />
+      <div
+        className={classNames(
+          `font-sans text-center absolute w-full bottom-0 p-4`,
+        )}
+      >
+        <Button
+          onClick={() => router.push('/user/signup/extra-info')}
+          color="primary"
+          fill
+          label="다음으로"
+        />
         <div className="mt-2"> 회원 가입</div>
       </div>
     </div>
