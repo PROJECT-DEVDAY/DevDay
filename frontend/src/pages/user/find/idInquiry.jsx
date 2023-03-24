@@ -63,13 +63,17 @@ const idInquiry = () => {
 
       <div
         className={classnames(
-          style[`bottom-sheet`],
+          style.BottomSheet,
           style[`${show ? 'show' : ''}`],
         )}
         ref={bottomSheetRef}
       >
         <div className={classnames(style[`modal-content`], `p-6`)}>
-          <button className={classnames(style.exitBtn)} onClick={showModal}>
+          <button
+            type="button"
+            className={classnames(style.ExitBtn)}
+            onClick={showModal}
+          >
             <AiOutlineCloseCircle />
           </button>
           <p className={classnames(`mb-2`)}>회원님의 아이디는 ~ 입니다</p>
@@ -77,7 +81,7 @@ const idInquiry = () => {
             onClick={goToLogin}
             color="primary"
             fill
-            label={'로그인 하러 가기'}
+            label="로그인 하러 가기"
           />
         </div>
       </div>
