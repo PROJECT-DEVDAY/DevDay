@@ -14,12 +14,12 @@ export const ReturnArrow = ({
   ...props
 }) => {
   return (
-    <div className={classnames(style.ReturnArrow, className)}>
+    <div className={classnames(style.ReturnArrow, className, `mt-2`)}>
       <div className={style.arrowdiv}>
         <SlArrowLeft className={style.arrow} width={30} />
       </div>
       <div>
-        <p className={style.arrowtitle}>{title}</p>
+        <p className={classnames(style.arrowtitle, `font-bold`)}>{title}</p>
       </div>
       <div className={style.space} />
     </div>
