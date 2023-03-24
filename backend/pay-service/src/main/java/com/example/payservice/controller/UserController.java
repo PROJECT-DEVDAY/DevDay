@@ -19,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,6 +43,12 @@ public class UserController {
 	@GetMapping("/{userId}")
 	public SingleResult<PayUserDto> getUserInfo(@PathVariable Long userId) {
 		return responseService.getSingleResult(userService.getPayUserInfo(userId));
+	}
+
+	@DeleteMapping("/{userId}")
+	public ResponseEntity<Object> deleteUserInfo(@PathVariable Long userId) {
+		userService.deletePayUserInfo(userId);
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 
 	@PostMapping("/{userId}/prize")
