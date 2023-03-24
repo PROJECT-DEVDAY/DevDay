@@ -22,8 +22,8 @@ public interface ChallengeService {
     List<SimpleChallengeResponseDto> getListSimpleChallenge (String type , String search , int size , Long offset);
     /** 푼 문제 리스트 찾기 **/
     SolvedListResponseDto solvedProblemList(String baekjoonId);
-    /** 유저의 백준리스트  **/
-    // updateUserBaekjoon(String baekjoonId, String userId);
+    /** 유저의 백준리스트 가져오기  **/
+    void updateUserBaekjoon(Long userId);
 
     /** 사진 인증 기록 생성하기 **/
     void createPhotoRecord (ChallengeRecordRequestDto requestDto) throws IOException;

@@ -2,6 +2,7 @@ package com.example.challengeservice.controller;
 
 import com.example.challengeservice.common.response.ResponseService;
 import com.example.challengeservice.common.result.ListResult;
+import com.example.challengeservice.common.result.Result;
 import com.example.challengeservice.common.result.SingleResult;
 import com.example.challengeservice.dto.request.ChallengeRecordRequestDto;
 import com.example.challengeservice.dto.request.ChallengeRoomRequestDto;
@@ -10,6 +11,7 @@ import com.example.challengeservice.dto.response.ChallengeRoomResponseDto;
 import com.example.challengeservice.dto.response.SimpleChallengeResponseDto;
 import com.example.challengeservice.dto.response.*;
 import com.example.challengeservice.dto.response.SolvedListResponseDto;
+import com.example.challengeservice.service.ChallengeService;
 import com.example.challengeservice.service.ChallengeServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,14 +29,8 @@ import java.util.Map;
 @Slf4j
 @RequiredArgsConstructor
 public class ChallengeController {
-    @Autowired
-    private ResponseService responseService;
-    @Autowired
-    private ChallengeServiceImpl challengeService;
-    @Autowired
-    public ChallengeController(ChallengeServiceImpl challengeService) {
-        this.challengeService = challengeService;
-    }
+    private final ResponseService responseService;
+    private final ChallengeService challengeService;
 
     /** 홍금비
      * 챌린지 생성 **/
@@ -84,6 +80,7 @@ public class ChallengeController {
     /** 신대득
      * 유저 백준 아이디를 통해 해당 유저의 푼 문제 리스트 찾기 (크롤링)
      * 나온 결과를 계산해서 user에 넣어줘야한다.
+     * Todo : userId로 baekjoonId 가져오는걸로 바꾸기
      */
     @GetMapping("/baekjoon/{baekjoonId}")
     public ResponseEntity<SolvedListResponseDto> solvedProblemList(@PathVariable("baekjoonId") String baekjoonId){
@@ -94,12 +91,11 @@ public class ChallengeController {
      * 신대득
      * 유저가 푼 문제 리스트 갱신
      */
-    /*
-    @GetMapping("baekjoon/{bakejoonId}/users/{userId}")
-    public ListResult<UserBaekjoonUpdateListResponseDto> updateUserBaekjoon(@PathVariable("baekjoonId") String baekjoonId, @PathVariable String userId){
-        return responseService.getListResult(challengeService.updateUserBaekjoon(String baekjoonId, String userId))
+    @GetMapping("/baekjoon/users/{userId}")
+    public Result updateUserBaekjoon(@PathVariable Long userId){
+        challengeService.updateUserBaekjoon(userId);
+        return responseService.getSuccessResult();
     }
-     */
 
 
 
