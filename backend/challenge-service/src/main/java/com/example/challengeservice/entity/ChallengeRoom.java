@@ -16,7 +16,7 @@ public class ChallengeRoom {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "CHALLENGE_ID")
+    @Column(name = "CHALLENGE_ROOM_ID")
     private Long id;
 
 

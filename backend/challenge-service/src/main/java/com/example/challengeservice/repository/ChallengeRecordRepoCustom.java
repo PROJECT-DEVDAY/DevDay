@@ -8,5 +8,6 @@ import java.util.List;
 
 public interface ChallengeRecordRepoCustom {
 
-    List<PhotoRecordResponseDto> getSelfPhotoRecord(UserChallenge userChallenge  , Integer size , String date);
+    List<PhotoRecordResponseDto> getSelfPhotoRecord(UserChallenge userChallenge   , String viewType);
+    List<PhotoRecordResponseDto> getTeamPhotoRecord(Long challengeRoomId, String viewType);
 }

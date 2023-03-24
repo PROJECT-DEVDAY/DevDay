@@ -28,7 +28,7 @@ public class ChallengeRecord {
 
 
     /** 챌린지 기록 ID **/
-    @ManyToOne(targetEntity = ChallengeRoom.class, fetch=FetchType.LAZY)
+    @ManyToOne(targetEntity = UserChallenge.class, fetch=FetchType.LAZY)
     @JoinColumn(name="USER_CHALLENGE_ID")
     private UserChallenge userChallenge;
 
@@ -39,8 +39,6 @@ public class ChallengeRecord {
     /**  리더 신고 여부 **/
     @Column(nullable = false)
     private boolean hostReport ;
-
-
 
     /** 인증 사진  url **/
     private String photoUrl;
