@@ -23,10 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -180,13 +177,12 @@ public class UserServiceImpl implements UserService{
     @Transactional(readOnly = true)
     public BaekjoonListResponseDto getBaekjoonList(Long userId) {
         List<Solvedac> solvedList = solvedacReporitory.findAllByUserId(userId);
-        List<String> collect = solvedList.stream().map(Solvedac::getProblemId).collect(Collectors.toList());
+        HashMap<String, String> hashMap = new HashMap<>();
+        solvedList.forEach((s) -> hashMap.put(s.getProblemId(), s.getSuccessDate()));
+
         User user = getUser(userId);
 
-        return BaekjoonListResponseDto.builder()
-                .baekjoonId(user.getBaekjoon())
-                .problemList(collect)
-                .build();
+        return BaekjoonListResponseDto.of(user.getBaekjoon(), hashMap);
     }
 
     @Override
