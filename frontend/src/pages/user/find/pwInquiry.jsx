@@ -1,16 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
-
-import { useRouter } from 'next/router';
+import { AiOutlineCloseCircle } from 'react-icons/Ai';
 
 import classnames from 'classnames';
+import { useRouter } from 'next/router';
+
+import style from './inquiry.module.scss';
 
 import { Button } from '@/components/Button';
 import { InputText } from '@/components/InputText';
 import { ReturnArrow } from '@/components/ReturnArrow';
 
-import { AiOutlineCloseCircle } from 'react-icons/Ai';
-
-import style from './inquiry.module.scss';
 const pwInquiry = () => {
   const [show, setShow] = useState(false);
 
@@ -64,13 +63,17 @@ const pwInquiry = () => {
 
       <div
         className={classnames(
-          style[`bottom-sheet`],
+          style.BottomSheet,
           style[`${show ? 'show' : ''}`],
         )}
         ref={bottomSheetRef}
       >
         <div className={classnames(style[`modal-content`], `p-6`)}>
-          <button className={classnames(style.exitBtn)} onClick={showModal}>
+          <button
+            type="button"
+            className={classnames(style.ExitBtn)}
+            onClick={showModal}
+          >
             <AiOutlineCloseCircle />
           </button>
           <p className={classnames(`mb-4 mt-2`)}>
@@ -80,7 +83,7 @@ const pwInquiry = () => {
             onClick={goToLogin}
             color="primary"
             fill
-            label={'로그인 하러 가기'}
+            label="로그인 하러 가기"
           />
         </div>
       </div>

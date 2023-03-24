@@ -23,11 +23,11 @@ export const SelectArrow = ({
       )}
     >
       <div style={{ flex: 1 }}>
-        <p className="arrowtitle">{title}</p>
-        <p className="arrowcontent">{content}</p>
+        <p className="ArrowTitle">{title}</p>
+        <p className="ArrowContent">{content}</p>
       </div>
-      <div className="arrowdiv">
-        <SlArrowRight className="arrow" width={30} />
+      <div className="ArrowDiv">
+        <SlArrowRight className="Arrow" width={30} />
       </div>
     </div>
   );

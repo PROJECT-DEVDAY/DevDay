@@ -21,8 +21,8 @@ export const SelectOption = ({
         fill && 'Select-background-fill',
       )}
     >
-      <p className="title">{title}</p>
-      <p className="content">{content}</p>
+      <p className="Title">{title}</p>
+      <p className="Content">{content}</p>
     </div>
     // <button
     //   type="button"

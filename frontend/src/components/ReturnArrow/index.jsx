@@ -2,7 +2,6 @@ import React from 'react';
 import { SlArrowLeft } from 'react-icons/sl';
 
 import classnames from 'classnames';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 
