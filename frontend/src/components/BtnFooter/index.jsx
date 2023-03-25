@@ -14,6 +14,7 @@ export const BtnFooter = ({
   color,
   disable,
   gotourl,
+  warningMessage,
   ...props
 }) => {
   const router = useRouter();
@@ -27,7 +28,7 @@ export const BtnFooter = ({
         <Button onClick={goTo} className="mt-3 mb-3" label={label} />
       </div>
       <div className={classnames(disable && style.check, style.text)}>
-        선택하지 않은 사항이 있어요.
+        {warningMessage}
       </div>
     </div>
   );
