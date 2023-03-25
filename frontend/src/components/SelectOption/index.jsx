@@ -3,46 +3,21 @@ import React from 'react';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 
-import './selectoption.css';
+import style from './index.module.scss';
 
-export const SelectOption = ({
-  fill,
-  className,
-  iconname,
-  title,
-  content,
-  ...props
-}) => {
+export const SelectOption = ({ fill, check, title, content, ...props }) => {
   return (
     <div
-      className={classnames(
-        'Select',
-        className,
-        fill && 'Select-background-fill',
-      )}
+      className={classnames(!check && style.Select, check && style.Selected)}
     >
-      <p className="Title">{title}</p>
-      <p className="Content">{content}</p>
+      <div className={style.Title}>{title}</div>
+      <div className={style.Content}>{content}</div>
     </div>
-    // <button
-    //   type="button"
-    //   className={classnames(
-    //     'Button',
-    //     `Button-${color}`,
-    //     fill && 'Button-background-fill',
-    //     className,
-    //   )}
-    //   {...props}
-    // >
-    //   {label}
-    // </button>
   );
 };
 
 SelectOption.propTypes = {
   fill: PropTypes.bool,
-  title: PropTypes.string.isRequired,
-  content: PropTypes.string.isRequired,
   onClick: PropTypes.func,
 };
 

@@ -32,7 +32,7 @@ const check = props => {
       </div>
       <div className="div-body p-6 pb-32 mt-16">
         <div>
-          <div className={classNames('text-lg', style.fontText)}>
+          <div className="text-lg font-medium">
             챌린지를 여는 이 순간부터,
             <br />
             당신은 챌린지를 이끌어나갈
@@ -80,6 +80,7 @@ const check = props => {
           label="네! 약속할게요"
           disable={firstChecked && secondChecked}
           gotourl="/create/type"
+          warningMessage="약속을 지키지 않으실건가요ㅠㅠ"
         />
       </div>
     </div>
