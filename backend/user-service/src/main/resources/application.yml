@@ -46,5 +46,4 @@ logging:
   level:
     com.example.userservice.client: DEBUG
 
-gateway:
-  ip: 127.0.0.1
+

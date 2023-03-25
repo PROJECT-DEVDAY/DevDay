@@ -46,6 +46,3 @@ logging:
   level:
     com.example.challengeservice.client: DEBUG
 
-
-gateway:
-  ip: 127.0.0.1
