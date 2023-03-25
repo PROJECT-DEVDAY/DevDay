@@ -1,11 +1,13 @@
 package com.example.payservice.service;
 
+import com.example.payservice.common.client.UserServiceClient;
 import com.example.payservice.dto.response.UserResponse;
 import com.example.payservice.dto.user.PayUserDto;
 import com.example.payservice.entity.PayUserEntity;
 import com.example.payservice.exception.UserNotExistException;
 import com.example.payservice.repository.PayUserRepository;
-import lombok.AllArgsConstructor;
+import feign.FeignException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
@@ -15,9 +17,10 @@ import javax.transaction.Transactional;
 
 @Slf4j
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class UserService {
 
+    private final UserServiceClient userServiceClient;
     private final PayUserRepository payUserRepository;
 
     /**
@@ -75,18 +78,14 @@ public class UserService {
      * @return
      */
     public UserResponse searchUserInDevDay(long userId) {
-        // TODO: user-service에서 user정보를 검사한다.
-        UserResponse user = new UserResponse();
-        user.setUserId(userId);
-//
-//        UserResponse user = null;
-//        try {
-//            user = userServiceClient.getUserInfo(userId);
-//        } catch(FeignException ex) {
-//            log.error("user-service에서 정보를 가져오는데 실패했습니다. -> {}", ex.getMessage());
-//        }
-        if(user == null) {
-            throw new UserNotExistException("user-service에 존재하지 않는 유저입니다.");
+        UserResponse user = null;
+        try {
+            user = userServiceClient.getUserInfo(userId).getData();
+            if(user == null) {
+                throw new UserNotExistException("user-service에 존재하지 않는 유저입니다.");
+            }
+        } catch(FeignException ex) {
+            log.error("user-service에서 정보를 가져오는데 실패했습니다. -> {}", ex.getMessage());
         }
         return user;
     }

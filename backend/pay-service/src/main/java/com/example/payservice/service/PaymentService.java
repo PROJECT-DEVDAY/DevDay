@@ -1,9 +1,5 @@
 package com.example.payservice.service;
 
-import java.util.UUID;
-
-import javax.transaction.Transactional;
-
 import com.example.payservice.dto.bank.AccountDto;
 import com.example.payservice.dto.bank.Bank;
 import com.example.payservice.dto.deposit.DepositTransactionType;
@@ -20,7 +16,6 @@ import com.example.payservice.exception.PaymentsConfirmException;
 import com.example.payservice.exception.PrizeWithdrawException;
 import com.example.payservice.repository.DepositTransactionHistoryRepository;
 import com.example.payservice.repository.DepositTransactionRepository;
-
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
@@ -30,6 +25,9 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+
+import javax.transaction.Transactional;
+import java.util.UUID;
 
 /**
  * 토스페이, 농협오픈뱅킹과 관련된 서비스를 처리합니다.
@@ -64,7 +62,7 @@ public class PaymentService {
             .user(userEntity)
             .build();
 
-        userEntity.setDeposit(userEntity.getDeposit() + payment.getTotalAmount());
+        userEntity.updateDeposit(userEntity.getDeposit() + payment.getTotalAmount());
         depositTransactionHistoryRepository.save(dthEntity);
 
 

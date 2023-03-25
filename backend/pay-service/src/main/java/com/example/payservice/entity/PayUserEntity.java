@@ -1,7 +1,9 @@
 package com.example.payservice.entity;
 
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
@@ -9,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Data
+@Getter
 @DynamicUpdate
 @EqualsAndHashCode(callSuper=false)
 @Table(name = "pay_users")
@@ -22,8 +24,27 @@ public class PayUserEntity extends BaseEntity {
     private Integer prize;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @JsonManagedReference
     List<PrizeHistoryEntity> prizeHistories = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @JsonIgnoreProperties
     List<DepositTransactionHistoryEntity> depositTransactionHistories = new ArrayList<>();
+
+    @Override
+    public String toString() {
+        return "PayUserEntity{" +
+                "userId=" + userId +
+                ", deposit=" + deposit +
+                ", prize=" + prize +
+                '}';
+    }
+
+    public void updateDeposit(Integer deposit) {
+        this.deposit = deposit;
+    }
+
+    public void updatePrize(Integer prize) {
+        this.prize = prize;
+    }
 }
