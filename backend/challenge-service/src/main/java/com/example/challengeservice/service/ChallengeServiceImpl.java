@@ -24,7 +24,6 @@ import org.jsoup.select.Elements;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.modelmapper.convention.MatchingStrategies;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,8 +32,8 @@ import java.lang.reflect.Type;
 import java.util.*;
 
 @Service
-@Slf4j
 @RequiredArgsConstructor
+@Slf4j
 public class ChallengeServiceImpl implements ChallengeService{
     private final UserServiceClient userServiceClient;
     private final UserChallengeRepository userChallengeRepository;

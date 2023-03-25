@@ -24,7 +24,7 @@ import static com.example.challengeservice.entity.QUserChallenge.userChallenge;
 @Repository
 public class ChallengeRecordRepoCustomImpl implements ChallengeRecordRepoCustom {
 
-    private CommonServiceImpl commonService;
+    private final CommonServiceImpl commonService;
 
     private final JPAQueryFactory jpaQueryFactory;
     @Override
