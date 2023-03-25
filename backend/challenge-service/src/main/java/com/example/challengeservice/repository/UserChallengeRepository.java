@@ -6,10 +6,12 @@ import org.bouncycastle.asn1.cmp.Challenge;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public interface UserChallengeRepository extends JpaRepository<UserChallenge,Long> {
     Optional<UserChallenge> findByChallengeRoomIdAndUserId(Long challengeId, Long userId);
 //    List<UserChallenge> findAllByChallengeId(Long challengeId);
