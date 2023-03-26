@@ -1,17 +1,13 @@
 .RadioGroup {
-  display: flex;
   flex-direction: row;
-  align-items: center;
 
   label {
-    display: inline-block;
-    background-color: var(--grey-bg);
-    border-radius: 15px;
+    background-color: var(--gray-bg);
     cursor: pointer;
 
     &.selected {
       background-color: black;
-      color: var(--grey-bg);
+      color: var(--gray-bg);
     }
   }
 

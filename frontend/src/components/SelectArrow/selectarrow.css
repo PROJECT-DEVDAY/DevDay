@@ -5,7 +5,7 @@
   background-color: #fff;
   font-size: 1rem;
   cursor: pointer;
-  border: 2px solid var(--grey-border);
+  border: 2px solid var(--gray-border);
   display: flex;
   justify-content: space-between;
   padding: 10px;
