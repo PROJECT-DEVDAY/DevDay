@@ -4,8 +4,8 @@ import Image from 'next/image';
 
 import style from './index.module.scss';
 
-export const UserAvatar = props => {
-  const [imgFile, setImgeFile] = useState('');
+export const UserAvatar = ({ imageURL, ...props }) => {
+  const [imgFile, setImgeFile] = useState({ imageURL });
 
   const logoImgInput = useRef();
 
