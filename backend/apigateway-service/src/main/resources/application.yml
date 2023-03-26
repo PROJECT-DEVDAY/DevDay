@@ -12,8 +12,6 @@ eureka:
       defaultZone: http://localhost:8761/eureka
 
 spring:
-  profiles:
-    include: jwt
   application:
     name: apigateway-service
   cloud:
@@ -103,6 +101,6 @@ spring:
             - RemoveRequestHeader=Cookie
             - RewritePath=/pay-service/(?<segment>.*), /$\{segment}
             - JwtAuthenticationFilter
-            
+
 token:
   secret: dyAeHubOOc8KaOfYB6XEQoEj1QzRlVgtjNL8PYs1A1tymZvvqkcEU7L1imkKHeDa
