@@ -11,7 +11,7 @@ import java.util.List;
 @Setter
 @Builder
 public class ProblemRequestDto {
-    List<String> problemList = new ArrayList<>();
+    List<String> problemList;
     public static ProblemRequestDto from(List<String> problemList){
         return ProblemRequestDto.builder()
                 .problemList(problemList)
