@@ -24,7 +24,8 @@ spring:
         corsConfigurations:
           '[/**]':
             allowedOrigins:
-              - "http://localhost:8080/"
+              - "http://j8c209.p.ssafy.io/"
+              - "http://localhost:3000/"
             allow-credentials: true
             allowedHeaders: '*'
             exposedHeaders: '*'
@@ -79,6 +80,15 @@ spring:
         - id: challenge-service
           uri: lb://CHALLENGE-SERVICE
           predicates:
+            - Path=/challenge-service/auth/**
+            - Method=GET, POST, PATCH, DELETE
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/challenge-service/(?<segment>.*), /$\{segment}
+            - JwtAuthenticationFilter
+        - id: challenge-service
+          uri: lb://CHALLENGE-SERVICE
+          predicates:
             - Path=/challenge-service/**
             - Method=GET, POST, PATCH, DELETE
           filters:
@@ -92,3 +102,4 @@ spring:
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/pay-service/(?<segment>.*), /$\{segment}
+            - JwtAuthenticationFilter
