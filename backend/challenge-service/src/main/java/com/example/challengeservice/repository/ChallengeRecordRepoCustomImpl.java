@@ -3,7 +3,7 @@ package com.example.challengeservice.repository;
 import com.example.challengeservice.dto.response.PhotoRecordResponseDto;
 import com.example.challengeservice.entity.*;
 
-import com.example.challengeservice.service.CommonService;
+
 import com.example.challengeservice.service.CommonServiceImpl;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Projections;
@@ -16,7 +16,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 import static com.example.challengeservice.entity.QChallengeRecord.challengeRecord;
-import static com.example.challengeservice.entity.QChallengeRoom.challengeRoom;
 import static com.example.challengeservice.entity.QUserChallenge.userChallenge;
 
 
@@ -24,7 +23,7 @@ import static com.example.challengeservice.entity.QUserChallenge.userChallenge;
 @Repository
 public class ChallengeRecordRepoCustomImpl implements ChallengeRecordRepoCustom {
 
-    private CommonServiceImpl commonService;
+    private  final  CommonServiceImpl commonService;
 
     private final JPAQueryFactory jpaQueryFactory;
     @Override
@@ -66,11 +65,10 @@ public class ChallengeRecordRepoCustomImpl implements ChallengeRecordRepoCustom 
                 ))
                 .from(challengeRecord)
                 .join(challengeRecord.userChallenge, userChallenge)
-                .where(challengeRecord.userChallenge.challengeRoom.id.eq(challengeRoomId), isPreview(viewType))
-                .orderBy(challengeRecord.createAt.desc());
+                .where(challengeRecord.userChallenge.challengeRoom.id.eq(challengeRoomId), isPreview(viewType));
 
        if(viewType.equals("ALL")){
-         query = query.groupBy(challengeRecord.createAt);
+         query = query.orderBy(challengeRecord.createAt.desc());
         }
 
         return query.fetch();
@@ -82,7 +80,9 @@ public class ChallengeRecordRepoCustomImpl implements ChallengeRecordRepoCustom 
         switch (viewType){
 
             case "PREVIEW":
+                System.out.println("오늘날짜: "+commonService.getDate());
                 return challengeRecord.createAt.eq(commonService.getDate());
+
             default: return null;
         }
 
