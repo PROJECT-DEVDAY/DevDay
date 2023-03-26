@@ -22,7 +22,7 @@ public class Solvedac {
     @Id
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID")
-    private User user;
+    private User userId;
 
     private String successDate;
 }
