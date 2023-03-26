@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 
 import classnames from 'classnames';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 // import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 
@@ -20,12 +21,11 @@ export const ChallengeItem = ({
 }) => {
   const [imgURL, setImgeFile] = useState({ imgUrl });
 
-  // const router = useRouter();
-  // const goTo = () => {
-  //   router.push(`${goToUrl}`);
-  // };
+  const router = useRouter();
+
   const goToChallengDetail = () => {
     onClick(id);
+    // router.push(`${디테일/id}`);
   };
   const handleKeyPress = event => {
     if (event.key === 'Enter' || event.key === ' ') {

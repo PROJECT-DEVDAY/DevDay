@@ -30,9 +30,7 @@ const main = props => {
     setSearchBoxStatus(prev => !prev);
   };
 
-  const goToChallengDetail = event => {
-    alert(event.target.value);
-  };
+  const goToChallengDetail = () => {};
 
   const HEADER_ITEMS = [
     {
