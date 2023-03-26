@@ -1,7 +1,7 @@
 .checkBoxBtn {
-  border-top: 2px solid var(--grey-hr);
+  border-top: 2px solid var(--gray-hr);
   padding: 15px;
-  background-color: var(--grey-bg);
+  background-color: var(--gray-bg);
 
   .content {
     height: 100%;
@@ -12,7 +12,7 @@
 
     user-select: none;
     font-size: 15px;
-    color: var(--grey-extra);
+    color: var(--gray-extra);
   }
   .checkBox {
     position: relative;
