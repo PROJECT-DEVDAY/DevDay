@@ -10,5 +10,6 @@ import java.util.List;
 @Data
 @Builder
 public class SimpleChallengeInfosRequest implements Serializable {
+    @Builder.Default
     private List<Long> challengeIdList = new ArrayList<>();
 }
