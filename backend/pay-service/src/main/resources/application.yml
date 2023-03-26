@@ -1,5 +1,5 @@
 server:
-  port: 0
+  port: 8003
 
 spring:
   application:
@@ -10,11 +10,17 @@ spring:
       settings:
         web-allow-others: true
       enabled: true
+#  datasource:
+#    driver-class-name: org.h2.Driver
+#    url: jdbc:h2:mem:pay-service
+#    username: sa
+#    password: 1234
   datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:pay-service
-    username: sa
+    url: jdbc:mysql://localhost:9003/devday?useSSL=false&serverTimezone=UTC
+    username: root
     password: 1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
 
   jpa:
     generate-ddl: true
@@ -37,7 +43,7 @@ eureka:
 payment:
   toss:
     baseUrl: https://api.tosspayments.com
-    secret:
+    secret: dGVzdF9za19qa1lHNTdFYmEzR1JCWGcxbUs2OHBXRE94bUExOg==
     path:
       confirm: /v1/payments/confirm
       cancel: /v1/payments/%s/cancel
@@ -45,9 +51,9 @@ payment:
 openapi:
   nonghyup:
     baseUrl: https://developers.nonghyup.com
-    accessToken:
-    iscd:
-    fintechApsno:
+    accessToken: 1bde7fbe896bd899b734984345141a21a4acb8e6b20fe3f22517d21bc5fdbda2
+    iscd: '001780'
+    fintechApsno: '001' # 테스트
     apiSvcCd: ReceivedTransferA
     otlt: Devday 상금
 

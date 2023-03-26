@@ -33,6 +33,9 @@ dependencies {
 
 	// modelmapper
 	implementation 'org.modelmapper:modelmapper:2.3.8'
+
+	// mysql
+	runtimeOnly 'com.mysql:mysql-connector-j'
 }
 
 dependencyManagement {
