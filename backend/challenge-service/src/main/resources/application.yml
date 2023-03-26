@@ -31,6 +31,12 @@ spring:
       ddl-auto: update
     show-sql: true
     generate-ddl: true
+    
+    database : mysql
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    properties:
+      hibernate:
+        format_sql: true
 
 eureka:
   instance:
