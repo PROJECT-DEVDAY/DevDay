@@ -1,0 +1,26 @@
+.Divider {
+  width: 100vh;
+  border-bottom: 1px solid var(--gray-hr);
+  box-sizing: border-box;
+}
+
+.HeaderSearch {
+  height: 100%;
+  .searchContainer {
+    position: relative;
+    input {
+      background-color: var(--gray-border);
+      width: 100%;
+      padding-right: 88px;
+    }
+    svg {
+      color: var(--gray-extra);
+      position: absolute;
+      right: 12px;
+      cursor: pointer;
+    }
+    svg:nth-child(2) {
+      right: 48px;
+    }
+  }
+}
