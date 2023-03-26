@@ -103,3 +103,6 @@ spring:
             - RemoveRequestHeader=Cookie
             - RewritePath=/pay-service/(?<segment>.*), /$\{segment}
             - JwtAuthenticationFilter
+            
+token:
+  secret: dyAeHubOOc8KaOfYB6XEQoEj1QzRlVgtjNL8PYs1A1tymZvvqkcEU7L1imkKHeDa
