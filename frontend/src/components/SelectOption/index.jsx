@@ -1,17 +1,36 @@
 import React from 'react';
 
 import classnames from 'classnames';
+import Image from 'next/image';
 import PropTypes from 'prop-types';
 
 import style from './index.module.scss';
 
-export const SelectOption = ({ fill, check, title, content, ...props }) => {
+export const SelectOption = ({
+  fill,
+  check,
+  title,
+  content,
+  iconUrl,
+  ...props
+}) => {
   return (
     <div
-      className={classnames(!check && style.Select, check && style.Selected)}
+      className={classnames(
+        !check && style.Select,
+        check && style.Selected,
+        'flex',
+      )}
     >
-      <div className={style.Title}>{title}</div>
-      <div className={style.Content}>{content}</div>
+      <div>
+        <div className={style.Title}>{title}</div>
+        <div className={style.Content}>{content}</div>
+      </div>
+      {iconUrl && (
+        <div className={style.iconImage}>
+          <Image src={iconUrl} alt={title} />
+        </div>
+      )}
     </div>
   );
 };
@@ -19,9 +38,11 @@ export const SelectOption = ({ fill, check, title, content, ...props }) => {
 SelectOption.propTypes = {
   fill: PropTypes.bool,
   onClick: PropTypes.func,
+  iconUrl: PropTypes.string,
 };
 
 SelectOption.defaultProps = {
   fill: true,
   onClick: undefined,
+  iconUrl: null,
 };
