@@ -1,4 +1,4 @@
 FROM openjdk:17-ea-11-jdk-slim
 VOLUME /tmp
-COPY build/libs/eurekaservice-0.0.1-SNAPSHOT.jar EurekaService.jar
+COPY build/libs/eureka-service-0.0.1-SNAPSHOT.jar EurekaService.jar
 ENTRYPOINT ["java", "-jar", "EurekaService.jar"]
