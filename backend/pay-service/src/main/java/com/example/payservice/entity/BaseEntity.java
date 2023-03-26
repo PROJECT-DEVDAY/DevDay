@@ -3,6 +3,7 @@ package com.example.payservice.entity;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.repository.Lock;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;

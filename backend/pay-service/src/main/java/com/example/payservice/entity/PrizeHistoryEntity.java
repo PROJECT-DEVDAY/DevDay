@@ -3,6 +3,7 @@ package com.example.payservice.entity;
 import com.example.payservice.dto.bank.AccountDto;
 import com.example.payservice.dto.prize.PrizeHistoryType;
 import com.example.payservice.dto.request.RewardSaveRequest;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
@@ -31,6 +32,7 @@ public class PrizeHistoryEntity extends BaseEntity implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "USER_ID")
+    @JsonBackReference
     private PayUserEntity user;
 
     @Column(name = "CHALLENGE_ID")
@@ -48,15 +50,15 @@ public class PrizeHistoryEntity extends BaseEntity implements Serializable {
             user.getPrizeHistories().add(this);
         }
         if(this.prizeHistoryType == PrizeHistoryType.IN) {
-            user.setPrize(user.getPrize() + amount);
+            user.updatePrize(user.getPrize() + amount);
         } else {
-            user.setPrize(user.getPrize() - amount);
+            user.updatePrize(user.getPrize() - amount);
         }
     }
 
     /**
      * 획득이력을 기록하는 PrizeHistoryEntity를 반환합니다.
-     * @param rewardSaveDto
+     * @param request
      * @return
      */
     public static PrizeHistoryEntity createInTypePrizeHistory(RewardSaveRequest request) {
