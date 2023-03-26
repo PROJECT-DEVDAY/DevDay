@@ -51,3 +51,9 @@ sonar {
 		property "sonar.qualitygate.wait", true
 	}
 }
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
