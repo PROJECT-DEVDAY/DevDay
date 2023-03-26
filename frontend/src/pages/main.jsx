@@ -11,6 +11,8 @@ import PropTypes from 'prop-types';
 
 import style from './main.module.scss';
 
+import { ChallengeItem } from '@/components/ChallengeItem';
+import Footer from '@/components/Footer';
 import { HeaderButtons } from '@/components/HeaderButtons';
 
 const main = props => {
@@ -28,6 +30,10 @@ const main = props => {
     setSearchBoxStatus(prev => !prev);
   };
 
+  const goToChallengDetail = event => {
+    alert(event.target.value);
+  };
+
   const HEADER_ITEMS = [
     {
       label: 'search',
@@ -40,9 +46,47 @@ const main = props => {
       onClick: addChallenge,
     },
   ];
+
+  const CHALLENGE_ITEMS = [
+    {
+      id: 1,
+      imgUrl: '@/image/default-user.png',
+      participants: '4',
+      leader: '박태환',
+      title: '1일 1알고리즘 도전하기',
+      period: '03.26 ~ 04.12',
+    },
+    {
+      id: 2,
+      imgUrl: '@/image/default-user.png',
+      participants: '11',
+      leader: '홍금비',
+      title: '1일 1커밋 도전하기',
+      period: '03.30 ~ 04.12',
+    },
+    {
+      id: 3,
+      imgUrl: '@/image/default-user.png',
+      participants: '55',
+      leader: '신대득',
+      title: '매일매일 자소서쓰기',
+      period: '04.01 ~ 04.12',
+    },
+    {
+      id: 4,
+      imgUrl: '@/image/default-user.png',
+      participants: '100',
+      leader: '최형운',
+      title: '런닝머신 1시간뛰기',
+      period: '03.26 ~ 04.26',
+    },
+  ];
+
   return (
-    <div className={classnames(style.MainHeader, `py-6`)}>
-      <div className={classnames(`flex justify-between px-6`, style.HeaderTop)}>
+    <div className={classnames(style.MainHeader, `pt-6`)}>
+      <div
+        className={classnames(`flex justify-between px-6`, style.TopOfHeader)}
+      >
         <Image src={require('@/image/MainLogo.png')} width={70} height={70} />
         <div className={classnames(`flex HeaderIcons`)}>
           {HEADER_ITEMS.map(item => {
@@ -68,7 +112,7 @@ const main = props => {
 
       <hr className={style.Divider} />
 
-      <div className={classnames(`p-4`, style.HeaderBottom)}>
+      <div className={classnames(`p-4`, style.BottomOfHeader)}>
         {searchBoxStatus && (
           <div
             className={classnames(
@@ -93,9 +137,35 @@ const main = props => {
           </div>
         )}
 
-        <div className={classnames(`py-4`, style.HeaderButtons)}>
+        <div className={classnames(`pt-4`, style.HeaderButtons)}>
           <HeaderButtons />
         </div>
+      </div>
+      <div
+        className={classnames(
+          style.MainBody,
+          `flex flex-wrap justify-around px-6`,
+        )}
+      >
+        {CHALLENGE_ITEMS.map(item => {
+          const { id, imgURL, participants, leader, title, period } = item;
+          const key = `challenge-item-${id}`;
+          return (
+            <ChallengeItem
+              id={id}
+              imgUrl={imgURL}
+              participants={participants}
+              leader={leader}
+              title={title}
+              period={period}
+              onClick={goToChallengDetail}
+            />
+          );
+        })}
+      </div>
+
+      <div className={classnames('absolute w-full bottom-0 m-0')}>
+        <Footer />
       </div>
     </div>
   );
