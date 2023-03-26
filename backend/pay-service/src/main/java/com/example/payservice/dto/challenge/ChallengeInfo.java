@@ -1,9 +1,9 @@
-package com.example.payservice.dto.response;
+package com.example.payservice.dto.challenge;
 
 import lombok.Data;
 
 @Data
-public class ChallengeResponse {
+public class ChallengeInfo {
 
     // 챌린지 ID
     private Long id;
