@@ -13,13 +13,13 @@ export const BtnFooter = ({
   label,
   color,
   disable,
-  gotourl,
+  goToUrl,
   warningMessage,
   ...props
 }) => {
   const router = useRouter();
   const goTo = () => {
-    router.push(`${gotourl}`);
+    router.push(`${goToUrl}`);
   };
   return (
     <div className={style.btnFooter}>
