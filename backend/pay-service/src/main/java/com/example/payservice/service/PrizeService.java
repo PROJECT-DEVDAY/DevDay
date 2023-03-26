@@ -1,25 +1,35 @@
 package com.example.payservice.service;
 
+import com.example.payservice.common.client.ChallengeServiceClient;
+import com.example.payservice.dto.CustomPage;
 import com.example.payservice.dto.bank.AccountDto;
+import com.example.payservice.dto.challenge.SimpleChallengeInfo;
 import com.example.payservice.dto.prize.PrizeHistoryDto;
+import com.example.payservice.dto.prize.PrizeHistoryType;
 import com.example.payservice.dto.request.RewardSaveRequest;
+import com.example.payservice.dto.request.SimpleChallengeInfosRequest;
 import com.example.payservice.dto.response.WithdrawResponse;
 import com.example.payservice.entity.PayUserEntity;
 import com.example.payservice.entity.PrizeHistoryEntity;
 import com.example.payservice.exception.LackOfPrizeException;
 import com.example.payservice.repository.PrizeHistoryRepository;
-import lombok.AllArgsConstructor;
+import feign.FeignException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class PrizeService {
+    private final ChallengeServiceClient challengeServiceClient;
     private final PrizeHistoryRepository prizeHistoryRepository;
     private final PaymentService paymentService;
     private final UserService userService;
@@ -76,14 +86,66 @@ public class PrizeService {
      * @param pageable
      * @return
      */
-    public Page<PrizeHistoryDto> searchHistories(long userId, String type, Pageable pageable) {
+    public CustomPage<PrizeHistoryDto> searchHistories(long userId, String type, Pageable pageable) {
         PayUserEntity payUserEntity = userService.getPayUserEntity(userId);
         String historyType = String.valueOf(type).isEmpty() ? null : type;
-        // TODO: 챌린지 정보 반영하기
 
-        return prizeHistoryRepository
-                .findAllByUserAndPrizeHistoryType(payUserEntity, historyType, pageable)
-                .map(PrizeHistoryDto::from);
+        Page<PrizeHistoryEntity> pages = prizeHistoryRepository
+                .findAllByUserAndPrizeHistoryType(payUserEntity, historyType, pageable);
+        List<PrizeHistoryDto> updatedPages = getSyncChallengeLists(pages.getContent());
+
+
+        return CustomPage.<PrizeHistoryDto>builder()
+                .empty(pages.isEmpty())
+                .first(pages.isFirst())
+                .last(pages.isLast())
+                .size(pages.getSize())
+                .totalElements(pages.getTotalElements())
+                .totalPages(pages.getTotalPages())
+                .content(updatedPages)
+                .page(pages.getPageable().getPageNumber())
+                .build();
+    }
+
+    /**
+     * challenge-service에서 challenge 정보를 조회해 업데이트 후 리스트를 반환합니다.
+     * @param challenges
+     * @return
+     */
+    private List<PrizeHistoryDto> getSyncChallengeLists(List<PrizeHistoryEntity> challenges) {
+        log.info("{}", challenges);
+        List<PrizeHistoryDto> syncChallenges = challenges.stream()
+                .map(PrizeHistoryDto::from).collect(Collectors.toList());
+
+        try {
+            List<Long> challengeTypeInIds = challenges.stream()
+                    .filter(prizeHistory -> prizeHistory.getPrizeHistoryType() == PrizeHistoryType.IN)
+                    .map(prizeHistory -> prizeHistory.getChallengeId())
+                    .collect(Collectors.toList());
+
+            if(!challengeTypeInIds.isEmpty()) {
+                SimpleChallengeInfosRequest request = SimpleChallengeInfosRequest.builder()
+                        .challengeIdList(challengeTypeInIds)
+                        .build();
+
+                Map<Long, SimpleChallengeInfo> challengeInfoMap = challengeServiceClient
+                    .getSimpleChallengeInfos(request)
+                    .getData();
+
+                syncChallenges = challenges.stream().map(c -> {
+                    PrizeHistoryDto dto = PrizeHistoryDto.from(c);
+                    // challenge 정보를 업데이트 합니다.
+                    if (c.getPrizeHistoryType() == PrizeHistoryType.IN)
+                        dto.setChallenge(challengeInfoMap.getOrDefault(c.getChallengeId(), null));
+                    return dto;
+                }).collect(Collectors.toList());
+            }
+        } catch(FeignException ex) {
+            log.error("challenge-service로부터 challenge 정보를 가져오는 데 실패했습니다. -> {}", ex.getMessage());
+        } catch(Exception ex) {
+            log.error("challenge-service의 데이터와 pay-service 데이터를 합치는 과정에 문제가 발생했습니다. -> {}", ex.getMessage());
+        }
+        return syncChallenges;
     }
 
     /**

@@ -2,13 +2,20 @@ package com.example.payservice.service;
 
 import com.example.payservice.dto.bank.AccountDto;
 import com.example.payservice.dto.bank.Bank;
+import com.example.payservice.dto.deposit.DepositTransactionType;
 import com.example.payservice.dto.nhbank.Header;
 import com.example.payservice.dto.nhbank.ReceivedTransferType;
 import com.example.payservice.dto.nhbank.RequestTransfer;
+import com.example.payservice.dto.response.ChallengeJoinResponse;
 import com.example.payservice.dto.tosspayments.Payment;
 import com.example.payservice.dto.tosspayments.SuccessRequest;
+import com.example.payservice.entity.DepositTransactionEntity;
+import com.example.payservice.entity.DepositTransactionHistoryEntity;
+import com.example.payservice.entity.PayUserEntity;
 import com.example.payservice.exception.PaymentsConfirmException;
 import com.example.payservice.exception.PrizeWithdrawException;
+import com.example.payservice.repository.DepositTransactionHistoryRepository;
+import com.example.payservice.repository.DepositTransactionRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
@@ -18,6 +25,9 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+
+import javax.transaction.Transactional;
+import java.util.UUID;
 
 /**
  * 토스페이, 농협오픈뱅킹과 관련된 서비스를 처리합니다.
@@ -30,7 +40,34 @@ public class PaymentService {
 
     private final Environment env;
 
+    private final UserService userService;
+    private final DepositTransactionRepository depositTransactionRepository;
+    private final DepositTransactionHistoryRepository depositTransactionHistoryRepository;
 
+    @Transactional
+    public ChallengeJoinResponse saveTransaction(Payment payment, Long userId, Long challengeId) {
+        PayUserEntity userEntity = userService.getPayUserEntity(userId);
+        DepositTransactionEntity dtEntity = DepositTransactionEntity.builder()
+            .id(String.valueOf(UUID.randomUUID()))
+            .user(userEntity)
+            .paymentKey(payment.getPaymentKey())
+            .amount(payment.getTotalAmount())
+            .refundableAmount(payment.getTotalAmount())
+            .build();
+
+        DepositTransactionHistoryEntity dthEntity = DepositTransactionHistoryEntity.builder()
+            .depositTransaction(dtEntity)
+            .type(DepositTransactionType.PAY)
+            .amount(payment.getTotalAmount())
+            .user(userEntity)
+            .build();
+
+        userEntity.updateDeposit(userEntity.getDeposit() + payment.getTotalAmount());
+        depositTransactionHistoryRepository.save(dthEntity);
+
+
+        return null;
+    };
     /**
      * 사용자로부터 결제정보를 받아 토스에 확인 메시지를 전달합니다.
      * @param request
