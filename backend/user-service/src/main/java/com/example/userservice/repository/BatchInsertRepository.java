@@ -45,7 +45,7 @@ public class BatchInsertRepository {
                     @Override
                     public void setValues(PreparedStatement ps, int i) throws SQLException {
                         ps.setString(1, bowl.get(i).getProblemId());
-                        ps.setString(2, String.valueOf(bowl.get(i).getUserId().getId()));
+                        ps.setString(2, String.valueOf(bowl.get(i).getUser().getId()));
                         ps.setString(3, String.valueOf(bowl.get(i).getSuccessDate()));
                     }
 
