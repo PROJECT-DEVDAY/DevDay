@@ -96,6 +96,13 @@ public class ChallengeController {
         return responseService.getSuccessResult();
     }
 
+    /** 지울거임 **/
+    @PostMapping("/baekjoon/users/{userId}")
+    public Result updateUserBaekjoon(@PathVariable Long userId){
+        challengeService.updateUserBaekjoon(userId);
+        return responseService.getSuccessResult();
+    }
+
 
 
     /** 메인 페이지 조회 **/
@@ -111,14 +118,6 @@ public class ChallengeController {
 
     /** 사진 인증 저장 **/
     @PostMapping("record")
-    public ResponseEntity<String> createChallengeRecord(@ModelAttribute ChallengeRecordRequestDto requestDto) throws IOException{
-
-        challengeService.createPhotoRecord(requestDto);
-        return ResponseEntity.status(HttpStatus.OK).body("인증기록 저장완료");
-    }
-
-    /** 지울거임 **/
-    @PutMapping("record")
     public ResponseEntity<String> createChallengeRecord(@ModelAttribute ChallengeRecordRequestDto requestDto) throws IOException{
 
         challengeService.createPhotoRecord(requestDto);
