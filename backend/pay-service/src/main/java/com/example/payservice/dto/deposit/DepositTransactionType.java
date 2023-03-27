@@ -6,5 +6,7 @@ public enum DepositTransactionType {
 	// 지불
 	PAY,
 	// 충전
-	CHARGE
+	CHARGE,
+	// 카드 부분취소
+	CANCEL
 }
