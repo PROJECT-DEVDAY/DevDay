@@ -23,7 +23,7 @@ export const BtnFooter = ({
   };
   return (
     <div className={style.btnFooter}>
-      <p className={style.content}>{content}</p>
+      {content && <p className={style.content}>{content}</p>}
       <div className={classnames(style.button, !disable && style.check)}>
         <Button onClick={goTo} className="mt-3 mb-3" label={label} />
       </div>
