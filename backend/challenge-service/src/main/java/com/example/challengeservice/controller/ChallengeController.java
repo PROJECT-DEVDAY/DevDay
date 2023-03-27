@@ -75,12 +75,6 @@ public class ChallengeController {
         return responseService.getSingleResult(challengeService.myChallengeList(userId));
 
     }
-    
-    /** 지울거임 **/
-    @PutMapping("/{challengeId}/users/{userId}")
-    public SingleResult<Long> joinChallenge(@PathVariable("challengeId") Long challengeId, @PathVariable("userId") Long userId){
-        return responseService.getSingleResult(challengeService.joinChallenge(challengeId, userId));
-    }
 
     /** 신대득
      * 유저 백준 아이디를 통해 해당 유저의 푼 문제 리스트 찾기 (크롤링)
@@ -116,6 +110,14 @@ public class ChallengeController {
 
     /** 사진 인증 저장 **/
     @PostMapping("record")
+    public ResponseEntity<String> createChallengeRecord(@ModelAttribute ChallengeRecordRequestDto requestDto) throws IOException{
+
+        challengeService.createPhotoRecord(requestDto);
+        return ResponseEntity.status(HttpStatus.OK).body("인증기록 저장완료");
+    }
+
+    /** 지울거임 **/
+    @PutMapping("record")
     public ResponseEntity<String> createChallengeRecord(@ModelAttribute ChallengeRecordRequestDto requestDto) throws IOException{
 
         challengeService.createPhotoRecord(requestDto);
