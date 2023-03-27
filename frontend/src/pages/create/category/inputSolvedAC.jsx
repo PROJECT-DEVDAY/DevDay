@@ -9,7 +9,7 @@ import { BtnFooter } from '@/components/BtnFooter';
 import { InputBox } from '@/components/InputBox';
 import { ReturnArrow } from '@/components/ReturnArrow';
 
-const inputsolved_ac = props => {
+const inputSolvedAc = props => {
   const [text, setText] = useState('');
   const setTextValue = e => {
     setText(e.target.value);
@@ -61,4 +61,4 @@ const inputsolved_ac = props => {
   );
 };
 
-export default inputsolved_ac;
+export default inputSolvedAc;
