@@ -54,12 +54,14 @@ const login = props => {
           alt="loginImage"
         />
         <InputText
-          type="text"
+          type="email"
+          inputType="text"
           labelName="이메일"
           content="welcome@devday.com"
         />
         <InputText
           type="password"
+          inputType="password"
           labelName="비밀번호"
           content="12자리 이상, 대문자 소문자 특수문자"
         />
