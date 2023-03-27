@@ -131,7 +131,7 @@ public class ChallengeController {
         return responseService.getListResult(challengeService.getTeamPhotoRecord(challengeRoomId,viewType));
     }
 
-    /** 지울거임 진짜로 마지막 **/
+    /** 지울거임 진짜로 마지막 dir 잊지 않겠어 **/
         @PutMapping("{challengeId}/record")
     public ListResult<?> getTeamChallengeRecord(@PathVariable("challengeId")Long challengeRoomId ,@RequestParam("view") String viewType){
 
