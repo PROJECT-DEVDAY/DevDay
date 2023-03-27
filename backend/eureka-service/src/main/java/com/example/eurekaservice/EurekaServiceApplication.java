@@ -12,5 +12,4 @@ public class EurekaServiceApplication {
         SpringApplication.run(EurekaServiceApplication.class, args);
     }
     
-    // jenkins 테스트
 }
