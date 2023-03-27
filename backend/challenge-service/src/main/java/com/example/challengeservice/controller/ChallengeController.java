@@ -57,13 +57,6 @@ public class ChallengeController {
         return responseService.getSingleResult(challengeService.challengeInfoList(challengeIdList));
     }
 
-    /** 지울거임 **/
-    @PutMapping("/listInfo")
-    public SingleResult<Map<Long, ChallengeInfoResponseDto>> challengeInfoList(@RequestBody Map<String, List<Long>> map){
-        List<Long> challengeIdList= map.get("challengeIdList");
-        return responseService.getSingleResult(challengeService.challengeInfoList(challengeIdList));
-    }
-
 
     /** 챌린지 상세 조회 ** (입장 페이지)*/
 
@@ -81,6 +74,12 @@ public class ChallengeController {
     public SingleResult<UserChallengeInfoResponseDto> userChallengeInfo(@PathVariable Long userId){
         return responseService.getSingleResult(challengeService.myChallengeList(userId));
 
+    }
+    
+    /** 지울거임 **/
+    @PutMapping("/{challengeId}/users/{userId}")
+    public SingleResult<Long> joinChallenge(@PathVariable("challengeId") Long challengeId, @PathVariable("userId") Long userId){
+        return responseService.getSingleResult(challengeService.joinChallenge(challengeId, userId));
     }
 
     /** 신대득
