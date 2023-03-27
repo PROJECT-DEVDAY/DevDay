@@ -26,6 +26,14 @@ public class PaymentsController {
 
 	private final PaymentService paymentService;
 
+	/**
+	 * tosspayments에서 승인이 된 후 redirect된 devday페이지에서 호출을 하는 URL입니다.
+	 * 위 기능은 tosspayments로 승인 후 인증 10분안에 호출되어야 합니다.
+	 * @param request
+	 * @param challengeId
+	 * @param successRequest
+	 * @return
+	 */
 	@GetMapping("/{challengeId}/success")
 	public ResponseEntity<InternalResponse<ChallengeJoinResponse>> paymentsSuccess(
 			HttpServletRequest request,
@@ -40,6 +48,15 @@ public class PaymentsController {
 		return ResponseEntity.ok(new InternalResponse<>(joinResponse));
 	}
 
+	/**
+	 * 위 기능은 tosspayments에서 실패했을 때, 불리는 api 입니다.
+	 * FE에서 처리하기 위해 이 기능은 deprecated 됐습니다.
+	 * @deprecated
+	 * @param request
+	 * @param challengeId
+	 * @param failRequest
+	 * @return
+	 */
 	@Deprecated
 	@GetMapping("/{challengeId}/fail")
 	public ResponseEntity<ResponseEntity.BodyBuilder> paymentsFail(

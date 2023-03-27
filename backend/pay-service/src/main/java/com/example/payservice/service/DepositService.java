@@ -27,6 +27,7 @@ public class DepositService {
     private final ChallengeServiceClient challengeServiceClient;
     private final UserService userService;
     private final DepositTransactionHistoryRepository depositTransactionHistoryRepository;
+    
     public CustomPage<DepositTransactionHistoryDto> searchHistories(Long userId, String type, Pageable pageable) {
         PayUserEntity userEntity = userService.getPayUserEntity(userId);
         String historyType = String.valueOf(type).isEmpty() ? null : type;

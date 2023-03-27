@@ -9,13 +9,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 @FeignClient(name = "user-service")
 public interface UserServiceClient {
     @GetMapping("/user-service/user/{userId}")
-    default InternalResponse<UserResponse> getUserInfo(@PathVariable Long userId)
-    {
-        UserResponse user = new UserResponse();
-        user.setUserId(userId);
-
-        return new InternalResponse<>(userId <= 3 ? user : null);
-    }
-
-
+    InternalResponse<UserResponse> getUserInfo(@PathVariable Long userId);
+//    {
+//        UserResponse user = new UserResponse();
+//        user.setUserId(userId);
+//
+//        return new InternalResponse<>(userId <= 3 ? user : null);
+//    }
 }
