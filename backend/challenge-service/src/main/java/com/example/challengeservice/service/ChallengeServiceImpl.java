@@ -1,7 +1,10 @@
 package com.example.challengeservice.service;
 
+import com.example.challengeservice.client.UserServiceClient;
+import com.example.challengeservice.common.result.SingleResult;
 import com.example.challengeservice.dto.request.ChallengeRecordRequestDto;
 import com.example.challengeservice.dto.request.ChallengeRoomRequestDto;
+import com.example.challengeservice.dto.request.ProblemRequestDto;
 import com.example.challengeservice.dto.response.*;
 import com.example.challengeservice.entity.ChallengeRecord;
 import com.example.challengeservice.entity.ChallengeRoom;
@@ -11,6 +14,8 @@ import com.example.challengeservice.exception.ExceptionEnum;
 import com.example.challengeservice.infra.amazons3.querydsl.SearchParam;
 import com.example.challengeservice.infra.amazons3.service.AmazonS3Service;
 import com.example.challengeservice.repository.*;
+import feign.FeignException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -20,7 +25,6 @@ import org.jsoup.select.Elements;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.modelmapper.convention.MatchingStrategies;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,27 +33,17 @@ import java.lang.reflect.Type;
 import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 @Slf4j
 public class ChallengeServiceImpl implements ChallengeService{
-
-    private  UserChallengeRepository userChallengeRepository;
-    private ChallengeRoomRepository challengeRoomRepository;
-    private AmazonS3Service amazonS3Service;
-    private ChallengeRoomRepoCustomImpl challengeRoomRepoCustom;
-    private CommonServiceImpl commonService;
-    private ChallengeRecordRepository challengeRecordRepository;
-    private ChallengeRecordRepoCustomImpl recordRepoCustom;
-
-    @Autowired
-    public ChallengeServiceImpl(UserChallengeRepository userChallengeRepository, ChallengeRoomRepository challengeRoomRepository, AmazonS3Service amazonS3Service, ChallengeRoomRepoCustomImpl challengeRoomRepoCustom, CommonServiceImpl commonService,ChallengeRecordRepository challengeRecordRepository ,ChallengeRecordRepoCustomImpl recordRepoCustom) {
-        this.userChallengeRepository = userChallengeRepository;
-        this.challengeRoomRepository = challengeRoomRepository;
-        this.amazonS3Service = amazonS3Service;
-        this.challengeRoomRepoCustom = challengeRoomRepoCustom;
-        this.commonService = commonService;
-        this.challengeRecordRepository = challengeRecordRepository;
-        this.recordRepoCustom = recordRepoCustom;
-    }
+    private final UserServiceClient userServiceClient;
+    private final UserChallengeRepository userChallengeRepository;
+    private final ChallengeRoomRepository challengeRoomRepository;
+    private final AmazonS3Service amazonS3Service;
+    private final ChallengeRoomRepoCustomImpl challengeRoomRepoCustom;
+    private final CommonServiceImpl commonService;
+    private final ChallengeRecordRepository challengeRecordRepository;
+    private final ChallengeRecordRepoCustomImpl recordRepoCustom;
 
 
     @Override
@@ -177,7 +171,7 @@ public class ChallengeServiceImpl implements ChallengeService{
         String baekJoonUrl = "https://www.acmicpc.net/user/";
         baekJoonUrl+=baekjoonId;
         Connection conn = Jsoup.connect(baekJoonUrl);
-        List<Integer> solvedList= new ArrayList<>();
+        List<String> solvedList= new ArrayList<>();
         int count=0;
         try {
             Document document = conn.get();
@@ -185,7 +179,7 @@ public class ChallengeServiceImpl implements ChallengeService{
             Element element = imageUrlElements.get(0);
             Elements problems= element.getElementsByTag("a");
             for (Element problem : problems) {
-                solvedList.add(Integer.parseInt(problem.text()));
+                solvedList.add(problem.text());
                 count++;
             }
             System.out.printf("총 %d 문제 풀이하셨습니다\n", count);
@@ -195,6 +189,44 @@ public class ChallengeServiceImpl implements ChallengeService{
         SolvedListResponseDto solvedListResponseDto = SolvedListResponseDto.from(solvedList, count);
         return solvedListResponseDto;
     }
+
+    /** 유저의 백준리스트 업데이트
+     * Todo : 예외처리 추가
+     * **/
+    public void updateUserBaekjoon(Long userId){
+        /* Feign Exception Handling */
+        /*
+        List<String> diffSolvedList=new ArrayList<>();
+        try {
+            SingleResult<BaekjoonListResponseDto> baekjoonListResponseDto = userServiceClient.getUserBaekjoonList(userId);
+            String baekjoonId = baekjoonListResponseDto.getData().getBaekjoonId();
+            Map<String, String> problemList = baekjoonListResponseDto.getData().getProblemList();
+            List<String> newSolvedList=solvedProblemList(baekjoonId).getSolvedList();
+            for(String s:newSolvedList){
+                if(problemList.get(s)==null){
+//                problemList.put(s, commonService.getDate());
+                    diffSolvedList.add(s);
+                }
+            }
+        } catch(FeignException ex){
+            log.error(ex.getMessage());
+        }
+         */
+        List<String> diffSolvedList=new ArrayList<>();
+        SingleResult<BaekjoonListResponseDto> baekjoonListResponseDto = userServiceClient.getUserBaekjoonList(userId);
+        String baekjoonId = baekjoonListResponseDto.getData().getBaekjoonId();
+        Map<String, String> problemList = baekjoonListResponseDto.getData().getProblemList();
+        List<String> newSolvedList=solvedProblemList(baekjoonId).getSolvedList();
+        for(String s:newSolvedList){
+            if(problemList.get(s)==null){
+//                problemList.put(s, commonService.getDate());
+                diffSolvedList.add(s);
+            }
+        }
+        if(diffSolvedList.size()>0)
+            userServiceClient.createProblem(userId, ProblemRequestDto.from(diffSolvedList));
+        return;
+    };
 
 
 

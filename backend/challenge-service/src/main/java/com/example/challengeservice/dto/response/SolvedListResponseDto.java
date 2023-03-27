@@ -10,10 +10,10 @@ import java.util.List;
 @Builder
 @Setter
 public class SolvedListResponseDto {
-    public List<Integer> solvedList;
+    public List<String> solvedList;
     public int count;
 
-    public static SolvedListResponseDto from(List<Integer> solvedList, int count){
+    public static SolvedListResponseDto from(List<String> solvedList, int count){
         return SolvedListResponseDto.builder()
                 .solvedList(solvedList)
                 .count(count)

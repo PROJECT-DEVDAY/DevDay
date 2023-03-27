@@ -13,5 +13,5 @@ public class ProblemId implements Serializable {
 
     private String problemId;
 
-    private Long user;
+    private Long userId;
 }

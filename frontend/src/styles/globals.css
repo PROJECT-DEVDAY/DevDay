@@ -8,11 +8,11 @@
   --color-guembi: #ffaf14;
   --color-taehwan: #e6e6fa;
 
-  --grey-bg: #fafafa;
-  --grey-border: #e7e7e7;
-  --grey-hr: #dddddd;
-  --grey-enabled: #d5d5d5;
-  --grey-extra: #595959;
+  --gray-bg: #fafafa;
+  --gray-border: #e7e7e7;
+  --gray-hr: #dddddd;
+  --gray-enabled: #d5d5d5;
+  --gray-extra: #595959;
 
   --red-border: #ff9b9b;
 }
@@ -36,26 +36,26 @@ a {
 }
 
 /* 배경색 */
-.grey-bg {
+.gray-bg {
   background-color: #fafafa;
 }
 
 /* 선색, 부가설명 배경 */
-.grey-border {
+.gray-border {
   background-color: #e7e7e7;
 }
 
 /* 구분선 */
-.grey-hr {
+.gray-hr {
   background-color: #dddddd;
 }
 
 /* 미사용 버튼 */
-.grey-enabled {
+.gray-enabled {
   background-color: #d5d5d5;
 }
 
 /* 부가설명 */
-.grey-extra {
-  background-color: #b4b4b4;
+.gray-extra {
+  background-color: #595959;
 }

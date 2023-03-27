@@ -1,4 +1,4 @@
-.bottom-sheet {
+.BottomSheet {
   position: fixed;
   bottom: -250px; /* 아래로 숨겨진 상태 */
   left: 0;
@@ -10,11 +10,11 @@
   z-index: 9999;
 }
 
-.bottom-sheet.show {
+.BottomSheet.show {
   bottom: 0; /* 아래에서 올라옴 */
 }
 
-.exitBtn {
+.ExitBtn {
   width: 100%;
   display: flex;
   justify-content: flex-end;

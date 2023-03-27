@@ -4,8 +4,8 @@ import Image from 'next/image';
 
 import style from './index.module.scss';
 
-export const UserAvatar = props => {
-  const [imgFile, setImgeFile] = useState('');
+export const UserAvatar = ({ imageURL, ...props }) => {
+  const [imgFile, setImgeFile] = useState({ imageURL });
 
   const logoImgInput = useRef();
 
@@ -33,18 +33,20 @@ export const UserAvatar = props => {
   };
 
   return (
-    <div className={style.userAvatar}>
+    <div className={style.UserAvatar}>
       <Image
         src={imgFile || require('../../image/default-user.png')}
         alt="프로필 이미지"
-        className={style.image}
+        className={style.Image}
         onClick={onImgeInputBtnClick}
+        width={150}
+        height={150}
       />
       <input
         style={{ display: 'none' }}
         ref={logoImgInput}
         type="file"
-        className={style.imgInput}
+        className={style.ImgInput}
         id="logoImg"
         accept="image/*"
         name="file"
