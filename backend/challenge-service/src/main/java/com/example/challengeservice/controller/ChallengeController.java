@@ -86,18 +86,17 @@ public class ChallengeController {
         return ResponseEntity.status(HttpStatus.OK).body(challengeService.solvedProblemList(baekjoonId));
     }
 
+    /** 지울거임 **/
+    @PostMapping("/baekjoon/{baekjoonId}")
+    public ResponseEntity<SolvedListResponseDto> solvedProblemList(@PathVariable("baekjoonId") String baekjoonId){
+        return ResponseEntity.status(HttpStatus.OK).body(challengeService.solvedProblemList(baekjoonId));
+    }
+
     /**
      * 신대득
      * 유저가 푼 문제 리스트 갱신
      */
     @GetMapping("/baekjoon/users/{userId}")
-    public Result updateUserBaekjoon(@PathVariable Long userId){
-        challengeService.updateUserBaekjoon(userId);
-        return responseService.getSuccessResult();
-    }
-
-    /** 지울거임 **/
-    @PostMapping("/baekjoon/users/{userId}")
     public Result updateUserBaekjoon(@PathVariable Long userId){
         challengeService.updateUserBaekjoon(userId);
         return responseService.getSuccessResult();
