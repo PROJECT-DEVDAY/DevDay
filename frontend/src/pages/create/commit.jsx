@@ -80,6 +80,7 @@ const commit = props => {
               <div className={classNames('flex', style.changeMember)}>
                 {member > 0 ? (
                   <button
+                    type="button"
                     className={classNames(style.plusMinus, 'rounded-l-lg')}
                     onClick={() => setMember(member - 1)}
                   >
@@ -87,6 +88,7 @@ const commit = props => {
                   </button>
                 ) : (
                   <button
+                    type="button"
                     className={classNames(style.plusMinus, 'rounded-l-lg')}
                     onClick={() => setMember(member - 1)}
                     disabled
@@ -103,6 +105,7 @@ const commit = props => {
                   {member}명
                 </div>
                 <button
+                  type="button"
                   className={classNames(style.plusMinus, 'rounded-r-lg')}
                   onClick={() => setMember(member + 1)}
                 >

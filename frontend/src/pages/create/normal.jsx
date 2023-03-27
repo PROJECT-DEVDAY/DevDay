@@ -85,6 +85,7 @@ const normal = props => {
               <div className={classNames('flex', style.changeMember)}>
                 {member > 0 ? (
                   <button
+                    type="button"
                     className={classNames(style.plusMinus, 'rounded-l-lg')}
                     onClick={() => setMember(member - 1)}
                   >
@@ -92,6 +93,7 @@ const normal = props => {
                   </button>
                 ) : (
                   <button
+                    type="button"
                     className={classNames(style.plusMinus, 'rounded-l-lg')}
                     onClick={() => setMember(member - 1)}
                     disabled
@@ -108,6 +110,7 @@ const normal = props => {
                   {member}명
                 </div>
                 <button
+                  type="button"
                   className={classNames(style.plusMinus, 'rounded-r-lg')}
                   onClick={() => setMember(member + 1)}
                 >
@@ -119,8 +122,8 @@ const normal = props => {
         </div>
         <div className="mt-8">
           <InputLabel content="인증 가능 시간" asterisk />
-          <button>시작 시간</button>
-          <button>종료 시간</button>
+          <button type="button">시작 시간</button>
+          <button type="button">종료 시간</button>
         </div>
         <div className="mt-8">
           <InputLabel content="챌린지 기간" asterisk />

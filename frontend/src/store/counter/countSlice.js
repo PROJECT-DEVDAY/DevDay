@@ -4,8 +4,8 @@ const counterSlice = createSlice({
   name: 'counter',
   initialState: { value: 0 },
   reducers: {
-    plus: state => {
-      state.value += 1;
+    plus(state) {
+      return { ...state, value: state.value + 1 };
     },
   },
 });

@@ -66,9 +66,9 @@ const signup = props => {
         {minutes}:{seconds < 10 ? `0${seconds}` : seconds}
       </div>
     );
-
-    const goToNextSignUpPage = () => {};
   };
+
+  const goToNextSignUpPage = () => {};
 
   return (
     <div className={style.signup}>
