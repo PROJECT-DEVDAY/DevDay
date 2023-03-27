@@ -23,6 +23,8 @@ public class DepositTransactionHistoryEntity extends BaseEntity {
 
 	private int amount;
 
+	private Long challengeId;
+
 	@Enumerated(EnumType.STRING)
 	private DepositTransactionType type;
 

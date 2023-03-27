@@ -5,11 +5,13 @@ import com.example.payservice.common.exception.ExceptionEnum;
 import com.example.payservice.dto.CustomPage;
 import com.example.payservice.dto.InternalResponse;
 import com.example.payservice.dto.bank.AccountDto;
+import com.example.payservice.dto.deposit.DepositTransactionHistoryDto;
 import com.example.payservice.dto.prize.PrizeHistoryDto;
 import com.example.payservice.dto.request.WithdrawRequest;
 import com.example.payservice.dto.response.UserResponse;
 import com.example.payservice.dto.response.WithdrawResponse;
 import com.example.payservice.dto.user.PayUserDto;
+import com.example.payservice.service.DepositService;
 import com.example.payservice.service.PrizeService;
 import com.example.payservice.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +33,7 @@ public class UserController {
 
 	private final PrizeService prizeService;
 	private final UserService userService;
+	private final DepositService depositService;
 
 	@PostMapping("/{userId}")
 	public ResponseEntity<InternalResponse<PayUserDto>> createUserInfo(@PathVariable Long userId) {
@@ -48,7 +51,7 @@ public class UserController {
 	}
 
 	@DeleteMapping("/{userId}")
-	public ResponseEntity<Object> deleteUserInfo(@PathVariable Long userId) {
+	public ResponseEntity<ResponseEntity.BodyBuilder> deleteUserInfo(@PathVariable Long userId) {
 		userService.deletePayUserInfo(userId);
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
@@ -80,12 +83,19 @@ public class UserController {
 	}
 
 	@PostMapping("/{userId}/deposit")
-	public ResponseEntity<?> getDiposit(@PathVariable String userId) {
+	public ResponseEntity<InternalResponse> getDiposit(@PathVariable String userId) {
 		return null;
 	}
 	@GetMapping("/{userId}/deposit")
-	public ResponseEntity<?> getDipositHistory(@PathVariable String userId) {
-		return null;
+	public ResponseEntity<InternalResponse> getDipositHistory(
+			@PathVariable Long userId,
+			@RequestParam(required = false, defaultValue = "") String type,
+			@PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
+	) {
+		CustomPage<DepositTransactionHistoryDto> result = depositService.searchHistories(userId, type, pageable);
+
+		InternalResponse<CustomPage<DepositTransactionHistoryDto>> response = new InternalResponse<>(result);
+		return ResponseEntity.ok(response);
 	}
 
 }

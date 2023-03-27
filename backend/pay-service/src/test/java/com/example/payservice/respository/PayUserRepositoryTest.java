@@ -23,10 +23,7 @@ public class PayUserRepositoryTest {
     @DisplayName("pay-service 유저 삭제")
     public void 유저_삭제() {
         // give
-        PayUserEntity entity = new PayUserEntity();
-        entity.setUserId(1L);
-        entity.updateDeposit(2000);
-        entity.updatePrize(3000);
+        PayUserEntity entity = new PayUserEntity(1L, 2000, 3000);
         payUserRepository.save(entity);
 
         // when
@@ -41,10 +38,7 @@ public class PayUserRepositoryTest {
     @DisplayName("pay-service 유저 2번 삭제")
     public void 유저_2번_삭제() {
         // give
-        PayUserEntity entity = new PayUserEntity();
-        entity.setUserId(1L);
-        entity.updateDeposit(2000);
-        entity.updatePrize(3000);
+        PayUserEntity entity = new PayUserEntity(1L, 2000, 3000);
         payUserRepository.save(entity);
 
         // when

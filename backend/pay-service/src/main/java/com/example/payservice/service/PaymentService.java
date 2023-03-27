@@ -16,7 +16,7 @@ import com.example.payservice.exception.PaymentsConfirmException;
 import com.example.payservice.exception.PrizeWithdrawException;
 import com.example.payservice.repository.DepositTransactionHistoryRepository;
 import com.example.payservice.repository.DepositTransactionRepository;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
@@ -35,39 +35,86 @@ import java.util.UUID;
 
 @Slf4j
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class PaymentService {
 
     private final Environment env;
 
     private final UserService userService;
-    private final DepositTransactionRepository depositTransactionRepository;
+    // private final DepositTransactionRepository depositTransactionRepository;
     private final DepositTransactionHistoryRepository depositTransactionHistoryRepository;
 
+    /**
+     * 토스로부터 결제가 완료되고 결제정보와 히스토리를 남깁니다.
+     * 히스토리는 충전과 동시에 사용한 여부를 저장하고 있어 2가지가 처리됩니다.
+     *
+     * @param payment
+     * @param userId
+     * @param challengeId
+     * @return
+     */
     @Transactional
     public ChallengeJoinResponse saveTransaction(Payment payment, Long userId, Long challengeId) {
         PayUserEntity userEntity = userService.getPayUserEntityForUpdate(userId);
-        DepositTransactionEntity dtEntity = DepositTransactionEntity.builder()
-            .id(String.valueOf(UUID.randomUUID()))
-            .user(userEntity)
-            .paymentKey(payment.getPaymentKey())
-            .amount(payment.getTotalAmount())
-            .refundableAmount(payment.getTotalAmount())
-            .build();
 
-        DepositTransactionHistoryEntity dthEntity = DepositTransactionHistoryEntity.builder()
-            .depositTransaction(dtEntity)
-            .type(DepositTransactionType.PAY)
-            .amount(payment.getTotalAmount())
-            .user(userEntity)
-            .build();
+        DepositTransactionEntity dtEntity = createTransaction(payment, userEntity);
+        saveChargeTransactionHistory(payment, userEntity, dtEntity);
+        savePayTransactionHistory(payment, userEntity, challengeId);
 
-        userEntity.updateDeposit(userEntity.getDeposit() + payment.getTotalAmount());
-        depositTransactionHistoryRepository.save(dthEntity);
+        return ChallengeJoinResponse.builder()
+                .userId(userId)
+                .challengeId(challengeId)
+                .approve(true)
+                .build();
+    }
 
+    /**
+     * 결제 내역을 Transaction으로 생성합니다.
+     * @param payment
+     * @param user
+     * @return
+     */
+    private DepositTransactionEntity createTransaction(Payment payment, PayUserEntity user) {
+        return DepositTransactionEntity.builder()
+                .id(String.valueOf(UUID.randomUUID()))
+                .user(user)
+                .paymentKey(payment.getPaymentKey())
+                .amount(payment.getTotalAmount())
+                .refundableAmount(payment.getTotalAmount())
+                .build();
+    }
 
-        return null;
-    };
+    /**
+     * 충전한 트랜잭션 히스토리를 저장합니다.
+     * @param payment
+     * @param user
+     * @param dtEntity
+     */
+    private void saveChargeTransactionHistory(Payment payment, PayUserEntity user, DepositTransactionEntity dtEntity) {
+        DepositTransactionHistoryEntity chargeDthEntity = DepositTransactionHistoryEntity.builder()
+                .depositTransaction(dtEntity)
+                .type(DepositTransactionType.CHARGE)
+                .amount(payment.getTotalAmount())
+                .user(user)
+                .build();
+        depositTransactionHistoryRepository.save(chargeDthEntity);
+    }
+
+    /**
+     * 지불한 트랜잭션 히스토리를 기록합니다.w
+     * @param payment
+     * @param user
+     * @param challengeId
+     */
+    private void savePayTransactionHistory(Payment payment, PayUserEntity user, Long challengeId) {
+        DepositTransactionHistoryEntity payDthEntity = DepositTransactionHistoryEntity.builder()
+                .challengeId(challengeId)
+                .type(DepositTransactionType.PAY)
+                .amount(payment.getTotalAmount())
+                .user(user)
+                .build();
+        depositTransactionHistoryRepository.save(payDthEntity);
+    }
     /**
      * 사용자로부터 결제정보를 받아 토스에 확인 메시지를 전달합니다.
      * @param request

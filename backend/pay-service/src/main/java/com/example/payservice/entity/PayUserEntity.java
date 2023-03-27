@@ -2,20 +2,17 @@ package com.example.payservice.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-
+@Data
 @Entity
-@Getter
-@Setter
 @DynamicUpdate
 @EqualsAndHashCode(callSuper=false)
+@NoArgsConstructor
 @Table(name = "pay_users")
 public class PayUserEntity extends BaseEntity {
     @Id
@@ -49,4 +46,11 @@ public class PayUserEntity extends BaseEntity {
     public void updatePrize(Integer prize) {
         this.prize = prize;
     }
+
+    public PayUserEntity(long userId, int deposit, int prize) {
+        this.userId = userId;
+        this.deposit = deposit;
+        this.prize = prize;
+    }
+
 }
