@@ -72,7 +72,7 @@ public class JwtAuthenticationFilter extends AbstractGatewayFilterFactory<JwtAut
         @Override
         public Mono<Void> handle(
                 ServerWebExchange exchange, Throwable ex) {
-            int errorCode = 500;
+            int errorCode = 503;
             if (ex.getClass() == NullPointerException.class) {
                 errorCode = 401;
             } else if (ex.getClass() == ExpiredJwtException.class) {
