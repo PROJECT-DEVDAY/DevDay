@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 
-import style from './inputGithub.module.scss';
-import { ReturnArrow } from '@/components/ReturnArrow';
-import { InputBox } from '@/components/InputBox';
-import { BtnFooter } from '@/components/BtnFooter';
 import classNames from 'classnames';
 import Image from 'next/image';
+
+import style from './inputGithub.module.scss';
+
+import { BtnFooter } from '@/components/BtnFooter';
+import { InputBox } from '@/components/InputBox';
+import { ReturnArrow } from '@/components/ReturnArrow';
+
 const inputGithub = props => {
   const [text, setText] = useState('');
   const setTextValue = e => {
