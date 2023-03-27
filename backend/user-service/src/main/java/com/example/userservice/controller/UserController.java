@@ -76,6 +76,7 @@ public class UserController {
                 .body(new BaseResponseDto<>(200, "success", userService.getBaekjoonList(userId)));
     }
 
+    /* 지울거임 */
     @PostMapping("/user/baekjoon/{userId}")
     public ResponseEntity<BaseResponseDto> createProblem(@PathVariable Long userId, @RequestBody ProblemRequestDto requestDto) {
         userService.createProblem(userId, requestDto);
