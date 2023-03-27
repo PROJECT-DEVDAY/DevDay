@@ -27,7 +27,7 @@ const inputGithub = props => {
 
         <Image
           src={require('@/image/github.png')}
-          alt="solvedAC"
+          alt="github"
           className="w-1/2 mt-8"
         />
         <InputBox
@@ -50,8 +50,9 @@ const inputGithub = props => {
         )}
       >
         <BtnFooter
+          content=""
           label="다음"
-          disable={text}
+          disable={!!text}
           goToUrl="/create/commit"
           warningMessage="Commit 챌린지는 GitHub ID가 필요해요."
         />
