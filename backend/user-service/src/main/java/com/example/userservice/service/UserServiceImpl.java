@@ -72,7 +72,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public TokenResponseDto login(LoginRequestDto requestDto) {
         User user = userRepository.findByEmail(requestDto.getEmail())
                 .orElseThrow(() -> new ApiException(ExceptionEnum.MEMBER_NOT_EXIST_EXCEPTION));
@@ -114,7 +114,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public Long emailCheck(String email) {
 
         // 이메일 중복 체크
@@ -158,7 +158,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public TokenResponseDto refresh(HttpServletRequest request) {
         String accessToken = jwtUtil.resolveToken(request, "Authorization");
         String refreshToken = jwtUtil.resolveToken(request, "RefreshToken");
