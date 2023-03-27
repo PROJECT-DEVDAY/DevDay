@@ -117,6 +117,14 @@ public class ChallengeController {
         return ResponseEntity.status(HttpStatus.OK).body("인증기록 저장완료");
     }
 
+    /** 지울거임 **/
+    @PutMapping("record")
+    public ResponseEntity<String> createChallengeRecord(@ModelAttribute ChallengeRecordRequestDto requestDto) throws IOException{
+
+        challengeService.createPhotoRecord(requestDto);
+        return ResponseEntity.status(HttpStatus.OK).body("인증기록 저장완료");
+    }
+
     /** 나의 인증 기록 불러오기 **/
 
     @GetMapping("{challengeId}/record/users/{userId}")
