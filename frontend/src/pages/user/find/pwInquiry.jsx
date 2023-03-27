@@ -48,8 +48,12 @@ const pwInquiry = () => {
           <ReturnArrow title="비밀번호 찾기" />
         </div>
         <div className="div-body p-6">
-          <InputText labelName="이름" content="홍길동" />
-          <InputText labelName="이메일" content="welcome@devday.com" />
+          <InputText type="text" labelName="이름" content="홍길동" />
+          <InputText
+            type="email"
+            labelName="이메일"
+            content="welcome@devday.com"
+          />
 
           <Button
             className="inquiry-bt mt-6"

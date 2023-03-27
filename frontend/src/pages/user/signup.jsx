@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 
 import classNames from 'classnames';
@@ -68,6 +69,15 @@ const signup = props => {
     );
   };
 
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm();
+  const onSubmit = data => {
+    // console.log(data);
+  };
+
   const goToNextSignUpPage = () => {};
 
   return (
@@ -75,62 +85,74 @@ const signup = props => {
       <div className={classNames(`style.div-header`, `sticky top-0`)}>
         <ReturnArrow title="회원가입" />
       </div>
-      <div className="div-body p-6 pb-32">
-        <InputText
-          type="iconText"
-          labelName="이메일"
-          content="welcome@devday.com"
-          icon="인증하기"
-          onClick={onClickEmailValidation}
-        />
-        {emailValidCheck && (
-          <div className={style.emailCheck}>
-            <input
-              type="text"
-              className={classNames(
-                'w-full focus:outline-none',
-                style.emailInput,
-              )}
-            />
-            <Timer />
-            <button type="button" className="ml-2 whitespace-nowrap">
-              확인
-            </button>
-          </div>
-        )}
-        <InputText
-          type="password"
-          labelName="비밀번호"
-          content="12자리 이상, 대문자 소문자 특수문자"
-        />
-        <InputText
-          type="password"
-          labelName="비밀번호 확인"
-          content="위와 일치하지 않습니다"
-        />
-        <InputText type="text" labelName="이름" content="홍길동" />
-        <InputText
-          type="iconText"
-          labelName="닉네임"
-          content="Devday챌린지"
-          icon="중복확인"
-          onClick={onClickDuplicateCheck}
-        />
-        {nickNameDuplicateChk && <div>가즈아</div>}
-      </div>
-      <div
-        className={classNames(
-          `font-sans text-center absolute w-full bottom-0 p-4`,
-        )}
-      >
-        <Button
-          onClick={() => router.push('/user/signup/extra-info')}
-          color="primary"
-          fill
-          label="다음으로"
-        />
-        <div className="mt-2"> 회원 가입</div>
-      </div>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div className="div-body p-6 pb-32">
+          <InputText
+            type="email"
+            inputType="iconText"
+            labelName="이메일"
+            content="welcome@devday.com"
+            icon="인증하기"
+            onClick={onClickEmailValidation}
+          />
+          {emailValidCheck && (
+            <div className={style.emailCheck}>
+              <input
+                type="text"
+                className={classNames(
+                  'w-full focus:outline-none',
+                  style.emailInput,
+                )}
+              />
+              <Timer />
+              <button type="button" className="ml-2 whitespace-nowrap">
+                확인
+              </button>
+            </div>
+          )}
+          <InputText
+            type="password"
+            inputType="password"
+            labelName="비밀번호"
+            content="12자리 이상, 대문자 소문자 특수문자"
+          />
+          <InputText
+            type="password"
+            inputType="password"
+            labelName="비밀번호 확인"
+            content="위와 일치하지 않습니다"
+          />
+          <InputText
+            type="text"
+            inputType="text"
+            labelName="이름"
+            content="홍길동"
+          />
+          <InputText
+            type="text"
+            inputType="iconText"
+            labelName="닉네임"
+            content="Devday챌린지"
+            icon="중복확인"
+            onClick={onClickDuplicateCheck}
+          />
+          {nickNameDuplicateChk && <div>가즈아</div>}
+        </div>
+        <div
+          className={classNames(
+            `font-sans text-center absolute w-full bottom-0 p-4`,
+          )}
+        >
+          <Button
+            type="submit"
+            // onClick={() => router.push('/user/signup/extra-info')}
+            color="primary"
+            fill
+            label="다음으로"
+          />
+          <div className="mt-2"> 회원 가입</div>
+        </div>
+      </form>
     </div>
   );
 };
