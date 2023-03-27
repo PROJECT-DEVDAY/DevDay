@@ -1,3 +1,4 @@
+/* eslint-disable react/button-has-type */
 import React from 'react';
 
 import classnames from 'classnames';
@@ -5,10 +6,10 @@ import PropTypes from 'prop-types';
 
 import style from './index.module.scss';
 
-export const Button = ({ color, fill, className, label, ...props }) => {
+export const Button = ({ color, fill, className, label, type, ...props }) => {
   return (
     <button
-      type="button"
+      type={type || 'button'}
       className={classnames(
         style.Button,
         style[`Button-${color}`],
@@ -24,6 +25,7 @@ export const Button = ({ color, fill, className, label, ...props }) => {
 };
 
 Button.propTypes = {
+  type: PropTypes.string,
   color: PropTypes.string,
   fill: PropTypes.bool,
   label: PropTypes.string.isRequired,
@@ -31,6 +33,7 @@ Button.propTypes = {
 };
 
 Button.defaultProps = {
+  type: 'button',
   color: 'primary',
   fill: true,
   onClick: undefined,

@@ -6,46 +6,53 @@ import PropTypes from 'prop-types';
 
 import style from './index.module.scss';
 
-export const InputText = ({ labelName, content, icon, type, onClick }) => {
+export const InputText = ({
+  labelName,
+  content,
+  icon,
+  inputType,
+  type,
+  onClick,
+}) => {
   const [showPassword, setShowPassword] = useState(false);
 
   const toggleShowPassword = () => {
     setShowPassword(prev => !prev);
   };
 
-  let inputType = null;
-  let buttonType = null;
+  let inputValue = null;
+  let buttonValue = null;
 
-  if (type === 'password') {
-    inputType = (
+  if (inputType === 'password') {
+    inputValue = (
       <input
         type={showPassword ? 'text' : 'password'}
         placeholder={content}
         className={classnames(style.Content, `w-full h-6`)}
       />
     );
-    buttonType = (
+    buttonValue = (
       <button type="button" onClick={toggleShowPassword}>
         {showPassword ? <BiShow /> : <BiHide />}
       </button>
     );
-  } else if (type === 'iconText') {
-    inputType = (
+  } else if (inputType === 'iconText') {
+    inputValue = (
       <input
-        type="text"
+        type={type}
         placeholder={content}
         className={classnames(style.Content, `w-full h-6`)}
       />
     );
-    buttonType = (
+    buttonValue = (
       <button type="button" className={style.RightBtn} onClick={onClick}>
         {icon}
       </button>
     );
   } else {
-    inputType = (
+    inputValue = (
       <input
-        type="text"
+        type={type}
         placeholder={content}
         className={classnames(style.Content, `w-full h-6`)}
       />
@@ -58,14 +65,15 @@ export const InputText = ({ labelName, content, icon, type, onClick }) => {
         {labelName}
       </div>
       <div className="flex">
-        {inputType}
-        {buttonType}
+        {inputValue}
+        {buttonValue}
       </div>
     </div>
   );
 };
 
 InputText.propTypes = {
+  type: PropTypes.string.isRequired,
   labelName: PropTypes.string,
   content: PropTypes.string,
   onClick: PropTypes.func,
