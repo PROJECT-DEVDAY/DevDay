@@ -79,7 +79,7 @@ const check = props => {
         <BtnFooter
           label="네! 약속할게요"
           disable={firstChecked && secondChecked}
-          gotourl="/create/type"
+          goToUrl="/create/type"
           warningMessage="약속을 지키지 않으실건가요ㅠㅠ"
         />
       </div>
