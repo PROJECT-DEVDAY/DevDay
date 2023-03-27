@@ -48,8 +48,8 @@ const idInquiry = () => {
           <ReturnArrow title="아이디 찾기" />
         </div>
         <div className="div-body p-6">
-          <InputText labelName="이름" content="홍길동" />
-          <InputText labelName="닉네임" content="홍홍홍홍~" />
+          <InputText type="text" labelName="이름" content="홍길동" />
+          <InputText type="text" labelName="닉네임" content="홍홍홍홍~" />
 
           <Button
             className="inquiry-bt mt-6"

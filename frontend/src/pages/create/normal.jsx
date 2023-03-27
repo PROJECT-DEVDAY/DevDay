@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { BiPlus, BiMinus } from 'react-icons/bi';
 import { TbTilde } from 'react-icons/tb';
+
 import classNames from 'classnames';
 
 import style from './normal.module.scss';
