@@ -57,6 +57,13 @@ public class ChallengeController {
         return responseService.getSingleResult(challengeService.challengeInfoList(challengeIdList));
     }
 
+    /** 지울거임 **/
+    @PutMapping("/listInfo")
+    public SingleResult<Map<Long, ChallengeInfoResponseDto>> challengeInfoList(@RequestBody Map<String, List<Long>> map){
+        List<Long> challengeIdList= map.get("challengeIdList");
+        return responseService.getSingleResult(challengeService.challengeInfoList(challengeIdList));
+    }
+
 
     /** 챌린지 상세 조회 ** (입장 페이지)*/
 
@@ -86,12 +93,6 @@ public class ChallengeController {
         return ResponseEntity.status(HttpStatus.OK).body(challengeService.solvedProblemList(baekjoonId));
     }
 
-    /** 지울거임 **/
-    @PostMapping("/baekjoon/{baekjoonId}")
-    public ResponseEntity<SolvedListResponseDto> solvedProblemList(@PathVariable("baekjoonId") String baekjoonId){
-        return ResponseEntity.status(HttpStatus.OK).body(challengeService.solvedProblemList(baekjoonId));
-    }
-
     /**
      * 신대득
      * 유저가 푼 문제 리스트 갱신
@@ -101,7 +102,6 @@ public class ChallengeController {
         challengeService.updateUserBaekjoon(userId);
         return responseService.getSuccessResult();
     }
-
 
 
     /** 메인 페이지 조회 **/
