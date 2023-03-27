@@ -100,9 +100,6 @@ public class UserServiceTest {
     @Test
     @DisplayName("user-service에서 유저 조회시, 유저 없음")
     public void 유저_서비스_조회시_유저_없음() {
-        // give
-        UserResponse mockUserResponse = null;
-
         // when
         when(userServiceClient.getUserInfo(1L)).thenReturn(new InternalResponse<>(null));
 

@@ -1,13 +1,15 @@
 package com.example.payservice.controller;
 
-import com.example.payservice.dto.response.ChallengeJoinResponse;
+import com.example.payservice.common.util.Utils;
 import com.example.payservice.dto.InternalResponse;
+import com.example.payservice.dto.response.ChallengeJoinResponse;
 import com.example.payservice.dto.tosspayments.FailRequest;
 import com.example.payservice.dto.tosspayments.Payment;
 import com.example.payservice.dto.tosspayments.SuccessRequest;
 import com.example.payservice.service.PaymentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,18 +32,23 @@ public class PaymentsController {
 			@PathVariable Long challengeId,
 			SuccessRequest successRequest
 	) {
-		// TODO: userId는 직접 기입하는 것으로 테스트 하자.
-		Long userId = 2L; // Long.parseLong(request.getHeader("userId"));
-		log.info("클라이언트 toss 결제 완료 -> challengeId: {}, request: {}", challengeId, request);
+		Long userId = Utils.parseAuthorizedUserId(request);
+		log.info("클라이언트 toss 결제 완료 -> challengeId: {}, userId: {}, request: {}", challengeId, userId, request);
 		Payment payment = paymentService.confirm(successRequest);
 		ChallengeJoinResponse joinResponse = paymentService.saveTransaction(payment, userId, challengeId);
+		// TODO: 필요시, challenge-service로 결제완료 메시지를 함께 알려준다.
 		return ResponseEntity.ok(new InternalResponse<>(joinResponse));
 	}
 
-	@GetMapping("/{userId}/fail")
-	public ResponseEntity<?> paymentsFail(@PathVariable Long userId, FailRequest request) {
-		log.info("클라이언트 toss 결제 실패 -> userId: {}, request: {}", userId, request);
-		return null;
+	@Deprecated
+	@GetMapping("/{challengeId}/fail")
+	public ResponseEntity<ResponseEntity.BodyBuilder> paymentsFail(
+			HttpServletRequest request,
+		    @PathVariable Long challengeId,
+			FailRequest failRequest
+	) {
+		Long userId = Utils.parseAuthorizedUserId(request);
+		log.info("클라이언트 toss 결제 실패 -> challengeId: {}, userId: {}, request: {}", challengeId, userId, failRequest);
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
-
 }

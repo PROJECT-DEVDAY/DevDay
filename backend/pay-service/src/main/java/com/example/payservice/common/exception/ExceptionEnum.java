@@ -16,7 +16,8 @@ public enum ExceptionEnum {
     API_METHOD_NOT_ALLOWED_EXCEPTION(HttpStatus.METHOD_NOT_ALLOWED, "E0003", "지원하지 않는 Method 입니다."),
     API_PARAMETER_EXCEPTION(HttpStatus.BAD_REQUEST, "E0004", "파라미터 타입과 값을 확인하세요."),
     MEMBER_NOT_EXIST_EXCEPTION(HttpStatus.NOT_FOUND,"M0001", "존재하지 않는 계정입니다."),
-    MEMBER_ACCESS_EXCEPTION(HttpStatus.FORBIDDEN, "M0002", "접근 권한이 없습니다.");
+    MEMBER_ACCESS_EXCEPTION(HttpStatus.FORBIDDEN, "M0002", "접근 권한이 없습니다."),
+    MEMBER_AUTHORIZED_EXCEPTION(HttpStatus.UNAUTHORIZED, "M003", "인증되지 않은 계정의 요청입니다.");
 
 
 

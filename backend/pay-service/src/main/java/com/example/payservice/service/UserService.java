@@ -64,8 +64,20 @@ public class UserService {
      * @return
      */
     public PayUserEntity getPayUserEntity(long userId) {
-        UserResponse user = searchUserInDevDay(userId);
-        PayUserEntity payUserEntity = payUserRepository.findByUserId(user.getUserId());
+        PayUserEntity payUserEntity = payUserRepository.findByUserId(userId);
+        if(payUserEntity == null) {
+            throw new UserNotExistException("pay-service에 존재하지 않는 유저입니다.");
+        }
+        return payUserEntity;
+    }
+
+    /**
+     * user-service에서 검색한 user에 대해 pay-service 유저 정보를 리턴합니다.
+     * @param userId
+     * @return
+     */
+    public PayUserEntity getPayUserEntityForUpdate(long userId) {
+        PayUserEntity payUserEntity = payUserRepository.findByUserIdForUpdate(userId);
         if(payUserEntity == null) {
             throw new UserNotExistException("pay-service에 존재하지 않는 유저입니다.");
         }

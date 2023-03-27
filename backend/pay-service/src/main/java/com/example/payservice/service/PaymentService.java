@@ -46,7 +46,7 @@ public class PaymentService {
 
     @Transactional
     public ChallengeJoinResponse saveTransaction(Payment payment, Long userId, Long challengeId) {
-        PayUserEntity userEntity = userService.getPayUserEntity(userId);
+        PayUserEntity userEntity = userService.getPayUserEntityForUpdate(userId);
         DepositTransactionEntity dtEntity = DepositTransactionEntity.builder()
             .id(String.valueOf(UUID.randomUUID()))
             .user(userEntity)

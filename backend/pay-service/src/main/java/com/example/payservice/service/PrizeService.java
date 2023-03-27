@@ -46,7 +46,7 @@ public class PrizeService {
     public WithdrawResponse withdraw(long userId, int money, AccountDto account) {
 
         // 유저의 출금가능금액과 요청 금액을 비교해본다.
-        PayUserEntity payUserEntity = userService.getPayUserEntity(userId);
+        PayUserEntity payUserEntity = userService.getPayUserEntityForUpdate(userId);
         checkDrawMoney(payUserEntity, money);
         /*
             TODO: [우선순위 낮음] 요청한 계좌가 유효한지 확인한다.
@@ -70,7 +70,7 @@ public class PrizeService {
      */
     @Transactional
     public void save(RewardSaveRequest request) {
-        PayUserEntity payUserEntity = userService.getPayUserEntity(request.getUserId());
+        PayUserEntity payUserEntity = userService.getPayUserEntityForUpdate(request.getUserId());
         // TODO: 챌린지 ID가 존재하는 지
         PrizeHistoryEntity prizeHistory = PrizeHistoryEntity.createInTypePrizeHistory(request);
 
