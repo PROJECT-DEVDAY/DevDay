@@ -1,10 +1,12 @@
 package com.example.payservice.controller;
 
+import com.example.payservice.common.exception.ApiException;
+import com.example.payservice.common.exception.ExceptionEnum;
 import com.example.payservice.dto.CustomPage;
+import com.example.payservice.dto.InternalResponse;
 import com.example.payservice.dto.bank.AccountDto;
 import com.example.payservice.dto.prize.PrizeHistoryDto;
 import com.example.payservice.dto.request.WithdrawRequest;
-import com.example.payservice.dto.InternalResponse;
 import com.example.payservice.dto.response.UserResponse;
 import com.example.payservice.dto.response.WithdrawResponse;
 import com.example.payservice.dto.user.PayUserDto;
@@ -33,6 +35,9 @@ public class UserController {
 	@PostMapping("/{userId}")
 	public ResponseEntity<InternalResponse<PayUserDto>> createUserInfo(@PathVariable Long userId) {
 		UserResponse user = userService.searchUserInDevDay(userId);
+		if(user == null) {
+			throw new ApiException(ExceptionEnum.MEMBER_CAN_NOT_FIND_EXCEPTION);
+		}
 		PayUserDto userDto = userService.createPayUser(user.getUserId());
 		return ResponseEntity.ok(new InternalResponse<>(userDto));
 	}
