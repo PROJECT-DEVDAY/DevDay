@@ -16,7 +16,7 @@ spring:
   application:
     name: challenge-service
   datasource:
-      url: jdbc:mysql://j8c209.p.ssafy.io:3307/devday?useUnicode=true&serverTimezone=Asia/Seoul
+      url: jdbc:mysql://j8c209.p.ssafy.io:3307/devday?useUnicode=true&serverTimezone=Asia/Seoul&characterEncoding=utf8
       username: root
       password: devday1234
       driver-class-name: com.mysql.cj.jdbc.Driver
