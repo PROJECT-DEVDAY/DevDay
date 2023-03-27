@@ -143,6 +143,7 @@ const commit = props => {
         className={classNames(`text-center absolute w-full bottom-0 pb-4 m-0`)}
       >
         <BtnFooter
+          content=""
           label="다음"
           disable
           goToUrl="/create/algo"

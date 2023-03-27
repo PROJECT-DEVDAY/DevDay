@@ -31,9 +31,9 @@ const check = props => {
       content: [
         '알고리즘 챌린지에 도전해보세요!',
         <br />,
-        'solvedAC를 연동해 자동 검증됩니다.',
+        'solved_ac를 연동해 자동 검증됩니다.',
       ],
-      iconUrl: require('@/image/solvedac.png'),
+      iconUrl: require('@/image/solved_ac.png'),
     },
     {
       id: 1,
@@ -97,6 +97,7 @@ const check = props => {
         )}
       >
         <BtnFooter
+          content=""
           label="다음으로"
           disable={checking[0] || checking[1] || checking[2]}
           goToUrl={goUrl}

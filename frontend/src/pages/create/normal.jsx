@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { BiPlus, BiMinus } from 'react-icons/bi';
 import { TbTilde } from 'react-icons/tb';
-import TimeField from 'react-simple-timefield';
-
 import classNames from 'classnames';
 
 import style from './normal.module.scss';
@@ -152,6 +150,7 @@ const normal = props => {
       </div>
       <div className={classNames(`text-center absolute w-full bottom-0 m-0`)}>
         <BtnFooter
+          content=""
           label="다음"
           disable
           goToUrl="/create/algo"

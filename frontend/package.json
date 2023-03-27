@@ -15,8 +15,10 @@
     "*.{js,jsx}": "eslint --fix"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^1.9.3",
     "@tosspayments/payment-sdk": "^1.5.1",
     "classnames": "^2.3.2",
+    "immer": "^9.0.21",
     "next": "13.2.4",
     "postcss-loader": "^7.1.0",
     "prop-types": "^15.8.1",
@@ -24,7 +26,8 @@
     "react-datepicker": "^4.10.0",
     "react-dom": "18.2.0",
     "react-icons": "^4.8.0",
-    "react-simple-timefield": "^3.3.1"
+    "react-redux": "^8.0.5",
+    "redux": "^4.2.1"
   },
   "devDependencies": {
     "@babel/core": "^7.21.3",
