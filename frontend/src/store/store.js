@@ -1,6 +1,8 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
-import counter from '../store/counter/countSlice';
-import signup from '../store/signup/signupSlice';
+
+import counter from './counter/countSlice';
+import signup from './signup/signupSlice';
+
 const combinedReducer = combineReducers({
   counter,
   signup,

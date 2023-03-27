@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 
 import classNames from 'classnames';
 import { useRouter } from 'next/router';
@@ -8,16 +9,33 @@ import { Button } from '../../components/Button';
 import { InputText } from '../../components/InputText';
 import { ReturnArrow } from '../../components/ReturnArrow';
 
+import { save } from '@/store/signup/signupSlice';
+
 const signup = props => {
+  const [signUpInfos, setSignUpInfos] = useState({
+    id: '',
+    password: '',
+    passwordCheck: '',
+    name: '',
+    nickName: '',
+    solvedAc: '',
+    gitHub: '',
+  });
+
   const [emailValidCheck, setEmailValidCheck] = useState(false);
+
+  //
+  const [nickNameDuplicateChk, setnickNameDuplicateChk] = useState(false);
+
   const router = useRouter();
+  const dispatch = useDispatch();
+
   const onClickEmailValidation = () => {
     setEmailValidCheck(true);
     // TODO: 이메일 전송 API 구현
   };
-  const [checkValidCheck, setCheckValidCheck] = useState(false);
-  const onClickCheckValidation = () => {
-    setCheckValidCheck(true);
+  const onClickDuplicateCheck = () => {
+    setnickNameDuplicateChk(true);
     // TODO: 이메일 전송 API 구현
   };
   const Timer = () => {
@@ -48,6 +66,8 @@ const signup = props => {
         {minutes}:{seconds < 10 ? `0${seconds}` : seconds}
       </div>
     );
+
+    const goToNextSignUpPage = () => {};
   };
 
   return (
@@ -94,9 +114,9 @@ const signup = props => {
           labelName="닉네임"
           content="Devday챌린지"
           icon="중복확인"
-          onClick={onClickCheckValidation}
+          onClick={onClickDuplicateCheck}
         />
-        {checkValidCheck && <div>가즈아</div>}
+        {nickNameDuplicateChk && <div>가즈아</div>}
       </div>
       <div
         className={classNames(

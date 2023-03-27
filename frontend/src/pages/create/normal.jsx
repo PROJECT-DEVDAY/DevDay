@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
-
-import style from './normal.module.scss';
-import { ReturnArrow } from '@/components/ReturnArrow';
-import { InputLabel } from '@/components/InputLabel';
-import { ContentInput } from '@/components/ContentInput';
-import { DayPicker } from '@/components/DayPicker';
-import { BtnFooter } from '@/components/BtnFooter';
-
-import classNames from 'classnames';
 import { BiPlus, BiMinus } from 'react-icons/bi';
 import { TbTilde } from 'react-icons/tb';
+
+import classNames from 'classnames';
+
+import style from './normal.module.scss';
+
+import { BtnFooter } from '@/components/BtnFooter';
+import { ContentInput } from '@/components/ContentInput';
+import { DayPicker } from '@/components/DayPicker';
+import { InputLabel } from '@/components/InputLabel';
+import { ReturnArrow } from '@/components/ReturnArrow';
 
 const normal = props => {
   const [text, setText] = useState('');
@@ -49,7 +50,7 @@ const normal = props => {
       </div>
       <div className="div-body p-6 pb-32 mt-4">
         <div>
-          <InputLabel content="챌린지 제목" asterisk={true} />
+          <InputLabel content="챌린지 제목" asterisk />
           <ContentInput
             placeholder="예) 헬스 3주 도전"
             onChange={setTextValue}
@@ -59,7 +60,7 @@ const normal = props => {
           <p className="text-right">{text.length}/30</p>
         </div>
         <div className="mt-6">
-          <InputLabel content="참여 인원" asterisk={true} />
+          <InputLabel content="참여 인원" asterisk />
           <div className="flex">
             {memberCheckButton.map(item => {
               const { id, title, content } = item;
@@ -80,7 +81,7 @@ const normal = props => {
           </div>
           {checking[1] && (
             <div className="mt-6 flex">
-              <InputLabel content="참여 인원 수" asterisk={true} />
+              <InputLabel content="참여 인원 수" asterisk />
               <div className={classNames('flex', style.changeMember)}>
                 {member > 0 ? (
                   <button
@@ -117,12 +118,12 @@ const normal = props => {
           )}
         </div>
         <div className="mt-8">
-          <InputLabel content="인증 가능 시간" asterisk={true} />
+          <InputLabel content="인증 가능 시간" asterisk />
           <button>시작 시간</button>
           <button>종료 시간</button>
         </div>
         <div className="mt-8">
-          <InputLabel content="챌린지 기간" asterisk={true} />
+          <InputLabel content="챌린지 기간" asterisk />
           <div className="flex">
             <div className="w-2/5">
               <DayPicker />
@@ -150,7 +151,7 @@ const normal = props => {
       >
         <BtnFooter
           label="다음"
-          disable={true}
+          disable
           goToUrl="/create/algo"
           warningMessage="알고리즘 챌린지는 solved.AC ID가 필요해요."
         />

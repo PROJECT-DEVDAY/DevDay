@@ -7,13 +7,13 @@ import {
 
 import classnames from 'classnames';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 
 import style from './main.module.scss';
 
 import { ChallengeItem } from '@/components/ChallengeItem';
 import Footer from '@/components/Footer';
 import { HeaderButtons } from '@/components/HeaderButtons';
-import { useRouter } from 'next/router';
 
 const main = props => {
   const Router = useRouter();
