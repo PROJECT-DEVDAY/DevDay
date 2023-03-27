@@ -12,4 +12,5 @@ public class EurekaServiceApplication {
         SpringApplication.run(EurekaServiceApplication.class, args);
     }
 
+    // 유레카 재실행
 }
