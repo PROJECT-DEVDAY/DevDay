@@ -8,15 +8,16 @@ import style from './index.module.scss';
 
 import 'react-datepicker/dist/react-datepicker.css';
 
-export const DayPicker = () => {
+export const DayPicker = ({ minDate, ...props }) => {
   const [startDate, setStartDate] = useState(new Date());
   return (
     <label className={style.DateBox} htmlFor="dayPicker">
       <DatePicker
         className={style.DateSelect}
-        dateFormat="yyyy년 MM월 dd일"
+        dateFormat="yy. MM. dd"
         selected={startDate}
         onChange={date => setStartDate(date)}
+        minDate={minDate}
       />
       <FiCalendar className={style.Icon} />
     </label>
