@@ -49,7 +49,7 @@ const login = props => {
       </div>
       <div className="div-body p-6 pb-32">
         <Image
-          src={require('@/image/MainLogo.png')}
+          src={require('@/image/main_logo.png')}
           className="w-full"
           alt="loginImage"
         />

@@ -93,6 +93,7 @@ const check = props => {
         )}
       >
         <BtnFooter
+          content=""
           label="다음으로"
           disable={checking[0] || checking[1]}
           goToUrl="/create/category"

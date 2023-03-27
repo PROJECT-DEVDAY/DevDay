@@ -77,6 +77,7 @@ const check = props => {
         className={classNames(`text-center absolute w-full bottom-0 pb-4 m-0`)}
       >
         <BtnFooter
+          content=""
           label="네! 약속할게요"
           disable={firstChecked && secondChecked}
           goToUrl="/create/type"
