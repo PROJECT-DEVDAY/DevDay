@@ -153,6 +153,7 @@ const normal = props => {
         className={classNames(`text-center sticky w-full bottom-0 pb-4 m-0`)}
       >
         <BtnFooter
+          content=""
           label="다음"
           disable
           goToUrl="/create/algo"

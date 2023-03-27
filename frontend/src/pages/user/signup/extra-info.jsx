@@ -28,8 +28,8 @@ const signup = props => {
       <div className="div-body p-6 pb-32">
         <div className="mb-16">
           <Image
-            src={require('@/image/solvedAC.png')}
-            alt="solvedac"
+            src={require('@/image/solved_ac.png')}
+            alt="solved_ac"
             width={195}
             height={39}
             className="mb-4"

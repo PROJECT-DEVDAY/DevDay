@@ -9,7 +9,7 @@ import { BtnFooter } from '@/components/BtnFooter';
 import { InputBox } from '@/components/InputBox';
 import { ReturnArrow } from '@/components/ReturnArrow';
 
-const inputSolvedAC = props => {
+const inputsolved_ac = props => {
   const [text, setText] = useState('');
   const setTextValue = e => {
     setText(e.target.value);
@@ -26,8 +26,8 @@ const inputSolvedAC = props => {
         </div>
 
         <Image
-          src={require('@/image/solvedAC.png')}
-          alt="solvedAC"
+          src={require('@/image/solved_ac.png')}
+          alt="solved_ac"
           className="w-1/2 mt-8"
         />
         <InputBox
@@ -50,8 +50,9 @@ const inputSolvedAC = props => {
         )}
       >
         <BtnFooter
+          content=""
           label="다음"
-          disable={text}
+          disable={!!text}
           goToUrl="/create/algo"
           warningMessage="알고리즘 챌린지는 solved.AC ID가 필요해요."
         />
@@ -60,4 +61,4 @@ const inputSolvedAC = props => {
   );
 };
 
-export default inputSolvedAC;
+export default inputsolved_ac;

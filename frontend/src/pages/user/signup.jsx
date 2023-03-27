@@ -18,7 +18,7 @@ const signup = props => {
     passwordCheck: '',
     name: '',
     nickName: '',
-    solvedAc: '',
+    solved_ac: '',
     gitHub: '',
   });
 

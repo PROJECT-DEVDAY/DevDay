@@ -8,7 +8,7 @@ const initialState = {
   passwordCheck: '',
   name: '',
   nickname: '',
-  solvedAc: '',
+  solved_ac: '',
   gitHub: '',
 };
 

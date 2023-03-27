@@ -88,7 +88,7 @@ const main = props => {
       <div
         className={classnames(`flex justify-between px-6`, style.TopOfHeader)}
       >
-        <Image src={require('@/image/MainLogo.png')} width={70} height={70} />
+        <Image src={require('@/image/main_logo.png')} width={70} height={70} />
         <div className={classnames(`flex HeaderIcons`)}>
           {HEADER_ITEMS.map(item => {
             const { label, icon, onClick } = item;
