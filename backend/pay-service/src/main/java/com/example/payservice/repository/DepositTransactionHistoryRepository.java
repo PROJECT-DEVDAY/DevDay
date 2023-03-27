@@ -6,8 +6,12 @@ import com.example.payservice.entity.PayUserEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.QueryHints;
 
+import javax.persistence.LockModeType;
+import javax.persistence.QueryHint;
 import java.util.Optional;
 import java.util.Set;
 
@@ -18,5 +22,7 @@ public interface DepositTransactionHistoryRepository extends JpaRepository<Depos
     Page<DepositTransactionHistoryEntity> findAllByUserAndDepositTransactionType(
             PayUserEntity payUserEntity, String historyType, Pageable pageable);
 
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @QueryHints({@QueryHint(name = "javax.persistence.lock.timeout", value="5000")})
     Set<DepositTransactionHistoryEntity> findAllByChallengeIdAndType(Long challengeId, DepositTransactionType type);
 }

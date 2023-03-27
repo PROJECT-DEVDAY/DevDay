@@ -113,7 +113,7 @@ public class DepositService {
      *
      * @return
      */
-    @Transactional(isolation = Isolation.SERIALIZABLE)
+    @Transactional
     public void refund(Long challengeId) {
         // TODO: 성능이 안좋을 것으로 보여 재개발 필요
         Set<DepositTransactionHistoryEntity> paidSets = depositTransactionHistoryRepository.
