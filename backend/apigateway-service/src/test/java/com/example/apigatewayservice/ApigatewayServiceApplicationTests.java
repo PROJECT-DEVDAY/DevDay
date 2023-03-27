@@ -10,4 +10,6 @@ class ApigatewayServiceApplicationTests {
     void contextLoads() {
     }
 
+    // jenkins 테스트
+
 }
