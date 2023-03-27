@@ -7,7 +7,6 @@ import {
 
 import classnames from 'classnames';
 import Image from 'next/image';
-import PropTypes from 'prop-types';
 
 import style from './main.module.scss';
 
