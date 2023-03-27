@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 
 import classNames from 'classnames';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 
 import style from './extra-info.module.scss';
 import { Button } from '../../../components/Button';
 import { ReturnArrow } from '../../../components/ReturnArrow';
 
 import { InputBox } from '@/components/InputBox';
-import { useRouter } from 'next/router';
 
 const signup = props => {
   const Router = useRouter();
