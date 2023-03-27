@@ -31,4 +31,8 @@ public class DepositTransactionHistoryEntity extends BaseEntity {
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
 	@ToString.Exclude
 	private DepositTransactionEntity depositTransaction;
+
+	public static boolean notHasChallengeFields(DepositTransactionType type) {
+		return type == DepositTransactionType.CANCEL || type == DepositTransactionType.PAY;
+	}
 }

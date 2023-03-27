@@ -4,9 +4,11 @@
   background-color: var(--gray-bg);
   font-size: 1rem;
   cursor: pointer;
-  border: 2px solid var(--gray-border);
+  border: 2px solid var(--gray-hr);
   padding: 10px;
   height: 62px;
+  background-color: var(--gray-border);
+  margin-top: 8px;
 }
 .ContentInput::-webkit-scrollbar {
   display: none;

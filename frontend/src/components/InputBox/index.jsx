@@ -6,22 +6,16 @@ import PropTypes from 'prop-types';
 
 import style from './index.module.scss';
 
-export const InputBox = ({ className, content, placeholder, ...props }) => {
+export const InputBox = ({ className, placeholder, ...props }) => {
   return (
     <div className={style.box} {...props}>
       <CiMail className={style.icon} />
-      <input
-        className={style.inputbox}
-        value={content}
-        type="text"
-        placeholder={placeholder}
-      />
+      <input className={style.inputbox} type="text" placeholder={placeholder} />
     </div>
   );
 };
 
 InputBox.propTypes = {
-  content: PropTypes.string.isRequired,
   placeholder: PropTypes.string,
 };
 
