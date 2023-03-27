@@ -20,42 +20,75 @@ public class UserController {
 
     private final UserService userService;
 
+    /**
+     * 회원가입 API 입니다.
+     * @param emailAuthId
+     * @param requestDto
+     * */
     @PostMapping("/join/{emailAuthId}")
     public ResponseEntity<BaseResponseDto> join(@PathVariable Long emailAuthId, @RequestBody SignUpRequestDto requestDto) {
         userService.join(emailAuthId, requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(new BaseResponseDto(201, "success"));
     }
 
+    /**
+     * 로그인 API 입니다.
+     * @param requestDto
+     * @return
+     * */
     @PostMapping("/login")
     public ResponseEntity<BaseResponseDto<TokenResponseDto>> login(@RequestBody LoginRequestDto requestDto) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new BaseResponseDto<>(200, "success", userService.login(requestDto)));
     }
 
+    /**
+     * 아이디를 찾는 API 입니다.
+     * @param requestDto
+     * @return
+     * */
     @PostMapping("/username")
     public ResponseEntity<BaseResponseDto<String>> findId(@RequestBody FindIdRequestDto requestDto) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new BaseResponseDto<>(200, "success", userService.findId(requestDto)));
     }
 
+    /**
+     * 비밀번호를 찾는 API 입니다.
+     * @param requestDto
+     * */
     @PatchMapping("/password")
     public ResponseEntity<BaseResponseDto> findPw(@RequestBody FindPwRequestDto requestDto) {
         userService.findPw(requestDto);
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseDto<>(200, "success"));
     }
 
+    /**
+     * 이메일 인증 API 입니다.
+     * @param requestDto
+     * @return
+     * */
     @PostMapping("/email")
     public ResponseEntity<BaseResponseDto<Long>> emailCheck(@RequestBody EmailRequestDto requestDto) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new BaseResponseDto<>(200, "success", userService.emailCheck(requestDto.getEmail())));
     }
 
+    /**
+     * 이메일 인증번호를 확인하는 API 입니다.
+     * @param requestDto
+     * */
     @PatchMapping("/confirm-email")
     public ResponseEntity<BaseResponseDto> confirmEmail(@RequestBody EmailAuthRequestDto requestDto) {
         userService.confirmEmail(requestDto);
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseDto<>(200, "success"));
     }
 
+    /**
+     * accessToken 을 refresh 하는 API 입니다.
+     * @param request
+     * @return
+     * */
     @GetMapping("/refresh")
     public ResponseEntity<BaseResponseDto<TokenResponseDto>> refresh(HttpServletRequest request) {
 
@@ -63,6 +96,11 @@ public class UserController {
                 .body(new BaseResponseDto<>(200, "success", userService.refresh(request)));
     }
 
+    /**
+     * 챌린지, 결제 마이크로 서비스에서 사용자 정보를 FeignClient 로 가져오기 위한 API 입니다.
+     * @param userId
+     * @return
+     * */
     @GetMapping("/user/{userId}")
     public ResponseEntity<BaseResponseDto<UserResponseDto>> getUserInfo(@PathVariable Long userId) {
 
@@ -70,13 +108,22 @@ public class UserController {
                 .body(new BaseResponseDto<>(200, "success", userService.getUserInfo(userId)));
     }
 
+    /**
+     * 챌린지 마이크로 서비스에서 백준 문제 리스트를 FeignClient 로 가져오기 위한 API 입니다.
+     * @param userId
+     * @return
+     * */
     @GetMapping("/user/baekjoon/{userId}")
     public ResponseEntity<BaseResponseDto<BaekjoonListResponseDto>> getBaekjoonList(@PathVariable Long userId) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new BaseResponseDto<>(200, "success", userService.getBaekjoonList(userId)));
     }
 
-    /* 지울거임 */
+    /**
+     * 챌린지 마이크로 서비스에서 FeignClient 로 오늘 푼 문제 리스트를 저장하기 위한 API 입니다.
+     * @param userId
+     * @param requestDto
+     * */
     @PostMapping("/user/baekjoon/{userId}")
     public ResponseEntity<BaseResponseDto> createProblem(@PathVariable Long userId, @RequestBody ProblemRequestDto requestDto) {
         userService.createProblem(userId, requestDto);

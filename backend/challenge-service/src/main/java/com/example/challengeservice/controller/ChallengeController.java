@@ -124,7 +124,7 @@ public class ChallengeController {
         return responseService.getListResult(challengeService.getSelfPhotoRecord(challengeRoomId,userId,viewType));
     }
 
-    /** 팀원의 인증 기록 불러오기 테스트 **/
+    /** 팀원의 인증 기록 불러오기 테스트 코드**/
     @GetMapping("{challengeId}/record")
     public ListResult<?> getTeamChallengeRecord(@PathVariable("challengeId")Long challengeRoomId ,@RequestParam("view") String viewType){
 

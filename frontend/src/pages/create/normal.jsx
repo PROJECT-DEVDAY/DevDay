@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { BiPlus, BiMinus } from 'react-icons/bi';
 import { TbTilde } from 'react-icons/tb';
-
 import classNames from 'classnames';
 
 import style from './normal.module.scss';
@@ -38,17 +37,13 @@ const normal = props => {
     }
   };
   const [member, setMember] = useState(0);
-  const [value, setValue] = useState('10:00');
 
-  const onChange = timeValue => {
-    setValue(timeValue);
-  };
   return (
     <div>
       <div className={classNames(`style.div-header`, `sticky top-0`)}>
         <ReturnArrow title="챌린지 만들기" />
       </div>
-      <div className="div-body p-6 pb-32 mt-4">
+      <div className="div-body p-6 pb-8 mt-4">
         <div>
           <InputLabel content="챌린지 제목" asterisk />
           <ContentInput
@@ -121,11 +116,6 @@ const normal = props => {
           )}
         </div>
         <div className="mt-8">
-          <InputLabel content="인증 가능 시간" asterisk />
-          <button type="button">시작 시간</button>
-          <button type="button">종료 시간</button>
-        </div>
-        <div className="mt-8">
           <InputLabel content="챌린지 기간" asterisk />
           <div className="flex">
             <div className="w-2/5">
@@ -140,18 +130,25 @@ const normal = props => {
           </div>
         </div>
         <div className="mt-8">
+          <InputLabel content="인증 방법" asterisk />
+          <ContentInput
+            placeholder="예) 헬스장 거울 앞에서 사진 찍기"
+            onChange={setTextValue}
+            value={text}
+            maxLength="30"
+          />
+        </div>
+        <div className="mt-8">
           <InputLabel content="챌린지 소개" asterisk={false} />
           <ContentInput
-            placeholder="예) 1일 1알고리즘 실천해서 코테 뿌셔봅시다"
+            placeholder="예) 3대 500 가능할때까지 무한 반복한다."
             onChange={setTextValue}
             value={text}
             maxLength="30"
           />
         </div>
       </div>
-      <div
-        className={classNames(`text-center sticky w-full bottom-0 pb-4 m-0`)}
-      >
+      <div className={classNames(`text-center absolute w-full bottom-0 m-0`)}>
         <BtnFooter
           content=""
           label="다음"

@@ -22,62 +22,104 @@ public class AuthController {
 
     private final AuthService authService;
 
+    /**
+     * 프로필 정보를 가져오는 API입니다.
+     * @param request
+     * @return
+     * */
     @GetMapping
     public ResponseEntity<BaseResponseDto<MypageResponseDto>> getMypageInfo(HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new BaseResponseDto<>(
                         200,
                         "success",
-                        authService.getMypageInfo(Long.parseLong(request.getHeader("userId")))
+                        authService.getMypageInfo(getUserId(request))
                         )
                 );
     }
 
+    /**
+     * 마이페이지 정보를 가져오는 API입니다.
+     * @param request
+     * @return
+     * */
     @GetMapping("/user/detail")
     public ResponseEntity<BaseResponseDto<ProfileResponseDto>> getProfileDetail(HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new BaseResponseDto<>(
                         200,
                         "success",
-                        authService.getProfileDetail(Long.parseLong(request.getHeader("userId")))
+                        authService.getProfileDetail(getUserId(request))
                         )
                 );
     }
 
+    /**
+     * 회원탈퇴 API입니다.
+     * @param request
+     * */
     @DeleteMapping("/user")
     public ResponseEntity<BaseResponseDto> deleteUser(HttpServletRequest request) {
-        authService.deleteUser(Long.parseLong(request.getHeader("userId")));
+        authService.deleteUser(getUserId(request));
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new BaseResponseDto<>(204, "success"));
     }
 
+    /**
+     * 기본 프로필 변경 API입니다.
+     * @param request
+     * */
     @PatchMapping("/user/defaultimg")
     public ResponseEntity<BaseResponseDto> updateProfileDefaultImg(HttpServletRequest request) {
-        authService.updateProfileDefaultImg(Long.parseLong(request.getHeader("userId")));
+        authService.updateProfileDefaultImg(getUserId(request));
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseDto<>(200, "success"));
     }
 
+    /**
+     * 프로필 사진을 변경하는 API입니다.
+     * @param request
+     * @param profileImg
+     * */
     @PatchMapping("/user/img")
     public ResponseEntity<BaseResponseDto> updateProfileImg(HttpServletRequest request, @RequestPart MultipartFile profileImg) {
-        authService.updateProfileImg(Long.parseLong(request.getHeader("userId")), profileImg);
+        authService.updateProfileImg(getUserId(request), profileImg);
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseDto<>(200, "success"));
     }
 
+    /**
+     * 비밀번호 변경 API입니다.
+     * @param request
+     * @param requestDto
+     * */
     @PatchMapping("/user/password")
     public ResponseEntity<BaseResponseDto> updatePassword(HttpServletRequest request, @RequestBody PasswordRequestDto requestDto) {
-        authService.updatePassword(Long.parseLong(request.getHeader("userId")), requestDto);
+        authService.updatePassword(getUserId(request), requestDto);
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseDto<>(200, "success"));
     }
 
+    /**
+     * 닉네임을 변경하는 API입니다.
+     * @param request
+     * @param requestDto
+     * */
     @PatchMapping("/user/nickname")
     public ResponseEntity<BaseResponseDto> updateNickname(HttpServletRequest request, @RequestBody NicknameRequestDto requestDto) {
-        authService.updateNickname(Long.parseLong(request.getHeader("userId")), requestDto);
+        authService.updateNickname(getUserId(request), requestDto);
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseDto<>(200, "success"));
     }
 
+    /**
+     * 백준 아이디와 깃허브 아이디를 변경하는 API입니다.
+     * @param request
+     * @param requestDto
+     * */
     @PatchMapping("/user/githubandbaekjoon")
     public ResponseEntity<BaseResponseDto> updateGithubAndBaekjoon(HttpServletRequest request, @RequestBody GithubBaekjoonRequestDto requestDto) {
-        authService.updateGithubAndBaekjoon(Long.parseLong(request.getHeader("userId")), requestDto);
+        authService.updateGithubAndBaekjoon(getUserId(request), requestDto);
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseDto(200, "success"));
+    }
+
+    private Long getUserId(HttpServletRequest request) {
+        return Long.parseLong(request.getHeader("userId"));
     }
 
 }
