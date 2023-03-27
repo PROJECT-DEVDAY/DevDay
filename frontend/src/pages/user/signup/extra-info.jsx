@@ -8,8 +8,18 @@ import { Button } from '../../../components/Button';
 import { ReturnArrow } from '../../../components/ReturnArrow';
 
 import { InputBox } from '@/components/InputBox';
+import { useRouter } from 'next/router';
 
 const signup = props => {
+  const Router = useRouter();
+  const join = () => {
+    // api
+    Router.push('/main');
+  };
+  const pass = () => {
+    // api
+    Router.push('/main');
+  };
   return (
     <div className={style.signup}>
       <div className={classNames(`style.div-header`, `sticky top-0`)}>
@@ -51,10 +61,15 @@ const signup = props => {
       >
         <div className="flex">
           <div className="w-1/2 p-2">
-            <Button color="primary" fill={false} label="건너뛰기" />
+            <Button
+              color="primary"
+              fill={false}
+              label="건너뛰기"
+              onClick={pass}
+            />
           </div>
           <div className="w-1/2 p-2">
-            <Button color="primary" fill label="가입하기" />
+            <Button color="primary" fill label="가입하기" onClick={join} />
           </div>
         </div>
         <div className="mt-2"> 회원 가입</div>

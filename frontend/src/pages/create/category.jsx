@@ -10,13 +10,17 @@ import { SelectOption } from '../../components/SelectOption';
 
 const check = props => {
   const [checking, setChecking] = useState([false, false, false]);
+  const [goUrl, setGoUrl] = useState('');
   const changeCheck = index => {
     if (index === 0) {
       setChecking([true, false, false]);
+      setGoUrl('/create/category/inputSolvedAC');
     } else if (index === 1) {
       setChecking([false, true, false]);
+      setGoUrl('/create/category/inputGithub');
     } else {
       setChecking([false, false, true]);
+      setGoUrl('/create/normal');
     }
   };
 
@@ -95,7 +99,7 @@ const check = props => {
         <BtnFooter
           label="다음으로"
           disable={checking[0] || checking[1] || checking[2]}
-          gotourl="/create/category"
+          goToUrl={goUrl}
           warningMessage="어떤 카테고리의 챌린지를 만드실건가요?"
         />
       </div>

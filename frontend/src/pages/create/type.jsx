@@ -95,7 +95,7 @@ const check = props => {
         <BtnFooter
           label="다음으로"
           disable={checking[0] || checking[1]}
-          gotourl="/create/category"
+          goToUrl="/create/category"
           warningMessage="챌린지방의 유형을 한개 골라주세용"
         />
       </div>

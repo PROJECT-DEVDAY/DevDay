@@ -14,8 +14,10 @@ import style from './main.module.scss';
 import { ChallengeItem } from '@/components/ChallengeItem';
 import Footer from '@/components/Footer';
 import { HeaderButtons } from '@/components/HeaderButtons';
+import { useRouter } from 'next/router';
 
 const main = props => {
+  const Router = useRouter();
   const [searchBoxStatus, setSearchBoxStatus] = useState(false);
 
   const search = () => {};
@@ -24,7 +26,9 @@ const main = props => {
       search();
     }
   };
-  const addChallenge = () => {};
+  const addChallenge = () => {
+    Router.push('/create/check');
+  };
 
   const searchBoxStatusChange = () => {
     setSearchBoxStatus(prev => !prev);
@@ -72,7 +76,7 @@ const main = props => {
     },
     {
       id: 4,
-      imgUrl: '@/image/default-user.png',
+      imgUrl: require('@/image/default-user.png'),
       participants: '100',
       leader: '최형운',
       title: '런닝머신 1시간뛰기',
