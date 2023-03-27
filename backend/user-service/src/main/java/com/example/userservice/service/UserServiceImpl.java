@@ -15,6 +15,7 @@ import com.example.userservice.repository.EmailAuthRepository;
 import com.example.userservice.repository.SolvedacReporitory;
 import com.example.userservice.repository.UserRepository;
 import com.example.userservice.security.JWTUtil;
+import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
