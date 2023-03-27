@@ -20,6 +20,7 @@ spring:
       username: root
       password: devday1234
       driver-class-name: com.mysql.cj.jdbc.Driver
+      # 안녕하세요
   jpa:
     hibernate:
       ddl-auto: create
