@@ -10,7 +10,7 @@ import com.example.payservice.dto.deposit.DepositTransactionType;
 
 @DataJpaTest
 @ActiveProfiles("test")
-public class DepositTransactionHistoryEntityTest {
+class DepositTransactionHistoryEntityTest {
 
 	@Test
 	@DisplayName("챌린지 필드가 없는 엔티티 반환하기")
@@ -31,10 +31,10 @@ public class DepositTransactionHistoryEntityTest {
 			.id(4L)
 			.type(DepositTransactionType.CHARGE)
 			.build();
-		Assertions.assertTrue(DepositTransactionHistoryEntity.notHasChallengeFields(payEntity.getType()));
-		Assertions.assertTrue(DepositTransactionHistoryEntity.notHasChallengeFields(cancelEntity.getType()));
-		Assertions.assertFalse(DepositTransactionHistoryEntity.notHasChallengeFields(chargeEntity.getType()));
-		Assertions.assertFalse(DepositTransactionHistoryEntity.notHasChallengeFields(refundEntity.getType()));
+		Assertions.assertEquals(DepositTransactionHistoryEntity.notHasChallengeFields(payEntity.getType()), true);
+		Assertions.assertEquals(DepositTransactionHistoryEntity.notHasChallengeFields(cancelEntity.getType()), true);
+		Assertions.assertEquals(DepositTransactionHistoryEntity.notHasChallengeFields(chargeEntity.getType()), false);
+		Assertions.assertEquals(DepositTransactionHistoryEntity.notHasChallengeFields(refundEntity.getType()), false);
 	}
 
 	@Test
@@ -54,7 +54,7 @@ public class DepositTransactionHistoryEntityTest {
 			.type(DepositTransactionType.CHARGE)
 			.build();
 
-		Assertions.assertTrue(chargeEntity.equals(chargeEntity2));
-		Assertions.assertFalse(chargeEntity.equals(refundEntity));
+		Assertions.assertEquals(chargeEntity.equals(chargeEntity2), true);
+		Assertions.assertEquals(chargeEntity.equals(refundEntity), false);
 	}
 }

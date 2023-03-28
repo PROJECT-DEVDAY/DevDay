@@ -182,11 +182,10 @@ public class DepositService {
             throw new UnRefundableException("환불 대상이 아닙니다.");
         }
 
-        DepositTransactionHistoryEntity payHistory = depositTransactionHistoryRepository
+        return depositTransactionHistoryRepository
                 .findByUserAndChallengeIdAndType(user, challengeId, DepositTransactionType.PAY)
                 .orElseThrow(() -> new UnRefundableException("환불 대상이 아닙니다."));
 
-        return payHistory;
     }
 
     /**
