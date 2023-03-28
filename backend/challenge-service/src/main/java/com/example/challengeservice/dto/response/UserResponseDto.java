@@ -17,6 +17,8 @@ public class UserResponseDto {
 
     private String name;
 
+    private String nickname;
+
     private String github;
 
     private String baekjoon;

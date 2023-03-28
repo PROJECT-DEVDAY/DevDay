@@ -44,9 +44,11 @@ public class ChallengeRecord {
     private String photoUrl;
 
     /** 이 기록에 알고리즘 푼 개수 **/
+
     private int algorithmCount;
 
     /** 이 기록에 커밋 수 **/
+
     private int commitCount;
 
     // 사진 생성자
