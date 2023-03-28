@@ -3,9 +3,11 @@ package com.example.payservice.controller;
 import com.example.payservice.common.exception.ApiException;
 import com.example.payservice.common.exception.ApiExceptionEntity;
 import com.example.payservice.common.exception.ExceptionEnum;
+import com.example.payservice.exception.LackOfDepositException;
 import com.example.payservice.exception.LackOfPrizeException;
 import com.example.payservice.exception.PaymentsConfirmException;
 import com.example.payservice.exception.PrizeWithdrawException;
+import com.example.payservice.exception.UnRefundableException;
 import com.example.payservice.exception.UserNotExistException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -58,6 +60,14 @@ public class ExceptionAdviceController {
     public ResponseEntity<ApiExceptionEntity> lackOfPrizeExceptionHandler() {
         return apiExceptionHandler(new ApiException(ExceptionEnum.PRIZE_LACK_OF_MONEY_EXCEPTION));
     }
+    /**
+     * 출금금액이 예치금보다 클 경우 기본 처리입니다.
+     * @return
+     */
+    @ExceptionHandler({LackOfDepositException.class})
+    public ResponseEntity<ApiExceptionEntity> lackOfDepsitExceptionHandler() {
+        return apiExceptionHandler(new ApiException(ExceptionEnum.DEPOSIT_LACK_OF_MONEY_EXCEPTION));
+    }
 
     /**
      * RuntimeException, Exception 발생시 내부서버에러(500)를 표시합니다.
@@ -105,5 +115,13 @@ public class ExceptionAdviceController {
     @ExceptionHandler({UserNotExistException.class})
     public ResponseEntity<ApiExceptionEntity> userNotExistException() {
         return apiExceptionHandler(new ApiException(ExceptionEnum.MEMBER_NOT_EXIST_EXCEPTION));
+    }
+
+    /**
+     * 환불이 불가능한 유저에 대한 기본 처리입니다.
+     */
+    @ExceptionHandler({UnRefundableException.class})
+    public ResponseEntity<ApiExceptionEntity> unRefundableException() {
+        return apiExceptionHandler(new ApiException(ExceptionEnum.MEMBER_NOT_REFUNDABLE_EXCEPTION));
     }
 }

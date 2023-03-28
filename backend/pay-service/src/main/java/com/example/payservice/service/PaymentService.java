@@ -3,17 +3,21 @@ package com.example.payservice.service;
 import com.example.payservice.dto.bank.AccountDto;
 import com.example.payservice.dto.bank.Bank;
 import com.example.payservice.dto.deposit.DepositTransactionType;
+import com.example.payservice.dto.deposit.DepositWithdrawTransaction;
 import com.example.payservice.dto.nhbank.Header;
 import com.example.payservice.dto.nhbank.ReceivedTransferType;
 import com.example.payservice.dto.nhbank.RequestTransfer;
 import com.example.payservice.dto.response.ChallengeJoinResponse;
+import com.example.payservice.dto.tosspayments.CancelRequest;
 import com.example.payservice.dto.tosspayments.Payment;
 import com.example.payservice.dto.tosspayments.SuccessRequest;
 import com.example.payservice.entity.DepositTransactionEntity;
 import com.example.payservice.entity.DepositTransactionHistoryEntity;
 import com.example.payservice.entity.PayUserEntity;
+import com.example.payservice.exception.PaymentCancelException;
 import com.example.payservice.exception.PaymentsConfirmException;
 import com.example.payservice.exception.PrizeWithdrawException;
+import com.example.payservice.exception.UnRefundableException;
 import com.example.payservice.repository.DepositTransactionHistoryRepository;
 import com.example.payservice.repository.DepositTransactionRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +31,12 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import javax.transaction.Transactional;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -39,9 +49,8 @@ import java.util.UUID;
 public class PaymentService {
 
     private final Environment env;
-
     private final UserService userService;
-    // private final DepositTransactionRepository depositTransactionRepository;
+    private final DepositTransactionRepository depositTransactionRepository;
     private final DepositTransactionHistoryRepository depositTransactionHistoryRepository;
 
     /**
@@ -142,8 +151,26 @@ public class PaymentService {
      * 결제가 취소/환급에 대해 메시지를 토스에게 전달합니다.
      * @return
      */
-    public Payment cancel() {
-        return null;
+    public Payment cancel(DepositWithdrawTransaction transaction) {
+        WebClient client = WebClient.builder()
+            .baseUrl(env.getProperty("payment.toss.baseUrl"))
+            .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+            .defaultHeader(HttpHeaders.AUTHORIZATION, env.getProperty("payment.toss.secret"))
+            .build();
+
+        return client.post()
+            .uri(
+                String.format(
+                    env.getProperty("payment.toss.path.cancel"),
+                    transaction.getTransaction().getPaymentKey())
+            ).bodyValue(new CancelRequest(transaction.getWithdrawMoney()))
+            .retrieve()
+            .onStatus(HttpStatus::isError, response ->
+                response.bodyToMono(String.class) // error body as String or other class
+                    .flatMap(error -> Mono.error(new PaymentCancelException(error)))
+            )
+            .bodyToMono(Payment.class)
+            .block();
     }
 
     /**
@@ -196,5 +223,87 @@ public class PaymentService {
                                 .flatMap(error -> Mono.error(new PrizeWithdrawException(error)))
                 ).bodyToMono(Header.class).block();
         return true;
+    }
+    @Transactional
+    public boolean refund(PayUserEntity user, int money) {
+        List<DepositTransactionEntity> fundableList = getRefundableTransactionList(user);
+        Map<String, DepositWithdrawTransaction> withdrawTransactionMap = findRefundMap(fundableList, money);
+        if(withdrawTransactionMap.isEmpty()) {
+           return false;
+        }
+
+        Iterator<String> withdrawalTransactionIter = withdrawTransactionMap.keySet().iterator();
+        // TODO: 비동기 동시실행으로 변경할 것!
+        while(withdrawalTransactionIter.hasNext()) {
+            try {
+                DepositWithdrawTransaction tx = withdrawTransactionMap.get(withdrawalTransactionIter.next());
+                cancel(tx); // 토스페이먼트로 환불진행
+
+                // db 반영
+                DepositTransactionEntity transaction = tx.getTransaction();
+                user.setDeposit(user.getDeposit() - tx.getWithdrawMoney());
+                transaction.setRefundableAmount(transaction.getRefundableAmount() - tx.getWithdrawMoney());
+                DepositTransactionHistoryEntity history = DepositTransactionHistoryEntity.builder()
+                    .user(user)
+                    .amount(tx.getWithdrawMoney())
+                    .type(DepositTransactionType.CANCEL)
+                    .depositTransaction(transaction)
+                    .build();
+                depositTransactionHistoryRepository.save(history);
+            } catch(PaymentCancelException ex) {
+                log.error("toss payments 환불 중에 문제가 발생했습니다.", ex.getMessage());
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * 환불가능 금액이 0원 초과인 결제 리스트를 오래된 순으로 가져옵니다.
+     * @param user
+     * @return
+     */
+    private List<DepositTransactionEntity> getRefundableTransactionList(PayUserEntity user) {
+        return depositTransactionRepository
+            .findAllByUserAndRefundableAmountIsGreaterThanOOrderByCreatedAtAsc(user, 0);
+
+    }
+
+    /**
+     * 예치금 입금된 트랜잭션 리스트에서 환불받고자 하는 금액에 맞는 리스트를 찾아
+     * 환불해야할 금액과 트랜잭션ID를 알려주는 맵정보를 전달합니다.
+     * @param fundableList
+     * @param money
+     * @return
+     */
+    private Map<String, DepositWithdrawTransaction> findRefundMap(List<DepositTransactionEntity> fundableList, int money) {
+        Map<String, DepositWithdrawTransaction> withdrawTransactionMap = new HashMap<>();
+        Iterator<DepositTransactionEntity> iter = fundableList.iterator();
+        int withdrawal = 0;
+        while(iter.hasNext()) {
+            DepositTransactionEntity transaction = iter.next();
+            withdrawal += transaction.getRefundableAmount();
+            if(withdrawal > money) {
+                int overMoney = withdrawal - money;
+                withdrawal -= overMoney;
+                withdrawTransactionMap.put(
+                    transaction.getId(),
+                    new DepositWithdrawTransaction(
+                        transaction.getRefundableAmount() - overMoney,
+                        transaction
+                    )
+                );
+                break;
+            } else {
+                withdrawTransactionMap.put(
+                    transaction.getId(),
+                    new DepositWithdrawTransaction(
+                        transaction.getRefundableAmount(),
+                        transaction
+                    )
+                );
+            }
+        }
+        return withdrawTransactionMap;
     }
 }
