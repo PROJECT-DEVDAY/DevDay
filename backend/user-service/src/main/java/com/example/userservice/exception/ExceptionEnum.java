@@ -23,7 +23,8 @@ public enum ExceptionEnum {
     EMAIL_NOT_ACCEPT_EXCEPTION(HttpStatus.FORBIDDEN, "E0003", "이메일이 인증되지 않았습니다."),
     SERVER_NOT_CONNECT_EXCEPTION(HttpStatus.SERVICE_UNAVAILABLE, "S0001", "서비스가 연결되지 않았습니다."),
     CHALLENGEINFO_NOT_EXIST_EXCEPTION(HttpStatus.NOT_FOUND, "S0002", "챌린지 정보가 존재하지 않습니다."),
-    MONEYINFO_NOT_EXIST_EXCEPTION(HttpStatus.NOT_FOUND, "S0003", "상여금 및 예치금 정보가 존재하지 않습니다.");
+    MONEYINFO_NOT_EXIST_EXCEPTION(HttpStatus.NOT_FOUND, "S0003", "상여금 및 예치금 정보가 존재하지 않습니다."),
+    PROBLEMINFO_NOT_EXIST_EXCEPTION(HttpStatus.NOT_FOUND, "S0003", "문제 리스트 정보가 존재하지 않습니다.");
     private final HttpStatus status;
     private final String code;
     private final String message;

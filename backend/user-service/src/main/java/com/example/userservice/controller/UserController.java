@@ -95,18 +95,6 @@ public class UserController {
     }
 
     /**
-     * accessToken 을 refresh 하는 API 입니다.
-     * @param request
-     * @return
-     * */
-    @GetMapping("/refresh")
-    public ResponseEntity<BaseResponseDto<TokenResponseDto>> refresh(HttpServletRequest request) {
-
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(new BaseResponseDto<>(200, "success", userService.refresh(request)));
-    }
-
-    /**
      * 챌린지, 결제 마이크로 서비스에서 사용자 정보를 FeignClient 로 가져오기 위한 API 입니다.
      * @param userId
      * @return
@@ -138,6 +126,18 @@ public class UserController {
     public ResponseEntity<BaseResponseDto> createProblem(@PathVariable Long userId, @RequestBody ProblemRequestDto requestDto) {
         userService.createProblem(userId, requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(new BaseResponseDto<>(201, "success"));
+    }
+
+    /**
+     * accessToken 을 refresh 하는 API 입니다.
+     * @param request
+     * @return
+     * */
+    @GetMapping("/refresh")
+    public ResponseEntity<BaseResponseDto<TokenResponseDto>> refresh(HttpServletRequest request) {
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new BaseResponseDto<>(200, "success", userService.refresh(request)));
     }
 
 }
