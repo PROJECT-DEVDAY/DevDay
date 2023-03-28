@@ -24,9 +24,9 @@ public interface UserService {
 
     UserResponseDto getUserInfo(Long userId);
 
-    TokenResponseDto refresh(HttpServletRequest request);
-
     BaekjoonListResponseDto getBaekjoonList(Long userId);
 
     void createProblem(Long userId, ProblemRequestDto requestDto);
+
+    TokenResponseDto refresh(HttpServletRequest request);
 }

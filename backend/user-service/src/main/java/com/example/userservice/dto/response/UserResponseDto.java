@@ -18,6 +18,8 @@ public class UserResponseDto {
 
     private String name;
 
+    private String nickname;
+
     private String github;
 
     private String baekjoon;
@@ -27,6 +29,7 @@ public class UserResponseDto {
                 .userId(user.getId())
                 .email(user.getEmail())
                 .name(user.getName())
+                .nickname(user.getNickname())
                 .github(user.getGithub())
                 .baekjoon(user.getBaekjoon())
                 .build();
