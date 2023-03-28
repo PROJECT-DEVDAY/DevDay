@@ -85,6 +85,16 @@ public class UserController {
     }
 
     /**
+     * 닉네임을 중복검사하는 API 입니다.
+     * @param requestDto
+     * */
+    @PostMapping("/nickname")
+    public ResponseEntity<BaseResponseDto> nicknameCheck(@RequestBody NicknameCheckRequestDto requestDto) {
+        userService.nicknameCheck(requestDto.getNickname());
+        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseDto<>(200, "success"));
+    }
+
+    /**
      * accessToken 을 refresh 하는 API 입니다.
      * @param request
      * @return

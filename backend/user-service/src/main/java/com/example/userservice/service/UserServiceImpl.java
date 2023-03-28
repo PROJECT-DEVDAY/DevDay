@@ -120,7 +120,11 @@ public class UserServiceImpl implements UserService{
 
         // 이메일 중복 체크
         Optional<User> user = userRepository.findByEmail(email);
-        if (user.isPresent()) throw new ApiException(ExceptionEnum.MEMBER_EXIST_EXCEPTION);
+
+        if (user.isPresent()) {
+            log.error("이미 사용중인 이메일입니다.");
+            throw new ApiException(ExceptionEnum.MEMBER_EXIST_EXCEPTION);
+        }
 
         EmailAuth emailAuth = EmailAuth.of(email, UUID.randomUUID().toString());
 
@@ -149,6 +153,17 @@ public class UserServiceImpl implements UserService{
         }
 
         emailAuth.check();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public void nicknameCheck(String nickname) {
+        Optional<User> user = userRepository.findByNickname(nickname);
+
+        if (user.isPresent()) {
+            log.error("이미 사용중인 닉네입입니다.");
+            throw new ApiException(ExceptionEnum.MEMBER_EXIST_EXCEPTION);
+        }
     }
 
     @Override
