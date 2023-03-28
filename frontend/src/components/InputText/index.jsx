@@ -80,7 +80,7 @@ InputText.propTypes = {
 };
 
 InputText.defaultProps = {
-  labelName: '비밀번호',
+  labelName: '',
   content: null,
   onClick: () => {},
 };
