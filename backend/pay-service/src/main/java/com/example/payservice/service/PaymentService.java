@@ -17,7 +17,6 @@ import com.example.payservice.entity.PayUserEntity;
 import com.example.payservice.exception.PaymentCancelException;
 import com.example.payservice.exception.PaymentsConfirmException;
 import com.example.payservice.exception.PrizeWithdrawException;
-import com.example.payservice.exception.UnRefundableException;
 import com.example.payservice.repository.DepositTransactionHistoryRepository;
 import com.example.payservice.repository.DepositTransactionRepository;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +34,6 @@ import javax.transaction.Transactional;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 import java.util.UUID;
 
@@ -265,7 +263,7 @@ public class PaymentService {
      */
     private List<DepositTransactionEntity> getRefundableTransactionList(PayUserEntity user) {
         return depositTransactionRepository
-            .findAllByUserAndRefundableAmountIsGreaterThanOOrderByCreatedAtAsc(user, 0);
+            .findAllByUserAndRefundableAmountIsGreaterThanOrderByCreatedAtAsc(user, 0);
 
     }
 

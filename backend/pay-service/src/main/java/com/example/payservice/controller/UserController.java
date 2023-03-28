@@ -138,6 +138,7 @@ public class UserController {
 	@GetMapping("/{userId}/deposit")
 	public ResponseEntity<InternalResponse> getDipositHistory(
 			@PathVariable Long userId,
+
 			@RequestParam(required = false, defaultValue = "") String type,
 			@PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
 	) {

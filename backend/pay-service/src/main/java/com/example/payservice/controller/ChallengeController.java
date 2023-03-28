@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class ChallengeController {
 
-	private DepositService depositService;
+	private final DepositService depositService;
 
 	@DeleteMapping("/{challengeId}")
 	public ResponseEntity<InternalResponse> refundChallengeByManager(@PathVariable Long challengeId) {

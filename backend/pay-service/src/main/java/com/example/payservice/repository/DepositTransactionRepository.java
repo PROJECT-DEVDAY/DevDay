@@ -16,7 +16,7 @@ import org.springframework.stereotype.Repository;
 public interface DepositTransactionRepository extends JpaRepository<DepositTransactionEntity, Long> {
 
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
-	List<DepositTransactionEntity> findAllByUserAndRefundableAmountIsGreaterThanOOrderByCreatedAtAsc(
+	List<DepositTransactionEntity> findAllByUserAndRefundableAmountIsGreaterThanOrderByCreatedAtAsc(
 		PayUserEntity user,
 		int fundableMoney
 	);

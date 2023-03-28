@@ -29,8 +29,8 @@ import java.util.stream.Collectors;
 
 import static com.example.payservice.entity.DepositTransactionHistoryEntity.notHasChallengeFields;
 
-@Service
 @Slf4j
+@Service
 @RequiredArgsConstructor
 public class DepositService {
     private final ChallengeServiceClient challengeServiceClient;
