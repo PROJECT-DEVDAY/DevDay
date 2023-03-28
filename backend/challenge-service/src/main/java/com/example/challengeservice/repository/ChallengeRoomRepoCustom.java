@@ -1,7 +1,7 @@
 package com.example.challengeservice.repository;
 
 import com.example.challengeservice.entity.ChallengeRoom;
-import com.example.challengeservice.infra.amazons3.querydsl.SearchParam;
+import com.example.challengeservice.infra.querydsl.SearchParam;
 
 import java.util.List;
 

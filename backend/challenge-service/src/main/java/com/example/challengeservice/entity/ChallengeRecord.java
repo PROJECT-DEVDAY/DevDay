@@ -41,6 +41,7 @@ public class ChallengeRecord {
     private boolean hostReport ;
 
     /** 인증 사진  url **/
+    @Column(columnDefinition = "VARCHAR(500)" , nullable = false)
     private String photoUrl;
 
     public static ChallengeRecord from(ChallengeRecordRequestDto dto ,String date ,String photoUrl, UserChallenge userChallenge){

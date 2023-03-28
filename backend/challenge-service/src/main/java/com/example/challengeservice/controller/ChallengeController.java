@@ -109,12 +109,22 @@ public class ChallengeController {
 
 
     /** 사진 인증 저장 **/
-    @PostMapping("record")
+    @PostMapping("photo-record")
     public ResponseEntity<String> createChallengeRecord(@ModelAttribute ChallengeRecordRequestDto requestDto) throws IOException{
 
         challengeService.createPhotoRecord(requestDto);
         return ResponseEntity.status(HttpStatus.OK).body("인증기록 저장완료");
     }
+
+    /** 사진 인증 상세 조회 **/
+    @GetMapping("photo-record/{recordId}")
+    public ResponseEntity<String> getPhotoRecordDetail(@PathVariable("recordId") Long recordId){
+
+
+
+        return ResponseEntity.status(HttpStatus.OK).body("인증기록 저장완료");
+    }
+
 
 
     /** 나의 인증 기록 불러오기 **/
@@ -129,6 +139,7 @@ public class ChallengeController {
     public ListResult<?> getTeamChallengeRecord(@PathVariable("challengeId")Long challengeRoomId ,@RequestParam("view") String viewType){
 
         return responseService.getListResult(challengeService.getTeamPhotoRecord(challengeRoomId,viewType));
+
     }
 
 }
