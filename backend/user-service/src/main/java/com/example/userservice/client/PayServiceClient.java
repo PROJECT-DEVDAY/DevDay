@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 @FeignClient(name = "pay-service")
 public interface PayServiceClient {
 
-    @GetMapping("/pay-service/users/{userId}")
+    @GetMapping("/users/{userId}")
     BaseResponseDto<MoneyResponseDto> getMoneyInfo(@PathVariable Long userId);
 
-    @PostMapping("/pay-service/users/{userId}")
+    @PostMapping("/users/{userId}")
     BaseResponseDto<MoneyResponseDto> createUser(@PathVariable Long userId);
 
-    @DeleteMapping("/pay-service/users/{userId}")
+    @DeleteMapping("/users/{userId}")
     void deleteUser(@PathVariable Long userId);
 }

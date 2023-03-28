@@ -9,6 +9,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 @FeignClient(name = "challenge-service")
 public interface ChallengeServiceClient {
 
-    @GetMapping("/challenge-service/challenges/challengeInfo/users/{userId}")
+    @GetMapping("/challenges/challengeInfo/users/{userId}")
     BaseResponseDto<ChallengeResponseDto> getChallengeInfo(@PathVariable Long userId);
 }
