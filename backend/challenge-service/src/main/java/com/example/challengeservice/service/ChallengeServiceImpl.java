@@ -11,10 +11,9 @@ import com.example.challengeservice.entity.ChallengeRoom;
 import com.example.challengeservice.entity.UserChallenge;
 import com.example.challengeservice.exception.ApiException;
 import com.example.challengeservice.exception.ExceptionEnum;
-import com.example.challengeservice.infra.amazons3.querydsl.SearchParam;
+import com.example.challengeservice.infra.querydsl.SearchParam;
 import com.example.challengeservice.infra.amazons3.service.AmazonS3Service;
 import com.example.challengeservice.repository.*;
-import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Connection;
@@ -273,5 +272,28 @@ public class ChallengeServiceImpl implements ChallengeService{
         List<PhotoRecordResponseDto> challengeRecords = recordRepoCustom.getTeamPhotoRecord(challengeRoomId, viewType );
         return challengeRecords;
 
+    }
+
+
+    /** 사진 인증 상세 조회 **/
+    public PhotoRecordDetailResponseDto getPhotoRecordDetail(Long challengeRecordId){
+
+        //해당 ChallengeRecord찾기
+        ChallengeRecord challengeRecord = challengeRecordRepository.findById(challengeRecordId).orElseThrow(()->new ApiException(ExceptionEnum.USER_CHALLENGE_NOT_EXIST_EXCEPTION));
+
+        //유저 아이디 찾아와서 user-service 사용자 닉네임인증정보 요청하기
+
+        Long userId =challengeRecord.getUserChallenge().getUserId();
+
+        UserResponseDto userResponseDto = userServiceClient.getUserInfo(userId).getData();
+
+
+
+
+        //그 정보를 담아서 dto 만들고 리턴하기
+
+
+
+        return null;
     }
 }
