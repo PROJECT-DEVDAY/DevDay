@@ -61,7 +61,10 @@ public class PrizeService {
         prizeHistory.setUser(payUserEntity);
         prizeHistoryRepository.save(prizeHistory);
 
-        return new WithdrawResponse(result, payUserEntity.getPrize());
+        return WithdrawResponse.builder()
+            .result(result)
+            .remainPrizes(payUserEntity.getPrize())
+            .build();
     }
 
     /**
