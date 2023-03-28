@@ -10,6 +10,8 @@ import com.example.payservice.dto.request.WithdrawPrizeRequest;
 import com.example.payservice.dto.response.WithdrawResponse;
 import com.example.payservice.entity.DepositTransactionHistoryEntity;
 import com.example.payservice.entity.PayUserEntity;
+import com.example.payservice.exception.LackOfDepositException;
+import com.example.payservice.exception.LackOfPrizeException;
 import com.example.payservice.exception.UnRefundableException;
 import com.example.payservice.repository.DepositTransactionHistoryRepository;
 import feign.FeignException;
@@ -193,5 +195,17 @@ public class DepositService {
 
     public WithdrawResponse withdraw(Long userId, WithdrawPrizeRequest request) {
         return null;
+    }
+
+    /**
+     * 유저가 money를 출금할 수 있는지 확인합니다.
+     * @param payUserEntity
+     * @param money
+     * @throws Exception
+     */
+    private void checkDrawMoney(PayUserEntity payUserEntity, int money) {
+        if(payUserEntity.getDeposit() < money) {
+            throw new LackOfDepositException("출금할 예치금 금액이 저장된 금액보다 큽니다.");
+        }
     }
 }

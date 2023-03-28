@@ -3,6 +3,7 @@ package com.example.payservice.controller;
 import com.example.payservice.common.exception.ApiException;
 import com.example.payservice.common.exception.ApiExceptionEntity;
 import com.example.payservice.common.exception.ExceptionEnum;
+import com.example.payservice.exception.LackOfDepositException;
 import com.example.payservice.exception.LackOfPrizeException;
 import com.example.payservice.exception.PaymentsConfirmException;
 import com.example.payservice.exception.PrizeWithdrawException;
@@ -58,6 +59,14 @@ public class ExceptionAdviceController {
     @ExceptionHandler({LackOfPrizeException.class})
     public ResponseEntity<ApiExceptionEntity> lackOfPrizeExceptionHandler() {
         return apiExceptionHandler(new ApiException(ExceptionEnum.PRIZE_LACK_OF_MONEY_EXCEPTION));
+    }
+    /**
+     * 출금금액이 예치금보다 클 경우 기본 처리입니다.
+     * @return
+     */
+    @ExceptionHandler({LackOfDepositException.class})
+    public ResponseEntity<ApiExceptionEntity> lackOfDepsitExceptionHandler() {
+        return apiExceptionHandler(new ApiException(ExceptionEnum.DEPOSIT_LACK_OF_MONEY_EXCEPTION));
     }
 
     /**
