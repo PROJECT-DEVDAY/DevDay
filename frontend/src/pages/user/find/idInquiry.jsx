@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { AiOutlineCloseCircle } from 'react-icons/Ai';
 
-import classnames from 'classnames';
+import classNames from 'classnames';
 import { useRouter } from 'next/router';
 
 import style from './inquiry.module.scss';
@@ -62,21 +62,21 @@ const idInquiry = () => {
       </div>
 
       <div
-        className={classnames(
+        className={classNames(
           style.BottomSheet,
           style[`${show ? 'show' : ''}`],
         )}
         ref={bottomSheetRef}
       >
-        <div className={classnames(style[`modal-content`], `p-6`)}>
+        <div className={classNames(style[`modal-content`], `p-6`)}>
           <button
             type="button"
-            className={classnames(style.ExitBtn)}
+            className={classNames(style.ExitBtn)}
             onClick={showModal}
           >
             <AiOutlineCloseCircle />
           </button>
-          <p className={classnames(`mb-2`)}>회원님의 아이디는 ~ 입니다</p>
+          <p className={classNames(`mb-2`)}>회원님의 아이디는 ~ 입니다</p>
           <Button
             onClick={goToLogin}
             color="primary"

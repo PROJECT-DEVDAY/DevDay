@@ -1,6 +1,6 @@
 import React from 'react';
 
-import classnames from 'classnames';
+import classNames from 'classnames';
 import PropTypes from 'prop-types';
 
 import style from './index.module.scss';
@@ -22,7 +22,7 @@ export const CheckBoxBtn = ({
           <input
             id="agree"
             type="checkbox"
-            className={classnames(style.checkBox, 'checked:bg-blue-500 ...')}
+            className={classNames(style.checkBox, 'checked:bg-blue-500 ...')}
           />
         )}
       </label>

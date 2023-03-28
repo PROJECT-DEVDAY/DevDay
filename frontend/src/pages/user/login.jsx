@@ -10,6 +10,8 @@ import { Button } from '../../components/Button';
 import { InputText } from '../../components/InputText';
 import { ReturnArrow } from '../../components/ReturnArrow';
 
+import { InputLabel } from '@/components/InputLabel';
+
 const login = props => {
   const router = useRouter();
   const [service, setService] = useState(false);
@@ -47,25 +49,28 @@ const login = props => {
       <div className={classNames(`style.div-header`, `sticky top-0`)}>
         <ReturnArrow title="로그인" />
       </div>
-      <div className="div-body p-6 pb-32">
+      <div className="div-body p-6 ">
         <Image
           src={require('@/image/main_logo.png')}
           className="w-full"
           alt="loginImage"
         />
-        <InputText
-          type="email"
-          inputType="text"
-          labelName="이메일"
-          content="welcome@devday.com"
-        />
-        <InputText
-          type="password"
-          inputType="password"
-          labelName="비밀번호"
-          content="12자리 이상, 대문자 소문자 특수문자"
-        />
-        <div className={style.option}>
+        <div>
+          <InputLabel content="이메일" />
+          <InputText
+            type="email"
+            inputType="text"
+            content="welcome@devday.com"
+          />
+        </div>
+        <div className={classNames(`mt-3`)}>
+          <InputLabel content="비밀번호" />
+          <InputText
+            type="password"
+            content="12자리 이상, 대문자 소문자 특수문자"
+          />
+        </div>
+        <div className={classNames(`mt-3`, style.option)}>
           <label htmlFor="toggle" className="flex">
             <label htmlFor="toggle" className={style.togglelabel}>
               <input className={style.toggle} type="checkbox" id="toggle" />

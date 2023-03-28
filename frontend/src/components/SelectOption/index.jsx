@@ -1,6 +1,6 @@
 import React from 'react';
 
-import classnames from 'classnames';
+import classNames from 'classnames';
 import Image from 'next/image';
 import PropTypes from 'prop-types';
 
@@ -16,7 +16,7 @@ export const SelectOption = ({
 }) => {
   return (
     <div
-      className={classnames(
+      className={classNames(
         !check && style.Select,
         check && style.Selected,
         'flex',
