@@ -5,6 +5,7 @@ import com.example.challengeservice.common.result.SingleResult;
 import com.example.challengeservice.dto.request.ChallengeRecordRequestDto;
 import com.example.challengeservice.dto.request.ChallengeRoomRequestDto;
 import com.example.challengeservice.dto.request.ProblemRequestDto;
+import com.example.challengeservice.dto.request.ReportRecordRequestDto;
 import com.example.challengeservice.dto.response.*;
 import com.example.challengeservice.entity.ChallengeRecord;
 import com.example.challengeservice.entity.ChallengeRoom;
@@ -339,5 +340,15 @@ public class ChallengeServiceImpl implements ChallengeService{
         PhotoRecordDetailResponseDto responseDto = new PhotoRecordDetailResponseDto(challengeRecord,userResponseDto.getNickname());
 
         return responseDto;
+    }
+
+
+    /** 사진 인증 신고하기 **/
+    @Override
+    public void reportRecord(ReportRecordRequestDto reportRecordRequestDto) {
+
+     List<UserChallenge> list =userChallengeRepository.findAll();
+
+        //일단 신고기록이 존재한다면 존재한다고 에러를 내어준다.
     }
 }
