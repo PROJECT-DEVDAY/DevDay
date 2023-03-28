@@ -227,7 +227,34 @@ public class ChallengeServiceImpl implements ChallengeService{
         return;
     };
 
+    /** 신대득
+     * 인증 정보 저장 (알고리즘)
+     * 제작중
+     *  **/
+    /*
+    @Override
+    public void createAlgoRecord(ChallengeRecordRequestDto requestDto) throws IOException {
+        log.info("챌린지id "+ requestDto.getChallengeRoomId()+"유저아이디id"+requestDto.getUserId());
+        ChallengeRoomResponseDto challengeRoom=readChallenge(requestDto.getChallengeRoomId());
+        UserResponseDto user= userServiceClient.getUserInfo(requestDto.getUserId()).getData();
 
+        //오늘 날짜
+        String date = commonService.getDate();
+
+        // user의 solved ac에서 오늘 푼 문제들만 조회하기!
+        // challengeRoom에서 최소 알고리즘 개수 가져오기
+        // 두개 비교
+
+//        if(requestDto.getPhotoCertFile()==null)
+//            throw new ApiException(ExceptionEnum.CHALLENGE_BAD_REQUEST);
+
+        // UserChallenge 조회
+        UserChallenge userChallenge = userChallengeRepository.findByChallengeRoomIdAndUserId(requestDto.getChallengeRoomId(), requestDto.getUserId()).orElseThrow(()-> new ApiException(ExceptionEnum.USER_CHALLENGE_NOT_EXIST_EXCEPTION) );
+        log.info("[userChallenge id값]"+ userChallenge.getId());
+        ChallengeRecord challengeRecord = ChallengeRecord.from(requestDto,date,,userChallenge);
+        challengeRecordRepository.save(challengeRecord);
+    }
+     */
 
     /**인증 정보 저장 (사진)**/
     @Override
@@ -250,8 +277,6 @@ public class ChallengeServiceImpl implements ChallengeService{
         ChallengeRecord challengeRecord = ChallengeRecord.from(requestDto,date,photoUrl,userChallenge);
 
         challengeRecordRepository.save(challengeRecord);
-
-
     }
 
     /** 사진 인증 개인 조회ㅏ  **/
@@ -261,12 +286,34 @@ public class ChallengeServiceImpl implements ChallengeService{
         //userChallenge 값을 찾아야함
 
       UserChallenge userChallenge =  userChallengeRepository.findByChallengeRoomIdAndUserId(challengeRoomId , userId).orElseThrow(()->new ApiException(ExceptionEnum.USER_CHALLENGE_NOT_EXIST_EXCEPTION));
-
-
         List<PhotoRecordResponseDto> challengeRecords = recordRepoCustom.getSelfPhotoRecord(userChallenge, viewType );
         return challengeRecords;
     }
 
+    /**
+     * 신대득
+     * category에 따라 record를 만드는 메서드
+     * 제작중!!
+     * @param challengeRoomId
+     * @param userId
+     * @param viewType
+     * @param category
+     * @return
+     */
+    public List<?> getSelfRecord(Long challengeRoomId, Long userId, String viewType, String category) {
+        List<?> selfRecord=new ArrayList<>();
+        switch(category){
+            case "ALGO":
+                break;
+            case "COMMIT":
+                break;
+            case "FREE":
+                //userChallenge 값을 찾아야함
+                selfRecord=getSelfPhotoRecord(challengeRoomId,userId,viewType);
+                break;
+        }
+        return selfRecord;
+    }
     @Override
     public List<PhotoRecordResponseDto> getTeamPhotoRecord(Long challengeRoomId, String viewType) {
         List<PhotoRecordResponseDto> challengeRecords = recordRepoCustom.getTeamPhotoRecord(challengeRoomId, viewType );

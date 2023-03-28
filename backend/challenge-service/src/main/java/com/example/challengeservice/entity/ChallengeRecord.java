@@ -14,7 +14,6 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ChallengeRecord {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "CHALLENGE_RECORD_ID")
@@ -41,14 +40,33 @@ public class ChallengeRecord {
     private boolean hostReport ;
 
     /** 인증 사진  url **/
-    @Column(columnDefinition = "VARCHAR(500)" , nullable = false)
+    @Column(columnDefinition = "VARCHAR(500)" , nullable = true)
     private String photoUrl;
 
+    /** 이 기록에 알고리즘 푼 개수 **/
+    private int algorithmCount;
+
+    /** 이 기록에 커밋 수 **/
+    private int commitCount;
+
+    // 사진 생성자
     public static ChallengeRecord from(ChallengeRecordRequestDto dto ,String date ,String photoUrl, UserChallenge userChallenge){
         return ChallengeRecord.builder()
                 .createAt(date)
                 .userChallenge(userChallenge)
                 .photoUrl(photoUrl)
+                .success(true)
+                .hostReport(false)
+                .reportCount(0)
+                .build();
+    }
+
+    // 알고리즘 생성자
+    public static ChallengeRecord algoFrom(ChallengeRecordRequestDto dto ,String date, int algorithmCount, UserChallenge userChallenge){
+        return ChallengeRecord.builder()
+                .createAt(date)
+                .userChallenge(userChallenge)
+                .algorithmCount(algorithmCount)
                 .success(true)
                 .hostReport(false)
                 .reportCount(0)
