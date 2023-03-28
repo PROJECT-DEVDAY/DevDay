@@ -15,7 +15,6 @@ import javax.persistence.QueryHint;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 public interface DepositTransactionHistoryRepository extends JpaRepository<DepositTransactionHistoryEntity, Long> {
     boolean existsDepositTransactionHistoryEntityByUserAndChallengeIdAndType(PayUserEntity entity, Long challengeId, DepositTransactionType type);

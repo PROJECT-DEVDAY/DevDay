@@ -25,7 +25,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
 @ActiveProfiles("test")
-public class UserServiceTest {
+class UserServiceTest {
     @Mock(answer = RETURNS_DEEP_STUBS)
     UserServiceClient userServiceClient;
     @Mock
@@ -36,7 +36,7 @@ public class UserServiceTest {
 
     @Test
     @DisplayName("pay-service 없는 유저 생성하기")
-    public void 없는_유저_생성하기() {
+    void 없는_유저_생성하기() {
         PayUserDto mockPayUserDto = PayUserDto.createPayUserDto(1L);
         PayUserDto payUserDto = userService.createPayUser(1L);
         Assertions.assertEquals(payUserDto, mockPayUserDto);
@@ -44,7 +44,7 @@ public class UserServiceTest {
 
     @Test
     @DisplayName("pay-service 이미 있는 유저 생성하기")
-    public void 이미있는_유저_생성하기() {
+    void 이미있는_유저_생성하기() {
         PayUserDto mockPayUserDto = PayUserDto.builder()
                 .userId(1L)
                 .prize(3000)
@@ -58,7 +58,7 @@ public class UserServiceTest {
     }
     @Test
     @DisplayName("pay-service 유저정보 조회")
-    public void 유저정보_조회하기() {
+    void 유저정보_조회하기() {
         PayUserDto mockPayUserDto = PayUserDto.builder()
                 .userId(1L)
                 .prize(3000)
@@ -73,7 +73,7 @@ public class UserServiceTest {
 
     @Test
     @DisplayName("pay-service 유저정보에서 없는 유저 조회시 UserNotExistException 발생")
-    public void 없는_유저_조회하기() {
+    void 없는_유저_조회하기() {
         when(payUserRepository.findByUserId(1L)).thenReturn(null);
 
         Assertions.assertThrows(UserNotExistException.class, () -> {
@@ -82,7 +82,7 @@ public class UserServiceTest {
     }
     @Test
     @DisplayName("user-service에서 유저 조회하기")
-    public void 유저_서비스_조회하기() {
+    void 유저_서비스_조회하기() {
         // give
         UserResponse mockUserResponse = new UserResponse();
         mockUserResponse.setUserId(1L);
@@ -99,7 +99,7 @@ public class UserServiceTest {
 
     @Test
     @DisplayName("user-service에서 유저 조회시, 유저 없음")
-    public void 유저_서비스_조회시_유저_없음() {
+    void 유저_서비스_조회시_유저_없음() {
         // when
         when(userServiceClient.getUserInfo(1L)).thenReturn(new InternalResponse<>(null));
 
@@ -111,7 +111,7 @@ public class UserServiceTest {
 
     @Test
     @DisplayName("user-service에서 feignCLient 에러 발생 시")
-    public void 유저_서비스_Feign_client_Exception() {
+    void 유저_서비스_Feign_client_Exception() {
         when(userServiceClient.getUserInfo(1L)).thenThrow(FeignException.FeignClientException.class);
 
         UserResponse response = userService.searchUserInDevDay(1L);

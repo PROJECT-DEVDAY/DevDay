@@ -223,7 +223,7 @@ public class PaymentService {
         return true;
     }
     @Transactional
-    public boolean refund(PayUserEntity user, int money) {
+    public boolean withdraw(PayUserEntity user, int money) {
         List<DepositTransactionEntity> fundableList = getRefundableTransactionList(user);
         Map<String, DepositWithdrawTransaction> withdrawTransactionMap = findRefundMap(fundableList, money);
         if(withdrawTransactionMap.isEmpty()) {
@@ -283,7 +283,6 @@ public class PaymentService {
             withdrawal += transaction.getRefundableAmount();
             if(withdrawal > money) {
                 int overMoney = withdrawal - money;
-                withdrawal -= overMoney;
                 withdrawTransactionMap.put(
                     transaction.getId(),
                     new DepositWithdrawTransaction(

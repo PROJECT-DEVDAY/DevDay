@@ -6,7 +6,7 @@ import com.example.payservice.dto.challenge.SimpleChallengeInfo;
 import com.example.payservice.dto.deposit.DepositTransactionHistoryDto;
 import com.example.payservice.dto.deposit.DepositTransactionType;
 import com.example.payservice.dto.request.SimpleChallengeInfosRequest;
-import com.example.payservice.dto.request.WithdrawPrizeRequest;
+import com.example.payservice.dto.request.WithdrawDepositRequest;
 import com.example.payservice.dto.response.WithdrawResponse;
 import com.example.payservice.entity.DepositTransactionHistoryEntity;
 import com.example.payservice.entity.PayUserEntity;
@@ -82,7 +82,7 @@ public class DepositService {
         try {
             List<Long> challengeTypePayRefundIds = challenges.stream()
                     .filter(depositHistory -> !notHasChallengeFields(depositHistory.getType()))
-                    .map(depositHistory -> depositHistory.getChallengeId())
+                    .map(DepositTransactionHistoryEntity::getChallengeId)
                     .collect(Collectors.toList());
 
             if(!challengeTypePayRefundIds.isEmpty()) {
@@ -137,9 +137,7 @@ public class DepositService {
     }
     private Map<Long, Boolean> makeAlreadyRefundUserMap(List<DepositTransactionHistoryEntity> refundedUserHistories) {
         Map<Long, Boolean> alreadyRefundMap = new HashMap<>();
-        refundedUserHistories.forEach(refundUserHistory -> {
-            alreadyRefundMap.put(refundUserHistory.getUser().getUserId(), true);
-        });
+        refundedUserHistories.forEach(refundUserHistory -> alreadyRefundMap.put(refundUserHistory.getUser().getUserId(), true));
 
         return alreadyRefundMap;
     }
@@ -191,12 +189,18 @@ public class DepositService {
         return payHistory;
     }
 
+    /**
+     * 예치금 결제 취소 기능입니다.
+     * @param userId
+     * @param request
+     * @return
+     */
     @Transactional
-    public WithdrawResponse withdraw(Long userId, WithdrawPrizeRequest request) {
+    public WithdrawResponse withdraw(Long userId, WithdrawDepositRequest request) {
         PayUserEntity payUserEntity = userService.getPayUserEntityForUpdate(userId);
         checkWithdrawMoney(payUserEntity, request.getMoney());
 
-        boolean result = paymentService.refund(payUserEntity, request.getMoney());
+        boolean result = paymentService.withdraw(payUserEntity, request.getMoney());
         return WithdrawResponse.builder()
             .result(result)
             .remainPrizes(payUserEntity.getPrize())

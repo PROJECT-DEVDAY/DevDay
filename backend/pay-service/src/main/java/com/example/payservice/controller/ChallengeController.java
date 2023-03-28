@@ -14,13 +14,13 @@ public class ChallengeController {
 	private final DepositService depositService;
 
 	@DeleteMapping("/{challengeId}")
-	public ResponseEntity<InternalResponse> refundChallengeByManager(@PathVariable Long challengeId) {
+	public ResponseEntity<InternalResponse<Boolean>> refundChallengeByManager(@PathVariable Long challengeId) {
 		depositService.refund(challengeId);
 		return ResponseEntity.ok(new InternalResponse<Boolean>(true));
 	}
 
 	@DeleteMapping("/{challengeId}/users/{userId}")
-	public ResponseEntity<InternalResponse> refundChallengeByUser(@PathVariable Long challengeId, @PathVariable Long userId) {
+	public ResponseEntity<InternalResponse<Boolean>> refundChallengeByUser(@PathVariable Long challengeId, @PathVariable Long userId) {
 		depositService.refund(userId, challengeId);
 		return ResponseEntity.ok(new InternalResponse<Boolean>(true));
 

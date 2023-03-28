@@ -14,14 +14,14 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
 @ActiveProfiles("test")
-public class PayUserRepositoryTest {
+class PayUserRepositoryTest {
 
     @Mock
     PayUserRepository payUserRepository;
 
     @Test
     @DisplayName("pay-service 유저 삭제")
-    public void 유저_삭제() {
+    void 유저_삭제() {
         // give
         PayUserEntity entity = new PayUserEntity(1L, 2000, 3000);
         payUserRepository.save(entity);
@@ -36,7 +36,7 @@ public class PayUserRepositoryTest {
 
     @Test
     @DisplayName("pay-service 유저 2번 삭제")
-    public void 유저_2번_삭제() {
+    void 유저_2번_삭제() {
         // give
         PayUserEntity entity = new PayUserEntity(1L, 2000, 3000);
         payUserRepository.save(entity);

@@ -123,7 +123,7 @@ public class PrizeService {
         try {
             List<Long> challengeTypeInIds = challenges.stream()
                     .filter(prizeHistory -> prizeHistory.getPrizeHistoryType() == PrizeHistoryType.IN)
-                    .map(prizeHistory -> prizeHistory.getChallengeId())
+                    .map(PrizeHistoryEntity::getChallengeId)
                     .collect(Collectors.toList());
 
             if(!challengeTypeInIds.isEmpty()) {

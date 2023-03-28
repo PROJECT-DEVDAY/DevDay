@@ -49,15 +49,16 @@ public class PaymentsController {
 	}
 
 	/**
+	 * @deprecated
 	 * 위 기능은 tosspayments에서 실패했을 때, 불리는 api 입니다.
 	 * FE에서 처리하기 위해 이 기능은 deprecated 됐습니다.
-	 * @deprecated
+	 *
 	 * @param request
 	 * @param challengeId
 	 * @param failRequest
 	 * @return
 	 */
-	@Deprecated
+	@Deprecated(forRemoval = true)
 	@GetMapping("/{challengeId}/fail")
 	public ResponseEntity<ResponseEntity.BodyBuilder> paymentsFail(
 			HttpServletRequest request,

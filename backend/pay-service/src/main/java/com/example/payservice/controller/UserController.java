@@ -5,6 +5,7 @@ import com.example.payservice.dto.InternalResponse;
 import com.example.payservice.dto.bank.AccountDto;
 import com.example.payservice.dto.deposit.DepositTransactionHistoryDto;
 import com.example.payservice.dto.prize.PrizeHistoryDto;
+import com.example.payservice.dto.request.WithdrawDepositRequest;
 import com.example.payservice.dto.request.WithdrawPrizeRequest;
 import com.example.payservice.dto.response.WithdrawResponse;
 import com.example.payservice.dto.user.PayUserDto;
@@ -100,7 +101,7 @@ public class UserController {
 	 * @return
 	 */
 	@GetMapping("/{userId}/prize")
-	public ResponseEntity<InternalResponse> getPrizeHistory(
+	public ResponseEntity<InternalResponse<CustomPage<PrizeHistoryDto>>> getPrizeHistory(
 			@PathVariable Long userId,
 			@RequestParam(required = false, defaultValue = "") String type,
 		    @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
@@ -117,9 +118,9 @@ public class UserController {
 	 * @return
 	 */
 	@PostMapping("/{userId}/deposit")
-	public ResponseEntity<InternalResponse> getDiposit(
+	public ResponseEntity<InternalResponse<WithdrawResponse>> getDeposit(
 		@PathVariable Long userId,
-		@RequestBody WithdrawPrizeRequest request
+		@RequestBody WithdrawDepositRequest request
 	) {
 		WithdrawResponse result = depositService.withdraw(userId, request);
 		InternalResponse<WithdrawResponse> response = new InternalResponse<>(result);
@@ -136,7 +137,7 @@ public class UserController {
 	 * @return
 	 */
 	@GetMapping("/{userId}/deposit")
-	public ResponseEntity<InternalResponse> getDipositHistory(
+	public ResponseEntity<InternalResponse<CustomPage<DepositTransactionHistoryDto>>> getDepositHistory(
 			@PathVariable Long userId,
 
 			@RequestParam(required = false, defaultValue = "") String type,
