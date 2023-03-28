@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import classnames from 'classnames';
+import classNames from 'classnames';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 // import { useRouter } from 'next/router';
@@ -40,14 +40,14 @@ export const ChallengeItem = ({
       onClick={goToChallengDetail}
       onKeyPress={handleKeyPress}
     >
-      <div className={classnames(style.ImageContainer, `relative`)}>
+      <div className={classNames(style.ImageContainer, `relative`)}>
         <Image
-          className={classnames(style.Image, `rounded-lg`)}
+          className={classNames(style.Image, `rounded-lg`)}
           src={imgURL || require('../../image/default-user.png')}
           alt="temp"
         />
         <div
-          className={classnames(
+          className={classNames(
             style.Participants,
             `absolute rounded-md p-1 font-bold text-xs`,
           )}
@@ -55,14 +55,14 @@ export const ChallengeItem = ({
           {participants}명
         </div>
       </div>
-      <div className={classnames(`flex flex-col ml-1 pt-1`)}>
-        <div className={classnames(style.Leader, `font-medium text-xs`)}>
+      <div className={classNames(`flex flex-col ml-1 pt-1`)}>
+        <div className={classNames(style.Leader, `font-medium text-xs`)}>
           {leader}
         </div>
-        <div className={classnames(style.Title, `font-bold text-base`)}>
+        <div className={classNames(style.Title, `font-bold text-base`)}>
           {title}
         </div>
-        <div className={classnames(style.Period, `font-medium text-xs`)}>
+        <div className={classNames(style.Period, `font-medium text-xs`)}>
           {period}
         </div>
       </div>

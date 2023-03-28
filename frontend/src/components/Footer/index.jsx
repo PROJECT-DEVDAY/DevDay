@@ -1,7 +1,7 @@
 import React from 'react';
 import { FiHome, FiCamera, FiUser } from 'react-icons/fi';
 
-import classnames from 'classnames';
+import classNames from 'classnames';
 
 import style from './footer.module.scss';
 
@@ -19,7 +19,7 @@ export default function Footer() {
         const key = `footer-item-${index}`;
         return (
           <div
-            className={classnames(
+            className={classNames(
               style.FooterBox,
               roundBackground && style.BackgroundRound,
               `pt-3`,
@@ -27,7 +27,7 @@ export default function Footer() {
             key={key}
           >
             {icon}
-            <span className={classnames(`pt-2 font-bold`)}>{label}</span>
+            <span className={classNames(`pt-2 font-bold`)}>{label}</span>
           </div>
         );
       })}

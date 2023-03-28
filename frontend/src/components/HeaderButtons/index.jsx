@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import classnames from 'classnames';
+import classNames from 'classnames';
 
 import style from './index.module.scss';
 
@@ -15,14 +15,14 @@ export const HeaderButtons = props => {
 
   return (
     <div
-      className={classnames(
+      className={classNames(
         style.RadioGroup,
         `flex justify-between items-center`,
       )}
     >
       {HEADER_ITEMS.map(item => (
         <label
-          className={classnames(
+          className={classNames(
             selectedItem === item ? style.selected : '',
             `inline-block rounded-2xl px-5 py-2 font-medium`,
           )}
