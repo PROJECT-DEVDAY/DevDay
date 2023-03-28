@@ -11,7 +11,6 @@ import com.example.payservice.dto.response.WithdrawResponse;
 import com.example.payservice.entity.DepositTransactionHistoryEntity;
 import com.example.payservice.entity.PayUserEntity;
 import com.example.payservice.exception.LackOfDepositException;
-import com.example.payservice.exception.LackOfPrizeException;
 import com.example.payservice.exception.UnRefundableException;
 import com.example.payservice.repository.DepositTransactionHistoryRepository;
 import feign.FeignException;
@@ -20,7 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
@@ -37,8 +35,8 @@ import static com.example.payservice.entity.DepositTransactionHistoryEntity.notH
 public class DepositService {
     private final ChallengeServiceClient challengeServiceClient;
     private final UserService userService;
+    private final PaymentService paymentService;
     private final DepositTransactionHistoryRepository depositTransactionHistoryRepository;
-
     /**
      * 예치금 내역을 조회하는 기능입니다.
      * @param userId
@@ -193,17 +191,26 @@ public class DepositService {
         return payHistory;
     }
 
+    @Transactional
     public WithdrawResponse withdraw(Long userId, WithdrawPrizeRequest request) {
-        return null;
+        PayUserEntity payUserEntity = userService.getPayUserEntityForUpdate(userId);
+        checkWithdrawMoney(payUserEntity, request.getMoney());
+
+        boolean result = paymentService.refund(payUserEntity, request.getMoney());
+        return WithdrawResponse.builder()
+            .result(result)
+            .remainPrizes(payUserEntity.getPrize())
+            .build();
     }
+
 
     /**
      * 유저가 money를 출금할 수 있는지 확인합니다.
      * @param payUserEntity
      * @param money
-     * @throws Exception
+     * @throws LackOfDepositException
      */
-    private void checkDrawMoney(PayUserEntity payUserEntity, int money) {
+    private void checkWithdrawMoney(PayUserEntity payUserEntity, int money) {
         if(payUserEntity.getDeposit() < money) {
             throw new LackOfDepositException("출금할 예치금 금액이 저장된 금액보다 큽니다.");
         }
