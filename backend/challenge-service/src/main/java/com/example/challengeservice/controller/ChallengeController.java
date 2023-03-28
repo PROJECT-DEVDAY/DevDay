@@ -131,11 +131,10 @@ public class ChallengeController {
 
     /** 사진 인증 상세 조회 **/
     @GetMapping("photo-record/{recordId}")
-    public ResponseEntity<String> getPhotoRecordDetail(@PathVariable("recordId") Long recordId){
+    public SingleResult<PhotoRecordDetailResponseDto> getPhotoRecordDetail(@PathVariable("recordId") Long recordId){
 
+        return responseService.getSingleResult(challengeService.getPhotoRecordDetail(recordId));
 
-
-        return ResponseEntity.status(HttpStatus.OK).body("인증기록 저장완료");
     }
 
 
