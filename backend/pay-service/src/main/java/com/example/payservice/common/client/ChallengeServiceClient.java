@@ -21,11 +21,4 @@ public interface ChallengeServiceClient {
     InternalResponse<Map<Long, SimpleChallengeInfo>> getSimpleChallengeInfos(
             @RequestBody SimpleChallengeInfosRequest request
     );
-//    {
-//        Map<Long, SimpleChallengeInfo> challengeInfoMap = new HashMap<>();
-//        request.getChallengeIdList().forEach(id -> {
-//            challengeInfoMap.put(id, new SimpleChallengeInfo(id, String.format("챌린지 테스트 ID: %d", id), "2020-12-12", "2020-12-24"));
-//        });
-//        return new InternalResponse<>(challengeInfoMap);
-//    }
 }

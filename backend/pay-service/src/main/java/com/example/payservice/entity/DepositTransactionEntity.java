@@ -12,6 +12,7 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,6 +24,7 @@ import lombok.Setter;
 @DynamicUpdate
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = true, of = {"id","user"})
 @Table(name = "deposit_transaction")
 public class DepositTransactionEntity extends BaseEntity {
 	@Id
@@ -39,4 +41,5 @@ public class DepositTransactionEntity extends BaseEntity {
 
 	@Column(name = "payment_key")
 	private String paymentKey;
+
 }

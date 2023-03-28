@@ -10,10 +10,5 @@ import org.springframework.web.bind.annotation.PathVariable;
 public interface UserServiceClient {
     @GetMapping("/user/{userId}")
     InternalResponse<UserResponse> getUserInfo(@PathVariable Long userId);
-//    {
-//        UserResponse user = new UserResponse();
-//        user.setUserId(userId);
-//
-//        return new InternalResponse<>(userId <= 3 ? user : null);
-//    }
+
 }
