@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -115,16 +116,30 @@ public class DepositService {
      */
     @Transactional
     public void refund(Long challengeId) {
-        // TODO: 성능이 안좋을 것으로 보여 재개발 필요
-        Set<DepositTransactionHistoryEntity> paidSets = depositTransactionHistoryRepository.
+        List<DepositTransactionHistoryEntity> paidUserHistoires = depositTransactionHistoryRepository.
                 findAllByChallengeIdAndType(challengeId, DepositTransactionType.PAY);
-        Set<DepositTransactionHistoryEntity> refundSets = depositTransactionHistoryRepository.
+
+        List<DepositTransactionHistoryEntity> refundUserHistories = depositTransactionHistoryRepository.
                 findAllByChallengeIdAndType(challengeId, DepositTransactionType.REFUND);
 
-        paidSets.removeAll(refundSets);
-        paidSets.forEach(historyEntity -> {
-            refund(historyEntity.getUser(), historyEntity);
+        Map<Long, Boolean> alreadyRefundMap = makeAlreadyRefundUserMap(refundUserHistories);
+
+        paidUserHistoires.stream()
+            .filter(paidHistory ->
+                checkRefunableUser(alreadyRefundMap, paidHistory.getUser().getUserId())
+            )
+            .forEach(historyEntity ->  refund(historyEntity.getUser(), historyEntity));
+    }
+    private boolean checkRefunableUser(Map<Long, Boolean> map, Long userId) {
+        return !map.getOrDefault(userId, false);
+    }
+    private Map<Long, Boolean> makeAlreadyRefundUserMap(List<DepositTransactionHistoryEntity> refundedUserHistories) {
+        Map<Long, Boolean> alreadyRefundMap = new HashMap<>();
+        refundedUserHistories.forEach(refundUserHistory -> {
+            alreadyRefundMap.put(refundUserHistory.getUser().getUserId(), true);
         });
+
+        return alreadyRefundMap;
     }
 
     /**

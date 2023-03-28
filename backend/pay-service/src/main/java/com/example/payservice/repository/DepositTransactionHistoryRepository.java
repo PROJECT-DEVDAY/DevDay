@@ -12,6 +12,8 @@ import org.springframework.data.jpa.repository.QueryHints;
 
 import javax.persistence.LockModeType;
 import javax.persistence.QueryHint;
+
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -24,5 +26,5 @@ public interface DepositTransactionHistoryRepository extends JpaRepository<Depos
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @QueryHints({@QueryHint(name = "javax.persistence.lock.timeout", value="5000")})
-    Set<DepositTransactionHistoryEntity> findAllByChallengeIdAndType(Long challengeId, DepositTransactionType type);
+    List<DepositTransactionHistoryEntity> findAllByChallengeIdAndType(Long challengeId, DepositTransactionType type);
 }
