@@ -11,19 +11,9 @@ import { Button } from '../../components/Button';
 import { ReturnArrow } from '../../components/ReturnArrow';
 
 import { InputLabel } from '@/components/InputLabel';
-import { save } from '@/store/signup/signupSlice';
+import { saveSignUpInfos } from '@/store/signup/signupSlice';
 
 const signup = props => {
-  const [signUpInfos, setSignUpInfos] = useState({
-    id: '',
-    password: '',
-    passwordCheck: '',
-    name: '',
-    nickName: '',
-    solved_ac: '',
-    gitHub: '',
-  });
-
   const [emailValidCheck, setEmailValidCheck] = useState(false);
   const [nickNameDuplicateChk, setnickNameDuplicateChk] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -91,7 +81,7 @@ const signup = props => {
   } = useForm({ validate, mode: 'onBlur' });
 
   const onSubmit = data => {
-    // console.log(data);
+    dispatch(saveSignUpInfos(data));
   };
 
   const goToNextSignUpPage = () => {};

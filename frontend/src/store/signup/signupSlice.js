@@ -1,29 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit';
 import produce from 'immer';
 
-const initialState = {
-  // email , password, passwordCheck, name, nickname
-  email: '',
-  password: '',
-  passwordCheck: '',
-  name: '',
-  nickname: '',
-  solved_ac: '',
-  gitHub: '',
-};
-
 const signupSlice = createSlice({
-  name: 'signupSlice',
-  initialState,
+  name: 'user',
+  initialState: {},
   reducers: {
-    save(state, action) {
-      return produce(state, changedState => {
-        Object.assign(changedState, action.payload);
-      });
+    saveSignUpInfos: (state, action) => {
+      return action.payload;
     },
   },
 });
 
-const { actions, reducer } = signupSlice;
-export const { save } = actions;
-export default reducer;
+export const { saveSignUpInfos } = signupSlice.actions;
+export default signupSlice.reducer;
