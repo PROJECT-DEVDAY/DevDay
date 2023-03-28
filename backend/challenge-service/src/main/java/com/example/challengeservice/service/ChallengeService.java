@@ -25,7 +25,7 @@ public interface ChallengeService {
     /** 유저의 백준리스트 가져오기  **/
     void updateUserBaekjoon(Long userId);
     /** 알고리즘 인증 기록 생성하기 **/
-    // void createAlgoRecord(ChallengeRecordRequestDto requestDto) throws IOException;
+    void createAlgoRecord(ChallengeRecordRequestDto requestDto) throws IOException;
 
     /** 사진 인증 기록 생성하기 **/
     void createPhotoRecord (ChallengeRecordRequestDto requestDto) throws IOException;

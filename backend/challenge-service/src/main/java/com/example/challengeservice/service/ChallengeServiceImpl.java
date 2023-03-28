@@ -230,31 +230,32 @@ public class ChallengeServiceImpl implements ChallengeService{
     /** 신대득
      * 인증 정보 저장 (알고리즘)
      * 제작중
+     * Todo : 오후 11시 50분에 이 작업을 스케줄러로 실행 시켜야함!!!
      *  **/
-    /*
     @Override
     public void createAlgoRecord(ChallengeRecordRequestDto requestDto) throws IOException {
-        log.info("챌린지id "+ requestDto.getChallengeRoomId()+"유저아이디id"+requestDto.getUserId());
-        ChallengeRoomResponseDto challengeRoom=readChallenge(requestDto.getChallengeRoomId());
-        UserResponseDto user= userServiceClient.getUserInfo(requestDto.getUserId()).getData();
+        log.info("챌린지id " + requestDto.getChallengeRoomId() + "유저아이디id" + requestDto.getUserId());
+        ChallengeRoomResponseDto challengeRoom = readChallenge(requestDto.getChallengeRoomId());
+        UserResponseDto user = userServiceClient.getUserInfo(requestDto.getUserId()).getData();
 
         //오늘 날짜
         String date = commonService.getDate();
 
-        // user의 solved ac에서 오늘 푼 문제들만 조회하기!
-        // challengeRoom에서 최소 알고리즘 개수 가져오기
-        // 두개 비교
+        // Todo :user의 solved ac에서 오늘 푼 문제들만 조회하기!
+        BaekjoonListResponseDto baekjoonListResponseDto= userServiceClient.getUserBaekjoonList(user.getUserId()).getData();
 
-//        if(requestDto.getPhotoCertFile()==null)
-//            throw new ApiException(ExceptionEnum.CHALLENGE_BAD_REQUEST);
+        // challengeRoom에서 최소 알고리즘 개수 가져오기
+        // 인증 회수 미달이면 실패 Exception
+        if(baekjoonListResponseDto.getProblemList().size()<challengeRoom.getAlgorithmCount()){
+            throw new ApiException(ExceptionEnum.CONFIRM_FAILURE_ALGO_EXCEPTION);
+        }
 
         // UserChallenge 조회
-        UserChallenge userChallenge = userChallengeRepository.findByChallengeRoomIdAndUserId(requestDto.getChallengeRoomId(), requestDto.getUserId()).orElseThrow(()-> new ApiException(ExceptionEnum.USER_CHALLENGE_NOT_EXIST_EXCEPTION) );
-        log.info("[userChallenge id값]"+ userChallenge.getId());
-        ChallengeRecord challengeRecord = ChallengeRecord.from(requestDto,date,,userChallenge);
+        UserChallenge userChallenge = userChallengeRepository.findByChallengeRoomIdAndUserId(requestDto.getChallengeRoomId(), requestDto.getUserId()).orElseThrow(() -> new ApiException(ExceptionEnum.USER_CHALLENGE_NOT_EXIST_EXCEPTION));
+        log.info("[userChallenge id값]" + userChallenge.getId());
+        ChallengeRecord challengeRecord = ChallengeRecord.fromAlgo(requestDto, date, baekjoonListResponseDto.getProblemList().size() , userChallenge);
         challengeRecordRepository.save(challengeRecord);
     }
-     */
 
     /**인증 정보 저장 (사진)**/
     @Override
