@@ -43,7 +43,7 @@ public class UserController {
 	 */
 	@PostMapping("/{userId}")
 	public ResponseEntity<InternalResponse<PayUserDto>> createUserInfo(@PathVariable Long userId) {
-		// TODO: 유저 서비스에서 transaction에 걸리는 상황 [논의 필요]
+		// 유저 서비스에서 transaction에 걸리는 상황 [논의 필요]
 		// UserResponse user = userService.searchUserInDevDay(userId);
 		// if(user == null) {
 		// 	throw new ApiException(ExceptionEnum.MEMBER_CAN_NOT_FIND_EXCEPTION);
