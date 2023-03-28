@@ -1,19 +1,12 @@
 import React, { useState } from 'react';
 import { BiShow, BiHide } from 'react-icons/bi';
 
-import classnames from 'classnames';
+import classNames from 'classnames';
 import PropTypes from 'prop-types';
 
 import style from './index.module.scss';
 
-export const InputText = ({
-  labelName,
-  content,
-  icon,
-  inputType,
-  type,
-  onClick,
-}) => {
+export const InputText = ({ content, icon, inputType, type, onClick }) => {
   const [showPassword, setShowPassword] = useState(false);
 
   const toggleShowPassword = () => {
@@ -28,7 +21,7 @@ export const InputText = ({
       <input
         type={showPassword ? 'text' : 'password'}
         placeholder={content}
-        className={classnames(style.Content, `w-full h-6`)}
+        className={classNames(style.Content, `w-full h-6`)}
       />
     );
     buttonValue = (
@@ -41,7 +34,7 @@ export const InputText = ({
       <input
         type={type}
         placeholder={content}
-        className={classnames(style.Content, `w-full h-6`)}
+        className={classNames(style.Content, `w-full h-6`)}
       />
     );
     buttonValue = (
@@ -54,20 +47,15 @@ export const InputText = ({
       <input
         type={type}
         placeholder={content}
-        className={classnames(style.Content, `w-full h-6`)}
+        className={classNames(style.Content, `w-full h-6`)}
       />
     );
   }
 
   return (
-    <div className={classnames(style.InputText, 'w-full mb-5 pb-2 pt-2')}>
-      <div className={classnames('font-medium', style.LabelName)}>
-        {labelName}
-      </div>
-      <div className="flex">
-        {inputValue}
-        {buttonValue}
-      </div>
+    <div className={classNames(style.InputText, 'flex w-full my-2 pb-1')}>
+      {inputValue}
+      {buttonValue}
     </div>
   );
 };
