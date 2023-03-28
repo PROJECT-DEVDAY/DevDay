@@ -19,7 +19,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
 @ActiveProfiles("test")
-public class PaymentServiceTest {
+class PaymentServiceTest {
     @Mock
     private UserService userService;
 

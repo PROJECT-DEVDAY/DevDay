@@ -61,7 +61,10 @@ public class PrizeService {
         prizeHistory.setUser(payUserEntity);
         prizeHistoryRepository.save(prizeHistory);
 
-        return new WithdrawResponse(result, payUserEntity.getPrize());
+        return WithdrawResponse.builder()
+            .result(result)
+            .remainPrizes(payUserEntity.getPrize())
+            .build();
     }
 
     /**
@@ -120,7 +123,7 @@ public class PrizeService {
         try {
             List<Long> challengeTypeInIds = challenges.stream()
                     .filter(prizeHistory -> prizeHistory.getPrizeHistoryType() == PrizeHistoryType.IN)
-                    .map(prizeHistory -> prizeHistory.getChallengeId())
+                    .map(PrizeHistoryEntity::getChallengeId)
                     .collect(Collectors.toList());
 
             if(!challengeTypeInIds.isEmpty()) {

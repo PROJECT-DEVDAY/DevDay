@@ -35,6 +35,8 @@ public class AuthServiceImpl implements AuthService {
 
     private final ChallengeServiceClient challengeServiceClient;
 
+    private final CommonService commonService;
+
     @Override
     @Transactional
     public void deleteUser(Long userId) {
@@ -84,6 +86,7 @@ public class AuthServiceImpl implements AuthService {
         }
 
         user.updateNickname(requestDto.getNickname());
+        commonService.saveProblemList(user);
     }
 
     @Override
@@ -103,6 +106,7 @@ public class AuthServiceImpl implements AuthService {
     public void updateGithubAndBaekjoon(Long userId, GithubBaekjoonRequestDto requestDto) {
         User user = getUser(userId);
         user.updateEmail(requestDto.getGithub(), requestDto.getBaekjoon());
+
     }
 
     @Override

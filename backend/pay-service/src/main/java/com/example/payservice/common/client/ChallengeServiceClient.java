@@ -14,18 +14,11 @@ import java.util.Map;
 
 @FeignClient(name = "challenge-service")
 public interface ChallengeServiceClient {
-    @GetMapping("/challenge-service/challenges/{challengId}")
+    @GetMapping("/challenges/{challengId}")
     InternalResponse<ChallengeInfo> getChallengeId(@PathVariable Long challengeId);
 
-    @PostMapping("/challenge-service/challenges/listInfo")
+    @PostMapping("/challenges/listInfo")
     InternalResponse<Map<Long, SimpleChallengeInfo>> getSimpleChallengeInfos(
             @RequestBody SimpleChallengeInfosRequest request
     );
-//    {
-//        Map<Long, SimpleChallengeInfo> challengeInfoMap = new HashMap<>();
-//        request.getChallengeIdList().forEach(id -> {
-//            challengeInfoMap.put(id, new SimpleChallengeInfo(id, String.format("챌린지 테스트 ID: %d", id), "2020-12-12", "2020-12-24"));
-//        });
-//        return new InternalResponse<>(challengeInfoMap);
-//    }
 }

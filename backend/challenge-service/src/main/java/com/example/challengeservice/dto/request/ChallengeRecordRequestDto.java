@@ -13,13 +13,7 @@ public class ChallengeRecordRequestDto {
     /** 챌린지 아이디 **/
     private Long challengeRoomId;
 
-   /** 최소 커밋 수 **/
-    private int commitCount;
-
-    /** 최소 알고리즘 문제 수 **/
-    private int algorithmCount;
-
-    /**성공 여부 **/
+    /** 인증 URL **/
     private MultipartFile photoCertFile;
 
 

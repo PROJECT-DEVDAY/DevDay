@@ -31,7 +31,7 @@ public class DepositTransactionHistoryDto {
     private LocalDateTime createdAt;
 
     public static DepositTransactionHistoryDto from(DepositTransactionHistoryEntity entity) {
-        DepositTransactionHistoryDto dto = DepositTransactionHistoryDto
+        return DepositTransactionHistoryDto
                 .builder()
                 .id(entity.getId())
                 .amount(entity.getAmount())
@@ -39,7 +39,5 @@ public class DepositTransactionHistoryDto {
                 .userId(entity.getUser().getUserId())
                 .type(entity.getType())
                 .build();
-
-        return dto;
     }
 }

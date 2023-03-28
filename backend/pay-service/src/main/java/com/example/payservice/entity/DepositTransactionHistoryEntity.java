@@ -8,6 +8,7 @@ import javax.persistence.*;
 @Getter
 @Entity
 @Builder
+@EqualsAndHashCode(callSuper = false, of = {"id"})
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "deposit_transaction_history")

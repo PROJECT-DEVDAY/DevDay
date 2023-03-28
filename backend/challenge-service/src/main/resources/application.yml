@@ -16,14 +16,14 @@ spring:
   application:
     name: challenge-service
   datasource:
-      url: jdbc:mysql://j8c209.p.ssafy.io:3307/devday?useUnicode=true&serverTimezone=Asia/Seoul&characterEncoding=utf8
+      url: jdbc:mysql://j8c209.p.ssafy.io:3307/devday?useSSL=false&serverTimezone=UTC
+      # url: jdbc:mysql://localhost:3307/devday?useSSL=false&serverTimezone=UTC
       username: root
       password: devday1234
       driver-class-name: com.mysql.cj.jdbc.Driver
-      # 안녕하세요
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     show-sql: true
     generate-ddl: true
     
@@ -37,7 +37,11 @@ eureka:
   instance:
     prefer-ip-address: true
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
-  
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://127.0.0.1:8761/eureka
 
 logging:
   level:

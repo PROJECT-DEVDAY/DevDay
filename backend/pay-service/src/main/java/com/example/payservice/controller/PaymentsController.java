@@ -47,25 +47,4 @@ public class PaymentsController {
 		// TODO: 필요시, challenge-service로 결제완료 메시지를 함께 알려준다.
 		return ResponseEntity.ok(new InternalResponse<>(joinResponse));
 	}
-
-	/**
-	 * 위 기능은 tosspayments에서 실패했을 때, 불리는 api 입니다.
-	 * FE에서 처리하기 위해 이 기능은 deprecated 됐습니다.
-	 * @deprecated
-	 * @param request
-	 * @param challengeId
-	 * @param failRequest
-	 * @return
-	 */
-	@Deprecated
-	@GetMapping("/{challengeId}/fail")
-	public ResponseEntity<ResponseEntity.BodyBuilder> paymentsFail(
-			HttpServletRequest request,
-		    @PathVariable Long challengeId,
-			FailRequest failRequest
-	) {
-		Long userId = Utils.parseAuthorizedUserId(request);
-		log.info("클라이언트 toss 결제 실패 -> challengeId: {}, userId: {}, request: {}", challengeId, userId, failRequest);
-		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-	}
 }

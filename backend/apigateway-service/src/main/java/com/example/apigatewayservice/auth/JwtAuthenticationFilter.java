@@ -74,14 +74,19 @@ public class JwtAuthenticationFilter extends AbstractGatewayFilterFactory<JwtAut
                 ServerWebExchange exchange, Throwable ex) {
             int errorCode = 503;
             if (ex.getClass() == NullPointerException.class) {
+                log.error("토큰이 비어있습니다.");
                 errorCode = 401;
             } else if (ex.getClass() == ExpiredJwtException.class) {
+                log.error("토큰이 만료되었습니다.");
                 errorCode = 402;
             } else if (ex.getClass() == MalformedJwtException.class) {
+                log.error("JWT 토큰 구조가 잘못되었습니다.");
                 errorCode = 403;
             } else if (ex.getClass() == SignatureException.class) {
+                log.error("변조된 토큰입니다.");
                 errorCode = 404;
             } else if (ex.getClass() == UnsupportedJwtException.class) {
+                log.error("JWT 형식이 잘못되었습니다.");
                 errorCode = 405;
             }
 

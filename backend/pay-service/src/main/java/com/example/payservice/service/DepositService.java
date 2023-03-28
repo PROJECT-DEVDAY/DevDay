@@ -6,8 +6,11 @@ import com.example.payservice.dto.challenge.SimpleChallengeInfo;
 import com.example.payservice.dto.deposit.DepositTransactionHistoryDto;
 import com.example.payservice.dto.deposit.DepositTransactionType;
 import com.example.payservice.dto.request.SimpleChallengeInfosRequest;
+import com.example.payservice.dto.request.WithdrawDepositRequest;
+import com.example.payservice.dto.response.WithdrawResponse;
 import com.example.payservice.entity.DepositTransactionHistoryEntity;
 import com.example.payservice.entity.PayUserEntity;
+import com.example.payservice.exception.LackOfDepositException;
 import com.example.payservice.exception.UnRefundableException;
 import com.example.payservice.repository.DepositTransactionHistoryRepository;
 import feign.FeignException;
@@ -16,9 +19,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -26,14 +29,14 @@ import java.util.stream.Collectors;
 
 import static com.example.payservice.entity.DepositTransactionHistoryEntity.notHasChallengeFields;
 
-@Service
 @Slf4j
+@Service
 @RequiredArgsConstructor
 public class DepositService {
     private final ChallengeServiceClient challengeServiceClient;
     private final UserService userService;
+    private final PaymentService paymentService;
     private final DepositTransactionHistoryRepository depositTransactionHistoryRepository;
-
     /**
      * 예치금 내역을 조회하는 기능입니다.
      * @param userId
@@ -79,7 +82,7 @@ public class DepositService {
         try {
             List<Long> challengeTypePayRefundIds = challenges.stream()
                     .filter(depositHistory -> !notHasChallengeFields(depositHistory.getType()))
-                    .map(depositHistory -> depositHistory.getChallengeId())
+                    .map(DepositTransactionHistoryEntity::getChallengeId)
                     .collect(Collectors.toList());
 
             if(!challengeTypePayRefundIds.isEmpty()) {
@@ -115,16 +118,28 @@ public class DepositService {
      */
     @Transactional
     public void refund(Long challengeId) {
-        // TODO: 성능이 안좋을 것으로 보여 재개발 필요
-        Set<DepositTransactionHistoryEntity> paidSets = depositTransactionHistoryRepository.
+        List<DepositTransactionHistoryEntity> paidUserHistoires = depositTransactionHistoryRepository.
                 findAllByChallengeIdAndType(challengeId, DepositTransactionType.PAY);
-        Set<DepositTransactionHistoryEntity> refundSets = depositTransactionHistoryRepository.
+
+        List<DepositTransactionHistoryEntity> refundUserHistories = depositTransactionHistoryRepository.
                 findAllByChallengeIdAndType(challengeId, DepositTransactionType.REFUND);
 
-        paidSets.removeAll(refundSets);
-        paidSets.forEach(historyEntity -> {
-            refund(historyEntity.getUser(), historyEntity);
-        });
+        Map<Long, Boolean> alreadyRefundMap = makeAlreadyRefundUserMap(refundUserHistories);
+
+        paidUserHistoires.stream()
+            .filter(paidHistory ->
+                checkRefunableUser(alreadyRefundMap, paidHistory.getUser().getUserId())
+            )
+            .forEach(historyEntity ->  refund(historyEntity.getUser(), historyEntity));
+    }
+    private boolean checkRefunableUser(Map<Long, Boolean> map, Long userId) {
+        return !map.getOrDefault(userId, false);
+    }
+    private Map<Long, Boolean> makeAlreadyRefundUserMap(List<DepositTransactionHistoryEntity> refundedUserHistories) {
+        Map<Long, Boolean> alreadyRefundMap = new HashMap<>();
+        refundedUserHistories.forEach(refundUserHistory -> alreadyRefundMap.put(refundUserHistory.getUser().getUserId(), true));
+
+        return alreadyRefundMap;
     }
 
     /**
@@ -167,10 +182,40 @@ public class DepositService {
             throw new UnRefundableException("환불 대상이 아닙니다.");
         }
 
-        DepositTransactionHistoryEntity payHistory = depositTransactionHistoryRepository
+        return depositTransactionHistoryRepository
                 .findByUserAndChallengeIdAndType(user, challengeId, DepositTransactionType.PAY)
                 .orElseThrow(() -> new UnRefundableException("환불 대상이 아닙니다."));
 
-        return payHistory;
+    }
+
+    /**
+     * 예치금 결제 취소 기능입니다.
+     * @param userId
+     * @param request
+     * @return
+     */
+    @Transactional
+    public WithdrawResponse withdraw(Long userId, WithdrawDepositRequest request) {
+        PayUserEntity payUserEntity = userService.getPayUserEntityForUpdate(userId);
+        checkWithdrawMoney(payUserEntity, request.getMoney());
+
+        boolean result = paymentService.withdraw(payUserEntity, request.getMoney());
+        return WithdrawResponse.builder()
+            .result(result)
+            .remainPrizes(payUserEntity.getPrize())
+            .build();
+    }
+
+
+    /**
+     * 유저가 money를 출금할 수 있는지 확인합니다.
+     * @param payUserEntity
+     * @param money
+     * @throws LackOfDepositException
+     */
+    private void checkWithdrawMoney(PayUserEntity payUserEntity, int money) {
+        if(payUserEntity.getDeposit() < money) {
+            throw new LackOfDepositException("출금할 예치금 금액이 저장된 금액보다 큽니다.");
+        }
     }
 }

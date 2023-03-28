@@ -15,8 +15,10 @@ public class FeignErrorDecoder implements ErrorDecoder {
         } else if (response.status() == 404) {
             if (methodKey.contains("getChallengeInfo")) {
                 return new ApiException(ExceptionEnum.CHALLENGEINFO_NOT_EXIST_EXCEPTION);
-            } else if (methodKey.contains("getMoneyInfo")) {
+            } else if (methodKey.contains("getMoneyInfo") || methodKey.contains("createUser")) {
                 return new ApiException(ExceptionEnum.MONEYINFO_NOT_EXIST_EXCEPTION);
+            } else if (methodKey.contains("solvedProblemList")) {
+                return new ApiException(ExceptionEnum.PROBLEMINFO_NOT_EXIST_EXCEPTION);
             }
         }
         return new Exception(response.reason());

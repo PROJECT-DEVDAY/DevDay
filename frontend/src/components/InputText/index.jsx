@@ -68,6 +68,7 @@ InputText.propTypes = {
 };
 
 InputText.defaultProps = {
+  labelName: '',
   content: null,
   onClick: () => {},
 };

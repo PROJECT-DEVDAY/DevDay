@@ -2,20 +2,16 @@ package com.example.userservice.service;
 
 import com.example.userservice.client.PayServiceClient;
 import com.example.userservice.dto.request.*;
-import com.example.userservice.dto.response.BaekjoonListResponseDto;
 import com.example.userservice.dto.response.TokenResponseDto;
 import com.example.userservice.dto.response.UserResponseDto;
 import com.example.userservice.entity.EmailAuth;
-import com.example.userservice.entity.Solvedac;
 import com.example.userservice.entity.User;
 import com.example.userservice.exception.ApiException;
 import com.example.userservice.exception.ExceptionEnum;
-import com.example.userservice.repository.BatchInsertRepository;
 import com.example.userservice.repository.EmailAuthRepository;
 import com.example.userservice.repository.SolvedacReporitory;
 import com.example.userservice.repository.UserRepository;
 import com.example.userservice.security.JWTUtil;
-import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,10 +19,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -49,7 +43,7 @@ public class UserServiceImpl implements UserService{
 
     private final SolvedacReporitory solvedacReporitory;
 
-    private final BatchInsertRepository batchInsertRepository;
+    private final CommonService commonService;
 
     @Override
     @Transactional
@@ -63,6 +57,8 @@ public class UserServiceImpl implements UserService{
         // 회원 저장
         User user = User.from(requestDto);
         User saveUser = userRepository.save(user);
+
+        if (saveUser.getBaekjoon() != null) commonService.saveProblemList(saveUser);
 
         // 이메일 인증 기록 삭제
         List<EmailAuth> emailAuthList = emailAuthRepository.findAllByEmail(saveUser.getEmail());
@@ -120,7 +116,11 @@ public class UserServiceImpl implements UserService{
 
         // 이메일 중복 체크
         Optional<User> user = userRepository.findByEmail(email);
-        if (user.isPresent()) throw new ApiException(ExceptionEnum.MEMBER_EXIST_EXCEPTION);
+
+        if (user.isPresent()) {
+            log.error("이미 사용중인 이메일입니다.");
+            throw new ApiException(ExceptionEnum.MEMBER_EXIST_EXCEPTION);
+        }
 
         EmailAuth emailAuth = EmailAuth.of(email, UUID.randomUUID().toString());
 
@@ -153,6 +153,17 @@ public class UserServiceImpl implements UserService{
 
     @Override
     @Transactional(readOnly = true)
+    public void nicknameCheck(String nickname) {
+        Optional<User> user = userRepository.findByNickname(nickname);
+
+        if (user.isPresent()) {
+            log.error("이미 사용중인 닉네입입니다.");
+            throw new ApiException(ExceptionEnum.MEMBER_EXIST_EXCEPTION);
+        }
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public UserResponseDto getUserInfo(Long userId) {
         User user = getUser(userId);
         return UserResponseDto.from(user);
@@ -171,37 +182,7 @@ public class UserServiceImpl implements UserService{
 
         redisService.setValues(newRefreshToken, userId);
 
-        return TokenResponseDto.builder()
-                .accessToken(newAccessToken)
-                .refreshToken(newRefreshToken)
-                .build();
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public BaekjoonListResponseDto getBaekjoonList(Long userId) {
-        List<Solvedac> solvedList = solvedacReporitory.findAllByUserId(userId);
-        HashMap<String, String> hashMap = new HashMap<>();
-        solvedList.forEach((s) -> hashMap.put(s.getProblemId(), s.getSuccessDate()));
-
-        User user = getUser(userId);
-
-        return BaekjoonListResponseDto.of(user.getBaekjoon(), hashMap);
-    }
-
-    @Override
-    @Transactional
-    public void createProblem(Long userId, ProblemRequestDto requestDto) {
-        User user = getUser(userId);
-
-        String nowDate = getDate();
-
-        List<Solvedac> collect = requestDto.getProblemList()
-                .stream()
-                .map((p) -> new Solvedac(p, user, nowDate))
-                .collect(Collectors.toList());
-
-        batchInsertRepository.solvedacSaveAll(collect);
+        return TokenResponseDto.of(newAccessToken, newRefreshToken);
     }
 
     private Long tokenValidation(String accessToken, String refreshToken) {
@@ -239,13 +220,6 @@ public class UserServiceImpl implements UserService{
     private User getUser(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new ApiException(ExceptionEnum.MEMBER_NOT_EXIST_EXCEPTION));
-    }
-
-    private String getDate() {
-        Date date = new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-
-        return formatter.format(date);
     }
 
 }

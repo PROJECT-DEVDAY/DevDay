@@ -3,17 +3,15 @@ package com.example.challengeservice.repository;
 
 import com.example.challengeservice.entity.ChallengeRoom;
 import com.example.challengeservice.entity.QChallengeRoom;
-import com.example.challengeservice.infra.amazons3.querydsl.SearchParam;
+import com.example.challengeservice.infra.querydsl.SearchParam;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.StringUtils;
 
 import java.util.List;
 
 import static com.example.challengeservice.entity.QChallengeRoom.challengeRoom;
-import static org.springframework.data.domain.Sort.Order.desc;
 
 @RequiredArgsConstructor
 @Repository

@@ -97,6 +97,19 @@ public class ChallengeController {
     }
 
 
+    /**
+     * 신대득
+     * 해당 날짜 푼 문제들 조회
+     */
+    /*
+    @GetMapping("/baekjoon/users/{userId}")
+    public SingleResult<SolvedListResponseDto> checkDateUserBaekjoon(@PathVariable Long userId){
+        return responseService.getSingleResult(challengeService.checkDateUserBaekjoon(userId));
+    }
+     */
+
+
+
     /** 메인 페이지 조회 **/
     @GetMapping("")
     public  ResponseEntity<List<SimpleChallengeResponseDto>> getListSimpleChallenge (@RequestParam ("type") String type, @RequestParam (value = "offset", required = false) Long offset , @RequestParam (value = "search" ,required = false) String search , @RequestParam ("size") int size){
@@ -109,12 +122,22 @@ public class ChallengeController {
 
 
     /** 사진 인증 저장 **/
-    @PostMapping("record")
+    @PostMapping("photo-record")
     public ResponseEntity<String> createChallengeRecord(@ModelAttribute ChallengeRecordRequestDto requestDto) throws IOException{
 
         challengeService.createPhotoRecord(requestDto);
         return ResponseEntity.status(HttpStatus.OK).body("인증기록 저장완료");
     }
+
+    /** 사진 인증 상세 조회 **/
+    @GetMapping("photo-record/{recordId}")
+    public ResponseEntity<String> getPhotoRecordDetail(@PathVariable("recordId") Long recordId){
+
+
+
+        return ResponseEntity.status(HttpStatus.OK).body("인증기록 저장완료");
+    }
+
 
 
     /** 나의 인증 기록 불러오기 **/
@@ -124,11 +147,21 @@ public class ChallengeController {
         return responseService.getListResult(challengeService.getSelfPhotoRecord(challengeRoomId,userId,viewType));
     }
 
+    // 위에거
+    // 이걸로 바꿀 예정
+    /*
+    @GetMapping("{challengeId}/record/users/{userId}")
+    public ListResult<?> getSelfRecord(@PathVariable("challengeId") Long challengeRoomId ,@PathVariable("userId") Long userId,@RequestParam("view") String viewType, @RequestParam("category") String category){
+        return responseService.getListResult(challengeService.getSelfRecord(challengeRoomId,userId,viewType,category));
+    }
+     */
+
     /** 팀원의 인증 기록 불러오기 테스트 코드**/
     @GetMapping("{challengeId}/record")
     public ListResult<?> getTeamChallengeRecord(@PathVariable("challengeId")Long challengeRoomId ,@RequestParam("view") String viewType){
 
         return responseService.getListResult(challengeService.getTeamPhotoRecord(challengeRoomId,viewType));
+
     }
 
 }

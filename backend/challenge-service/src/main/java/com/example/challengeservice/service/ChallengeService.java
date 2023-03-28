@@ -24,6 +24,8 @@ public interface ChallengeService {
     SolvedListResponseDto solvedProblemList(String baekjoonId);
     /** 유저의 백준리스트 가져오기  **/
     void updateUserBaekjoon(Long userId);
+    /** 알고리즘 인증 기록 생성하기 **/
+    // void createAlgoRecord(ChallengeRecordRequestDto requestDto) throws IOException;
 
     /** 사진 인증 기록 생성하기 **/
     void createPhotoRecord (ChallengeRecordRequestDto requestDto) throws IOException;
@@ -31,6 +33,9 @@ public interface ChallengeService {
     /** 개인 사진 인증 기록 가져오기 **/
 
     List<PhotoRecordResponseDto> getSelfPhotoRecord(Long challengeId ,Long userId, String viewType );
+    // List<?> getSelfRecord(Long challengeId ,Long userId, String viewType, String category);
 
     List<PhotoRecordResponseDto> getTeamPhotoRecord(Long challengeRoomId , String viewType);
+
+    PhotoRecordDetailResponseDto getPhotoRecordDetail(Long challengeRecordId);
 }

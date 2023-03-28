@@ -1,14 +1,12 @@
 package com.example.payservice.controller;
 
-import com.example.payservice.common.exception.ApiException;
-import com.example.payservice.common.exception.ExceptionEnum;
 import com.example.payservice.dto.CustomPage;
 import com.example.payservice.dto.InternalResponse;
 import com.example.payservice.dto.bank.AccountDto;
 import com.example.payservice.dto.deposit.DepositTransactionHistoryDto;
 import com.example.payservice.dto.prize.PrizeHistoryDto;
-import com.example.payservice.dto.request.WithdrawRequest;
-import com.example.payservice.dto.response.UserResponse;
+import com.example.payservice.dto.request.WithdrawDepositRequest;
+import com.example.payservice.dto.request.WithdrawPrizeRequest;
 import com.example.payservice.dto.response.WithdrawResponse;
 import com.example.payservice.dto.user.PayUserDto;
 import com.example.payservice.service.DepositService;
@@ -43,11 +41,12 @@ public class UserController {
 	 */
 	@PostMapping("/{userId}")
 	public ResponseEntity<InternalResponse<PayUserDto>> createUserInfo(@PathVariable Long userId) {
-		UserResponse user = userService.searchUserInDevDay(userId);
-		if(user == null) {
-			throw new ApiException(ExceptionEnum.MEMBER_CAN_NOT_FIND_EXCEPTION);
-		}
-		PayUserDto userDto = userService.createPayUser(user.getUserId());
+		// 유저 서비스에서 transaction에 걸리는 상황 [논의 필요]
+		// UserResponse user = userService.searchUserInDevDay(userId);
+		// if(user == null) {
+		// 	throw new ApiException(ExceptionEnum.MEMBER_CAN_NOT_FIND_EXCEPTION);
+		// }
+		PayUserDto userDto = userService.createPayUser(userId);
 		return ResponseEntity.ok(new InternalResponse<>(userDto));
 	}
 
@@ -82,7 +81,7 @@ public class UserController {
 	@PostMapping("/{userId}/prize")
 	public ResponseEntity<InternalResponse<WithdrawResponse>> withDrawPrize(
 			@PathVariable Long userId,
-			@RequestBody WithdrawRequest request
+			@RequestBody WithdrawPrizeRequest request
 	) {
 		ModelMapper mapper = new ModelMapper();
 		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
@@ -102,7 +101,7 @@ public class UserController {
 	 * @return
 	 */
 	@GetMapping("/{userId}/prize")
-	public ResponseEntity<InternalResponse> getPrizeHistory(
+	public ResponseEntity<InternalResponse<CustomPage<PrizeHistoryDto>>> getPrizeHistory(
 			@PathVariable Long userId,
 			@RequestParam(required = false, defaultValue = "") String type,
 		    @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
@@ -119,8 +118,13 @@ public class UserController {
 	 * @return
 	 */
 	@PostMapping("/{userId}/deposit")
-	public ResponseEntity<InternalResponse> getDiposit(@PathVariable String userId) {
-		return null;
+	public ResponseEntity<InternalResponse<WithdrawResponse>> getDeposit(
+		@PathVariable Long userId,
+		@RequestBody WithdrawDepositRequest request
+	) {
+		WithdrawResponse result = depositService.withdraw(userId, request);
+		InternalResponse<WithdrawResponse> response = new InternalResponse<>(result);
+		return ResponseEntity.ok(response);
 	}
 
 	/**
@@ -133,8 +137,9 @@ public class UserController {
 	 * @return
 	 */
 	@GetMapping("/{userId}/deposit")
-	public ResponseEntity<InternalResponse> getDipositHistory(
+	public ResponseEntity<InternalResponse<CustomPage<DepositTransactionHistoryDto>>> getDepositHistory(
 			@PathVariable Long userId,
+
 			@RequestParam(required = false, defaultValue = "") String type,
 			@PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
 	) {
