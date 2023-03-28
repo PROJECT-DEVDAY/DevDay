@@ -76,7 +76,7 @@ class DepositTransactionEntityTest {
 	}
 
 	@Test
-	@DisplayName("equals 테스트 - 페이먼트 키가 다를 경우")
+	@DisplayName("equals 테스트 - id가 다를 경우")
 	void DespositTransactionEqualsTest4() {
 		PayUserEntity user = new PayUserEntity(1L, 0, 0);
 		DepositTransactionEntity entity1ByUser = DepositTransactionEntity.builder()
@@ -86,14 +86,14 @@ class DepositTransactionEntityTest {
 				.user(user)
 				.paymentKey("paymentKey-1")
 				.build();
-		PayUserEntity user2 = new PayUserEntity(2L, 500, 0);
-		DepositTransactionEntity entity1ByUser2 = DepositTransactionEntity.builder()
+		DepositTransactionEntity entity2ByUser = DepositTransactionEntity.builder()
 				.id("1")
 				.refundableAmount(3000)
 				.amount(5000)
-				.user(user2)
+				.user(user)
 				.paymentKey("paymentKey-2")
 				.build();
-		Assertions.assertEquals(false, entity1ByUser.equals(entity1ByUser2));
+
+		Assertions.assertEquals(false, entity1ByUser.equals(entity2ByUser));
 	}
 }
