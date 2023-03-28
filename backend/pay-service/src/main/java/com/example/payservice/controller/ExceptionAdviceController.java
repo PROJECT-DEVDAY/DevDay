@@ -6,6 +6,7 @@ import com.example.payservice.common.exception.ExceptionEnum;
 import com.example.payservice.exception.LackOfPrizeException;
 import com.example.payservice.exception.PaymentsConfirmException;
 import com.example.payservice.exception.PrizeWithdrawException;
+import com.example.payservice.exception.UnRefundableException;
 import com.example.payservice.exception.UserNotExistException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -105,5 +106,13 @@ public class ExceptionAdviceController {
     @ExceptionHandler({UserNotExistException.class})
     public ResponseEntity<ApiExceptionEntity> userNotExistException() {
         return apiExceptionHandler(new ApiException(ExceptionEnum.MEMBER_NOT_EXIST_EXCEPTION));
+    }
+
+    /**
+     * 환불이 불가능한 유저에 대한 기본 처리입니다.
+     */
+    @ExceptionHandler({UnRefundableException.class})
+    public ResponseEntity<ApiExceptionEntity> unRefundableException() {
+        return apiExceptionHandler(new ApiException(ExceptionEnum.MEMBER_NOT_REFUNDABLE_EXCEPTION));
     }
 }
