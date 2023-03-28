@@ -13,7 +13,7 @@ public class ChallengeRecordRequestDto {
     /** 챌린지 아이디 **/
     private Long challengeRoomId;
 
-    /**성공 여부 **/
+    /** 인증 URL **/
     private MultipartFile photoCertFile;
 
 
