@@ -33,7 +33,7 @@ public class DepositTransactionHistoryEntity extends BaseEntity {
 	@ToString.Exclude
 	private DepositTransactionEntity depositTransaction;
 
-	public static boolean notHasChallengeFields(DepositTransactionType type) {
-		return type == DepositTransactionType.CANCEL || type == DepositTransactionType.PAY;
+	public static boolean hasChallengeFields(DepositTransactionType type) {
+		return type == DepositTransactionType.REFUND || type == DepositTransactionType.PAY;
 	}
 }

@@ -31,10 +31,10 @@ class DepositTransactionHistoryEntityTest {
 			.id(4L)
 			.type(DepositTransactionType.CHARGE)
 			.build();
-		Assertions.assertEquals(true, DepositTransactionHistoryEntity.notHasChallengeFields(payEntity.getType()));
-		Assertions.assertEquals(true, DepositTransactionHistoryEntity.notHasChallengeFields(cancelEntity.getType()));
-		Assertions.assertEquals(false, DepositTransactionHistoryEntity.notHasChallengeFields(chargeEntity.getType()));
-		Assertions.assertEquals(false, DepositTransactionHistoryEntity.notHasChallengeFields(refundEntity.getType()));
+		Assertions.assertEquals(true, DepositTransactionHistoryEntity.hasChallengeFields(payEntity.getType()));
+		Assertions.assertEquals(false, DepositTransactionHistoryEntity.hasChallengeFields(cancelEntity.getType()));
+		Assertions.assertEquals(false, DepositTransactionHistoryEntity.hasChallengeFields(chargeEntity.getType()));
+		Assertions.assertEquals(true, DepositTransactionHistoryEntity.hasChallengeFields(refundEntity.getType()));
 	}
 
 	@Test
