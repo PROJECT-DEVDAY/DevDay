@@ -1,4 +1,4 @@
-package com.example.challengeservice.infra.amazons3.querydsl;
+package com.example.challengeservice.infra.querydsl;
 
 
 import lombok.AllArgsConstructor;

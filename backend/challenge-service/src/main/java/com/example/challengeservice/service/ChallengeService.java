@@ -33,4 +33,6 @@ public interface ChallengeService {
     List<PhotoRecordResponseDto> getSelfPhotoRecord(Long challengeId ,Long userId, String viewType );
 
     List<PhotoRecordResponseDto> getTeamPhotoRecord(Long challengeRoomId , String viewType);
+
+    PhotoRecordDetailResponseDto getPhotoRecordDetail(Long challengeRecordId);
 }

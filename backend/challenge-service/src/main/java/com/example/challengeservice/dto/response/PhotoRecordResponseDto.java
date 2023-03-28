@@ -17,7 +17,7 @@ public class PhotoRecordResponseDto {
     Long challengeRecordId;
 
     /** 유저 아이디 **/
-    Long userId;
+    Long userChallengeId;
 
     /** 인증 날짜 **/
 
@@ -31,15 +31,10 @@ public class PhotoRecordResponseDto {
     private boolean success;
 
 
-    /** 신고 횟수 **/
-    private int reportCount ;
 
-    /**  리더 신고 여부 **/
-    private boolean hostReport ;
-
-    public PhotoRecordResponseDto(Long challengeRecordId, Long userId , String createAt, String photoUrl, boolean success) {
+    public PhotoRecordResponseDto(Long challengeRecordId, String createAt, String photoUrl, boolean success) {
         this.challengeRecordId = challengeRecordId;
-        this.userId = userId;
+
         this.createAt = createAt;
         this.photoUrl = photoUrl;
         this.success = success;
