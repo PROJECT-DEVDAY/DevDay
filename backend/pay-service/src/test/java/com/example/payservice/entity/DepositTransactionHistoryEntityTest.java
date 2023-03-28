@@ -31,10 +31,10 @@ class DepositTransactionHistoryEntityTest {
 			.id(4L)
 			.type(DepositTransactionType.CHARGE)
 			.build();
-		Assertions.assertEquals(DepositTransactionHistoryEntity.notHasChallengeFields(payEntity.getType()), true);
-		Assertions.assertEquals(DepositTransactionHistoryEntity.notHasChallengeFields(cancelEntity.getType()), true);
-		Assertions.assertEquals(DepositTransactionHistoryEntity.notHasChallengeFields(chargeEntity.getType()), false);
-		Assertions.assertEquals(DepositTransactionHistoryEntity.notHasChallengeFields(refundEntity.getType()), false);
+		Assertions.assertEquals(true, DepositTransactionHistoryEntity.notHasChallengeFields(payEntity.getType()));
+		Assertions.assertEquals(true, DepositTransactionHistoryEntity.notHasChallengeFields(cancelEntity.getType()));
+		Assertions.assertEquals(false, DepositTransactionHistoryEntity.notHasChallengeFields(chargeEntity.getType()));
+		Assertions.assertEquals(false, DepositTransactionHistoryEntity.notHasChallengeFields(refundEntity.getType()));
 	}
 
 	@Test
@@ -54,7 +54,7 @@ class DepositTransactionHistoryEntityTest {
 			.type(DepositTransactionType.CHARGE)
 			.build();
 
-		Assertions.assertEquals(chargeEntity.equals(chargeEntity2), true);
-		Assertions.assertEquals(chargeEntity.equals(refundEntity), false);
+		Assertions.assertEquals(true, chargeEntity.equals(chargeEntity2));
+		Assertions.assertEquals(false, chargeEntity.equals(refundEntity));
 	}
 }

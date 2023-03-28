@@ -11,7 +11,7 @@ import java.util.List;
 @Data
 @Entity
 @DynamicUpdate
-@EqualsAndHashCode(of ="userId", callSuper = true)
+@EqualsAndHashCode(of ="userId", callSuper = false)
 @NoArgsConstructor
 @Table(name = "pay_users")
 public class PayUserEntity extends BaseEntity {
