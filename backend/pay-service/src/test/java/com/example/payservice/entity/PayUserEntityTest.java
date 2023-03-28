@@ -11,13 +11,20 @@ import org.springframework.test.context.ActiveProfiles;
 public class PayUserEntityTest {
 
 	@Test
-	@DisplayName("PayUserEntity가 같은 지 비교하기")
-	void equalsTest() {
+	@DisplayName("PayUserEntity equals를 비교합니다. - userId만 같을 경우")
+	void 유저_비교_예치금_차이() {
 		PayUserEntity user1 = new PayUserEntity(1L, 500, 0);
 		PayUserEntity user2 = new PayUserEntity(1L, 4500, 0);
-		PayUserEntity user3 = new PayUserEntity(2L, 4500, 0);
 
 		Assertions.assertEquals(user1, user2);
-		Assertions.assertNotEquals(user1, user3);
+	}
+
+	@Test
+	@DisplayName("PayUserEntity equals를 비교합니다. - userId만 다를 경우")
+	void 유저_비교_아이디_차이() {
+		PayUserEntity user1 = new PayUserEntity(1L, 500, 0);
+		PayUserEntity user2 = new PayUserEntity(2L, 500, 0);
+
+		Assertions.assertNotEquals(user1, user2);
 	}
 }

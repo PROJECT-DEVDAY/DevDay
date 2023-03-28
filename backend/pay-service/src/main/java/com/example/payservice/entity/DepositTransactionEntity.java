@@ -1,21 +1,9 @@
 package com.example.payservice.entity;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
+import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import javax.persistence.*;
 
 @Getter
 @Setter
@@ -24,7 +12,7 @@ import lombok.Setter;
 @DynamicUpdate
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true, of = {"id","user"})
+@EqualsAndHashCode(callSuper = false, of = {"id", "user", "paymentKey"})
 @Table(name = "deposit_transaction")
 public class DepositTransactionEntity extends BaseEntity {
 	@Id

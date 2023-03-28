@@ -3,12 +3,7 @@ package com.example.payservice.controller;
 import com.example.payservice.common.exception.ApiException;
 import com.example.payservice.common.exception.ApiExceptionEntity;
 import com.example.payservice.common.exception.ExceptionEnum;
-import com.example.payservice.exception.LackOfDepositException;
-import com.example.payservice.exception.LackOfPrizeException;
-import com.example.payservice.exception.PaymentsConfirmException;
-import com.example.payservice.exception.PrizeWithdrawException;
-import com.example.payservice.exception.UnRefundableException;
-import com.example.payservice.exception.UserNotExistException;
+import com.example.payservice.exception.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -123,5 +118,13 @@ public class ExceptionAdviceController {
     @ExceptionHandler({UnRefundableException.class})
     public ResponseEntity<ApiExceptionEntity> unRefundableException() {
         return apiExceptionHandler(new ApiException(ExceptionEnum.MEMBER_NOT_REFUNDABLE_EXCEPTION));
+    }
+
+    /**
+     * 파라미터와 바디 데이터가 잘못된 경우 기본처리입니다.
+     */
+    @ExceptionHandler({BadRequestException.class})
+    public ResponseEntity<ApiExceptionEntity> badRequestException() {
+        return apiExceptionHandler(new ApiException(ExceptionEnum.API_PARAMETER_EXCEPTION));
     }
 }
