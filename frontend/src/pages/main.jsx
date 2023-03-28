@@ -5,7 +5,7 @@ import {
   AiOutlineCloseCircle,
 } from 'react-icons/ai';
 
-import classnames from 'classnames';
+import classNames from 'classnames';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 
@@ -84,19 +84,19 @@ const main = props => {
   ];
 
   return (
-    <div className={classnames(style.MainHeader, `pt-6`)}>
+    <div className={classNames(style.MainHeader, `pt-6`)}>
       <div
-        className={classnames(`flex justify-between px-6`, style.TopOfHeader)}
+        className={classNames(`flex justify-between px-6`, style.TopOfHeader)}
       >
         <Image src={require('@/image/main_logo.png')} width={70} height={70} />
-        <div className={classnames(`flex HeaderIcons`)}>
+        <div className={classNames(`flex HeaderIcons`)}>
           {HEADER_ITEMS.map(item => {
             const { label, icon, onClick } = item;
             const key = `header-item-${label}`;
             return (
               <button
                 type="button"
-                className={classnames(
+                className={classNames(
                   style.HeaderBox,
                   `flex items-center p-1`,
                   key,
@@ -113,22 +113,22 @@ const main = props => {
 
       <hr className={style.Divider} />
 
-      <div className={classnames(`p-4`, style.BottomOfHeader)}>
+      <div className={classNames(`p-4`, style.BottomOfHeader)}>
         {searchBoxStatus && (
           <div
-            className={classnames(
+            className={classNames(
               `flex items-center justify-center h-full`,
               style.HeaderSearch,
             )}
           >
             <div
-              className={classnames(
+              className={classNames(
                 `flex items-center w-full`,
                 style.searchContainer,
               )}
             >
               <input
-                className={classnames(`py-2 pl-4 rounded-3xl`)}
+                className={classNames(`py-2 pl-4 rounded-3xl`)}
                 placeholder="검색하실 내용을 입력해주세요"
                 onKeyPress={searchOnKeyPress}
               />
@@ -138,12 +138,12 @@ const main = props => {
           </div>
         )}
 
-        <div className={classnames(`pt-4`, style.HeaderButtons)}>
+        <div className={classNames(`pt-4`, style.HeaderButtons)}>
           <HeaderButtons />
         </div>
       </div>
       <div
-        className={classnames(
+        className={classNames(
           style.MainBody,
           `flex flex-wrap justify-around px-6`,
         )}
@@ -165,7 +165,7 @@ const main = props => {
         })}
       </div>
 
-      <div className={classnames('absolute w-full bottom-0 m-0')}>
+      <div className={classNames('absolute w-full bottom-0 m-0')}>
         <Footer />
       </div>
     </div>

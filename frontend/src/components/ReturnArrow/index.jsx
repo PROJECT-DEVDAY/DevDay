@@ -1,7 +1,7 @@
 import React from 'react';
 import { SlArrowLeft } from 'react-icons/sl';
 
-import classnames from 'classnames';
+import classNames from 'classnames';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 
@@ -20,12 +20,12 @@ export const ReturnArrow = ({
     router.back();
   };
   return (
-    <div className={classnames(style.ReturnArrow, className, `mt-2`)}>
+    <div className={classNames(style.ReturnArrow, className, `mt-2`)}>
       <button type="button" onClick={goToBack} className={style.arrowdiv}>
         <SlArrowLeft className={style.arrow} width={30} />
       </button>
       <div>
-        <p className={classnames(style.arrowtitle, `font-bold`)}>{title}</p>
+        <p className={classNames(style.arrowtitle, `font-bold`)}>{title}</p>
       </div>
       <div className={style.space} />
     </div>

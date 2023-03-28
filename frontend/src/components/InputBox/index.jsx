@@ -1,7 +1,7 @@
 import React from 'react';
 import { CiMail } from 'react-icons/ci';
 
-import classnames from 'classnames';
+import classNames from 'classnames';
 import PropTypes from 'prop-types';
 
 import style from './index.module.scss';

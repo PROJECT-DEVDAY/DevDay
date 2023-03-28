@@ -1,7 +1,7 @@
 import React from 'react';
 import { SlArrowRight } from 'react-icons/sl';
 
-import classnames from 'classnames';
+import classNames from 'classnames';
 import PropTypes from 'prop-types';
 
 import './selectarrow.css';
@@ -16,7 +16,7 @@ export const SelectArrow = ({
 }) => {
   return (
     <div
-      className={classnames(
+      className={classNames(
         'SelectArrow',
         className,
         fill && 'SelectArrow-background-fill',
