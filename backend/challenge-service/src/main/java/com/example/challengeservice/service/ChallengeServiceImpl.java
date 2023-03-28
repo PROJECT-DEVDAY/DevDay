@@ -325,22 +325,19 @@ public class ChallengeServiceImpl implements ChallengeService{
     /** 사진 인증 상세 조회 **/
     public PhotoRecordDetailResponseDto getPhotoRecordDetail(Long challengeRecordId){
 
-        //해당 ChallengeRecord찾기
+        //해당 ChallengeRecord 찾기
         ChallengeRecord challengeRecord = challengeRecordRepository.findById(challengeRecordId).orElseThrow(()->new ApiException(ExceptionEnum.USER_CHALLENGE_NOT_EXIST_EXCEPTION));
 
         //유저 아이디 찾아와서 user-service 사용자 닉네임인증정보 요청하기
 
         Long userId =challengeRecord.getUserChallenge().getUserId();
-
+        log.info("유저 아이디 누구인가요"+userId);
         UserResponseDto userResponseDto = userServiceClient.getUserInfo(userId).getData();
+        log.info("유저정보 가져왔나요"+userResponseDto.getNickname());
 
+        //사진 인증 상세 dto 생성
+        PhotoRecordDetailResponseDto responseDto = new PhotoRecordDetailResponseDto(challengeRecord,userResponseDto.getNickname());
 
-
-
-        //그 정보를 담아서 dto 만들고 리턴하기
-
-
-
-        return null;
+        return responseDto;
     }
 }
