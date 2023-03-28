@@ -2,7 +2,6 @@ package com.example.userservice.controller;
 
 import com.example.userservice.dto.BaseResponseDto;
 import com.example.userservice.dto.request.*;
-import com.example.userservice.dto.response.BaekjoonListResponseDto;
 import com.example.userservice.dto.response.TokenResponseDto;
 import com.example.userservice.dto.response.UserResponseDto;
 import com.example.userservice.service.UserService;
@@ -95,7 +94,7 @@ public class UserController {
     }
 
     /**
-     * 챌린지, 결제 마이크로 서비스에서 사용자 정보를 FeignClient 로 가져오기 위한 API 입니다.
+     * 챌린지, 결제 마이크로 서비스에서 사용자 정보를 FeignClient 로 가져가기 위한 API 입니다.
      * @param userId
      * @return
      * */
@@ -104,28 +103,6 @@ public class UserController {
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new BaseResponseDto<>(200, "success", userService.getUserInfo(userId)));
-    }
-
-    /**
-     * 챌린지 마이크로 서비스에서 백준 문제 리스트를 FeignClient 로 가져오기 위한 API 입니다.
-     * @param userId
-     * @return
-     * */
-    @GetMapping("/user/baekjoon/{userId}")
-    public ResponseEntity<BaseResponseDto<BaekjoonListResponseDto>> getBaekjoonList(@PathVariable Long userId) {
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(new BaseResponseDto<>(200, "success", userService.getBaekjoonList(userId)));
-    }
-
-    /**
-     * 챌린지 마이크로 서비스에서 FeignClient 로 오늘 푼 문제 리스트를 저장하기 위한 API 입니다.
-     * @param userId
-     * @param requestDto
-     * */
-    @PostMapping("/user/baekjoon/{userId}")
-    public ResponseEntity<BaseResponseDto> createProblem(@PathVariable Long userId, @RequestBody ProblemRequestDto requestDto) {
-        userService.createProblem(userId, requestDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new BaseResponseDto<>(201, "success"));
     }
 
     /**

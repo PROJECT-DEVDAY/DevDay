@@ -1,12 +1,14 @@
 package com.example.userservice;
 
-import com.example.userservice.exception.FeignErrorDecoder;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import feign.Logger;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
+
+import javax.persistence.EntityManager;
 
 @SpringBootApplication
 @EnableDiscoveryClient
@@ -20,6 +22,11 @@ public class UserServiceApplication {
     @Bean
     public Logger.Level feignLoggerLevel() {
         return Logger.Level.FULL;
+    }
+
+    @Bean
+    JPAQueryFactory jpaQueryFactory(EntityManager em) {
+        return new JPAQueryFactory(em);
     }
 
 }

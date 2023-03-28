@@ -1,18 +1,13 @@
 package com.example.userservice.service;
 
-import com.example.userservice.client.ChallengeServiceClient;
 import com.example.userservice.client.PayServiceClient;
 import com.example.userservice.dto.request.*;
-import com.example.userservice.dto.response.BaekjoonListResponseDto;
-import com.example.userservice.dto.response.ProblemResponseDto;
 import com.example.userservice.dto.response.TokenResponseDto;
 import com.example.userservice.dto.response.UserResponseDto;
 import com.example.userservice.entity.EmailAuth;
-import com.example.userservice.entity.Solvedac;
 import com.example.userservice.entity.User;
 import com.example.userservice.exception.ApiException;
 import com.example.userservice.exception.ExceptionEnum;
-import com.example.userservice.repository.BatchInsertRepository;
 import com.example.userservice.repository.EmailAuthRepository;
 import com.example.userservice.repository.SolvedacReporitory;
 import com.example.userservice.repository.UserRepository;
@@ -24,11 +19,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
-
-import static java.util.stream.Collectors.*;
 
 @Service
 @RequiredArgsConstructor
@@ -175,31 +167,6 @@ public class UserServiceImpl implements UserService{
     public UserResponseDto getUserInfo(Long userId) {
         User user = getUser(userId);
         return UserResponseDto.from(user);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public BaekjoonListResponseDto getBaekjoonList(Long userId) {
-        List<Solvedac> solvedList = solvedacReporitory.findAllByUserId(userId);
-        HashMap<String, String> hashMap = new HashMap<>();
-        solvedList.forEach((s) -> hashMap.put(s.getProblemId(), s.getSuccessDate()));
-
-        User user = getUser(userId);
-
-        return BaekjoonListResponseDto.of(user.getBaekjoon(), hashMap);
-    }
-
-    @Override
-    @Transactional
-    public void createProblem(Long userId, ProblemRequestDto requestDto) {
-        User user = getUser(userId);
-
-        List<Solvedac> solvedacList = requestDto.getProblemList()
-                .stream()
-                .map((p) -> new Solvedac(p, user, LocalDate.now().toString()))
-                .collect(toList());
-
-        solvedacReporitory.saveAll(solvedacList);
     }
 
     @Override
