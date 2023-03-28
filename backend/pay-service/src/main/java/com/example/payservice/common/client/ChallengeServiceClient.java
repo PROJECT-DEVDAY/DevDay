@@ -14,10 +14,10 @@ import java.util.Map;
 
 @FeignClient(name = "challenge-service")
 public interface ChallengeServiceClient {
-    @GetMapping("/challenge-service/challenges/{challengId}")
+    @GetMapping("/challenges/{challengId}")
     InternalResponse<ChallengeInfo> getChallengeId(@PathVariable Long challengeId);
 
-    @PostMapping("/challenge-service/challenges/listInfo")
+    @PostMapping("/challenges/listInfo")
     InternalResponse<Map<Long, SimpleChallengeInfo>> getSimpleChallengeInfos(
             @RequestBody SimpleChallengeInfosRequest request
     );
