@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface SolvedacReporitory extends JpaRepository<Solvedac, ProblemId>, SolvedacRepositoryCustom {
+public interface SolvedacRepository extends JpaRepository<Solvedac, ProblemId>, SolvedacRepositoryCustom {
     List<Solvedac> findAllByUserId(Long userId);
 }

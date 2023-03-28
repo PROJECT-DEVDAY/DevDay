@@ -8,7 +8,7 @@ import com.example.userservice.entity.Solvedac;
 import com.example.userservice.entity.User;
 import com.example.userservice.exception.ApiException;
 import com.example.userservice.exception.ExceptionEnum;
-import com.example.userservice.repository.SolvedacReporitory;
+import com.example.userservice.repository.SolvedacRepository;
 import com.example.userservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,14 +24,14 @@ import static java.util.stream.Collectors.toList;
 @RequiredArgsConstructor
 public class ChallengeServiceImpl implements ChallengeService{
 
-    private final SolvedacReporitory solvedacReporitory;
+    private final SolvedacRepository solvedacRepository;
 
     private final UserRepository userRepository;
 
     @Override
     @Transactional(readOnly = true)
     public BaekjoonListResponseDto getBaekjoonList(Long userId) {
-        List<Solvedac> solvedList = solvedacReporitory.findAllByUserId(userId);
+        List<Solvedac> solvedList = solvedacRepository.findAllByUserId(userId);
         HashMap<String, String> hashMap = new HashMap<>();
         solvedList.forEach((s) -> hashMap.put(s.getProblemId(), s.getSuccessDate()));
 
@@ -50,13 +50,13 @@ public class ChallengeServiceImpl implements ChallengeService{
                 .map((p) -> new Solvedac(p, user, LocalDate.now().toString()))
                 .collect(toList());
 
-        solvedacReporitory.saveAll(solvedacList);
+        solvedacRepository.saveAll(solvedacList);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<DateProblemResponseDto> getDateBaekjoonList(Long userId, DateProblemRequestDto requestDto) {
-        return solvedacReporitory.getDateProblem(userId, requestDto.getStartDate(), requestDto.getEndDate());
+        return solvedacRepository.getDateProblem(userId, requestDto.getStartDate(), requestDto.getEndDate());
     }
 
     private User getUser(Long userId) {
