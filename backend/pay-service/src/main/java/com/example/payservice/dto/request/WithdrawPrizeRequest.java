@@ -6,7 +6,7 @@ import lombok.Data;
 import javax.validation.constraints.Positive;
 
 @Data
-public class WithdrawRequest {
+public class WithdrawPrizeRequest {
     private AccountDto account;
     @Positive
     private Integer money;

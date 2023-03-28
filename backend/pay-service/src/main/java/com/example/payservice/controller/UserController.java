@@ -1,14 +1,11 @@
 package com.example.payservice.controller;
 
-import com.example.payservice.common.exception.ApiException;
-import com.example.payservice.common.exception.ExceptionEnum;
 import com.example.payservice.dto.CustomPage;
 import com.example.payservice.dto.InternalResponse;
 import com.example.payservice.dto.bank.AccountDto;
 import com.example.payservice.dto.deposit.DepositTransactionHistoryDto;
 import com.example.payservice.dto.prize.PrizeHistoryDto;
-import com.example.payservice.dto.request.WithdrawRequest;
-import com.example.payservice.dto.response.UserResponse;
+import com.example.payservice.dto.request.WithdrawPrizeRequest;
 import com.example.payservice.dto.response.WithdrawResponse;
 import com.example.payservice.dto.user.PayUserDto;
 import com.example.payservice.service.DepositService;
@@ -83,7 +80,7 @@ public class UserController {
 	@PostMapping("/{userId}/prize")
 	public ResponseEntity<InternalResponse<WithdrawResponse>> withDrawPrize(
 			@PathVariable Long userId,
-			@RequestBody WithdrawRequest request
+			@RequestBody WithdrawPrizeRequest request
 	) {
 		ModelMapper mapper = new ModelMapper();
 		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
@@ -120,8 +117,13 @@ public class UserController {
 	 * @return
 	 */
 	@PostMapping("/{userId}/deposit")
-	public ResponseEntity<InternalResponse> getDiposit(@PathVariable String userId) {
-		return null;
+	public ResponseEntity<InternalResponse> getDiposit(
+		@PathVariable Long userId,
+		@RequestBody WithdrawPrizeRequest request
+	) {
+		WithdrawResponse result = depositService.withdraw(userId, request);
+		InternalResponse<WithdrawResponse> response = new InternalResponse<>(result);
+		return ResponseEntity.ok(response);
 	}
 
 	/**

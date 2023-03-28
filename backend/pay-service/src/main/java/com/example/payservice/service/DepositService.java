@@ -6,6 +6,8 @@ import com.example.payservice.dto.challenge.SimpleChallengeInfo;
 import com.example.payservice.dto.deposit.DepositTransactionHistoryDto;
 import com.example.payservice.dto.deposit.DepositTransactionType;
 import com.example.payservice.dto.request.SimpleChallengeInfosRequest;
+import com.example.payservice.dto.request.WithdrawPrizeRequest;
+import com.example.payservice.dto.response.WithdrawResponse;
 import com.example.payservice.entity.DepositTransactionHistoryEntity;
 import com.example.payservice.entity.PayUserEntity;
 import com.example.payservice.exception.UnRefundableException;
@@ -187,5 +189,9 @@ public class DepositService {
                 .orElseThrow(() -> new UnRefundableException("환불 대상이 아닙니다."));
 
         return payHistory;
+    }
+
+    public WithdrawResponse withdraw(Long userId, WithdrawPrizeRequest request) {
+        return null;
     }
 }
