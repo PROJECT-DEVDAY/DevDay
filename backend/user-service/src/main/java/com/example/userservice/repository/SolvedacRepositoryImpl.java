@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 
 import static com.example.userservice.entity.QSolvedac.solvedac;
+import static com.example.userservice.entity.QUser.user;
 
 @RequiredArgsConstructor
 public class SolvedacRepositoryImpl implements SolvedacRepositoryCustom {
@@ -22,6 +23,7 @@ public class SolvedacRepositoryImpl implements SolvedacRepositoryCustom {
                         solvedac.user.id,
                         solvedac.successDate))
                 .from(solvedac)
+                .join(solvedac.user, user)
                 .where(solvedac.user.id.eq(userId),
                        solvedac.successDate.goe(startDate),
                        solvedac.successDate.loe(endDate))

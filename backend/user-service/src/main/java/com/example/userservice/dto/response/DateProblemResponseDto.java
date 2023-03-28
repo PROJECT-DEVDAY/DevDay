@@ -9,15 +9,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class DateProblemResponseDto {
 
-    private Long userId;
-
     private String problemId;
 
-    private String date;
+    private Long userId;
 
-    public DateProblemResponseDto(Long userId, String problemId, String date) {
-        this.userId = userId;
+    private String successDate;
+
+    public DateProblemResponseDto(String problemId, Long userId, String successDate) {
         this.problemId = problemId;
-        this.date = date;
+        this.userId = userId;
+        this.successDate = successDate;
     }
 }

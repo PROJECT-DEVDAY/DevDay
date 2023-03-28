@@ -56,7 +56,7 @@ public class ChallengeServiceImpl implements ChallengeService{
     @Override
     @Transactional(readOnly = true)
     public List<DateProblemResponseDto> getDateBaekjoonList(Long userId, DateProblemRequestDto requestDto) {
-        return null;
+        return solvedacReporitory.getDateProblem(userId, requestDto.getStartDate(), requestDto.getEndDate());
     }
 
     private User getUser(Long userId) {
