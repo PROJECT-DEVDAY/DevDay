@@ -20,6 +20,8 @@ public interface UserService {
 
     void confirmEmail(EmailAuthRequestDto requestDto);
 
+    void nicknameCheck(String nickname);
+
     UserResponseDto getUserInfo(Long userId);
 
     TokenResponseDto refresh(HttpServletRequest request);
