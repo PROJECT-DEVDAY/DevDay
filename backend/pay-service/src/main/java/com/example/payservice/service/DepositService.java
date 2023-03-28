@@ -10,6 +10,7 @@ import com.example.payservice.dto.request.WithdrawDepositRequest;
 import com.example.payservice.dto.response.WithdrawResponse;
 import com.example.payservice.entity.DepositTransactionHistoryEntity;
 import com.example.payservice.entity.PayUserEntity;
+import com.example.payservice.exception.BadRequestException;
 import com.example.payservice.exception.LackOfDepositException;
 import com.example.payservice.exception.UnRefundableException;
 import com.example.payservice.repository.DepositTransactionHistoryRepository;
@@ -24,10 +25,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.example.payservice.entity.DepositTransactionHistoryEntity.notHasChallengeFields;
+import static com.example.payservice.entity.DepositTransactionHistoryEntity.hasChallengeFields;
 
 @Slf4j
 @Service
@@ -81,7 +81,7 @@ public class DepositService {
 
         try {
             List<Long> challengeTypePayRefundIds = challenges.stream()
-                    .filter(depositHistory -> !notHasChallengeFields(depositHistory.getType()))
+                    .filter(depositHistory -> hasChallengeFields(depositHistory.getType()))
                     .map(DepositTransactionHistoryEntity::getChallengeId)
                     .collect(Collectors.toList());
 
@@ -202,7 +202,7 @@ public class DepositService {
         boolean result = paymentService.withdraw(payUserEntity, request.getMoney());
         return WithdrawResponse.builder()
             .result(result)
-            .remainPrizes(payUserEntity.getPrize())
+            .remainPrizes(payUserEntity.getDeposit())
             .build();
     }
 
@@ -216,6 +216,9 @@ public class DepositService {
     private void checkWithdrawMoney(PayUserEntity payUserEntity, int money) {
         if(payUserEntity.getDeposit() < money) {
             throw new LackOfDepositException("출금할 예치금 금액이 저장된 금액보다 큽니다.");
+        }
+        if(money <= 0) {
+            throw new BadRequestException("출금할 금액이 0원 이하일 수 없습니다.");
         }
     }
 }
