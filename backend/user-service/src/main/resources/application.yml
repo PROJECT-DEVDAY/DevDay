@@ -48,7 +48,7 @@ spring:
         max-idle: 8
         max-active: 8
     port: 6379
-    host: localhost
+    host: j8c209.p.ssafy.io
 
 eureka:
   instance:
