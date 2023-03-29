@@ -16,7 +16,4 @@ public class ChallengeRecordRequestDto {
     /** 인증 URL **/
     private MultipartFile photoCertFile;
 
-
-
-
 }

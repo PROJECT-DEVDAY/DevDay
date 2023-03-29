@@ -166,11 +166,18 @@ public class ChallengeController {
 
 
     /** 사진 기록 신고하기   -> 이거 유효한 유저인지 체크하고 넘겨줘야하지 않나? **/
+
     @PostMapping ("report/record")
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public Result reportRecord (@RequestBody ReportRecordRequestDto reportRequestDto){
+
+        challengeService.reportRecord(reportRequestDto);
 
         return responseService.getSuccessResult();
     }
+
+
+
 
 
 
