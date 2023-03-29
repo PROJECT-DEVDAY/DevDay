@@ -5,6 +5,7 @@ import com.example.challengeservice.common.result.SingleResult;
 import com.example.challengeservice.dto.request.ChallengeRecordRequestDto;
 import com.example.challengeservice.dto.request.ChallengeRoomRequestDto;
 import com.example.challengeservice.dto.request.ProblemRequestDto;
+import com.example.challengeservice.dto.request.ReportRecordRequestDto;
 import com.example.challengeservice.dto.response.*;
 import com.example.challengeservice.entity.ChallengeRecord;
 import com.example.challengeservice.entity.ChallengeRoom;
@@ -39,10 +40,9 @@ public class ChallengeServiceImpl implements ChallengeService{
     private final UserChallengeRepository userChallengeRepository;
     private final ChallengeRoomRepository challengeRoomRepository;
     private final AmazonS3Service amazonS3Service;
-    private final ChallengeRoomRepoCustomImpl challengeRoomRepoCustom;
     private final CommonServiceImpl commonService;
     private final ChallengeRecordRepository challengeRecordRepository;
-    private final ChallengeRecordRepoCustomImpl recordRepoCustom;
+
 
 
     @Override
@@ -51,7 +51,7 @@ public class ChallengeServiceImpl implements ChallengeService{
         //검색에 필요한 조건을 담은 객체
         SearchParam searchParam = new SearchParam(type,search,size,offset,commonService.getDate());
 
-        List<ChallengeRoom> challengeRooms = challengeRoomRepoCustom.getSimpleChallengeList(searchParam);
+        List<ChallengeRoom> challengeRooms = challengeRoomRepository.getSimpleChallengeList(searchParam);
 
         for (ChallengeRoom challengeRoom : challengeRooms) {
             // 현재 참여자 수 조회
@@ -287,7 +287,7 @@ public class ChallengeServiceImpl implements ChallengeService{
         //userChallenge 값을 찾아야함
 
       UserChallenge userChallenge =  userChallengeRepository.findByChallengeRoomIdAndUserId(challengeRoomId , userId).orElseThrow(()->new ApiException(ExceptionEnum.USER_CHALLENGE_NOT_EXIST_EXCEPTION));
-        List<PhotoRecordResponseDto> challengeRecords = recordRepoCustom.getSelfPhotoRecord(userChallenge, viewType );
+        List<PhotoRecordResponseDto> challengeRecords = challengeRecordRepository.getSelfPhotoRecord(userChallenge, viewType );
         return challengeRecords;
     }
 
@@ -317,7 +317,7 @@ public class ChallengeServiceImpl implements ChallengeService{
     }
     @Override
     public List<PhotoRecordResponseDto> getTeamPhotoRecord(Long challengeRoomId, String viewType) {
-        List<PhotoRecordResponseDto> challengeRecords = recordRepoCustom.getTeamPhotoRecord(challengeRoomId, viewType );
+        List<PhotoRecordResponseDto> challengeRecords = challengeRecordRepository.getTeamPhotoRecord(challengeRoomId, viewType );
         return challengeRecords;
 
     }
@@ -326,22 +326,29 @@ public class ChallengeServiceImpl implements ChallengeService{
     /** 사진 인증 상세 조회 **/
     public PhotoRecordDetailResponseDto getPhotoRecordDetail(Long challengeRecordId){
 
-        //해당 ChallengeRecord찾기
+        //해당 ChallengeRecord 찾기
         ChallengeRecord challengeRecord = challengeRecordRepository.findById(challengeRecordId).orElseThrow(()->new ApiException(ExceptionEnum.USER_CHALLENGE_NOT_EXIST_EXCEPTION));
 
         //유저 아이디 찾아와서 user-service 사용자 닉네임인증정보 요청하기
 
         Long userId =challengeRecord.getUserChallenge().getUserId();
-
+        log.info("유저 아이디 누구인가요"+userId);
         UserResponseDto userResponseDto = userServiceClient.getUserInfo(userId).getData();
+        log.info("유저정보 가져왔나요"+userResponseDto.getNickname());
+
+        //사진 인증 상세 dto 생성
+        PhotoRecordDetailResponseDto responseDto = new PhotoRecordDetailResponseDto(challengeRecord,userResponseDto.getNickname());
+
+        return responseDto;
+    }
 
 
+    /** 사진 인증 신고하기 **/
+    @Override
+    public void reportRecord(ReportRecordRequestDto reportRecordRequestDto) {
 
+     List<UserChallenge> list =userChallengeRepository.findAll();
 
-        //그 정보를 담아서 dto 만들고 리턴하기
-
-
-
-        return null;
+        //일단 신고기록이 존재한다면 존재한다고 에러를 내어준다.
     }
 }

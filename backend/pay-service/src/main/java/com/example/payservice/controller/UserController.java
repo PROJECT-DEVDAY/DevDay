@@ -23,6 +23,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @Slf4j
 @RestController
 @RequestMapping("/users")
@@ -120,7 +122,7 @@ public class UserController {
 	@PostMapping("/{userId}/deposit")
 	public ResponseEntity<InternalResponse<WithdrawResponse>> getDeposit(
 		@PathVariable Long userId,
-		@RequestBody WithdrawDepositRequest request
+		@Valid @RequestBody WithdrawDepositRequest request
 	) {
 		WithdrawResponse result = depositService.withdraw(userId, request);
 		InternalResponse<WithdrawResponse> response = new InternalResponse<>(result);

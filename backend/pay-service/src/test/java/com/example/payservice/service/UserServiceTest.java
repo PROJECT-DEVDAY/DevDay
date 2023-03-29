@@ -12,70 +12,56 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.modelmapper.ModelMapper;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
 
-import static org.mockito.Answers.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
-@DataJpaTest
+@SpringBootTest
 @ActiveProfiles("test")
 class UserServiceTest {
-    @Mock(answer = RETURNS_DEEP_STUBS)
+    @MockBean
     UserServiceClient userServiceClient;
-    @Mock
+    @Autowired
     PayUserRepository payUserRepository;
-
-    @InjectMocks
+    @Autowired
     UserService userService;
 
     @Test
-    @DisplayName("pay-service 없는 유저 생성하기")
+    @Transactional
+    @DisplayName("새로운 유저 생성하기")
     void 없는_유저_생성하기() {
         PayUserDto mockPayUserDto = PayUserDto.createPayUserDto(1L);
         PayUserDto payUserDto = userService.createPayUser(1L);
-        Assertions.assertEquals(payUserDto, mockPayUserDto);
+        Assertions.assertEquals(mockPayUserDto, payUserDto);
     }
 
     @Test
-    @DisplayName("pay-service 이미 있는 유저 생성하기")
+    @Transactional
+    @DisplayName("이미 있는 유저일경우, 기존 유저를 리턴")
     void 이미있는_유저_생성하기() {
         PayUserDto mockPayUserDto = PayUserDto.builder()
                 .userId(1L)
                 .prize(3000)
                 .deposit(2000)
                 .build();
-        when(payUserRepository.findByUserId(1L)).thenReturn(new ModelMapper().map(mockPayUserDto, PayUserEntity.class));
+        payUserRepository.save(new ModelMapper().map(mockPayUserDto, PayUserEntity.class));
 
         PayUserDto payUserDto = userService.createPayUser(1L);
 
-        Assertions.assertEquals(payUserDto, mockPayUserDto);
-    }
-    @Test
-    @DisplayName("pay-service 유저정보 조회")
-    void 유저정보_조회하기() {
-        PayUserDto mockPayUserDto = PayUserDto.builder()
-                .userId(1L)
-                .prize(3000)
-                .deposit(2000)
-                .build();
-        when(payUserRepository.findByUserId(1L)).thenReturn(new ModelMapper().map(mockPayUserDto, PayUserEntity.class));
-
-        PayUserDto payUserDto = userService.getPayUserInfo(1L);
-
-        Assertions.assertEquals(payUserDto, mockPayUserDto);
+        Assertions.assertEquals(mockPayUserDto, payUserDto);
     }
 
     @Test
+    @Transactional
     @DisplayName("pay-service 유저정보에서 없는 유저 조회시 UserNotExistException 발생")
     void 없는_유저_조회하기() {
-        when(payUserRepository.findByUserId(1L)).thenReturn(null);
-
         Assertions.assertThrows(UserNotExistException.class, () -> {
             userService.getPayUserInfo(1L);
         });
@@ -94,7 +80,7 @@ class UserServiceTest {
 
         //then
         UserResponse response = userService.searchUserInDevDay(1L);
-        Assertions.assertEquals(response, mockUserResponse);
+        Assertions.assertEquals(mockUserResponse, response);
     }
 
     @Test
@@ -116,5 +102,36 @@ class UserServiceTest {
 
         UserResponse response = userService.searchUserInDevDay(1L);
         Assertions.assertNull(response);
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("계정삭제 테스트")
+    void 계정_삭제() {
+        PayUserEntity user1 = new PayUserEntity(1L, 500, 0);
+        payUserRepository.save(user1);
+
+        Assertions.assertNotNull(payUserRepository.findByUserId(1L));
+        userService.deletePayUserInfo(1L);
+        Assertions.assertEquals(null, payUserRepository.findByUserId(1L));
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("있는 계정 조회하기")
+    void 있는_계정_조회() {
+        PayUserEntity user1 = new PayUserEntity(1L, 500, 0);
+        payUserRepository.save(user1);
+
+        PayUserEntity result =  userService.getPayUserEntity(1L);
+        Assertions.assertEquals(user1, result);
+    }
+    @Test
+    @Transactional
+    @DisplayName("없는 계정 조회하기")
+    void 없는_계정_조회() {
+        Assertions.assertThrows(UserNotExistException.class,() -> {
+            userService.getPayUserEntity(1L);
+        });
     }
 }

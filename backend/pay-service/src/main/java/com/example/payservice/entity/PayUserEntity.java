@@ -2,7 +2,9 @@ package com.example.payservice.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
@@ -11,7 +13,7 @@ import java.util.List;
 @Data
 @Entity
 @DynamicUpdate
-@EqualsAndHashCode(of ="userId", callSuper = true)
+@EqualsAndHashCode(of ="userId", callSuper = false)
 @NoArgsConstructor
 @Table(name = "pay_users")
 public class PayUserEntity extends BaseEntity {

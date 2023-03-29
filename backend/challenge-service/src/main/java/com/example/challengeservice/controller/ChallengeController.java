@@ -6,6 +6,7 @@ import com.example.challengeservice.common.result.Result;
 import com.example.challengeservice.common.result.SingleResult;
 import com.example.challengeservice.dto.request.ChallengeRecordRequestDto;
 import com.example.challengeservice.dto.request.ChallengeRoomRequestDto;
+import com.example.challengeservice.dto.request.ReportRecordRequestDto;
 import com.example.challengeservice.dto.response.ChallengeCreateResponseDto;
 import com.example.challengeservice.dto.response.ChallengeRoomResponseDto;
 import com.example.challengeservice.dto.response.SimpleChallengeResponseDto;
@@ -131,11 +132,10 @@ public class ChallengeController {
 
     /** 사진 인증 상세 조회 **/
     @GetMapping("photo-record/{recordId}")
-    public ResponseEntity<String> getPhotoRecordDetail(@PathVariable("recordId") Long recordId){
+    public SingleResult<PhotoRecordDetailResponseDto> getPhotoRecordDetail(@PathVariable("recordId") Long recordId){
 
+        return responseService.getSingleResult(challengeService.getPhotoRecordDetail(recordId));
 
-
-        return ResponseEntity.status(HttpStatus.OK).body("인증기록 저장완료");
     }
 
 
@@ -163,5 +163,15 @@ public class ChallengeController {
         return responseService.getListResult(challengeService.getTeamPhotoRecord(challengeRoomId,viewType));
 
     }
+
+
+    /** 사진 기록 신고하기   -> 이거 유효한 유저인지 체크하고 넘겨줘야하지 않나? **/
+    @PostMapping ("report/record")
+    public Result reportRecord (@RequestBody ReportRecordRequestDto reportRequestDto){
+
+        return responseService.getSuccessResult();
+    }
+
+
 
 }

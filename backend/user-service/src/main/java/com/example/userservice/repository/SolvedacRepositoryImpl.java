@@ -21,7 +21,8 @@ public class SolvedacRepositoryImpl implements SolvedacRepositoryCustom {
                 .select(Projections.constructor(DateProblemResponseDto.class,
                         solvedac.problemId,
                         solvedac.user.id,
-                        solvedac.successDate))
+                        solvedac.successDate)
+                )
                 .from(solvedac)
                 .join(solvedac.user, user)
                 .where(solvedac.user.id.eq(userId),

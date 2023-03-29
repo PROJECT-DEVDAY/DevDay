@@ -5,13 +5,16 @@ import com.example.payservice.dto.CustomPage;
 import com.example.payservice.dto.challenge.SimpleChallengeInfo;
 import com.example.payservice.dto.deposit.DepositTransactionHistoryDto;
 import com.example.payservice.dto.deposit.DepositTransactionType;
+import com.example.payservice.dto.request.ChallengeSettleRequest;
 import com.example.payservice.dto.request.SimpleChallengeInfosRequest;
 import com.example.payservice.dto.request.WithdrawDepositRequest;
 import com.example.payservice.dto.response.WithdrawResponse;
 import com.example.payservice.entity.DepositTransactionHistoryEntity;
 import com.example.payservice.entity.PayUserEntity;
+import com.example.payservice.exception.BadRequestException;
 import com.example.payservice.exception.LackOfDepositException;
 import com.example.payservice.exception.UnRefundableException;
+import com.example.payservice.exception.UserNotExistException;
 import com.example.payservice.repository.DepositTransactionHistoryRepository;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
@@ -24,10 +27,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.example.payservice.entity.DepositTransactionHistoryEntity.notHasChallengeFields;
+import static com.example.payservice.entity.DepositTransactionHistoryEntity.hasChallengeFields;
 
 @Slf4j
 @Service
@@ -36,6 +38,7 @@ public class DepositService {
     private final ChallengeServiceClient challengeServiceClient;
     private final UserService userService;
     private final PaymentService paymentService;
+    private final PrizeService prizeService;
     private final DepositTransactionHistoryRepository depositTransactionHistoryRepository;
     /**
      * 예치금 내역을 조회하는 기능입니다.
@@ -81,7 +84,7 @@ public class DepositService {
 
         try {
             List<Long> challengeTypePayRefundIds = challenges.stream()
-                    .filter(depositHistory -> !notHasChallengeFields(depositHistory.getType()))
+                    .filter(depositHistory -> hasChallengeFields(depositHistory.getType()))
                     .map(DepositTransactionHistoryEntity::getChallengeId)
                     .collect(Collectors.toList());
 
@@ -202,7 +205,7 @@ public class DepositService {
         boolean result = paymentService.withdraw(payUserEntity, request.getMoney());
         return WithdrawResponse.builder()
             .result(result)
-            .remainPrizes(payUserEntity.getPrize())
+            .remainPrizes(payUserEntity.getDeposit())
             .build();
     }
 
@@ -217,5 +220,73 @@ public class DepositService {
         if(payUserEntity.getDeposit() < money) {
             throw new LackOfDepositException("출금할 예치금 금액이 저장된 금액보다 큽니다.");
         }
+        if(money <= 0) {
+            throw new BadRequestException("출금할 금액이 0원 이하일 수 없습니다.");
+        }
+    }
+
+    /**
+     * 챌린지가 종료된 뒤 정산을 위한 함수입니다.
+     * @param challengeId
+     * @param resultList
+     */
+    @Transactional
+    public void settleChallenge(Long challengeId, List<ChallengeSettleRequest.ChallengeSettleInfo> resultList) {
+        // 유저마다 챌린지에 결제한 정보를 DB로부터 조회합니다.
+        resultList.forEach(result -> settle(challengeId, result));
+    }
+
+    /**
+     * 유저마다 금액을 받아 환불금액보다 크다면 상금으로 입금, 환불금액보다 적다면 패널티를 적용합니다.
+     * @param challengeId
+     * @param result
+     */
+    @Transactional
+    public void settle(long challengeId, ChallengeSettleRequest.ChallengeSettleInfo result) {
+        try {
+            PayUserEntity challengeUser = userService.getPayUserEntityForUpdate(result.getUserId());
+            DepositTransactionHistoryEntity history = depositTransactionHistoryRepository.findByUserAndChallengeIdAndType(
+                    challengeUser, challengeId, DepositTransactionType.PAY
+            ).orElseThrow(() -> new UnRefundableException("결제 이력이 없는 유저입니다."));
+            boolean isAlreadyRefundUser = depositTransactionHistoryRepository.existsDepositTransactionHistoryEntityByUserAndChallengeIdAndType(
+                    challengeUser, challengeId, DepositTransactionType.REFUND
+            );
+            if(isAlreadyRefundUser) {
+                throw new RuntimeException("이미 정산된 유저입니다.");
+            }
+
+            if(history.getAmount() < result.getMoney()) {
+                // 결과 값이 결제 금액보다 크다면 상금 입금
+                settleDeposit(challengeId, challengeUser, history.getAmount());
+                prizeService.settlePrize(challengeId, challengeUser, result.getMoney() - history.getAmount());
+            } else {
+                // 환불금액 줄이기
+                settleDeposit(challengeId, challengeUser, result.getMoney());
+            }
+        } catch(UserNotExistException ex) {
+            log.error("pay-service에 userId: {}가 존재하지 않습니다.", result.getUserId());
+        } catch(UnRefundableException ex) {
+            log.error("challengeId: {}에 해당하는 userId: {}의 결제 이력이 없습니다.",challengeId, result.getUserId());
+        } catch(RuntimeException ex) {
+            log.error("challengeId: {} 정산과정 중 문제가 발생했습니다. -> {}", challengeId, ex.getMessage());
+        }
+    }
+    /**
+     * 챌린지가 종료된 뒤, 정산과정에서 예치금이력을 등록합니다.
+     * @param challengeId
+     * @param challengeUser
+     * @param amount
+     */
+    @Transactional
+    public void settleDeposit(long challengeId, PayUserEntity challengeUser, int amount) {
+        DepositTransactionHistoryEntity newRefundHistoryEntity = DepositTransactionHistoryEntity
+                .builder()
+                .user(challengeUser)
+                .amount(amount)
+                .challengeId(challengeId)
+                .type(DepositTransactionType.REFUND)
+                .build();
+        challengeUser.setDeposit(challengeUser.getDeposit() + amount);
+        depositTransactionHistoryRepository.save(newRefundHistoryEntity);
     }
 }

@@ -2,6 +2,7 @@ package com.example.challengeservice.service;
 
 import com.example.challengeservice.dto.request.ChallengeRecordRequestDto;
 import com.example.challengeservice.dto.request.ChallengeRoomRequestDto;
+import com.example.challengeservice.dto.request.ReportRecordRequestDto;
 import com.example.challengeservice.dto.response.*;
 
 import java.io.IOException;
@@ -38,4 +39,6 @@ public interface ChallengeService {
     List<PhotoRecordResponseDto> getTeamPhotoRecord(Long challengeRoomId , String viewType);
 
     PhotoRecordDetailResponseDto getPhotoRecordDetail(Long challengeRecordId);
+
+    void reportRecord(ReportRecordRequestDto reportRecordRequestDto);
 }

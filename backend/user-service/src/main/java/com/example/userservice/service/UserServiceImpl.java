@@ -9,7 +9,7 @@ import com.example.userservice.entity.User;
 import com.example.userservice.exception.ApiException;
 import com.example.userservice.exception.ExceptionEnum;
 import com.example.userservice.repository.EmailAuthRepository;
-import com.example.userservice.repository.SolvedacReporitory;
+import com.example.userservice.repository.SolvedacRepository;
 import com.example.userservice.repository.UserRepository;
 import com.example.userservice.security.JWTUtil;
 import lombok.RequiredArgsConstructor;
@@ -40,8 +40,6 @@ public class UserServiceImpl implements UserService{
     private final RedisService redisService;
 
     private final PayServiceClient payServiceClient;
-
-    private final SolvedacReporitory solvedacReporitory;
 
     private final CommonService commonService;
 

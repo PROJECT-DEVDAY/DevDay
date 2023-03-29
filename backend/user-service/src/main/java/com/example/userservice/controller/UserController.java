@@ -25,9 +25,9 @@ public class UserController {
      * @param requestDto
      * */
     @PostMapping("/join/{emailAuthId}")
-    public ResponseEntity<BaseResponseDto> join(@PathVariable Long emailAuthId, @RequestBody SignUpRequestDto requestDto) {
+    public ResponseEntity<BaseResponseDto<?>> join(@PathVariable Long emailAuthId, @RequestBody SignUpRequestDto requestDto) {
         userService.join(emailAuthId, requestDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new BaseResponseDto(201, "success"));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new BaseResponseDto<>(201, "success"));
     }
 
     /**
@@ -57,7 +57,7 @@ public class UserController {
      * @param requestDto
      * */
     @PatchMapping("/password")
-    public ResponseEntity<BaseResponseDto> findPw(@RequestBody FindPwRequestDto requestDto) {
+    public ResponseEntity<BaseResponseDto<?>> findPw(@RequestBody FindPwRequestDto requestDto) {
         userService.findPw(requestDto);
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseDto<>(200, "success"));
     }
@@ -78,7 +78,7 @@ public class UserController {
      * @param requestDto
      * */
     @PatchMapping("/confirm-email")
-    public ResponseEntity<BaseResponseDto> confirmEmail(@RequestBody EmailAuthRequestDto requestDto) {
+    public ResponseEntity<BaseResponseDto<?>> confirmEmail(@RequestBody EmailAuthRequestDto requestDto) {
         userService.confirmEmail(requestDto);
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseDto<>(200, "success"));
     }
@@ -88,7 +88,7 @@ public class UserController {
      * @param requestDto
      * */
     @PostMapping("/nickname")
-    public ResponseEntity<BaseResponseDto> nicknameCheck(@RequestBody NicknameCheckRequestDto requestDto) {
+    public ResponseEntity<BaseResponseDto<?>> nicknameCheck(@RequestBody NicknameCheckRequestDto requestDto) {
         userService.nicknameCheck(requestDto.getNickname());
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseDto<>(200, "success"));
     }

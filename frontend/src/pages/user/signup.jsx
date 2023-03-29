@@ -9,21 +9,13 @@ import { useRouter } from 'next/router';
 import style from './signup.module.scss';
 import { Button } from '../../components/Button';
 import { ReturnArrow } from '../../components/ReturnArrow';
+import { EMAIL_URL } from '../api/constants';
+import http from '../api/http';
 
 import { InputLabel } from '@/components/InputLabel';
-import { save } from '@/store/signup/signupSlice';
+import { saveSignUpInfos } from '@/store/signup/signupSlice';
 
 const signup = props => {
-  const [signUpInfos, setSignUpInfos] = useState({
-    id: '',
-    password: '',
-    passwordCheck: '',
-    name: '',
-    nickName: '',
-    solved_ac: '',
-    gitHub: '',
-  });
-
   const [emailValidCheck, setEmailValidCheck] = useState(false);
   const [nickNameDuplicateChk, setnickNameDuplicateChk] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -31,16 +23,34 @@ const signup = props => {
   const router = useRouter();
   const dispatch = useDispatch();
 
-  const onClickEmailValidation = () => {
-    setEmailValidCheck(true);
-    // TODO: 이메일 전송 API 구현
+  const validate = values => {
+    const errors = {};
+
+    if (values.password !== values.passwordCheck) {
+      errors.passwordCheck = '비밀번호가 일치하지 않습니다.';
+    }
+
+    return errors;
   };
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+    watch,
+  } = useForm({ validate, mode: 'onBlur' });
 
   const onClickDuplicateCheck = () => {
     setnickNameDuplicateChk(true);
     // TODO: 이메일 전송 API 구현
   };
+  const onClickEmailValidation = () => {
+    setEmailValidCheck(true);
 
+    // TODO: 이메일 전송 API 구현
+    http.post(EMAIL_URL, {
+      email: watch('email', props.email),
+    });
+  };
   const toggleShowPassword = () => {
     setShowPassword(prev => !prev);
   };
@@ -75,23 +85,8 @@ const signup = props => {
     );
   };
 
-  const validate = values => {
-    const errors = {};
-
-    if (values.password !== values.passwordCheck) {
-      errors.passwordCheck = '비밀번호가 일치하지 않습니다.';
-    }
-
-    return errors;
-  };
-  const {
-    handleSubmit,
-    register,
-    formState: { errors },
-  } = useForm({ validate, mode: 'onBlur' });
-
   const onSubmit = data => {
-    // console.log(data);
+    dispatch(saveSignUpInfos(data));
   };
 
   const goToNextSignUpPage = () => {};

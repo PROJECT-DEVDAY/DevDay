@@ -21,12 +21,16 @@ public class FeignErrorDecoder implements ErrorDecoder {
             case 404:
                 if(methodKey.contains("getUserBaekjoonList")){
                     return new ResponseStatusException(HttpStatus.valueOf(response.status()),
-                    "user-service의 BaekjoonList를 불러올 수 없습니다.");
+                            "user-service의 BaekjoonList를 불러올 수 없습니다.");
                     // env.getProperty("order_service.exception.order_is_empty")와 같은 방법도 사용 가능
                 } else if(methodKey.contains("createProblem")){
                     return new ResponseStatusException(HttpStatus.valueOf(response.status()),
                             "user-service의 createProblem을 실행할 수 없습니다.");
-                }
+                }else if(methodKey.contains("getUserInfo")){
+                return new ResponseStatusException(HttpStatus.valueOf(response.status()),
+                        "user-service의 getUserInfo을 실행할 수 없습니다.");
+            }
+
             default:
                 return new Exception(response.reason());
         }
