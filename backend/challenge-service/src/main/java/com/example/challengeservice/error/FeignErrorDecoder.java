@@ -26,7 +26,11 @@ public class FeignErrorDecoder implements ErrorDecoder {
                 } else if(methodKey.contains("createProblem")){
                     return new ResponseStatusException(HttpStatus.valueOf(response.status()),
                             "user-service의 createProblem을 실행할 수 없습니다.");
-                }
+                }else if(methodKey.contains("getUserInfo")){
+                return new ResponseStatusException(HttpStatus.valueOf(response.status()),
+                        "user-service의 getUserInfo을 실행할 수 없습니다.");
+            }
+
             default:
                 return new Exception(response.reason());
         }
