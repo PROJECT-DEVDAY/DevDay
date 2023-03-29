@@ -1,6 +1,5 @@
 package com.example.userservice.service;
 
-import com.example.userservice.dto.request.DateProblemRequestDto;
 import com.example.userservice.dto.request.ProblemRequestDto;
 import com.example.userservice.dto.response.BaekjoonListResponseDto;
 import com.example.userservice.dto.response.DateProblemResponseDto;
@@ -57,8 +56,8 @@ public class ChallengeServiceImpl implements ChallengeService{
 
     @Override
     @Transactional(readOnly = true)
-    public List<DateProblemResponseDto> getDateBaekjoonList(Long userId, DateProblemRequestDto requestDto) {
-        return solvedacRepository.getDateProblem(userId, requestDto.getStartDate(), requestDto.getEndDate());
+    public List<DateProblemResponseDto> getDateBaekjoonList(Long userId, String startDate, String endDate) {
+        return solvedacRepository.getDateProblem(userId, startDate, endDate);
     }
 
     private User getUser(Long userId) {
