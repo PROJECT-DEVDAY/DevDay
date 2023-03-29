@@ -67,8 +67,8 @@ logging:
 
 batchSize: 500
 
-#gateway:
-#  ip: 172.18.0.1
+gateway:
+ ip: 172.18.0.1
 
 token:
   secret: dyAeHubOOc8KaOfYB6XEQoEj1QzRlVgtjNL8PYs1A1tymZvvqkcEU7L1imkKHeDa
