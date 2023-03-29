@@ -8,9 +8,16 @@ import style from './index.module.scss';
 
 export const InputBox = ({ className, placeholder, ...props }) => {
   return (
-    <div className={style.box} {...props}>
+    <div
+      className={classNames(`flex p-2 h-14 mt-6 w-full rounded-xl`, style.box)}
+      {...props}
+    >
       <CiMail className={style.icon} />
-      <input className={style.inputbox} type="text" placeholder={placeholder} />
+      <input
+        className={classNames(`rounded-none w-full pl2`, style.inputbox)}
+        type="text"
+        placeholder={placeholder}
+      />
     </div>
   );
 };

@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { BiShow, BiHide } from 'react-icons/bi';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import classNames from 'classnames';
 import { useRouter } from 'next/router';
 
 import style from './signup.module.scss';
-import { Button } from '../../components/Button';
-import { ReturnArrow } from '../../components/ReturnArrow';
 import { EMAIL_URL } from '../api/constants';
 import http from '../api/http';
 
+import { Button } from '@/components/Button';
 import { InputLabel } from '@/components/InputLabel';
+import { ReturnArrow } from '@/components/ReturnArrow';
 import { saveSignUpInfos } from '@/store/signup/signupSlice';
 
 const signup = props => {
@@ -20,8 +20,12 @@ const signup = props => {
   const [nickNameDuplicateChk, setnickNameDuplicateChk] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
+  const [emailCheck, setEmailCheck] = useState('false');
+  const [nickNameCheck, setNickNameCheck] = useState('false');
+
   const router = useRouter();
   const dispatch = useDispatch();
+  // const { signupInfo } = useSelector(state => state.user);
 
   const validate = values => {
     const errors = {};
@@ -35,14 +39,16 @@ const signup = props => {
   const {
     handleSubmit,
     register,
+    unregister,
     formState: { errors },
     watch,
   } = useForm({ validate, mode: 'onBlur' });
 
-  const onClickDuplicateCheck = () => {
-    setnickNameDuplicateChk(true);
-    // TODO: 이메일 전송 API 구현
+  const toggleShowPassword = () => {
+    setShowPassword(prev => !prev);
   };
+
+  // 이메일 확인
   const onClickEmailValidation = () => {
     setEmailValidCheck(true);
 
@@ -50,9 +56,27 @@ const signup = props => {
     http.post(EMAIL_URL, {
       email: watch('email', props.email),
     });
+
+    // 값을 저장해두고
   };
-  const toggleShowPassword = () => {
-    setShowPassword(prev => !prev);
+
+  const onClickEmailCheck = () => {
+    //이메일 중복체크 해야함 ( 값이 일치 하면 창이 사라지게)
+    // setEmailCheck(prev => !prev);
+  };
+
+  // 닉네임 중복체크
+  const onClickDuplicateCheck = () => {
+    setnickNameDuplicateChk(true);
+    // TODO: 이메일 전송 API 구현
+  };
+
+  const onSubmit = data => {
+    unregister(['passwordCheck']);
+    // 이메일 체크, 중복체크 다 되면 저장하고 다음페이지로 넘어가기
+    dispatch(saveSignUpInfos(data));
+
+    router.push('signup/extra-info');
   };
 
   const Timer = () => {
@@ -84,12 +108,6 @@ const signup = props => {
       </div>
     );
   };
-
-  const onSubmit = data => {
-    dispatch(saveSignUpInfos(data));
-  };
-
-  const goToNextSignUpPage = () => {};
 
   return (
     <div className={style.signup}>
@@ -142,8 +160,12 @@ const signup = props => {
                   )}
                 />
                 <Timer />
-                <button type="button" className="ml-2 whitespace-nowrap">
-                  확인
+                <button
+                  type="button"
+                  className="ml-2 whitespace-nowrap"
+                  onClick={onClickEmailCheck}
+                >
+                  인증하기
                 </button>
               </div>
             )}
@@ -311,13 +333,7 @@ const signup = props => {
             `font-sans text-center absolute w-full bottom-0 p-4`,
           )}
         >
-          <Button
-            type="submit"
-            // onClick={() => router.push('/user/signup/extra-info')}
-            color="primary"
-            fill
-            label="다음으로"
-          />
+          <Button type="submit" color="primary" fill label="다음으로" />
           <div className="mt-2"> 회원 가입</div>
         </div>
       </form>
