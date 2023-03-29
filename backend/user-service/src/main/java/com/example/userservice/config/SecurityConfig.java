@@ -17,7 +17,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-//   private final Environment env;
+   private final Environment env;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -26,7 +26,9 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//       String IpAddress = env.getProperty("gateway.ip");
+        String gatewayIpAddress = env.getProperty("gateway.ip");
+        String challengeIpAddress = env.getProperty("challenge-service.ip");
+        String payIpAddress = env.getProperty("pay-service.ip");
 
         http
                 .httpBasic().disable()
@@ -34,8 +36,12 @@ public class SecurityConfig {
                 .authorizeRequests()
                 .antMatchers("/error/**").permitAll()
                 .antMatchers("/h2-console/**").permitAll()
-//               .antMatchers("/**")
-//               .access("hasIpAddress('" + IpAddress + "')")
+                .antMatchers("/**")
+                .access("hasIpAddress('" + gatewayIpAddress + "')")
+                .antMatchers("/**")
+                .access("hasIpAddress('" + challengeIpAddress + "')")
+                .antMatchers("/**")
+                .access("hasIpAddress('" + payIpAddress + "')")
                 .and()
                 .headers().frameOptions().disable();
         return http.build();
