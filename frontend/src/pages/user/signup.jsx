@@ -7,12 +7,12 @@ import classNames from 'classnames';
 import { useRouter } from 'next/router';
 
 import style from './signup.module.scss';
+import { Button } from '../../components/Button';
+import { ReturnArrow } from '../../components/ReturnArrow';
 import { EMAIL_URL } from '../api/constants';
 import http from '../api/http';
 
-import { Button } from '@/components/Button';
 import { InputLabel } from '@/components/InputLabel';
-import { ReturnArrow } from '@/components/ReturnArrow';
 import { saveSignUpInfos } from '@/store/signup/signupSlice';
 
 const signup = props => {
@@ -20,12 +20,9 @@ const signup = props => {
   const [nickNameDuplicateChk, setnickNameDuplicateChk] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const [emailCheck, setEmailCheck] = useState('false');
-  const [nickNameCheck, setNickNameCheck] = useState('false');
-
   const router = useRouter();
   const dispatch = useDispatch();
-  // const { signupInfo } = useSelector(state => state.user);
+  const signUpInfos = useSelector(state => state.signUp);
 
   const validate = values => {
     const errors = {};
@@ -36,19 +33,26 @@ const signup = props => {
 
     return errors;
   };
+
   const {
     handleSubmit,
     register,
-    unregister,
     formState: { errors },
     watch,
+    reset,
   } = useForm({ validate, mode: 'onBlur' });
 
-  const toggleShowPassword = () => {
-    setShowPassword(prev => !prev);
-  };
+  useEffect(() => {
+    if (signUpInfos) {
+      const { email, password, passwordCheck, name, nickname } = signUpInfos;
+      reset({ email, password, passwordCheck, name, nickname });
+    }
+  }, [signUpInfos, reset]);
 
-  // 이메일 확인
+  const onClickDuplicateCheck = () => {
+    setnickNameDuplicateChk(true);
+    // TODO: 이메일 전송 API 구현
+  };
   const onClickEmailValidation = () => {
     setEmailValidCheck(true);
 
@@ -56,27 +60,9 @@ const signup = props => {
     http.post(EMAIL_URL, {
       email: watch('email', props.email),
     });
-
-    // 값을 저장해두고
   };
-
-  const onClickEmailCheck = () => {
-    // 이메일 중복체크 해야함 ( 값이 일치 하면 창이 사라지게)
-    // setEmailCheck(prev => !prev);
-  };
-
-  // 닉네임 중복체크
-  const onClickDuplicateCheck = () => {
-    setnickNameDuplicateChk(true);
-    // TODO: 이메일 전송 API 구현
-  };
-
-  const onSubmit = data => {
-    unregister(['passwordCheck']);
-    // 이메일 체크, 중복체크 다 되면 저장하고 다음페이지로 넘어가기
-    dispatch(saveSignUpInfos(data));
-
-    router.push('signup/extra-info');
+  const toggleShowPassword = () => {
+    setShowPassword(prev => !prev);
   };
 
   const Timer = () => {
@@ -107,6 +93,11 @@ const signup = props => {
         {minutes}:{seconds < 10 ? `0${seconds}` : seconds}
       </div>
     );
+  };
+
+  const onSubmit = data => {
+    dispatch(saveSignUpInfos(data));
+    router.push('./signup/extra-info');
   };
 
   return (
@@ -160,12 +151,8 @@ const signup = props => {
                   )}
                 />
                 <Timer />
-                <button
-                  type="button"
-                  className="ml-2 whitespace-nowrap"
-                  onClick={onClickEmailCheck}
-                >
-                  인증하기
+                <button type="button" className="ml-2 whitespace-nowrap">
+                  확인
                 </button>
               </div>
             )}
@@ -269,7 +256,7 @@ const signup = props => {
                 className={classNames(style.Content, `w-full h-6`)}
                 type="text"
                 placeholder="닉네임을 입력해주세요"
-                {...register('nickName', {
+                {...register('nickname', {
                   required: true,
                   pattern: /^(?=.*[a-z0-9가-힣])[a-z0-9가-힣]{2,16}$/,
                 })}
@@ -285,15 +272,15 @@ const signup = props => {
 
             <div className={(`font-medium`, style.Error)}>
               {errors &&
-                errors.nickName &&
-                errors.nickName.type === 'required' && (
+                errors.nickname &&
+                errors.nickname.type === 'required' && (
                   <span className={classNames(`font-medium`, style.Error)}>
                     닉네임 입력해주세요!
                   </span>
                 )}
               {errors &&
-                errors.nickName &&
-                errors.nickName.type === 'pattern' && (
+                errors.nickname &&
+                errors.nickname.type === 'pattern' && (
                   <span className={classNames(`font-medium`, style.Error)}>
                     조건에 맞지 않는 닉네임 입니다.
                   </span>
@@ -301,13 +288,13 @@ const signup = props => {
             </div>
             {!(
               errors &&
-              errors.nickName &&
-              errors.nickName.type === 'required'
+              errors.nickname &&
+              errors.nickname.type === 'required'
             ) &&
               !(
                 errors &&
-                errors.nickName &&
-                errors.nickName.type === 'pattern'
+                errors.nickname &&
+                errors.nickname.type === 'pattern'
               ) &&
               nickNameDuplicateChk && (
                 <div
@@ -333,7 +320,13 @@ const signup = props => {
             `font-sans text-center absolute w-full bottom-0 p-4`,
           )}
         >
-          <Button type="submit" color="primary" fill label="다음으로" />
+          <Button
+            type="submit"
+            // onClick={() => router.push('/user/signup/extra-info')}
+            color="primary"
+            fill
+            label="다음으로"
+          />
           <div className="mt-2"> 회원 가입</div>
         </div>
       </form>

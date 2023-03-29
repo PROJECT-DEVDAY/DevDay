@@ -7,6 +7,7 @@ const signupSlice = createSlice({
   initialState: {
     email: '',
     password: '',
+    passwordCheck: '',
     name: '',
     nickname: '',
     baekjoon: '',
