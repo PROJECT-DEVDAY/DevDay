@@ -51,7 +51,7 @@ tasks.named('test') {
 sonar {
 	properties {
 		property "sonar.projectKey", "devday"
-		// property "sonar.qualitygate.wait", true
+		property "sonar.qualitygate.wait", true
 	}
 }
 

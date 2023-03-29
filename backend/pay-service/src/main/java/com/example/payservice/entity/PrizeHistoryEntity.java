@@ -10,7 +10,6 @@ import org.hibernate.annotations.DynamicInsert;
 import org.modelmapper.ModelMapper;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.UUID;
 
 @Data
@@ -21,7 +20,7 @@ import java.util.UUID;
 @DynamicInsert
 @EqualsAndHashCode(callSuper=false)
 @Table(name ="prize_history")
-public class PrizeHistoryEntity extends BaseEntity implements Serializable {
+public class PrizeHistoryEntity extends BaseEntity {
 
     @Id
     @Column(name = "PRIZE_HISTORY_ID", unique = true)

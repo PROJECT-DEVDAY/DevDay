@@ -8,7 +8,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 @DataJpaTest
 @ActiveProfiles("test")
-public class PayUserEntityTest {
+class PayUserEntityTest {
 
 	@Test
 	@DisplayName("PayUserEntity equals를 비교합니다. - userId만 같을 경우")
