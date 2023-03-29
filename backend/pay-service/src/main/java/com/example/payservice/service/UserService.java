@@ -19,7 +19,7 @@ import javax.transaction.Transactional;
 @Service
 @RequiredArgsConstructor
 public class UserService {
-
+    private final BackupService backupService;
     private final UserServiceClient userServiceClient;
     private final PayUserRepository payUserRepository;
 
@@ -37,10 +37,19 @@ public class UserService {
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         return modelMapper.map(user, PayUserDto.class);
     }
+
+    /**
+     * 백업한 뒤, 계정을 제거합니다.
+     * @param userId
+     */
     @Transactional
-    public void deletePayUserInfo(Long userId) {
+    public void deletePayUser(Long userId) {
+        PayUserEntity entity = getPayUserEntityForUpdate(userId);
+        // 백업
+        backupService.backup(entity);
         payUserRepository.deleteByUserId(userId);
     }
+
     @Transactional
     public PayUserDto createPayUser(Long userId) {
         PayUserEntity entity = payUserRepository.findByUserId(userId);

@@ -1,5 +1,6 @@
-package com.example.payservice.entity;
+package com.example.payservice.entity.backup;
 
+import com.example.payservice.entity.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
@@ -10,13 +11,14 @@ import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+
 @Data
 @Entity
 @DynamicUpdate
 @EqualsAndHashCode(of ="userId", callSuper = false)
 @NoArgsConstructor
-@Table(name = "pay_users")
-public class PayUserEntity extends BaseEntity {
+@Table(name = "backup_pay_users")
+public class BackUpPayUserEntity extends BaseEntity {
     @Id
     @Column(name = "USER_ID", unique = true)
     private Long userId;
@@ -26,14 +28,16 @@ public class PayUserEntity extends BaseEntity {
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, orphanRemoval = true)
     @JsonManagedReference
-    List<PrizeHistoryEntity> prizeHistories = new ArrayList<>();
+    List<BackUpPrizeHistoryEntity> prizeHistories = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, orphanRemoval = true)
     @JsonIgnoreProperties
-    List<DepositTransactionEntity> depositTransactions = new ArrayList<>();
+    List<BackUpDepositTransactionEntity> depositTransactions = new ArrayList<>();
+
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, orphanRemoval = true)
     @JsonIgnoreProperties
-    List<DepositTransactionHistoryEntity> depositTransactionHistories = new ArrayList<>();
+    List<BackUpDepositTransactionHistoryEntity> depositTransactionHistories = new ArrayList<>();
+
 
     @Override
     public String toString() {
@@ -43,7 +47,6 @@ public class PayUserEntity extends BaseEntity {
                 ", prize=" + prize +
                 '}';
     }
-
     public void updateDeposit(Integer deposit) {
         this.deposit = deposit;
     }
@@ -52,10 +55,9 @@ public class PayUserEntity extends BaseEntity {
         this.prize = prize;
     }
 
-    public PayUserEntity(long userId, int deposit, int prize) {
+    public BackUpPayUserEntity(long userId, int deposit, int prize) {
         this.userId = userId;
         this.deposit = deposit;
         this.prize = prize;
     }
-
 }

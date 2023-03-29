@@ -112,7 +112,7 @@ class UserServiceTest {
         payUserRepository.save(user1);
 
         Assertions.assertNotNull(payUserRepository.findByUserId(1L));
-        userService.deletePayUserInfo(1L);
+        userService.deletePayUser(1L);
         Assertions.assertEquals(null, payUserRepository.findByUserId(1L));
     }
 
