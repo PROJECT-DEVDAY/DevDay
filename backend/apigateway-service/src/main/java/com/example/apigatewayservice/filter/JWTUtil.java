@@ -1,4 +1,4 @@
-package com.example.apigatewayservice.auth;
+package com.example.apigatewayservice.filter;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;

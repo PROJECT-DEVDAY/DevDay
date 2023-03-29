@@ -6,7 +6,6 @@ import com.example.payservice.dto.bank.AccountDto;
 import com.example.payservice.dto.challenge.SimpleChallengeInfo;
 import com.example.payservice.dto.prize.PrizeHistoryDto;
 import com.example.payservice.dto.prize.PrizeHistoryType;
-import com.example.payservice.dto.request.RewardSaveRequest;
 import com.example.payservice.dto.request.SimpleChallengeInfosRequest;
 import com.example.payservice.dto.response.WithdrawResponse;
 import com.example.payservice.entity.PayUserEntity;
@@ -37,6 +36,7 @@ public class PrizeService {
 
     /**
      * 상금을 환급하고 히스토리에 이력을 남깁니다.
+     * TODO: [우선순위 낮음] 요청한 계좌가 유효한지 확인한다. -> 계좌 유효 검사 시에 주민등록 앞자리가 필요함
      * @param userId
      * @param money
      * @param account
@@ -49,10 +49,6 @@ public class PrizeService {
         // 유저의 출금가능금액과 요청 금액을 비교해본다.
         PayUserEntity payUserEntity = userService.getPayUserEntityForUpdate(userId);
         checkDrawMoney(payUserEntity, money);
-        /*
-            TODO: [우선순위 낮음] 요청한 계좌가 유효한지 확인한다.
-            계좌 유효 검사 시에 주민등록 앞자리가 필요함
-        */
 
         // 출금을 반영합니다.
         boolean result = paymentService.transferMoney(account, money);
@@ -66,21 +62,6 @@ public class PrizeService {
             .result(result)
             .remainPrizes(payUserEntity.getPrize())
             .build();
-    }
-
-    /**
-     * 상금 획득 이력을 남깁니다.
-     * @param request
-     */
-    @Transactional
-    public void save(RewardSaveRequest request) {
-        PayUserEntity payUserEntity = userService.getPayUserEntityForUpdate(request.getUserId());
-        // TODO: 챌린지 ID가 존재하는 지
-        PrizeHistoryEntity prizeHistory = PrizeHistoryEntity.createInTypePrizeHistory(request);
-
-        // transaction 반영
-        prizeHistory.setUser(payUserEntity);
-        prizeHistoryRepository.save(prizeHistory);
     }
 
     /**
