@@ -23,7 +23,7 @@ spring:
       driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     show-sql: true
     generate-ddl: true
     
@@ -52,5 +52,5 @@ logging:
   level:
     com.example.challengeservice.client: DEBUG
 
-# 테스트
+
 
