@@ -1,6 +1,6 @@
 package com.example.challengeservice;
 
-import com.example.challengeservice.error.FeignErrorDecoder;
+// import com.example.challengeservice.error.FeignErrorDecoder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import feign.Logger;
 import org.springframework.boot.SpringApplication;
