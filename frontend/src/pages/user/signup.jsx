@@ -19,7 +19,7 @@ const signup = props => {
   const [emailValidCheck, setEmailValidCheck] = useState(false);
   const [emailCertificatedCheck, setEmailCertificatedCheck] = useState(false);
 
-  //인증 고유번호
+  // 인증 고유번호
   const [emailAuthId, setEmailAuthId] = useState(-1);
   const [emailAuthToken, setEmailAuthtoken] = useState('');
 
@@ -107,7 +107,7 @@ const signup = props => {
   };
 
   const onClickEmailAuthTokenCheck = () => {
-    http.patch(CONFIRM_EMAIL_URL, {
+    http.PATCH(CONFIRM_EMAIL_URL, {
       id: emailAuthId,
       authToken: emailAuthToken,
     });
