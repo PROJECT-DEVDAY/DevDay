@@ -7,6 +7,8 @@ export const LOGIN_URL = `${USER_SERVICE}/login`;
 export const EMAIL_URL = `${USER_SERVICE}/email`;
 export const CONFIRM_EMAIL_URL = `${USER_SERVICE}/confirm-email`;
 
+export const NICKNAME_URL = `${USER_SERVICE}/nickname`;
+
 // 챌린지
 const CHALLENGE_SERVICE = 'challenge-service';
 

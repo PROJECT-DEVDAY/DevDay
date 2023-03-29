@@ -5,9 +5,14 @@
   background-color: transparent;
 }
 
-.nickNameCheck {
-  background-color: var(--gray-border);
+.nickNamePass {
+  background-color: var(--color-taehwan);
 }
+
+.nickNameFail {
+  background-color: var(--red-border);
+}
+
 .InputText {
   border-bottom: 2px solid var(--red-border);
   :focus {
