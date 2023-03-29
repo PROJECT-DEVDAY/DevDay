@@ -22,16 +22,15 @@ public class ChallengeServiceApplication {
         SpringApplication.run(ChallengeServiceApplication.class, args);
     }
     
-    /* Feign 예외 1번 방법
+    // Feign 예외 1번 방법
     @Bean
     public Logger.Level feignLoggerLevel(){
         return Logger.Level.FULL;
     }
-     */
 
-//    @Bean
-//    public FeignErrorDecoder getFeignErrorDecoder(){
-//        return new FeignErrorDecoder();
-//    }
+   @Bean
+   public FeignErrorDecoder getFeignErrorDecoder(){
+       return new FeignErrorDecoder();
+   }
 
 }
