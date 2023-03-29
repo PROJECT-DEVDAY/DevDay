@@ -61,7 +61,7 @@ const signup = props => {
   };
 
   const onClickEmailCheck = () => {
-    //이메일 중복체크 해야함 ( 값이 일치 하면 창이 사라지게)
+    // 이메일 중복체크 해야함 ( 값이 일치 하면 창이 사라지게)
     // setEmailCheck(prev => !prev);
   };
 
