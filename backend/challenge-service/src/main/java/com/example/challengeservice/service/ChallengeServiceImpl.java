@@ -40,10 +40,9 @@ public class ChallengeServiceImpl implements ChallengeService{
     private final UserChallengeRepository userChallengeRepository;
     private final ChallengeRoomRepository challengeRoomRepository;
     private final AmazonS3Service amazonS3Service;
-    private final ChallengeRoomRepoCustomImpl challengeRoomRepoCustom;
     private final CommonServiceImpl commonService;
     private final ChallengeRecordRepository challengeRecordRepository;
-    private final ChallengeRecordRepoCustomImpl recordRepoCustom;
+
 
 
     @Override
@@ -52,7 +51,7 @@ public class ChallengeServiceImpl implements ChallengeService{
         //검색에 필요한 조건을 담은 객체
         SearchParam searchParam = new SearchParam(type,search,size,offset,commonService.getDate());
 
-        List<ChallengeRoom> challengeRooms = challengeRoomRepoCustom.getSimpleChallengeList(searchParam);
+        List<ChallengeRoom> challengeRooms = challengeRoomRepository.getSimpleChallengeList(searchParam);
 
         for (ChallengeRoom challengeRoom : challengeRooms) {
             // 현재 참여자 수 조회
@@ -287,7 +286,7 @@ public class ChallengeServiceImpl implements ChallengeService{
         //userChallenge 값을 찾아야함
 
       UserChallenge userChallenge =  userChallengeRepository.findByChallengeRoomIdAndUserId(challengeRoomId , userId).orElseThrow(()->new ApiException(ExceptionEnum.USER_CHALLENGE_NOT_EXIST_EXCEPTION));
-        List<PhotoRecordResponseDto> challengeRecords = recordRepoCustom.getSelfPhotoRecord(userChallenge, viewType );
+        List<PhotoRecordResponseDto> challengeRecords = challengeRecordRepository.getSelfPhotoRecord(userChallenge, viewType );
         return challengeRecords;
     }
 
@@ -317,7 +316,7 @@ public class ChallengeServiceImpl implements ChallengeService{
     }
     @Override
     public List<PhotoRecordResponseDto> getTeamPhotoRecord(Long challengeRoomId, String viewType) {
-        List<PhotoRecordResponseDto> challengeRecords = recordRepoCustom.getTeamPhotoRecord(challengeRoomId, viewType );
+        List<PhotoRecordResponseDto> challengeRecords = challengeRecordRepository.getTeamPhotoRecord(challengeRoomId, viewType );
         return challengeRecords;
 
     }
