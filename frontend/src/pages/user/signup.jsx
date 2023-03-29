@@ -9,7 +9,7 @@ import { useRouter } from 'next/router';
 import style from './signup.module.scss';
 import { Button } from '../../components/Button';
 import { ReturnArrow } from '../../components/ReturnArrow';
-import { EMAIL_URL } from '../api/constants';
+import { EMAIL_URL, CONFIRM_EMAIL_URL } from '../api/constants';
 import http from '../api/http';
 
 import { InputLabel } from '@/components/InputLabel';
@@ -17,6 +17,12 @@ import { saveSignUpInfos } from '@/store/signup/signupSlice';
 
 const signup = props => {
   const [emailValidCheck, setEmailValidCheck] = useState(false);
+  const [emailCertificatedCheck, setEmailCertificatedCheck] = useState(false);
+
+  //인증 고유번호
+  const [emailAuthId, setEmailAuthId] = useState(-1);
+  const [emailAuthToken, setEmailAuthtoken] = useState('');
+
   const [nickNameDuplicateChk, setnickNameDuplicateChk] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
@@ -34,6 +40,40 @@ const signup = props => {
     return errors;
   };
 
+  const Timer = () => {
+    const [minutes, setMinutes] = useState(parseInt(4, 10));
+    const [seconds, setSeconds] = useState(parseInt(59, 10));
+    useEffect(() => {
+      const countdown = setInterval(() => {
+        if (parseInt(seconds, 10) > parseInt(0, 10)) {
+          setSeconds(parseInt(seconds, 10) - parseInt(1, 10));
+        }
+        if (parseInt(seconds, 10) === parseInt(1, 10)) {
+          if (parseInt(minutes, 10) === parseInt(0, 10)) {
+            clearInterval(countdown);
+            setEmailValidCheck(false);
+          } else {
+            setMinutes(
+              parseInt(minutes, 10) - parseInt(1, 10),
+              parseInt(seconds, 10) - parseInt(1, 10),
+            );
+            setSeconds(parseInt(59, 10));
+          }
+        }
+      }, 1000);
+      return () => clearInterval(countdown);
+    }, [minutes, seconds]);
+    return (
+      <div className="text-red-500">
+        {minutes}:{seconds < 10 ? `0${seconds}` : seconds}
+      </div>
+    );
+  };
+
+  const toggleShowPassword = () => {
+    setShowPassword(prev => !prev);
+  };
+
   const {
     handleSubmit,
     register,
@@ -49,50 +89,33 @@ const signup = props => {
     }
   }, [signUpInfos, reset]);
 
-  const onClickDuplicateCheck = () => {
-    setnickNameDuplicateChk(true);
-    // TODO: 이메일 전송 API 구현
+  // email check logic
+  const onChangeAuthToken = event => {
+    setEmailAuthtoken(event.target.value);
   };
+
   const onClickEmailValidation = () => {
     setEmailValidCheck(true);
 
-    // TODO: 이메일 전송 API 구현
-    http.post(EMAIL_URL, {
-      email: watch('email', props.email),
-    });
-  };
-  const toggleShowPassword = () => {
-    setShowPassword(prev => !prev);
+    http
+      .post(EMAIL_URL, {
+        email: watch('email'),
+      })
+      .then(data => {
+        setEmailAuthId(data.data.data);
+      });
   };
 
-  const Timer = () => {
-    const [minutes, setMinutes] = useState(parseInt(0, 10));
-    const [seconds, setSeconds] = useState(parseInt(5, 10));
-    useEffect(() => {
-      const countdown = setInterval(() => {
-        if (parseInt(seconds, 10) > parseInt(0, 10)) {
-          setSeconds(parseInt(seconds, 10) - parseInt(1, 10));
-        }
-        if (parseInt(seconds, 10) === parseInt(1, 10)) {
-          if (parseInt(minutes, 10) === parseInt(0, 10)) {
-            clearInterval(countdown);
-            setEmailValidCheck(false);
-          } else {
-            setMinutes(
-              parseInt(minutes, 10),
-              parseInt(seconds, 10) - parseInt(1, 10),
-            );
-            setSeconds(parseInt(59, 10));
-          }
-        }
-      }, 1000);
-      return () => clearInterval(countdown);
-    }, [minutes, seconds]);
-    return (
-      <div className="text-red-500">
-        {minutes}:{seconds < 10 ? `0${seconds}` : seconds}
-      </div>
-    );
+  const onClickEmailAuthTokenCheck = () => {
+    http.patch(CONFIRM_EMAIL_URL, {
+      id: emailAuthId,
+      authToken: emailAuthToken,
+    });
+  };
+
+  // nickname check logic
+  const onClickDuplicateCheck = () => {
+    setnickNameDuplicateChk(true);
   };
 
   const onSubmit = data => {
@@ -149,9 +172,14 @@ const signup = props => {
                     'w-full focus:outline-none',
                     style.emailInput,
                   )}
+                  onChange={onChangeAuthToken}
                 />
                 <Timer />
-                <button type="button" className="ml-2 whitespace-nowrap">
+                <button
+                  type="button"
+                  className="ml-2 whitespace-nowrap"
+                  onClick={onClickEmailAuthTokenCheck}
+                >
                   확인
                 </button>
               </div>
