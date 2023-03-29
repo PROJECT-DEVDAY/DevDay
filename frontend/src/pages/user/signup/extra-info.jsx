@@ -17,7 +17,7 @@ import { saveExtraInfos } from '@/store/signup/signupSlice';
 const signup = props => {
   const Router = useRouter();
   const dispatch = useDispatch();
-  const signInfos = useSelector(state => state.signUp);
+  const signUpInfos = useSelector(state => state.signUp);
 
   const [inputs, setInputs] = useState({
     baekjoon: '',
@@ -40,10 +40,10 @@ const signup = props => {
         github,
       }),
     );
-    const signInfosData = { ...signInfos, ...inputs };
+    const signUpInfosData = { ...signUpInfos, ...inputs };
 
     // api
-    http.post(JOIN_URL(signInfosData.email), signInfosData);
+    http.post(JOIN_URL(signUpInfosData.email), signUpInfosData);
 
     // Router.push('/main');
   };
