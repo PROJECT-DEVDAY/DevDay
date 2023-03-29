@@ -19,10 +19,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -161,5 +162,24 @@ public class PrizeService {
         if(payUserEntity.getPrize() < money) {
             throw new LackOfPrizeException("출금할 상금 금액이 저장된 금액보다 큽니다.");
         }
+    }
+
+    /**
+     * 챌린지가 종료된 뒤, 정산과정에서 상금이력을 등록합니다.
+     * @param challengeId
+     * @param challengeUser
+     * @param amount
+     */
+    @Transactional
+    public void settlePrize(long challengeId, PayUserEntity challengeUser, int amount) {
+        PrizeHistoryEntity newPrizeHistoryEntity = PrizeHistoryEntity.builder()
+                .prizeHistoryType(PrizeHistoryType.IN)
+                .challengeId(challengeId)
+                .user(challengeUser)
+                .amount(amount)
+                .id(String.valueOf(UUID.randomUUID()))
+                .build();
+        challengeUser.setPrize(challengeUser.getPrize() + amount);
+        prizeHistoryRepository.save(newPrizeHistoryEntity);
     }
 }
