@@ -1,6 +1,7 @@
 package com.example.payservice.controller;
 
 import com.example.payservice.dto.InternalResponse;
+import com.example.payservice.dto.request.ChallengeSettleRequest;
 import com.example.payservice.service.DepositService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,14 +21,19 @@ public class ChallengeController {
 	}
 
 	@DeleteMapping("/{challengeId}/users/{userId}")
-	public ResponseEntity<InternalResponse<Boolean>> refundChallengeByUser(@PathVariable Long challengeId, @PathVariable Long userId) {
+	public ResponseEntity<InternalResponse<Boolean>> refundChallengeByUser(
+			@PathVariable Long challengeId, @PathVariable Long userId
+	) {
 		depositService.refund(userId, challengeId);
 		return ResponseEntity.ok(new InternalResponse<Boolean>(true));
 
 	}
 
 	@PostMapping("/{challengeId}/settle")
-	public ResponseEntity<?> settleChallenge(@PathVariable String challengeId) {
-		return null;
+	public ResponseEntity<InternalResponse<Boolean>> settleChallenge(
+			@PathVariable Long challengeId, @RequestBody ChallengeSettleRequest request
+	) {
+		depositService.settleChallenge(challengeId, request.getResultList());
+		return ResponseEntity.ok(new InternalResponse<Boolean>(true));
 	}
 }
