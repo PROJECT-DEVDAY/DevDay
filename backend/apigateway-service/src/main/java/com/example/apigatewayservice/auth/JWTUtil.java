@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.Base64;
+import java.util.Objects;
 
 @Component
 public class JWTUtil {
@@ -29,7 +30,10 @@ public class JWTUtil {
 
     // 헤더에서 토큰 추출
     public String resolveToken(ServerHttpRequest request) {
-        String bearerToken = request.getHeaders().get(HttpHeaders.AUTHORIZATION).get(0);
+        // 토큰이 비어있으면 NullPointerException
+        String bearerToken = Objects.requireNonNull(request.getHeaders().get(HttpHeaders.AUTHORIZATION)).get(0);
+
+        // 토큰이 비어잇지 않고 Bearer 로 시작한다면 accessToken 추출
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }

@@ -54,11 +54,8 @@ public class User {
         this.password = password;
     }
 
-    public void updateProfileKey(String profileImgKey) {
+    public void updateProfile(String profileImgKey, String profileImgUrl) {
         this.profileImgKey = profileImgKey;
-    }
-
-    public void updateProfileImg(String profileImgUrl) {
         this.profileImgUrl = profileImgUrl;
     }
 
