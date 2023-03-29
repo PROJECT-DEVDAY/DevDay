@@ -47,3 +47,5 @@ logging:
   level:
     com.example.challengeservice.client: DEBUG
 
+# 테스트
+
