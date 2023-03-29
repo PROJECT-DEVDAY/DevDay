@@ -18,5 +18,6 @@ public interface PayUserRepository extends JpaRepository<PayUserEntity, Long> {
     @Query("select user from PayUserEntity user where user.userId = :userId")
     @QueryHints({@QueryHint(name = "javax.persistence.lock.timeout", value="5000")})
     PayUserEntity findByUserIdForUpdate(Long userId);
-	void deleteByUserId(Long userId);
+
+    void deleteByUserId(Long userId);
 }

@@ -70,7 +70,7 @@ public class UserController {
 	 */
 	@DeleteMapping("/{userId}")
 	public ResponseEntity<ResponseEntity.BodyBuilder> deleteUserInfo(@PathVariable Long userId) {
-		userService.deletePayUserInfo(userId);
+		userService.deletePayUser(userId);
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 

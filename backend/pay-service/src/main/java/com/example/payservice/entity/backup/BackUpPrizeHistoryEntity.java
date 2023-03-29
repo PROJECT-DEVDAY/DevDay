@@ -1,8 +1,10 @@
-package com.example.payservice.entity;
+package com.example.payservice.entity.backup;
 
 import com.example.payservice.dto.bank.AccountDto;
 import com.example.payservice.dto.prize.PrizeHistoryType;
 import com.example.payservice.dto.request.RewardSaveRequest;
+import com.example.payservice.entity.AccountEntity;
+import com.example.payservice.entity.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -20,9 +22,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @DynamicInsert
 @EqualsAndHashCode(callSuper=false)
-@Table(name ="prize_history")
-public class PrizeHistoryEntity extends BaseEntity implements Serializable {
-
+@Table(name ="backup_prize_history")
+public class BackUpPrizeHistoryEntity extends BaseEntity implements Serializable {
     @Id
     @Column(name = "PRIZE_HISTORY_ID", unique = true)
     private String id;
@@ -33,7 +34,7 @@ public class PrizeHistoryEntity extends BaseEntity implements Serializable {
     @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "USER_ID")
     @JsonBackReference
-    private PayUserEntity user;
+    private BackUpPayUserEntity user;
 
     @Column(name = "CHALLENGE_ID")
     private Long challengeId;
@@ -44,7 +45,7 @@ public class PrizeHistoryEntity extends BaseEntity implements Serializable {
     @Embedded
     private AccountEntity accountEntity;
 
-    public void setUser(PayUserEntity user) {
+    public void setUser(BackUpPayUserEntity user) {
         this.user = user;
         if(!user.getPrizeHistories().contains(this)) {
             user.getPrizeHistories().add(this);
@@ -61,8 +62,8 @@ public class PrizeHistoryEntity extends BaseEntity implements Serializable {
      * @param request
      * @return
      */
-    public static PrizeHistoryEntity createInTypePrizeHistory(RewardSaveRequest request) {
-        return PrizeHistoryEntity.builder()
+    public static BackUpPrizeHistoryEntity createInTypePrizeHistory(RewardSaveRequest request) {
+        return BackUpPrizeHistoryEntity.builder()
                 .id(String.valueOf(UUID.randomUUID()))
                 .challengeId(request.getChallengeId())
                 .prizeHistoryType(PrizeHistoryType.IN)
@@ -76,13 +77,12 @@ public class PrizeHistoryEntity extends BaseEntity implements Serializable {
      * @param money
      * @return
      */
-    public static PrizeHistoryEntity createOutTypePrizeHistory(AccountDto account, int money) {
-        return PrizeHistoryEntity.builder()
+    public static BackUpPrizeHistoryEntity createOutTypePrizeHistory(AccountDto account, int money) {
+        return BackUpPrizeHistoryEntity.builder()
                 .id(String.valueOf(UUID.randomUUID()))
                 .prizeHistoryType(PrizeHistoryType.OUT)
                 .amount(money)
                 .accountEntity(new ModelMapper().map(account, AccountEntity.class))
                 .build();
     }
-
 }
