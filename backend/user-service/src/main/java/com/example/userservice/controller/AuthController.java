@@ -59,7 +59,7 @@ public class AuthController {
      * @param request
      * */
     @DeleteMapping("/user")
-    public ResponseEntity<BaseResponseDto> deleteUser(HttpServletRequest request) {
+    public ResponseEntity<BaseResponseDto<?>> deleteUser(HttpServletRequest request) {
         authService.deleteUser(getUserId(request));
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new BaseResponseDto<>(204, "success"));
     }
@@ -69,7 +69,7 @@ public class AuthController {
      * @param request
      * */
     @PatchMapping("/user/defaultimg")
-    public ResponseEntity<BaseResponseDto> updateProfileDefaultImg(HttpServletRequest request) {
+    public ResponseEntity<BaseResponseDto<?>> updateProfileDefaultImg(HttpServletRequest request) {
         authService.updateProfileDefaultImg(getUserId(request));
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseDto<>(200, "success"));
     }
@@ -80,7 +80,7 @@ public class AuthController {
      * @param profileImg
      * */
     @PatchMapping("/user/img")
-    public ResponseEntity<BaseResponseDto> updateProfileImg(HttpServletRequest request, @RequestPart MultipartFile profileImg) {
+    public ResponseEntity<BaseResponseDto<?>> updateProfileImg(HttpServletRequest request, @RequestPart MultipartFile profileImg) {
         authService.updateProfileImg(getUserId(request), profileImg);
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseDto<>(200, "success"));
     }
@@ -91,7 +91,7 @@ public class AuthController {
      * @param requestDto
      * */
     @PatchMapping("/user/password")
-    public ResponseEntity<BaseResponseDto> updatePassword(HttpServletRequest request, @RequestBody PasswordRequestDto requestDto) {
+    public ResponseEntity<BaseResponseDto<?>> updatePassword(HttpServletRequest request, @RequestBody PasswordRequestDto requestDto) {
         authService.updatePassword(getUserId(request), requestDto);
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseDto<>(200, "success"));
     }
@@ -102,7 +102,7 @@ public class AuthController {
      * @param requestDto
      * */
     @PatchMapping("/user/nickname")
-    public ResponseEntity<BaseResponseDto> updateNickname(HttpServletRequest request, @RequestBody NicknameRequestDto requestDto) {
+    public ResponseEntity<BaseResponseDto<?>> updateNickname(HttpServletRequest request, @RequestBody NicknameRequestDto requestDto) {
         authService.updateNickname(getUserId(request), requestDto);
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseDto<>(200, "success"));
     }
@@ -113,9 +113,9 @@ public class AuthController {
      * @param requestDto
      * */
     @PatchMapping("/user/githubandbaekjoon")
-    public ResponseEntity<BaseResponseDto> updateGithubAndBaekjoon(HttpServletRequest request, @RequestBody GithubBaekjoonRequestDto requestDto) {
+    public ResponseEntity<BaseResponseDto<?>> updateGithubAndBaekjoon(HttpServletRequest request, @RequestBody GithubBaekjoonRequestDto requestDto) {
         authService.updateGithubAndBaekjoon(getUserId(request), requestDto);
-        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseDto(200, "success"));
+        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseDto<>(200, "success"));
     }
 
     private Long getUserId(HttpServletRequest request) {

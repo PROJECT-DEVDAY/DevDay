@@ -37,7 +37,7 @@ public class ChallengeController {
      * @param requestDto
      * */
     @PostMapping("/user/baekjoon/{userId}")
-    public ResponseEntity<BaseResponseDto> createProblem(@PathVariable Long userId,
+    public ResponseEntity<BaseResponseDto<?>> createProblem(@PathVariable Long userId,
                                                          @RequestBody ProblemRequestDto requestDto) {
         challengeService.createProblem(userId, requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(new BaseResponseDto<>(201, "success"));
