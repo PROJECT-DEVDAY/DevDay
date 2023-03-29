@@ -16,23 +16,23 @@ spring:
     name: apigateway-service
   cloud:
     gateway:
-#      default-filters:
-#        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
-#      globalcors:
-#        corsConfigurations:
-#          '[/**]':
-#            allowedOrigins:
-#              - "http://j8c209.p.ssafy.io/"
-#              - "http://localhost:3000/"
-#            allow-credentials: true
-#            allowedHeaders: '*'
-#            exposedHeaders: '*'
-#            allowedMethods:
-#              - POST
-#              - GET
-#              - PUT
-#              - OPTIONS
-#              - DELETE
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins:
+              - "http://j8c209.p.ssafy.io/"
+              - "http://localhost:3000/"
+            allow-credentials: true
+            allowedHeaders: '*'
+            exposedHeaders: '*'
+            allowedMethods:
+              - POST
+              - GET
+              - PUT
+              - OPTIONS
+              - DELETE
       routes:
         - id: user-service
           uri: lb://USER-SERVICE

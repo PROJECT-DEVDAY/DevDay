@@ -1,6 +1,5 @@
 package com.example.apigatewayservice.filter;
 
-import com.example.apigatewayservice.auth.JWTUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
