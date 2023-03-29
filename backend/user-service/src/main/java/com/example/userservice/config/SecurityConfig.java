@@ -17,7 +17,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-//    private final Environment env;
+   private final Environment env;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
