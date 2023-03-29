@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface SolvedacRepository extends JpaRepository<Solvedac, ProblemId>, SolvedacRepositoryCustom {
     List<Solvedac> findAllByUserId(Long userId);
+
+    void deleteAllByUserId(Long userId);
 }

@@ -9,9 +9,11 @@ import com.example.userservice.dto.response.ChallengeResponseDto;
 import com.example.userservice.dto.response.MoneyResponseDto;
 import com.example.userservice.dto.response.MypageResponseDto;
 import com.example.userservice.dto.response.ProfileResponseDto;
+import com.example.userservice.entity.Solvedac;
 import com.example.userservice.entity.User;
 import com.example.userservice.exception.ApiException;
 import com.example.userservice.exception.ExceptionEnum;
+import com.example.userservice.repository.SolvedacRepository;
 import com.example.userservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -36,6 +39,8 @@ public class AuthServiceImpl implements AuthService {
     private final ChallengeServiceClient challengeServiceClient;
 
     private final CommonService commonService;
+
+    private final SolvedacRepository solvedacRepository;
 
     @Override
     @Transactional
@@ -116,6 +121,8 @@ public class AuthServiceImpl implements AuthService {
 
         User user = getUser(userId);
         user.updateEmail(requestDto.getGithub(), requestDto.getBaekjoon());
+
+        solvedacRepository.deleteAllByUserId(user.getId());
         commonService.saveProblemList(user);
     }
 
