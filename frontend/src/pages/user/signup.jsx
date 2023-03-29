@@ -9,13 +9,11 @@ import { useRouter } from 'next/router';
 import style from './signup.module.scss';
 import { Button } from '../../components/Button';
 import { ReturnArrow } from '../../components/ReturnArrow';
+import { EMAIL_URL } from '../api/constants';
+import http from '../api/http';
 
 import { InputLabel } from '@/components/InputLabel';
 import { saveSignUpInfos } from '@/store/signup/signupSlice';
-
-import { EMAIL_URL } from '../api/constants';
-
-import http from '../api/http';
 
 const signup = props => {
   const [emailValidCheck, setEmailValidCheck] = useState(false);
@@ -24,6 +22,22 @@ const signup = props => {
 
   const router = useRouter();
   const dispatch = useDispatch();
+
+  const validate = values => {
+    const errors = {};
+
+    if (values.password !== values.passwordCheck) {
+      errors.passwordCheck = '비밀번호가 일치하지 않습니다.';
+    }
+
+    return errors;
+  };
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+    watch,
+  } = useForm({ validate, mode: 'onBlur' });
 
   const onClickDuplicateCheck = () => {
     setnickNameDuplicateChk(true);
@@ -70,22 +84,6 @@ const signup = props => {
       </div>
     );
   };
-
-  const validate = values => {
-    const errors = {};
-
-    if (values.password !== values.passwordCheck) {
-      errors.passwordCheck = '비밀번호가 일치하지 않습니다.';
-    }
-
-    return errors;
-  };
-  const {
-    handleSubmit,
-    register,
-    formState: { errors },
-    watch,
-  } = useForm({ validate, mode: 'onBlur' });
 
   const onSubmit = data => {
     dispatch(saveSignUpInfos(data));
