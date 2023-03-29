@@ -10,9 +10,9 @@ import style from './extra-info.module.scss';
 import { Button } from '../../../components/Button';
 import { ReturnArrow } from '../../../components/ReturnArrow';
 
-import { saveExtraInfos } from '@/store/signup/signupSlice';
-import http from '@/pages/api/http';
 import { JOIN_URL } from '@/pages/api/constants';
+import http from '@/pages/api/http';
+import { saveExtraInfos } from '@/store/signup/signupSlice';
 
 const signup = props => {
   const Router = useRouter();
