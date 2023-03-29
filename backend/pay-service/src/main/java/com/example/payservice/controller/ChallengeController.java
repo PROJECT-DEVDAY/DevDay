@@ -4,6 +4,7 @@ import com.example.payservice.dto.InternalResponse;
 import com.example.payservice.dto.request.ChallengeSettleRequest;
 import com.example.payservice.service.DepositService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,10 +31,10 @@ public class ChallengeController {
 	}
 
 	@PostMapping("/{challengeId}/settle")
-	public ResponseEntity<InternalResponse<Boolean>> settleChallenge(
+	public ResponseEntity<ResponseEntity.BodyBuilder> settleChallenge(
 			@PathVariable Long challengeId, @RequestBody ChallengeSettleRequest request
 	) {
 		depositService.settleChallenge(challengeId, request.getResultList());
-		return ResponseEntity.ok(new InternalResponse<Boolean>(true));
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 }
