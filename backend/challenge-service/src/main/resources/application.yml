@@ -33,6 +33,7 @@ spring:
       hibernate:
         format_sql: true
 
+
 eureka:
   instance:
     prefer-ip-address: true
@@ -41,7 +42,11 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      defaultZone: http://172.18.0.5:8761/eureka
+      defaultZone: http://127.0.0.1:8761/eureka
+gateway:
+  ip: 172.18.0.8
+
+
 
 logging:
   level:
