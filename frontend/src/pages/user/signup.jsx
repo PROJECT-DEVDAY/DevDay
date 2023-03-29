@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import classNames from 'classnames';
 import { useRouter } from 'next/router';
+import Swal from 'sweetalert2';
 
 import style from './signup.module.scss';
 import { Button } from '../../components/Button';
@@ -15,7 +16,6 @@ import http from '../api/http';
 import { InputLabel } from '@/components/InputLabel';
 import { saveSignUpInfos } from '@/store/signup/signupSlice';
 
-import Swal from 'sweetalert2';
 const signup = props => {
   const [emailValidCheck, setEmailValidCheck] = useState(false);
   const [emailCertificatedCheck, setEmailCertificatedCheck] = useState(false);
@@ -128,7 +128,6 @@ const signup = props => {
   // nickname check logic
   const onClickDuplicateCheck = () => {
     setNickNameValidCheck(true);
-    console.log(watch('nickname'));
 
     http
       .post(NICKNAME_URL, { nickname: watch('nickname') })

@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import Swal from 'sweetalert2';
 
 import style from './extra-info.module.scss';
 import { Button } from '../../../components/Button';
@@ -13,7 +14,6 @@ import { ReturnArrow } from '../../../components/ReturnArrow';
 import { JOIN_URL } from '@/pages/api/constants';
 import http from '@/pages/api/http';
 import { saveExtraInfos } from '@/store/signup/signupSlice';
-import Swal from 'sweetalert2';
 
 const signup = props => {
   const Router = useRouter();
@@ -47,8 +47,8 @@ const signup = props => {
     http
       .post(JOIN_URL(signUpInfosData.email), signUpInfosData)
       .then
-      //리셋 시켜주고 , 로그인 창으로 이동시키기
-      //건너뛰기 누르면 경고창 한번 나오고 예 누르면 가입시켜주고 넘어가기
+      // 리셋 시켜주고 , 로그인 창으로 이동시키기
+      // 건너뛰기 누르면 경고창 한번 나오고 예 누르면 가입시켜주고 넘어가기
       ();
 
     // Router.push('/main');
@@ -65,7 +65,7 @@ const signup = props => {
       cancelButtonText: '아니요',
     }).then(result => {
       if (result.isConfirmed) {
-        //회원가입 로직 실행
+        // 회원가입 로직 실행
       }
     });
   };
