@@ -26,7 +26,6 @@ public class CommonService {
     public void saveProblemList(User user) {
         ProblemResponseDto responseDto = challengeServiceClient.solvedProblemList(user.getBaekjoon()).getData();
 
-        System.out.println(responseDto.getCount());
         String yesterday = LocalDate.now().minusDays(1).toString();
 
         List<Solvedac> solvedacList = responseDto.getSolvedList()
