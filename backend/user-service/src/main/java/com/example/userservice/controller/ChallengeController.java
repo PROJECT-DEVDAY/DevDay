@@ -38,14 +38,14 @@ public class ChallengeController {
      * */
     @PostMapping("/user/baekjoon/{userId}")
     public ResponseEntity<BaseResponseDto<?>> createProblem(@PathVariable Long userId,
-                                                         @RequestBody ProblemRequestDto requestDto) {
+                                                            @RequestBody ProblemRequestDto requestDto) {
         challengeService.createProblem(userId, requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(new BaseResponseDto<>(201, "success"));
     }
 
     @GetMapping("/user/baekjoon/date/{userId}")
     public ResponseEntity<BaseResponseDto<List<DateProblemResponseDto>>> getDateBaekjoonList(@PathVariable Long userId,
-                                                                                         @RequestBody DateProblemRequestDto requestDto) {
+                                                                                             @RequestBody DateProblemRequestDto requestDto) {
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new BaseResponseDto<>(

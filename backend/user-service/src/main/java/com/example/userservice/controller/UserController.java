@@ -25,7 +25,8 @@ public class UserController {
      * @param requestDto
      * */
     @PostMapping("/join/{emailAuthId}")
-    public ResponseEntity<BaseResponseDto<?>> join(@PathVariable Long emailAuthId, @RequestBody SignUpRequestDto requestDto) {
+    public ResponseEntity<BaseResponseDto<?>> join(@PathVariable Long emailAuthId,
+                                                   @RequestBody SignUpRequestDto requestDto) {
         userService.join(emailAuthId, requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(new BaseResponseDto<>(201, "success"));
     }

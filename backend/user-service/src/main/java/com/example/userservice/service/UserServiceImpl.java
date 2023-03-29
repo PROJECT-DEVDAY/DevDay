@@ -9,7 +9,6 @@ import com.example.userservice.entity.User;
 import com.example.userservice.exception.ApiException;
 import com.example.userservice.exception.ExceptionEnum;
 import com.example.userservice.repository.EmailAuthRepository;
-import com.example.userservice.repository.SolvedacRepository;
 import com.example.userservice.repository.UserRepository;
 import com.example.userservice.security.JWTUtil;
 import lombok.RequiredArgsConstructor;
@@ -56,7 +55,9 @@ public class UserServiceImpl implements UserService{
         User user = User.from(requestDto);
         User saveUser = userRepository.save(user);
 
-        if (saveUser.getBaekjoon() != null) commonService.saveProblemList(saveUser);
+        System.out.println(saveUser.getBaekjoon().isEmpty());
+
+        if (!saveUser.getBaekjoon().isEmpty()) commonService.saveProblemList(saveUser);
 
         // 이메일 인증 기록 삭제
         List<EmailAuth> emailAuthList = emailAuthRepository.findAllByEmail(saveUser.getEmail());

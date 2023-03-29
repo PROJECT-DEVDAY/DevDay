@@ -25,9 +25,12 @@ public class CommonService {
     @Transactional
     public void saveProblemList(User user) {
         ProblemResponseDto responseDto = challengeServiceClient.solvedProblemList(user.getBaekjoon()).getData();
+
+        String yesterday = LocalDate.now().minusDays(1).toString();
+
         List<Solvedac> solvedacList = responseDto.getSolvedList()
                 .stream()
-                .map((p) -> new Solvedac(p, user, LocalDate.now().minusDays(1).toString()))
+                .map((p) -> new Solvedac(p, user, yesterday))
                 .collect(toList());
 
         batchInsertRepository.solvedacSaveAll(solvedacList);
