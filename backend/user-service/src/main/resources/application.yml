@@ -36,7 +36,7 @@ spring:
     database: mysql   # 추가 해준 부분
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect # 추가 해준 부분
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     show-sql: true
     generate-ddl: true
     properties:
@@ -67,8 +67,8 @@ logging:
 
 batchSize: 500
 
-gateway:
- ip: 172.18.0.*
+#gateway:
+# ip: 172.18.0.*
 
 token:
   secret: dyAeHubOOc8KaOfYB6XEQoEj1QzRlVgtjNL8PYs1A1tymZvvqkcEU7L1imkKHeDa
