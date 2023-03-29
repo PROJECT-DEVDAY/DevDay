@@ -1,6 +1,4 @@
 package com.example.challengeservice;
-
-// import com.example.challengeservice.error.FeignErrorDecoder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import feign.Logger;
 import org.springframework.boot.SpringApplication;
@@ -11,7 +9,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 import javax.persistence.EntityManager;
-
 @SpringBootApplication
 @EnableDiscoveryClient
 @EnableFeignClients
@@ -22,7 +19,7 @@ public class ChallengeServiceApplication {
         SpringApplication.run(ChallengeServiceApplication.class, args);
     }
     
-    // Feign 예외 1번 방법
+    /* Feign 예외 1번 방법 */
     @Bean
     public Logger.Level feignLoggerLevel(){
         return Logger.Level.FULL;
