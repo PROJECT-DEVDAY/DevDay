@@ -8,7 +8,6 @@ import javax.persistence.*;
 
 @Entity
 @Getter
-@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -33,5 +32,11 @@ public class ReportRecord {
     @Column(nullable = false)
     private String reportDate;
 
-
+    public static ReportRecord from (Long userId , ChallengeRecord challengeRecord , String reportDate){
+        return ReportRecord.builder().
+                userId(userId)
+                .challengeRecord(challengeRecord)
+                .reportDate(reportDate)
+                .build();
+    }
 }
