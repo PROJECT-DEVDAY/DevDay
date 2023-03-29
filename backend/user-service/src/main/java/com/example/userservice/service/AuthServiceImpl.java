@@ -59,8 +59,7 @@ public class AuthServiceImpl implements AuthService {
 
         deleteS3Img(user);
 
-        user.updateProfileKey(null);
-        user.updateProfileImg(null);
+        user.updateProfile(null, null);
     }
 
     @Override
@@ -72,8 +71,19 @@ public class AuthServiceImpl implements AuthService {
 
         String fileName = saveS3Img(profileImg);
         String fileUrl = amazonS3Service.getFileUrl(fileName);
-        user.updateProfileKey(fileName);
-        user.updateProfileImg(fileUrl);
+        user.updateProfile(fileName, fileUrl);
+    }
+
+    private void deleteS3Img(User user) {
+        if (user.getProfileImgKey() != null) amazonS3Service.delete(user.getProfileImgKey());
+    }
+
+    private String saveS3Img(MultipartFile profileImg) {
+        try {
+            return amazonS3Service.upload(profileImg, "UserProfile");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -86,7 +96,6 @@ public class AuthServiceImpl implements AuthService {
         }
 
         user.updateNickname(requestDto.getNickname());
-        commonService.saveProblemList(user);
     }
 
     @Override
@@ -104,9 +113,10 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional
     public void updateGithubAndBaekjoon(Long userId, GithubBaekjoonRequestDto requestDto) {
+
         User user = getUser(userId);
         user.updateEmail(requestDto.getGithub(), requestDto.getBaekjoon());
-
+        commonService.saveProblemList(user);
     }
 
     @Override
@@ -123,18 +133,6 @@ public class AuthServiceImpl implements AuthService {
         ChallengeResponseDto challengeResponseDto = challengeServiceClient.getChallengeInfo(userId).getData();
         MoneyResponseDto moneyResponseDto = payServiceClient.getMoneyInfo(userId).getData();
         return MypageResponseDto.of(user, challengeResponseDto, moneyResponseDto);
-    }
-
-    private String saveS3Img(MultipartFile profileImg) {
-        try {
-            return amazonS3Service.upload(profileImg, "UserProfile");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private void deleteS3Img(User user) {
-        if (user.getProfileImgKey() != null) amazonS3Service.delete(user.getProfileImgKey());
     }
 
     private User getUser(Long userId) {
