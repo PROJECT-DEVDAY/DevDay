@@ -222,6 +222,14 @@ public class PaymentService {
                 ).bodyToMono(Header.class).block();
         return true;
     }
+
+    /**
+     * 유저가 tosspayments로 결제한 이력에서 money만큼 카드취소를 수행하는 로직입니다.
+     * TODO: 비동기 동시실행으로 변경해야 합니다.
+     * @param user
+     * @param money
+     * @return
+     */
     @Transactional
     public boolean withdraw(PayUserEntity user, int money) {
         List<DepositTransactionEntity> fundableList = getRefundableTransactionList(user);
@@ -231,7 +239,7 @@ public class PaymentService {
         }
 
         Iterator<String> withdrawalTransactionIter = withdrawTransactionMap.keySet().iterator();
-        // TODO: 비동기 동시실행으로 변경할 것!
+
         while(withdrawalTransactionIter.hasNext()) {
             try {
                 DepositWithdrawTransaction tx = withdrawTransactionMap.get(withdrawalTransactionIter.next());
