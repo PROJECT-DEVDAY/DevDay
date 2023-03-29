@@ -45,9 +45,11 @@ public class ChallengeServiceImpl implements ChallengeService{
     public void createProblem(Long userId, ProblemRequestDto requestDto) {
         User user = getUser(userId);
 
+        String today = LocalDate.now().toString();
+
         List<Solvedac> solvedacList = requestDto.getProblemList()
                 .stream()
-                .map((p) -> new Solvedac(p, user, LocalDate.now().toString()))
+                .map((p) -> new Solvedac(p, user, today))
                 .collect(toList());
 
         solvedacRepository.saveAll(solvedacList);
