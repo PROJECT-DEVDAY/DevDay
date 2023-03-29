@@ -2,12 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { Provider } from 'react-redux';
 
 import Router from 'next/router';
+import { persistStore } from 'redux-persist';
+import { PersistGate } from 'redux-persist/integration/react';
 
 import Spinner from '@/components/Spinner';
 import store from '@/store/store';
 
 import '@/styles/globals.css';
 import '../styles/fonts/style.css';
+
+export const persistor = persistStore(store);
 
 function App({ Component, pageProps }) {
   const [loading, setLoading] = useState(false);
@@ -35,7 +39,9 @@ function App({ Component, pageProps }) {
       </span>
       {!loading && (
         <Provider store={store}>
-          <Component {...pageProps} />
+          <PersistGate persistor={persistor}>
+            <Component {...pageProps} />
+          </PersistGate>
         </Provider>
       )}
     </>

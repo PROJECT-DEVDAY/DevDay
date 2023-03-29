@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { CiMail } from 'react-icons/ci';
+import { useDispatch, useSelector } from 'react-redux';
 
 import classNames from 'classnames';
 import Image from 'next/image';
@@ -8,33 +10,77 @@ import style from './extra-info.module.scss';
 import { Button } from '../../../components/Button';
 import { ReturnArrow } from '../../../components/ReturnArrow';
 
-import { InputBox } from '@/components/InputBox';
+import { saveExtraInfos } from '@/store/signup/signupSlice';
+import http from '@/pages/api/http';
+import { JOIN_URL } from '@/pages/api/constants';
 
 const signup = props => {
   const Router = useRouter();
-  const join = () => {
-    // api
-    Router.push('/main');
+  const dispatch = useDispatch();
+  const signInfos = useSelector(state => state.signUp);
+
+  const [inputs, setInputs] = useState({
+    baekjoon: '',
+    github: '',
+  });
+  const { baekjoon, github } = inputs;
+
+  const onChangeId = e => {
+    const { value, name } = e.target;
+    setInputs({
+      ...inputs,
+      [name]: value,
+    });
   };
-  const pass = () => {
+
+  const onClickJoin = () => {
+    dispatch(
+      saveExtraInfos({
+        baekjoon,
+        github,
+      }),
+    );
+    const signInfosData = { ...signInfos, ...inputs };
+
+    // api
+    http.post(JOIN_URL(signInfosData.email), signInfosData);
+
+    // Router.push('/main');
+  };
+  const onClickPass = () => {
     // api
     Router.push('/main');
   };
   return (
     <div className={style.signup}>
       <div className={classNames(`style.div-header`, `sticky top-0`)}>
-        <ReturnArrow title="회원가입" urlname="/user/signup" />
+        <ReturnArrow title="회원가입" />
       </div>
       <div className="div-body p-6 pb-32">
         <div className="mb-16">
           <Image
             src={require('@/image/solved_ac.png')}
             alt="solved_ac"
-            width={195}
+            width={240}
             height={39}
-            className="mb-4"
+            className="mb-4 ml-2"
           />
-          <InputBox placeholder="SOLVED.AC 아이디" />
+
+          <div
+            className={classNames(
+              `flex p-2 h-14 mt-6 w-full rounded-xl`,
+              style.box,
+            )}
+          >
+            <CiMail className={style.icon} />
+            <input
+              className={classNames(`rounded-none w-full pl-2`, style.inputbox)}
+              name="baekjoon"
+              type="text"
+              placeholder="solveAc 아이디"
+              onChange={onChangeId}
+            />
+          </div>
           <p className={classNames(style.info, 'w-full mt-4')}>
             알고리즘 챌린지를 이용하기 위해 필요합니다.
             <br /> 해당 정보가 입력되지 않는다면 해당 서비스 이용이 제한됩니다.
@@ -47,7 +93,21 @@ const signup = props => {
             width={195}
             height={39}
           />
-          <InputBox placeholder="GitHub 아이디" />
+          <div
+            className={classNames(
+              `flex p-2 h-14 mt-6 w-full rounded-xl`,
+              style.box,
+            )}
+          >
+            <CiMail className={style.icon} />
+            <input
+              name="github"
+              className={classNames(`rounded-none w-full pl-2`, style.inputbox)}
+              type="text"
+              placeholder="gitHub 아이디"
+              onChange={onChangeId}
+            />
+          </div>
           <p className={classNames(style.info, 'w-full mt-4')}>
             Commit 챌린지를 이용하기 위해 필요합니다.
             <br /> 해당 정보가 입력되지 않는다면 해당 서비스 이용이 제한됩니다.
@@ -65,11 +125,16 @@ const signup = props => {
               color="primary"
               fill={false}
               label="건너뛰기"
-              onClick={pass}
+              onClick={onClickPass}
             />
           </div>
           <div className="w-1/2 p-2">
-            <Button color="primary" fill label="가입하기" onClick={join} />
+            <Button
+              color="primary"
+              fill
+              label="가입하기"
+              onClick={onClickJoin}
+            />
           </div>
         </div>
         <div className="mt-2"> 회원 가입</div>
