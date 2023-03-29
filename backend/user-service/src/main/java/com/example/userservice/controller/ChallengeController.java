@@ -1,7 +1,6 @@
 package com.example.userservice.controller;
 
 import com.example.userservice.dto.BaseResponseDto;
-import com.example.userservice.dto.request.DateProblemRequestDto;
 import com.example.userservice.dto.request.ProblemRequestDto;
 import com.example.userservice.dto.response.BaekjoonListResponseDto;
 import com.example.userservice.dto.response.DateProblemResponseDto;
@@ -43,16 +42,19 @@ public class ChallengeController {
         return ResponseEntity.status(HttpStatus.CREATED).body(new BaseResponseDto<>(201, "success"));
     }
 
+    /**
+     * 챌린지 마이크로 서비스에서 FeignClient 로 특정 날짜 사이에 푼 문제 리스트를 조회하기 위한 API 입니다.
+     * @param userId
+     * @param startDate
+     * @param endDate
+     * @return
+     * */
     @GetMapping("/user/baekjoon/date/{userId}")
     public ResponseEntity<BaseResponseDto<List<DateProblemResponseDto>>> getDateBaekjoonList(@PathVariable Long userId,
-                                                                                             @RequestBody DateProblemRequestDto requestDto) {
+                                                                                             @RequestParam("startDate") String startDate,
+                                                                                             @RequestParam("endDate") String endDate) {
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new BaseResponseDto<>(
-                        200,
-                        "success",
-                        challengeService.getDateBaekjoonList(userId, requestDto)
-                        )
-                );
+                .body(new BaseResponseDto<>(200, "success", challengeService.getDateBaekjoonList(userId, startDate, endDate)));
     }
 }
