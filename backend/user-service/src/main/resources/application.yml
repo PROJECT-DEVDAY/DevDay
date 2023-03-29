@@ -84,6 +84,3 @@ cloud:
       secret-key: FClhlCe4tjhivSdZtMd0s5KnBskUoISoF3DBYYnZ
     stack:
       auto: false
-
-#test
-
