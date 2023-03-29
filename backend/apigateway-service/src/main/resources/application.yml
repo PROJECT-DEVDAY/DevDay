@@ -19,20 +19,19 @@ spring:
       default-filters:
         - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
       globalcors:
-        corsConfigurations:
+        cors-configurations:
           '[/**]':
             allowedOrigins:
-              - "http://j8c209.p.ssafy.io/"
-              - "http://localhost:3000/"
+              - 'http://localhost:3000/'
+              - 'http://j8c209.p.ssafy.io/'
             allow-credentials: true
             allowedHeaders: '*'
-            exposedHeaders: '*'
             allowedMethods:
-              - POST
-              - GET
               - PUT
-              - OPTIONS
+              - GET
+              - POST
               - DELETE
+              - OPTIONS
       routes:
         - id: user-service
           uri: lb://USER-SERVICE

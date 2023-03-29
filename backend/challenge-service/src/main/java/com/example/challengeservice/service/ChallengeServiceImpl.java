@@ -27,6 +27,7 @@ import org.modelmapper.TypeToken;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import feign.FeignException;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -194,7 +195,6 @@ public class ChallengeServiceImpl implements ChallengeService{
      * **/
     public void updateUserBaekjoon(Long userId){
         /* Feign Exception Handling */
-        /*
         List<String> diffSolvedList=new ArrayList<>();
         try {
             SingleResult<BaekjoonListResponseDto> baekjoonListResponseDto = userServiceClient.getUserBaekjoonList(userId);
@@ -209,19 +209,20 @@ public class ChallengeServiceImpl implements ChallengeService{
             }
         } catch(FeignException ex){
             log.error(ex.getMessage());
+        } catch(Exception e){
+            e.printStackTrace();
         }
-         */
-        List<String> diffSolvedList=new ArrayList<>();
-        SingleResult<BaekjoonListResponseDto> baekjoonListResponseDto = userServiceClient.getUserBaekjoonList(userId);
-        String baekjoonId = baekjoonListResponseDto.getData().getBaekjoonId();
-        Map<String, String> problemList = baekjoonListResponseDto.getData().getProblemList();
-        List<String> newSolvedList=solvedProblemList(baekjoonId).getSolvedList();
-        for(String s:newSolvedList){
-            if(problemList.get(s)==null){
-//                problemList.put(s, commonService.getDate());
-                diffSolvedList.add(s);
-            }
-        }
+//        List<String> diffSolvedList=new ArrayList<>();
+//        SingleResult<BaekjoonListResponseDto> baekjoonListResponseDto = userServiceClient.getUserBaekjoonList(userId);
+//        String baekjoonId = baekjoonListResponseDto.getData().getBaekjoonId();
+//        Map<String, String> problemList = baekjoonListResponseDto.getData().getProblemList();
+//        List<String> newSolvedList=solvedProblemList(baekjoonId).getSolvedList();
+//        for(String s:newSolvedList){
+//            if(problemList.get(s)==null){
+////                problemList.put(s, commonService.getDate());
+//                diffSolvedList.add(s);
+//            }
+//        }
         if(diffSolvedList.size()>0)
             userServiceClient.createProblem(userId, ProblemRequestDto.from(diffSolvedList));
         return;

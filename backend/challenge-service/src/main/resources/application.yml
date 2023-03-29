@@ -16,7 +16,7 @@ spring:
   application:
     name: challenge-service
   datasource:
-      url: jdbc:mysql://j8c209.p.ssafy.io:3307/devday?useSSL=false&serverTimezone=UTC
+      url: jdbc:mysql://172.18.0.1:3307/devday?useSSL=false&serverTimezone=UTC
       # url: jdbc:mysql://localhost:3307/devday?useSSL=false&serverTimezone=UTC
       username: root
       password: devday1234
@@ -33,6 +33,7 @@ spring:
       hibernate:
         format_sql: true
 
+
 eureka:
   instance:
     prefer-ip-address: true
@@ -42,8 +43,14 @@ eureka:
     fetch-registry: true
     service-url:
       defaultZone: http://127.0.0.1:8761/eureka
+gateway:
+  ip: 172.18.0.8
+
+
 
 logging:
   level:
     com.example.challengeservice.client: DEBUG
+
+
 

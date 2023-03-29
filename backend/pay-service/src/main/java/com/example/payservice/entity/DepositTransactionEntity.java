@@ -19,7 +19,7 @@ public class DepositTransactionEntity extends BaseEntity {
 	@Column(name = "transaction_id")
 	private String id;
 
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
 	private PayUserEntity user;
 
 	private int amount;

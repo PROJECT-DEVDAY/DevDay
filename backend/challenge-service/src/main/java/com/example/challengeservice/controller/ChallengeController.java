@@ -83,8 +83,8 @@ public class ChallengeController {
      * Todo : userId로 baekjoonId 가져오는걸로 바꾸기
      */
     @GetMapping("/baekjoon/{baekjoonId}")
-    public ResponseEntity<SolvedListResponseDto> solvedProblemList(@PathVariable("baekjoonId") String baekjoonId){
-        return ResponseEntity.status(HttpStatus.OK).body(challengeService.solvedProblemList(baekjoonId));
+    public SingleResult<SolvedListResponseDto> solvedProblemList(@PathVariable("baekjoonId") String baekjoonId){
+        return responseService.getSingleResult(challengeService.solvedProblemList(baekjoonId));
     }
 
     /**
