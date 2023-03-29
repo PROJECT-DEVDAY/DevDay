@@ -9,12 +9,13 @@ import { useRouter } from 'next/router';
 import style from './signup.module.scss';
 import { Button } from '../../components/Button';
 import { ReturnArrow } from '../../components/ReturnArrow';
-import { EMAIL_URL, CONFIRM_EMAIL_URL } from '../api/constants';
+import { EMAIL_URL, CONFIRM_EMAIL_URL, NICKNAME_URL } from '../api/constants';
 import http from '../api/http';
 
 import { InputLabel } from '@/components/InputLabel';
 import { saveSignUpInfos } from '@/store/signup/signupSlice';
 
+import Swal from 'sweetalert2';
 const signup = props => {
   const [emailValidCheck, setEmailValidCheck] = useState(false);
   const [emailCertificatedCheck, setEmailCertificatedCheck] = useState(false);
@@ -23,7 +24,8 @@ const signup = props => {
   const [emailAuthId, setEmailAuthId] = useState(-1);
   const [emailAuthToken, setEmailAuthtoken] = useState('');
 
-  const [nickNameDuplicateChk, setnickNameDuplicateChk] = useState(false);
+  const [nickNameValidCheck, setNickNameValidCheck] = useState(false);
+  const [nickNameDuplicateChk, setNickNameDuplicateChk] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
   const router = useRouter();
@@ -107,20 +109,44 @@ const signup = props => {
   };
 
   const onClickEmailAuthTokenCheck = () => {
-    http.PATCH(CONFIRM_EMAIL_URL, {
-      id: emailAuthId,
-      authToken: emailAuthToken,
-    });
+    http
+      .patch(CONFIRM_EMAIL_URL, {
+        id: emailAuthId,
+        authToken: emailAuthToken,
+      })
+      .then(setEmailCertificatedCheck(true))
+      .catch(error => {
+        Swal.fire({
+          icon: 'error',
+          title: '인증 실패',
+          text: error.response.data.message,
+        });
+        setEmailCertificatedCheck(false);
+      });
   };
 
   // nickname check logic
   const onClickDuplicateCheck = () => {
-    setnickNameDuplicateChk(true);
+    setNickNameValidCheck(true);
+    console.log(watch('nickname'));
+
+    http
+      .post(NICKNAME_URL, { nickname: watch('nickname') })
+      .then(setNickNameDuplicateChk(true));
+    // .catch(setNickNameDuplicateChk(false));
   };
 
   const onSubmit = data => {
-    dispatch(saveSignUpInfos(data));
-    router.push('./signup/extra-info');
+    if (emailCertificatedCheck && nickNameDuplicateChk) {
+      dispatch(saveSignUpInfos(data));
+      router.push('./signup/extra-info');
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: '잠시만요!',
+        text: '이메일 인증, 닉네임 중복체크를 해주세요',
+      });
+    }
   };
 
   return (
@@ -174,7 +200,6 @@ const signup = props => {
                   )}
                   onChange={onChangeAuthToken}
                 />
-                <Timer />
                 <button
                   type="button"
                   className="ml-2 whitespace-nowrap"
@@ -324,23 +349,27 @@ const signup = props => {
                 errors.nickname &&
                 errors.nickname.type === 'pattern'
               ) &&
-              nickNameDuplicateChk && (
+              nickNameValidCheck &&
+              (nickNameDuplicateChk ? (
                 <div
                   className={classNames(
                     `flex p-2 rounded-lg`,
-                    style.nickNameCheck,
+                    style.nickNamePass,
                   )}
                 >
-                  <div
-                    className={classNames(
-                      'w-11/12 focus:outline-none',
-                      style.emailInput,
-                    )}
-                  >
-                    중복된 닉네임입니다. check
-                  </div>
+                  {' '}
+                  정상{' '}
                 </div>
-              )}
+              ) : (
+                <div
+                  className={classNames(
+                    `flex p-2 rounded-lg`,
+                    style.nickNameFail,
+                  )}
+                >
+                  중복{' '}
+                </div>
+              ))}
           </div>
         </div>
         <div
