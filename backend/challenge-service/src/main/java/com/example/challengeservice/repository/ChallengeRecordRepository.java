@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ChallengeRecordRepository extends JpaRepository<ChallengeRecord , Long> {
+public interface ChallengeRecordRepository extends JpaRepository<ChallengeRecord,Long> ,ChallengeRecordRepoCustom{
 
 /*    Optional<ChallengeRecord> findByUserChallengeId (Long userChallengeId);
 

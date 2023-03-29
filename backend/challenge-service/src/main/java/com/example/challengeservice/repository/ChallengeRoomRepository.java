@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface ChallengeRoomRepository extends JpaRepository<ChallengeRoom, Long> {
+public interface ChallengeRoomRepository extends JpaRepository<ChallengeRoom, Long> , ChallengeRoomRepoCustom {
     Optional<ChallengeRoom> findChallengeRoomById(Long id) ;
 }
