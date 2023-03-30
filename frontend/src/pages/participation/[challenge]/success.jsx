@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-
+import axios from 'axios';
 import classNames from 'classnames';
 import Image from 'next/image';
 
@@ -8,17 +8,12 @@ import style from './success.module.scss';
 import { Button } from '@/components/Button';
 import { ReturnArrow } from '@/components/ReturnArrow';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 
-import Spinner from '@/components/Spinner';
-
-const success = () => {
+const success = ({ result, hasError }) => {
   const router = useRouter();
-  const [loading, setLoading] = useState(true);
   const { challenge } = router.query;
 
-  if (loading) {
-    return <Spinner content="결제를 진행중입니다." />;
-  }
   return (
     <div className="font-medium">
       <div className={classNames(`style.div-header`, `sticky top-0`)}>
@@ -34,10 +29,41 @@ const success = () => {
         <p className="mt-4">한번 가보자구</p>
       </div>
       <div className="p-16">
-        <Button label="참여하기" />
+        <Link href={`/participation/${challenge}`}>
+          <Button label="참여하기" />
+        </Link>
       </div>
     </div>
   );
+};
+
+// 서버사이드 렌더링 시, API를 통해 요청해옴
+export const getServerSideProps = async context => {
+  const { challenge } = context.params;
+  let hasError = false;
+  try {
+    let { data } = await fetch(
+      `http://localhost:8003/payments/${challenge}/success`,
+      {
+        headers: {
+          userId: 1,
+        },
+      },
+    ).then(res => res.json());
+  } catch (e) {
+    hasError = true;
+  }
+  return {
+    props: {
+      hasError,
+    },
+    ...(hasError && {
+      redirect: {
+        permanent: true,
+        destination: 'fail',
+      },
+    }),
+  };
 };
 
 export default success;

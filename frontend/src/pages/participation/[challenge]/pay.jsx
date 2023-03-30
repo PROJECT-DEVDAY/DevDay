@@ -26,7 +26,7 @@ const pay = ({ challengeInfo }) => {
     await tossPayments.requestPayment('카드', {
       amount: challengeInfo.entryFee,
       orderId: Math.random().toString(36).slice(2),
-      orderName: process.env.DEVDAY_ATTENDEE_TICKET,
+      orderName: process.env.NEXT_PUBLIC_DEVDAY_ENTRY_FEE,
       successUrl: `${window.location.origin}/participation/${challengeInfo.id}/success`,
       failUrl: `${window.location.origin}/participation/${challengeInfo.id}/fail`,
       windowTarget: 'self',
@@ -59,7 +59,7 @@ const pay = ({ challengeInfo }) => {
           <p>적극적 참여를 유도하기 위해 참가비를 냅니다.</p>
           <div className={classNames('w-full', style.redline)}>
             <span className="text-3xl">
-              {new Intl.NumberFormat(process.env.LOCALE, {
+              {new Intl.NumberFormat(process.env.NEXT_PUBLIC_LOCALE, {
                 maximumSignificantDigits: 3,
               }).format(challengeInfo.entryFee)}
               원
