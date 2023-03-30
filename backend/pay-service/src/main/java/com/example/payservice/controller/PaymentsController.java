@@ -50,6 +50,12 @@ public class PaymentsController {
 		return ResponseEntity.ok(new InternalResponse<>(joinResponse));
 	}
 
+	/**
+	 * [TEST] 챌린지 JOIN 메세지 전송 API입니다.
+	 * @param challengeId
+	 * @param userId
+	 * @return
+	 */
 	@GetMapping("/{challengeId}/join/{userId}")
 	public ResponseEntity<InternalResponse<Boolean>> joinChallenge(
 			@PathVariable Long challengeId,

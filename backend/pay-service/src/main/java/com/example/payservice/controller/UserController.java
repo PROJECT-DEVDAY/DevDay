@@ -1,5 +1,6 @@
 package com.example.payservice.controller;
 
+import com.example.payservice.common.util.Utils;
 import com.example.payservice.dto.CustomPage;
 import com.example.payservice.dto.InternalResponse;
 import com.example.payservice.dto.bank.AccountDto;
@@ -23,6 +24,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @Slf4j
@@ -76,15 +78,16 @@ public class UserController {
 
 	/**
 	 * 상금을 인출하는 API 입니다.
-	 * @param userId
+	 * @param servletRequest
 	 * @param request
 	 * @return
 	 */
-	@PostMapping("/{userId}/prize")
+	@PostMapping("/prize")
 	public ResponseEntity<InternalResponse<WithdrawResponse>> withDrawPrize(
-			@PathVariable Long userId,
+			HttpServletRequest servletRequest,
 			@RequestBody WithdrawPrizeRequest request
 	) {
+		Long userId = Utils.parseAuthorizedUserId(servletRequest);
 		ModelMapper mapper = new ModelMapper();
 		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 		AccountDto accountDto = mapper.map(request.getAccount(), AccountDto.class);
@@ -97,17 +100,18 @@ public class UserController {
 
 	/**
 	 * 상금내역을 조회하는 API입니다.
-	 * @param userId
+	 * @param servletRequest
 	 * @param type
 	 * @param pageable
 	 * @return
 	 */
-	@GetMapping("/{userId}/prize")
+	@GetMapping("/prize")
 	public ResponseEntity<InternalResponse<CustomPage<PrizeHistoryDto>>> getPrizeHistory(
-			@PathVariable Long userId,
+			HttpServletRequest servletRequest,
 			@RequestParam(required = false, defaultValue = "") String type,
 		    @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
 	) {
+		Long userId = Utils.parseAuthorizedUserId(servletRequest);
 		CustomPage<PrizeHistoryDto> result = prizeService.searchHistories(userId, type, pageable);
 
 		InternalResponse<CustomPage<PrizeHistoryDto>> response = new InternalResponse<>(result);
@@ -116,14 +120,15 @@ public class UserController {
 
 	/**
 	 * 예치금 환불 API 입니다.
-	 * @param userId
+	 * @param servletRequest
 	 * @return
 	 */
-	@PostMapping("/{userId}/deposit")
+	@PostMapping("/deposit")
 	public ResponseEntity<InternalResponse<WithdrawResponse>> getDeposit(
-		@PathVariable Long userId,
+		HttpServletRequest servletRequest,
 		@Valid @RequestBody WithdrawDepositRequest request
 	) {
+		Long userId = Utils.parseAuthorizedUserId(servletRequest);
 		WithdrawResponse result = depositService.withdraw(userId, request);
 		InternalResponse<WithdrawResponse> response = new InternalResponse<>(result);
 		return ResponseEntity.ok(response);
@@ -133,18 +138,19 @@ public class UserController {
 	 * 예치금 내역을 확인하는 API 입니다.
 	 * type은 pay[챌린지 참여지불금액], refund[환불금액], charge[충전금액] 3가지 조회가 가능합니다.
 	 * 기본 정렬은 createdAt으로 최신 시간 순으로 정렬합니다.
-	 * @param userId
+	 * @param request
 	 * @param type
 	 * @param pageable
 	 * @return
 	 */
-	@GetMapping("/{userId}/deposit")
+	@GetMapping("/deposit")
 	public ResponseEntity<InternalResponse<CustomPage<DepositTransactionHistoryDto>>> getDepositHistory(
-			@PathVariable Long userId,
+			HttpServletRequest request,
 
 			@RequestParam(required = false, defaultValue = "") String type,
 			@PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
 	) {
+		Long userId = Utils.parseAuthorizedUserId(request);
 		CustomPage<DepositTransactionHistoryDto> result = depositService.searchHistories(userId, type, pageable);
 
 		InternalResponse<CustomPage<DepositTransactionHistoryDto>> response = new InternalResponse<>(result);

@@ -1,5 +1,6 @@
 package com.example.payservice.controller;
 
+import com.example.payservice.common.util.Utils;
 import com.example.payservice.dto.InternalResponse;
 import com.example.payservice.dto.request.ChallengeSettleRequest;
 import com.example.payservice.service.DepositService;
@@ -7,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/challenges")
@@ -21,10 +24,12 @@ public class ChallengeController {
 		return ResponseEntity.ok(new InternalResponse<Boolean>(true));
 	}
 
-	@DeleteMapping("/{challengeId}/users/{userId}")
+	@DeleteMapping("/{challengeId}/users")
 	public ResponseEntity<InternalResponse<Boolean>> refundChallengeByUser(
-			@PathVariable Long challengeId, @PathVariable Long userId
+			@PathVariable Long challengeId, HttpServletRequest request
 	) {
+		Long userId = Utils.parseAuthorizedUserId(request);
+
 		depositService.refund(userId, challengeId);
 		return ResponseEntity.ok(new InternalResponse<Boolean>(true));
 
