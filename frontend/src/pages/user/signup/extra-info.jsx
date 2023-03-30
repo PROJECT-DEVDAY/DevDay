@@ -11,7 +11,6 @@ import style from './extra-info.module.scss';
 import { Button } from '../../../components/Button';
 import { ReturnArrow } from '../../../components/ReturnArrow';
 
-import { JOIN_URL } from '@/pages/api/constants';
 import http from '@/pages/api/http';
 import { saveExtraInfos, reset } from '@/store/signup/signupSlice';
 
@@ -45,7 +44,7 @@ const signup = props => {
     );
 
     http
-      .post(JOIN_URL(signUpInfos.emailAuthId), signUpInfos)
+      .post(`/user-service/join/${signUpInfos.emailAuthId}`, signUpInfos)
       .then(() => {
         Swal.fire({
           icon: 'success',
@@ -64,7 +63,9 @@ const signup = props => {
             clearInterval(timerInterval);
           },
         })
-          .then(dispatch.reset())
+          .then(() => {
+            dispatch(reset);
+          })
           .then(router.push('./user/login'));
       })
       .catch(error => {
@@ -76,13 +77,6 @@ const signup = props => {
       });
   };
   const onClickPass = () => {
-    dispatch(
-      saveExtraInfos({
-        baekjoon,
-        github,
-      }),
-    );
-
     Swal.fire({
       title: '다음에 입력하실 건가요?',
       text: '나중에 다시 입력할 수 있습니다!',
@@ -95,9 +89,22 @@ const signup = props => {
     }).then(result => {
       if (result.isConfirmed) {
         http
-          .post(JOIN_URL(signUpInfos.emailAuthId), signUpInfos)
+          .post(`/user-service/join/${signUpInfos.emailAuthId}`, {
+            ...signUpInfos,
+            baekjoon: '',
+            github: '',
+          })
           .then(() => {
+            dispatch(
+              saveExtraInfos({
+                baekjoon,
+                github,
+              }),
+            );
             router.push('./user/login');
+          })
+          .then(() => {
+            dispatch(reset);
           })
           .catch(error => {
             Swal.fire({
