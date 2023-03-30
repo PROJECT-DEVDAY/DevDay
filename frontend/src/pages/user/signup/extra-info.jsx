@@ -111,7 +111,7 @@ const signup = props => {
   };
   return (
     <div className={style.signup}>
-      <div className={`style.div-header sticky top-0`}>
+      <div className="style.div-header sticky top-0">
         <ReturnArrow title="회원가입" />
       </div>
       <div className="div-body p-6 pb-32">
