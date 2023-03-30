@@ -4,11 +4,13 @@ import { AiOutlineCloseCircle } from 'react-icons/ai';
 import classNames from 'classnames';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import Swal from 'sweetalert2';
 
 import style from './login.module.scss';
 import { Button } from '../../components/Button';
 import { InputText } from '../../components/InputText';
 import { ReturnArrow } from '../../components/ReturnArrow';
+import http from '../api/http';
 
 import { InputLabel } from '@/components/InputLabel';
 
@@ -17,15 +19,7 @@ const login = props => {
   const [service, setService] = useState(false);
   const [show, setShow] = useState(false);
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
-  const handleEmailChange = e => {
-    setEmail(e.target.value);
-  };
-  const handlePasswordChange = e => {
-    setPassword(e.target.value);
-  };
+  const [user, setUser] = useState({ email: '', password: '' });
 
   const showModal = () => {
     setShow(prev => !prev);
@@ -54,6 +48,38 @@ const login = props => {
   const goToPw = () => {
     router.push('/user/find/pwInquiry');
   };
+
+  const handleChange = e => {
+    setUser({
+      ...user,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const onClickLogin = e => {
+    e.preventDefault();
+    http
+      .post('LOGIN_URL', user)
+      .then(data => {
+        // data.data.data.accessToken + data.data.data.refreshToken;
+      })
+      .then(() => {
+        Swal.fire({
+          position: 'center',
+          icon: 'success',
+          title: '로그인 성공',
+          showConfirmButton: false,
+          timer: 1600,
+        });
+      })
+      .catch(error => {
+        Swal.fire({
+          icon: 'error',
+          title: '로그인 실패',
+          text: error.response.data.message,
+        });
+      });
+  };
   return (
     <div>
       <div className={classNames(`style.div-header`, `sticky top-0`)}>
@@ -65,24 +91,27 @@ const login = props => {
           className="w-full"
           alt="loginImage"
         />
-        <div>
-          <InputLabel content="이메일" />
-          <InputText
-            inputType="email"
-            content="welcome@devday.com"
-            value={email}
-            onChange={handleEmailChange}
-          />
-        </div>
-        <div className={classNames(`mt-3`)}>
-          <InputLabel content="비밀번호" />
-          <InputText
-            inputType="password"
-            content="12자리 이상, 대문자 소문자 특수문자"
-            value={password}
-            onChange={handlePasswordChange}
-          />
-        </div>
+        <form onSubmit={onClickLogin}>
+          <div>
+            <InputLabel content="이메일" />
+            <InputText
+              name="email"
+              type="email"
+              inputType="text"
+              content="welcome@devday.com"
+              onChange={handleChange}
+            />
+          </div>
+          <div className={classNames(`mt-3`)}>
+            <InputLabel content="비밀번호" />
+            <InputText
+              name="password"
+              type="password"
+              content="12자리 이상, 대문자 소문자 특수문자"
+              onChange={handleChange}
+            />
+          </div>
+        </form>
         <div className={classNames(`mt-3`, style.option)}>
           <label htmlFor="toggle" className="flex">
             <label htmlFor="toggle" className={style.togglelabel}>
@@ -99,7 +128,13 @@ const login = props => {
         </div>
       </div>
       <div className={classNames(`text-center absolute w-full bottom-0 p-4`)}>
-        <Button color="primary" fill label="로그인" />
+        <Button
+          type="submit"
+          color="primary"
+          fill
+          label="로그인"
+          onClick={onClickLogin}
+        />
         <div className="mt-2">
           회원 가입할래?
           <button

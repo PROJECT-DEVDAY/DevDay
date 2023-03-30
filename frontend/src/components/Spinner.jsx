@@ -5,7 +5,7 @@ import Image from 'next/image';
 
 import style from './Spinner.module.scss';
 
-const Spinner = () => {
+const Spinner = ({ content }) => {
   return (
     <div>
       <div className={classNames(style.spinner)}>
@@ -15,9 +15,13 @@ const Spinner = () => {
           alt="man"
         />
       </div>
-      <p className="text-center font-bold text-4xl mt-20">코딩중.....♡</p>
+      <p className="text-center font-bold text-4xl mt-20">{content}</p>
     </div>
   );
+};
+
+Spinner.defaultProps = {
+  content: '코딩중.....♡',
 };
 
 export default Spinner;

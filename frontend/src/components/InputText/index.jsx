@@ -11,7 +11,10 @@ export const InputText = ({
   icon,
   inputType,
   type,
+  name,
+  value,
   onClick,
+  onChange,
   ...props
 }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -28,7 +31,9 @@ export const InputText = ({
       <input
         type={showPassword ? 'text' : 'password'}
         placeholder={content}
+        name={name}
         className={classNames(style.Content, `w-full h-6`)}
+        onChange={onChange}
         {...props}
       />
     );
@@ -41,8 +46,11 @@ export const InputText = ({
     inputValue = (
       <input
         type={type}
+        name={name}
+        value={value}
         placeholder={content}
         className={classNames(style.Content, `w-full h-6`)}
+        onChange={onChange}
         {...props}
       />
     );
@@ -55,8 +63,11 @@ export const InputText = ({
     inputValue = (
       <input
         type={type}
+        name={name}
+        value={value}
         placeholder={content}
         className={classNames(style.Content, `w-full h-6`)}
+        onChange={onChange}
         {...props}
       />
     );

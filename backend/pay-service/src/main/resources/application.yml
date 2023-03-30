@@ -38,7 +38,7 @@ eureka:
 payment:
   toss:
     baseUrl: https://api.tosspayments.com
-    secret: dGVzdF9za19qa1lHNTdFYmEzR1JCWGcxbUs2OHBXRE94bUExOg==
+    secret: 'Basic dGVzdF9za19qa1lHNTdFYmEzR1JCWGcxbUs2OHBXRE94bUExOg=='
     path:
       confirm: /v1/payments/confirm
       cancel: /v1/payments/%s/cancel

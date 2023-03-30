@@ -12,6 +12,7 @@ export const CheckBoxBtn = ({
   className,
   label,
   color,
+  onClick,
   ...props
 }) => {
   return (
@@ -26,7 +27,11 @@ export const CheckBoxBtn = ({
           />
         )}
       </label>
-      <Button className={(style.button, `mt-3`)} label={label} />
+      <Button
+        className={(style.button, `mt-3`)}
+        label={label}
+        onClick={onClick}
+      />
     </div>
   );
 };
@@ -36,9 +41,11 @@ CheckBoxBtn.propTypes = {
   label: PropTypes.string.isRequired,
   color: PropTypes.string,
   check: PropTypes.bool,
+  onClick: PropTypes.func,
 };
 
 CheckBoxBtn.defaultProps = {
   color: null,
   check: true,
+  onClick: () => {},
 };

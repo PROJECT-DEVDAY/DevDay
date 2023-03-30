@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -37,14 +38,30 @@ public class ChallengeController {
 
     private final AmazonS3Service s3Service;
 
-    /** 홍금비
-     * 챌린지 생성 **/
+    /**
+     * author  : 홍금비
+     * explain :챌린지 생성
+     * **/
     @PostMapping()
-    public ResponseEntity<ChallengeCreateResponseDto> createChallenge(@ModelAttribute ChallengeRoomRequestDto challengeRoomRequestDto) throws IOException {
+    public ResponseEntity<ChallengeCreateResponseDto> createChallenge(@Valid @ModelAttribute ChallengeRoomRequestDto challengeRoomRequestDto) throws IOException {
         Long id=challengeService.createChallenge(challengeRoomRequestDto);
         String message="[Success] 챌린지 방이 생성되었습니다.";
         return ResponseEntity.status(HttpStatus.CREATED).body(ChallengeCreateResponseDto.from(id, message));
     }
+
+
+
+    /**
+     * author : 홍금비
+     * explain: 메인 페이지에서 참여가능한 첼린지 목록 조회
+     * */
+    @GetMapping("")
+    public  ResponseEntity<List<SimpleChallengeResponseDto>> getListSimpleChallenge (@RequestParam ("category") String category, @RequestParam (value = "offset", required = false) Long offset , @RequestParam (value = "search" ,required = false) String search , @RequestParam ("size") int size){
+
+        List<SimpleChallengeResponseDto> list = challengeService.getListSimpleChallenge(category,search,size,offset);
+        return  ResponseEntity.status(HttpStatus.OK).body(list);
+    }
+
 
     /** 신대득
      * 챌린지 조회 **/
@@ -66,9 +83,9 @@ public class ChallengeController {
 
     /** 챌린지 상세 조회 ** (입장 페이지)*/
 
+
     /** 신대득
      * 챌린지 참가하기 **/
-
     /**
      * pay-service로부터 호출되는 API입니다.
      * 챌린지에 유저가 결제가 완료된 뒤, 응답으로 받습니다.
@@ -84,9 +101,10 @@ public class ChallengeController {
         return responseService.getSingleResult(1L);
     }
     @PostMapping("/{challengeId}/users/{userId}")
-    public SingleResult<Boolean> joinChallenge(@PathVariable("challengeId") Long challengeId, @PathVariable("userId") Long userId){
+    public SingleResult<String> joinChallenge(@PathVariable("challengeId") Long challengeId, @PathVariable("userId") Long userId){
         return responseService.getSingleResult(challengeService.joinChallenge(challengeId, userId));
     }
+
 
     /** 신대득
      * 현재 user가 참가중인 챌린지 개수 반환
@@ -111,11 +129,12 @@ public class ChallengeController {
      * 신대득
      * 유저 깃허브 아이디를 통해 해당 유저의 커밋 찾기 (크롤링)
      * 나온 결과를 계산해서 user에 넣어줘야한다.
+     * Todo : 반환 타입 등 다시 만들 예정
      * Todo : userId로 commit 가져오는걸로 바꾸기
      */
     @GetMapping("/github/{githubId}")
-    public String getGithubList(@PathVariable("githubId") String githubId){
-        return ("총"+challengeService.getGithubCommit(githubId)+"개 커밋하셨습니다.");
+    public SingleResult<CommitCountResponseDto> getGithubList(@PathVariable("githubId") String githubId){
+        return responseService.getSingleResult(challengeService.getGithubCommit(githubId));
     }
 
 
@@ -134,26 +153,18 @@ public class ChallengeController {
 
     /**
      * 신대득
-     * 해당 날짜 푼 문제들 조회
+     * 선택한 유저가
+     * 해당 날짜에 푼 문제를 조회하는 API
+     * @param userId // 조회 할 유저의 id
+     * @param selectDate // 조회 할 날짜
+     * @return
      */
-    /*
-    @GetMapping("/baekjoon/users/{userId}")
-    public SingleResult<SolvedListResponseDto> checkDateUserBaekjoon(@PathVariable Long userId){
-        return responseService.getSingleResult(challengeService.checkDateUserBaekjoon(userId));
+    @GetMapping("/baekjoon/users/date")
+    public SingleResult<SolvedListResponseDto> checkDateUserBaekjoon(@RequestParam Long userId, @RequestParam String selectDate){
+        return responseService.getSingleResult(challengeService.checkDateUserBaekjoon(userId, selectDate));
     }
-     */
 
 
-
-    /** 메인 페이지 조회 **/
-    @GetMapping("")
-    public  ResponseEntity<List<SimpleChallengeResponseDto>> getListSimpleChallenge (@RequestParam ("type") String type, @RequestParam (value = "offset", required = false) Long offset , @RequestParam (value = "search" ,required = false) String search , @RequestParam ("size") int size){
-
-        List<SimpleChallengeResponseDto> list = challengeService.getListSimpleChallenge(type,search,size,offset);
-        return  ResponseEntity.status(HttpStatus.OK).body(list);
-
-
-    }
 
 
     /** 사진 인증 저장 **/
@@ -200,29 +211,26 @@ public class ChallengeController {
 
 
     /** 사진 기록 신고하기(반드시 로그인이 되어있어야함) **/
-
     @PostMapping ("report/record")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public Result reportRecord (@RequestBody ReportRecordRequestDto reportRequestDto){
 
         challengeService.reportRecord(reportRequestDto);
-
         return responseService.getSuccessResult();
     }
 
-    @GetMapping("/myTest")
+    /**
+     * 스케줄링으로 실행되는 메서드의 테스트
+     * @return
+     */
+    @GetMapping("/schedulingTest")
     public Result testRecord (){
         challengeService.createDailyRecord();
         return responseService.getSuccessResult();
     }
 
 
-
-
-
-
     /** 기본 사진 업로드 **/
-
     @PostMapping("upload/image")
     public String updateDefaultImage(@RequestParam("file") MultipartFile multipartFile , @RequestParam("dir") String dir) throws IOException{
 

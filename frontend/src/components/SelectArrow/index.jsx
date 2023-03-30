@@ -21,7 +21,7 @@ export const SelectArrow = ({
       className={classNames(
         style.SelectArrow,
         className,
-        fill && 'SelectArrow-background-fill',
+        fill && style[`SelectArrow-background-fill`],
       )}
     >
       <div style={{ flex: 1 }}>
@@ -35,9 +35,13 @@ export const SelectArrow = ({
         </p>
         <p className={style.ArrowContent}>{content}</p>
       </div>
-      <div className={classNames(style.ArrowDiv)} onClick={onClick}>
+      <button
+        type="button"
+        className={classNames(style.ArrowDiv)}
+        onClick={onClick}
+      >
         <SlArrowRight className={style.Arrow} width={30} />
-      </div>
+      </button>
     </div>
   );
 };
@@ -51,6 +55,6 @@ SelectArrow.propTypes = {
 };
 
 SelectArrow.defaultProps = {
-  fill: true,
+  fill: false,
   onClick: undefined,
 };
