@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class SearchParam {
-    String type;
+    String category;
     String search;
     int size;
     Long offset;
