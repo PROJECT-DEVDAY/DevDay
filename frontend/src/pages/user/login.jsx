@@ -17,6 +17,16 @@ const login = props => {
   const [service, setService] = useState(false);
   const [show, setShow] = useState(false);
 
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleEmailChange = e => {
+    setEmail(e.target.value);
+  };
+  const handlePasswordChange = e => {
+    setPassword(e.target.value);
+  };
+
   const showModal = () => {
     setShow(prev => !prev);
   };
@@ -58,16 +68,19 @@ const login = props => {
         <div>
           <InputLabel content="이메일" />
           <InputText
-            type="email"
-            inputType="text"
+            inputType="email"
             content="welcome@devday.com"
+            value={email}
+            onChange={handleEmailChange}
           />
         </div>
         <div className={classNames(`mt-3`)}>
           <InputLabel content="비밀번호" />
           <InputText
-            type="password"
+            inputType="password"
             content="12자리 이상, 대문자 소문자 특수문자"
+            value={password}
+            onChange={handlePasswordChange}
           />
         </div>
         <div className={classNames(`mt-3`, style.option)}>

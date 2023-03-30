@@ -78,11 +78,18 @@ const user = props => {
   ];
   return (
     <div>
-      <Image
-        src={require('@/image/handshake.png')}
-        alt="logo"
-        className={classNames('w-full', style.boxStyle)}
-      />
+      <div className="relative">
+        <div>
+          <Image
+            src={require('@/image/backgroundImage.jpg')}
+            alt="logo"
+            className={classNames('w-full', style.boxStyle)}
+          />
+        </div>
+        <p className="absolute bottom-20 left-10 text-4xl font-bold text-white">
+          다이어트 챌린지
+        </p>
+      </div>
       <div className="bg-[url(" />
       <div className={classNames('div-body p-6', style.boxStyle)}>
         <div className="flex">
@@ -151,10 +158,8 @@ const user = props => {
         </div>
       )}
       {selectedItem === '참가자 인증 현황' && (
-        <div>
-          <div className={classNames(style.peopleBox)}>
-            <Bar options={options} data={data} />
-          </div>
+        <div className={classNames(style.peopleBox)}>
+          <Bar options={options} data={data} />
         </div>
       )}
       <div className={classNames('sticky w-full bottom-0 m-0')}>
