@@ -12,6 +12,7 @@ export const InputText = ({
   inputType,
   type,
   name,
+  value,
   onClick,
   onChange,
   ...props
@@ -32,7 +33,7 @@ export const InputText = ({
         placeholder={content}
         name={name}
         className={classNames(style.Content, `w-full h-6`)}
-        onChange={onchange}
+        onChange={onChange}
         {...props}
       />
     );
@@ -46,9 +47,10 @@ export const InputText = ({
       <input
         type={type}
         name={name}
+        value={value}
         placeholder={content}
         className={classNames(style.Content, `w-full h-6`)}
-        onChange={onchange}
+        onChange={onChange}
         {...props}
       />
     );
@@ -62,9 +64,10 @@ export const InputText = ({
       <input
         type={type}
         name={name}
+        value={value}
         placeholder={content}
         className={classNames(style.Content, `w-full h-6`)}
-        onChange={onchange}
+        onChange={onChange}
         {...props}
       />
     );
