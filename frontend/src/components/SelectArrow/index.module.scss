@@ -2,7 +2,7 @@
   width: 100%;
   border-radius: 10px;
   box-sizing: border-box;
-  background-color: #fff;
+  background-color: var(--gray-bg);
   font-size: 1rem;
   cursor: pointer;
   // border: 2px solid var(--gray-border);
@@ -10,15 +10,20 @@
   justify-content: space-between;
   padding: 10px;
 }
+
 .SelectArrow.SelectArrow-background-fill {
   background-color: var(--color-kiyoon);
   color: white;
 }
+
 .ArrowTitle {
   font-size: large;
   font-weight: bolder;
   margin: 0;
-  // margin: 15px 0px 0 0px;
+}
+
+.SelectArrow-color-warning {
+  color: red !important;
 }
 
 .ArrowContent {
@@ -26,11 +31,13 @@
   font-size: small;
   // margin: 0 0 15px 0;
 }
+
 .Arrow {
   width: 100%;
   height: 100%;
   align-items: center;
 }
+
 .ArrowDiv {
   display: grid;
   /* width: 10%; */
