@@ -10,13 +10,24 @@ import java.util.List;
 @Builder
 @Setter
 public class SolvedListResponseDto {
-    public List<String> solvedList;
-    public int count;
+    private Long id;
+    private List<String> solvedList;
+    private int count;
+    private String successDate;
 
     public static SolvedListResponseDto from(List<String> solvedList, int count){
         return SolvedListResponseDto.builder()
                 .solvedList(solvedList)
                 .count(count)
+                .build();
+    }
+
+    public static SolvedListResponseDto from(Long id, List<String> solvedList, int count, String successDate){
+        return SolvedListResponseDto.builder()
+                .id(id)
+                .solvedList(solvedList)
+                .count(count)
+                .successDate(successDate)
                 .build();
     }
 
