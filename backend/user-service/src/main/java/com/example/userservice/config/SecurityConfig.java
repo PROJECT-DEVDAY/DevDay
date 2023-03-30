@@ -29,8 +29,6 @@ public class SecurityConfig {
         String gatewayIpAddress = env.getProperty("gateway.ip");
         String challengeIpAddress = env.getProperty("challenge-service.ip");
         String payIpAddress = env.getProperty("pay-service.ip");
-//        String eurekaIpAddress = env.getProperty("eureka-service.ip");
-//        String networkGatewayIpAddress = env.getProperty("network-gateway.ip");
 
         http
                 .httpBasic().disable()
