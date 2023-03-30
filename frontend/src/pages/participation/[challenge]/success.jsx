@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import classNames from 'classnames';
 import Image from 'next/image';
@@ -7,10 +7,20 @@ import style from './success.module.scss';
 
 import { Button } from '@/components/Button';
 import { ReturnArrow } from '@/components/ReturnArrow';
+import { useRouter } from 'next/router';
 
-const success = props => {
+import Spinner from '@/components/Spinner';
+
+const success = () => {
+  const router = useRouter();
+  const [loading, setLoading] = useState(true);
+  const { challenge } = router.query;
+
+  if (loading) {
+    return <Spinner content="결제를 진행중입니다." />;
+  }
   return (
-    <div>
+    <div className="font-medium">
       <div className={classNames(`style.div-header`, `sticky top-0`)}>
         <ReturnArrow title="참가하기" />
       </div>
