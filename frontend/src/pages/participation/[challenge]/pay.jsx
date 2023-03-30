@@ -1,17 +1,16 @@
 import React, { useState } from 'react';
-import { PropTypes } from 'prop-types';
 
+import { loadTossPayments } from '@tosspayments/payment-sdk';
 import classNames from 'classnames';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
+import { PropTypes } from 'prop-types';
 
 import style from './pay.module.scss';
 
 import { Button } from '@/components/Button';
 import { CheckBoxBtn } from '@/components/CheckBoxBtn';
 import { ReturnArrow } from '@/components/ReturnArrow';
-
-import { loadTossPayments } from '@tosspayments/payment-sdk';
-import { useRouter } from 'next/router';
 
 const pay = ({ challengeInfo }) => {
   const router = useRouter();

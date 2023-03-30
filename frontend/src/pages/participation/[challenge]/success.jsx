@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
+
 import axios from 'axios';
 import classNames from 'classnames';
 import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 import style from './success.module.scss';
 
 import { Button } from '@/components/Button';
 import { ReturnArrow } from '@/components/ReturnArrow';
-import { useRouter } from 'next/router';
-import Link from 'next/link';
 
 const success = ({ result, hasError }) => {
   const router = useRouter();
@@ -43,7 +44,7 @@ export const getServerSideProps = async context => {
   let hasError = false;
 
   try {
-    let { data } = await axios.get(
+    const { data } = await axios.get(
       `http://localhost:8003/payments/${challenge}/success`,
       {
         headers: {

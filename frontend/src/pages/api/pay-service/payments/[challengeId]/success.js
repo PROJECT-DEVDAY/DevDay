@@ -5,7 +5,7 @@ export default function handler(req, res) {
     message: 'success',
     data: {
       userId: 1,
-      challengeId: challengeId,
+      challengeId,
       approve: true,
     },
   });
