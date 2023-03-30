@@ -8,8 +8,8 @@ cloud:
     s3:
       bucket: devday-bucket
     credentials:
-      access-key: AKIAXEUXRPXDUUVY2A5E
-      secret-key: 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
+      access-key: AKIAXEUXRPXD5YMMPF6T
+      secret-key: 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
     stack:
       auto: false
 spring:
@@ -43,8 +43,7 @@ eureka:
     fetch-registry: true
     service-url:
       defaultZone: http://127.0.0.1:8761/eureka
-gateway:
-  ip: 172.18.0.8
+
 
 
 

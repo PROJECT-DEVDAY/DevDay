@@ -86,7 +86,7 @@ cloud:
     s3:
       bucket: devday-bucket
     credentials:
-      access-key: AKIAXEUXRPXDUEM6VMBZ
-      secret-key: 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
+      access-key: AKIAXEUXRPXD5YMMPF6T
+      secret-key: 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
     stack:
       auto: false
