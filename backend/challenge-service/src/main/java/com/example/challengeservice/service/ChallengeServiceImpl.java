@@ -63,8 +63,7 @@ public class ChallengeServiceImpl implements ChallengeService{
      * @param offset 마지막으로 검색된 challengeRoomId
      * **/
     @Override
-    public List<SimpleChallengeResponseDto> getListSimpleChallenge(String category ,String search,int size,Long offset ) {
-
+    public List<SimpleChallengeResponseDto> getListSimpleChallenge(String category,String search,int size,Long offset ) {
         //searchParam :검색에 필요한 조건을 담은 객체
         SearchParam searchParam = new SearchParam(category,search,size,offset,commonService.getDate());
 
@@ -74,12 +73,15 @@ public class ChallengeServiceImpl implements ChallengeService{
         Type listType = new TypeToken<List<SimpleChallengeResponseDto>>() {}.getType(); // 리스트 타입 지정
         List<SimpleChallengeResponseDto> dtoList = modelMapper.map(challengeRooms, listType); // 변환
 
+        log.info(dtoList.size()+" 찾은 방 개수");
+        log.info(commonService.getDate()+" 현재 날짜");
+
         return dtoList;
     }
 
     /**
      * author : 홍금비
-     * explain : ChallengeRoom 생성
+     * explain : 챌린지방  생성
      * @param challengeRoomRequestDto ChallengeRoom를 생성하는데 필요한 필드 값
      * @return 생성된 ChallengeRoomID
      * @throws IOException
@@ -90,16 +92,15 @@ public class ChallengeServiceImpl implements ChallengeService{
     @Override
     public Long createChallenge(ChallengeRoomRequestDto challengeRoomRequestDto)  throws IOException {
 
-
-
         String successUrl = "";
         String failUrl = "";
         String backgroundUrl = "";
+        String s3DirName ="ChallengeRoom";
 
-        //TODO [예외 체크] 1. 자유 챌린지인 경우 , 인증 성공 , 실패에 대한 이미지 파일이 존재한지 판단한다.
+        //TODO [예외 체크] 1. 자유 챌린지인 경우 , 인증 성공 , 실패에 대한 이미지 파일값이 존재한지 확인한다.
         if(challengeRoomRequestDto.getCategory().equals("FREE")){
             if(challengeRoomRequestDto.getCertSuccessFile()==null || challengeRoomRequestDto.getCertFailFile()==null)
-                throw new ApiException(ExceptionEnum.CHALLENGE_BAD_REQUEST);
+                throw new ApiException(ExceptionEnum.CHALLENGE_FILE_PARAMETER_EXCEPTION);
         }
 
         ChallengeRoom challengeRoom = ChallengeRoom.from(challengeRoomRequestDto);
@@ -123,16 +124,14 @@ public class ChallengeServiceImpl implements ChallengeService{
                         break;
                 }
             }else{
-                    backgroundUrl = amazonS3Service.upload(challengeRoomRequestDto.getBackGroundFile(),"ChallengeRoom");
+                    backgroundUrl = amazonS3Service.upload(challengeRoomRequestDto.getBackGroundFile(),s3DirName);
                     challengeRoom.setBackGroundUrl(backgroundUrl);
                 }
 
-
-
         if(challengeRoomRequestDto.getCategory().equals("FREE")) {
             //인증 성공,실패의 사진을 업로드
-            successUrl = amazonS3Service.upload(challengeRoomRequestDto.getCertSuccessFile(),"ChallengeRoom");
-            failUrl = amazonS3Service.upload(challengeRoomRequestDto.getCertFailFile(),"ChallengeRoom");
+            successUrl = amazonS3Service.upload(challengeRoomRequestDto.getCertSuccessFile(),s3DirName);
+            failUrl = amazonS3Service.upload(challengeRoomRequestDto.getCertFailFile(),s3DirName);
             challengeRoom.setCertificationUrl(successUrl,failUrl);
         }
 
@@ -162,7 +161,7 @@ public class ChallengeServiceImpl implements ChallengeService{
     public Map<Long, ChallengeInfoResponseDto> challengeInfoList(List<Long> challengeIdList){
         Map<Long, ChallengeInfoResponseDto> challengeInfoResponseDtoMap=new HashMap<>();
         for(Long challengeId: challengeIdList){
-            ChallengeRoom challengeRoom=challengeRoomRepository.findChallengeRoomById(challengeId)
+            ChallengeRoom challengeRoom = challengeRoomRepository.findChallengeRoomById(challengeId)
                     .orElseThrow(() -> new ApiException(ExceptionEnum.CHALLENGE_NOT_EXIST_EXCEPTION));
             ModelMapper mapper=new ModelMapper();
             mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
@@ -178,13 +177,13 @@ public class ChallengeServiceImpl implements ChallengeService{
      * @param challengeRoomId 챌린지방 ID
      * @param userId 유저 ID
      * @return
-     * retouch : find 대신 exist 함수로 존재 유무 확인  Optional<UserChallenge> -> UserChallenge orElseThrow로 변경
+     * retouch 홍금비 : find 대신 exist 함수로 존재 유무 확인  Optional<UserChallenge> -> UserChallenge orElseThrow로 변경
      *           해당 챌린지에 참여가능한 인원 수가 넘으면 참가할 수 없도록 예외처리 작성
      */
 
     @Override
     @Transactional
-    public boolean joinChallenge(Long challengeRoomId, Long userId) {
+    public  String  joinChallenge(Long challengeRoomId, Long userId) {
 
         //해당 challengeRoom Entity 조회
         ChallengeRoom challengeRoom = getChallengeRoomEntity(challengeRoomId);
@@ -203,10 +202,10 @@ public class ChallengeServiceImpl implements ChallengeService{
             userChallengeRepository.save(userChallenge);
             challengeRoom.plusCurParticipantsSize(); // +1 증가
         }else {
-            throw new ApiException(ExceptionEnum.UNABLE_TO_JOIN_CHALLENGEROOM);
+            throw new ApiException(ExceptionEnum.ALREADY_JOIN_CHALLENGEROOM);
         }
 
-        return isJoinUser;
+        return "참가 성공";
     }
 
     @Override

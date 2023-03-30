@@ -80,9 +80,6 @@ public class ChallengeRoom {
     @Column(name = "MAXIMUM_NUMBER_PARTICIPANTS")
     private int maxParticipantsSize;
 
-
-
-
     public static ChallengeRoom from(ChallengeRoomRequestDto dto){
          return ChallengeRoom.builder()
                  .title(dto.getTitle())
