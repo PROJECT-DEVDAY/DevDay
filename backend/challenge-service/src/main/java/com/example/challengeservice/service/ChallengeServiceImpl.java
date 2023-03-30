@@ -9,6 +9,7 @@ import com.example.challengeservice.dto.request.ReportRecordRequestDto;
 import com.example.challengeservice.dto.response.*;
 import com.example.challengeservice.entity.ChallengeRecord;
 import com.example.challengeservice.entity.ChallengeRoom;
+import com.example.challengeservice.entity.ReportRecord;
 import com.example.challengeservice.entity.UserChallenge;
 import com.example.challengeservice.exception.ApiException;
 import com.example.challengeservice.exception.ExceptionEnum;
@@ -43,6 +44,8 @@ public class ChallengeServiceImpl implements ChallengeService{
     private final AmazonS3Service amazonS3Service;
     private final CommonServiceImpl commonService;
     private final ChallengeRecordRepository challengeRecordRepository;
+
+    private final ReportRecordRepository reportRecordRepository;
 
 
 
@@ -334,6 +337,7 @@ public class ChallengeServiceImpl implements ChallengeService{
 
         Long userId =challengeRecord.getUserChallenge().getUserId();
         log.info("유저 아이디 누구인가요"+userId);
+
         UserResponseDto userResponseDto = userServiceClient.getUserInfo(userId).getData();
         log.info("유저정보 가져왔나요"+userResponseDto.getNickname());
 
@@ -345,11 +349,57 @@ public class ChallengeServiceImpl implements ChallengeService{
 
 
     /** 사진 인증 신고하기 **/
+    @Transactional
     @Override
     public void reportRecord(ReportRecordRequestDto reportRecordRequestDto) {
 
-     List<UserChallenge> list =userChallengeRepository.findAll();
+        Long userId = reportRecordRequestDto.getUserId();
+        Long recordId = reportRecordRequestDto.getChallengeRecordId();
+        Long challengeRoomId = reportRecordRequestDto.getChallengeRoomId();
+        String reportDate = reportRecordRequestDto.getReportDate();
 
-        //일단 신고기록이 존재한다면 존재한다고 에러를 내어준다.
+
+        //TODO  1. 사진인증 기록이 존재한다면 중복에러 발생
+        if(reportRecordRepository.existsByUserIdAndChallengeRecordId(userId,recordId)) {
+            throw new ApiException(ExceptionEnum.NOT_EXIST_REPORT_RECORD);
+        }
+
+        ChallengeRecord challengeRecord = challengeRecordRepository.findById(recordId).orElseThrow(()->new ApiException(ExceptionEnum.NOT_EXIST_CHALLENGE_RECORD));
+
+        //TODO 1-1 신고하는 날짜가 인증날짜와 다를경우 신고할 수 없다. 예외를 발생시킨다.
+        if(!challengeRecord.getCreateAt().equals(reportDate)){
+            throw  new ApiException(ExceptionEnum.CHALLENGE_RECORD_BAD_REQUEST);
+        }
+
+        //TODO 1-2 자기가 자기 자신의 인증 기록을 신고할 수는 없다.
+
+        if(challengeRecord.getUserChallenge().getUserId() == userId){
+            throw new ApiException(ExceptionEnum.CHALLENGE_RECORD_SELF_REPORT);
+        }
+
+
+        //TODO  2. 위의 인증 기록 에외처리를 넘어가면 사진 신고 기록이 없다면 신고기록을 저장한다.
+        reportRecordRepository.save(ReportRecord.from(userId,challengeRecord,reportDate));
+
+
+        //TODO  Before 2. 기\ 해당 유저가 방장인지 아닌지 체크해야한다.
+        ChallengeRoom challengeRoom = challengeRoomRepository.findById(challengeRoomId).orElseThrow(
+               ()-> new ApiException(ExceptionEnum.CHALLENGE_NOT_EXIST_EXCEPTION));
+
+
+        //TODO  2-1 if) 저장하려고 하는 사람이 방장일 경우 방장의 신고로 인정한다.
+        if(challengeRoom.getHostId() == userId)challengeRecord.doHostReport(); //true 로 변경 ->  방장이 신고를 함
+        // TODO  2-2 if) 저장하려고 하는 사람이 방장이 아닐 경우 신고받은 횟수 +1을 한다.
+        else challengeRecord.plusReportCount();
+
+        //인증 실패의 기준은 참여자 수의 절반 이상이다. 홀수인경우는 과반수를 넘기기 위해 나머지가 존재하면 +1을 해준다.
+        int participants = challengeRoom.getUserCount();
+        int reportStandard = participants % 2 != 0 ? (participants / 2) + 1 : participants / 2;
+
+        //TODO  3. 만약 신고기록 저장후에 해당 사진인증이 방 인원 전체의 절반 과 방장의 신고를 받은 기록이 있다면 해당 인증 기록은 실패로 처리한다.
+        if(reportStandard >= challengeRecord.getReportCount() && challengeRecord.isHostReport() ) challengeRecord.setSuccessFail();
+
+
+
     }
 }

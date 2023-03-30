@@ -1,6 +1,5 @@
 package com.example.userservice.service;
 
-import com.example.userservice.dto.request.DateProblemRequestDto;
 import com.example.userservice.dto.request.ProblemRequestDto;
 import com.example.userservice.dto.response.BaekjoonListResponseDto;
 import com.example.userservice.dto.response.DateProblemResponseDto;
@@ -13,5 +12,5 @@ public interface ChallengeService {
 
     void createProblem(Long userId, ProblemRequestDto requestDto);
 
-    List<DateProblemResponseDto> getDateBaekjoonList(Long userId, DateProblemRequestDto requestDto);
+    List<DateProblemResponseDto> getDateBaekjoonList(Long userId, String startDate, String endDate);
 }

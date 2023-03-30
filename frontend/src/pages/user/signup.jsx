@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { BiShow, BiHide } from 'react-icons/bi';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import classNames from 'classnames';
 import { useRouter } from 'next/router';
+import Swal from 'sweetalert2';
 
 import style from './signup.module.scss';
 import { Button } from '../../components/Button';
 import { ReturnArrow } from '../../components/ReturnArrow';
-import { EMAIL_URL } from '../api/constants';
+import { EMAIL_URL, CONFIRM_EMAIL_URL, NICKNAME_URL } from '../api/constants';
 import http from '../api/http';
 
 import { InputLabel } from '@/components/InputLabel';
@@ -17,11 +18,19 @@ import { saveSignUpInfos } from '@/store/signup/signupSlice';
 
 const signup = props => {
   const [emailValidCheck, setEmailValidCheck] = useState(false);
-  const [nickNameDuplicateChk, setnickNameDuplicateChk] = useState(false);
+  const [emailCertificatedCheck, setEmailCertificatedCheck] = useState(false);
+
+  // 인증 고유번호
+  const [emailAuthId, setEmailAuthId] = useState(-1);
+  const [emailAuthToken, setEmailAuthtoken] = useState('');
+
+  const [nickNameValidCheck, setNickNameValidCheck] = useState(false);
+  const [nickNameDuplicateChk, setNickNameDuplicateChk] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
   const router = useRouter();
   const dispatch = useDispatch();
+  const signUpInfos = useSelector(state => state.signUp);
 
   const validate = values => {
     const errors = {};
@@ -32,32 +41,10 @@ const signup = props => {
 
     return errors;
   };
-  const {
-    handleSubmit,
-    register,
-    formState: { errors },
-    watch,
-  } = useForm({ validate, mode: 'onBlur' });
-
-  const onClickDuplicateCheck = () => {
-    setnickNameDuplicateChk(true);
-    // TODO: 이메일 전송 API 구현
-  };
-  const onClickEmailValidation = () => {
-    setEmailValidCheck(true);
-
-    // TODO: 이메일 전송 API 구현
-    http.post(EMAIL_URL, {
-      email: watch('email', props.email),
-    });
-  };
-  const toggleShowPassword = () => {
-    setShowPassword(prev => !prev);
-  };
 
   const Timer = () => {
-    const [minutes, setMinutes] = useState(parseInt(0, 10));
-    const [seconds, setSeconds] = useState(parseInt(5, 10));
+    const [minutes, setMinutes] = useState(parseInt(4, 10));
+    const [seconds, setSeconds] = useState(parseInt(59, 10));
     useEffect(() => {
       const countdown = setInterval(() => {
         if (parseInt(seconds, 10) > parseInt(0, 10)) {
@@ -69,7 +56,7 @@ const signup = props => {
             setEmailValidCheck(false);
           } else {
             setMinutes(
-              parseInt(minutes, 10),
+              parseInt(minutes, 10) - parseInt(1, 10),
               parseInt(seconds, 10) - parseInt(1, 10),
             );
             setSeconds(parseInt(59, 10));
@@ -85,11 +72,81 @@ const signup = props => {
     );
   };
 
-  const onSubmit = data => {
-    dispatch(saveSignUpInfos(data));
+  const toggleShowPassword = () => {
+    setShowPassword(prev => !prev);
   };
 
-  const goToNextSignUpPage = () => {};
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+    watch,
+    reset,
+  } = useForm({ validate, mode: 'onBlur' });
+
+  useEffect(() => {
+    if (signUpInfos) {
+      const { email, password, passwordCheck, name, nickname } = signUpInfos;
+      reset({ email, password, passwordCheck, name, nickname });
+    }
+  }, [signUpInfos, reset]);
+
+  // email check logic
+  const onChangeAuthToken = event => {
+    setEmailAuthtoken(event.target.value);
+  };
+
+  const onClickEmailValidation = () => {
+    setEmailValidCheck(true);
+
+    http
+      .post(EMAIL_URL, {
+        email: watch('email'),
+      })
+      .then(data => {
+        setEmailAuthId(data.data.data);
+      });
+  };
+
+  const onClickEmailAuthTokenCheck = () => {
+    http
+      .patch(CONFIRM_EMAIL_URL, {
+        id: emailAuthId,
+        authToken: emailAuthToken,
+      })
+      .then(setEmailCertificatedCheck(true))
+      .catch(error => {
+        Swal.fire({
+          icon: 'error',
+          title: '인증 실패',
+          text: error.response.data.message,
+        });
+        setEmailCertificatedCheck(false);
+      });
+  };
+
+  // nickname check logic
+  const onClickDuplicateCheck = () => {
+    setNickNameValidCheck(true);
+
+    http
+      .post(NICKNAME_URL, { nickname: watch('nickname') })
+      .then(setNickNameDuplicateChk(true));
+    // .catch(setNickNameDuplicateChk(false));
+  };
+
+  const onSubmit = data => {
+    if (emailCertificatedCheck && nickNameDuplicateChk) {
+      dispatch(saveSignUpInfos(data));
+      router.push('./signup/extra-info');
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: '잠시만요!',
+        text: '이메일 인증, 닉네임 중복체크를 해주세요',
+      });
+    }
+  };
 
   return (
     <div className={style.signup}>
@@ -140,9 +197,13 @@ const signup = props => {
                     'w-full focus:outline-none',
                     style.emailInput,
                   )}
+                  onChange={onChangeAuthToken}
                 />
-                <Timer />
-                <button type="button" className="ml-2 whitespace-nowrap">
+                <button
+                  type="button"
+                  className="ml-2 whitespace-nowrap"
+                  onClick={onClickEmailAuthTokenCheck}
+                >
                   확인
                 </button>
               </div>
@@ -247,7 +308,7 @@ const signup = props => {
                 className={classNames(style.Content, `w-full h-6`)}
                 type="text"
                 placeholder="닉네임을 입력해주세요"
-                {...register('nickName', {
+                {...register('nickname', {
                   required: true,
                   pattern: /^(?=.*[a-z0-9가-힣])[a-z0-9가-힣]{2,16}$/,
                 })}
@@ -263,15 +324,15 @@ const signup = props => {
 
             <div className={(`font-medium`, style.Error)}>
               {errors &&
-                errors.nickName &&
-                errors.nickName.type === 'required' && (
+                errors.nickname &&
+                errors.nickname.type === 'required' && (
                   <span className={classNames(`font-medium`, style.Error)}>
                     닉네임 입력해주세요!
                   </span>
                 )}
               {errors &&
-                errors.nickName &&
-                errors.nickName.type === 'pattern' && (
+                errors.nickname &&
+                errors.nickname.type === 'pattern' && (
                   <span className={classNames(`font-medium`, style.Error)}>
                     조건에 맞지 않는 닉네임 입니다.
                   </span>
@@ -279,31 +340,35 @@ const signup = props => {
             </div>
             {!(
               errors &&
-              errors.nickName &&
-              errors.nickName.type === 'required'
+              errors.nickname &&
+              errors.nickname.type === 'required'
             ) &&
               !(
                 errors &&
-                errors.nickName &&
-                errors.nickName.type === 'pattern'
+                errors.nickname &&
+                errors.nickname.type === 'pattern'
               ) &&
-              nickNameDuplicateChk && (
+              nickNameValidCheck &&
+              (nickNameDuplicateChk ? (
                 <div
                   className={classNames(
                     `flex p-2 rounded-lg`,
-                    style.nickNameCheck,
+                    style.nickNamePass,
                   )}
                 >
-                  <div
-                    className={classNames(
-                      'w-11/12 focus:outline-none',
-                      style.emailInput,
-                    )}
-                  >
-                    중복된 닉네임입니다. check
-                  </div>
+                  {' '}
+                  정상{' '}
                 </div>
-              )}
+              ) : (
+                <div
+                  className={classNames(
+                    `flex p-2 rounded-lg`,
+                    style.nickNameFail,
+                  )}
+                >
+                  중복{' '}
+                </div>
+              ))}
           </div>
         </div>
         <div

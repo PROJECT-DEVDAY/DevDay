@@ -74,4 +74,15 @@ public class ChallengeRecord {
                 .reportCount(0)
                 .build();
     }
+
+    public void doHostReport(){
+        this.hostReport = true;
+    }
+
+    public void setSuccessFail(){
+        this.success = false;
+    }
+    public void plusReportCount(){
+        this.reportCount++;
+    }
 }
