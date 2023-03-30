@@ -27,7 +27,7 @@ public class ChallengeRoomRepoCustomImpl  implements ChallengeRoomRepoCustom{
                 .selectFrom(challengeRoom)
                 .where(hasSearch(searchParam.getSearch()),
                         hasOffset(searchParam.getOffset())
-                        ,challengeRoom.type.eq(searchParam.getType())
+                        ,challengeRoom.category.eq(searchParam.getCategory())
                                 ,challengeRoom.startDate.lt(searchParam.getNowDate())
                         )
                         .orderBy(challengeRoom.id.desc()).
@@ -39,10 +39,8 @@ public class ChallengeRoomRepoCustomImpl  implements ChallengeRoomRepoCustom{
     //검색어가 존재하는지
     private BooleanExpression hasSearch(String search) {
         if (search.equals("")) {
-            System.out.println("검색값없음");
             return null;
         }
-        System.out.println("검색값있음"+search);
         return challengeRoom.title.like("%"+search+"%");
     }
     //offset이 존재하는지
