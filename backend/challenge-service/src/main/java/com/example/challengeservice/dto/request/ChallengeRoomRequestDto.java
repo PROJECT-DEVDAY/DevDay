@@ -30,7 +30,7 @@ public class ChallengeRoomRequestDto {
 
 
     /** 챌린지 분류 **/
-    private String type;
+    private String category;
 
     /** 시작기간 **/
     private String startDate;

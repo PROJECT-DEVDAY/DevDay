@@ -77,7 +77,7 @@ public class ChallengeServiceImpl implements ChallengeService{
         String failUrl = "";
         String backgroundUrl = "";
 
-        if(challengeRoomRequestDto.getType().equals("ALL")){
+        if(challengeRoomRequestDto.getCategory().equals("ALL")){
             //[예외 체크] 1. 자유 챌린지인 경우 , 인증 성공 , 실패에 대한 이미지 파일이 존재한지 판단한다.
             if(challengeRoomRequestDto.getCertSuccessFile()==null || challengeRoomRequestDto.getCertFailFile()==null)
                 throw new ApiException(ExceptionEnum.CHALLENGE_BAD_REQUEST);
@@ -93,7 +93,7 @@ public class ChallengeServiceImpl implements ChallengeService{
 
         ChallengeRoom challengeRoom = ChallengeRoom.from(challengeRoomRequestDto);
 
-        if(challengeRoomRequestDto.getType().equals("ALL")) challengeRoom.setCertificationUrl(successUrl,failUrl);
+        if(challengeRoomRequestDto.getCategory().equals("ALL")) challengeRoom.setCertificationUrl(successUrl,failUrl);
         challengeRoom.setBackGroundUrl(backgroundUrl);
 
 
