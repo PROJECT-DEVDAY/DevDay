@@ -1,6 +1,6 @@
 package com.example.payservice.service;
 
-import com.example.payservice.common.client.ChallengeServiceClient;
+import com.example.payservice.client.ChallengeServiceClient;
 import com.example.payservice.dto.CustomPage;
 import com.example.payservice.dto.bank.AccountDto;
 import com.example.payservice.dto.challenge.SimpleChallengeInfo;

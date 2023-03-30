@@ -1,6 +1,6 @@
 package com.example.payservice.service;
 
-import com.example.payservice.common.client.UserServiceClient;
+import com.example.payservice.client.UserServiceClient;
 import com.example.payservice.dto.InternalResponse;
 import com.example.payservice.dto.response.UserResponse;
 import com.example.payservice.dto.user.PayUserDto;

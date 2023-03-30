@@ -1,6 +1,7 @@
 package com.example.payservice.service;
 
-import com.example.payservice.common.client.UserServiceClient;
+import com.example.payservice.client.ChallengeServiceClient;
+import com.example.payservice.client.UserServiceClient;
 import com.example.payservice.dto.response.UserResponse;
 import com.example.payservice.dto.user.PayUserDto;
 import com.example.payservice.entity.PayUserEntity;
@@ -21,6 +22,7 @@ import javax.transaction.Transactional;
 public class UserService {
     private final BackupService backupService;
     private final UserServiceClient userServiceClient;
+    private final ChallengeServiceClient challengeServiceClient;
     private final PayUserRepository payUserRepository;
 
     /**
@@ -109,5 +111,14 @@ public class UserService {
             log.error("user-service에서 정보를 가져오는데 실패했습니다. -> {}", ex.getMessage());
         }
         return user;
+    }
+
+    /**
+     * 챌린지 서비스로 유저가 챌린지에 참여할 수 있는 API를 호출합니다.
+     * @param userId
+     * @param challengeId
+     */
+    public void sendJoinMessageToChallengeService(long userId, long challengeId) {
+        challengeServiceClient.sendApproveUserJoinChallenge(userId, challengeId);
     }
 }

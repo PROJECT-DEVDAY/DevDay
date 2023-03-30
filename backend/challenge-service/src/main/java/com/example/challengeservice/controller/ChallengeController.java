@@ -20,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -63,6 +64,21 @@ public class ChallengeController {
 
     /** 신대득
      * 챌린지 참가하기 **/
+
+    /**
+     * pay-service로부터 호출되는 API입니다.
+     * 챌린지에 유저가 결제가 완료된 뒤, 응답으로 받습니다.
+     * @author djunnni
+     * @param challengeId
+     * @param request
+     * @return
+     */
+    @PostMapping("/{challengeId}/users")
+    public SingleResult<Long> joinChallenge(@PathVariable("challengeId") Long challengeId, HttpServletRequest request){
+        String userId = request.getHeader("userId");
+        log.info("pay-service로 부터 받은 데이터 => challengeId: {}, userId: {}", challengeId, userId);
+        return responseService.getSingleResult(1L);
+    }
     @PostMapping("/{challengeId}/users/{userId}")
     public SingleResult<Long> joinChallenge(@PathVariable("challengeId") Long challengeId, @PathVariable("userId") Long userId){
         return responseService.getSingleResult(challengeService.joinChallenge(challengeId, userId));
