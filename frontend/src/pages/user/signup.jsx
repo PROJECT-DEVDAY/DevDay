@@ -10,7 +10,6 @@ import Swal from 'sweetalert2';
 import style from './signup.module.scss';
 import { Button } from '../../components/Button';
 import { ReturnArrow } from '../../components/ReturnArrow';
-import { EMAIL_URL, CONFIRM_EMAIL_URL, NICKNAME_URL } from '../api/constants';
 import http from '../api/http';
 
 import { InputLabel } from '@/components/InputLabel';
@@ -97,7 +96,7 @@ const signup = props => {
     setSeconds(parseInt(59, 10));
 
     http
-      .post(EMAIL_URL, {
+      .post(`/user-service/email`, {
         email: watch('email'),
       })
       .then(data => {
@@ -117,7 +116,7 @@ const signup = props => {
 
   const onClickEmailAuthTokenCheck = () => {
     http
-      .patch(CONFIRM_EMAIL_URL, {
+      .patch(`/user-service/confirm-email`, {
         id: emailAuthId,
         authToken: emailAuthToken,
       })
@@ -146,7 +145,7 @@ const signup = props => {
   // nickname check logic
   const onClickDuplicateCheck = () => {
     http
-      .post(NICKNAME_URL, { nickn: watch('nickname') })
+      .post(`/user-service/nickname`, { nickn: watch('nickname') })
       .then(() => {
         setNickNameDuplicatedChk(true);
       })

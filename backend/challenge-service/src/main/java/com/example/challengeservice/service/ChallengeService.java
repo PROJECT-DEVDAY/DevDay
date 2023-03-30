@@ -18,16 +18,19 @@ public interface ChallengeService {
     /** 챌린지 번호들로 챌린지 정보들 조회 **/
     Map<Long, ChallengeInfoResponseDto> challengeInfoList(List<Long> challengeIdList);
     /** 챌린지 참여 **/
-    boolean joinChallenge(Long challengeId, Long userId);
+    String joinChallenge(Long challengeId, Long userId);
     /** 해당 유저의 챌린지 리스트 조회 **/
     UserChallengeInfoResponseDto myChallengeList(Long userId);
     List<SimpleChallengeResponseDto> getListSimpleChallenge (String type , String search , int size , Long offset);
     /** 깃허브 커밋 리스트 찾기 **/
-    int getGithubCommit(String githubId);
+    CommitCountResponseDto getGithubCommit(String githubId);
     /** 푼 문제 리스트 찾기 **/
     SolvedListResponseDto solvedProblemList(String baekjoonId);
     /** 유저의 백준리스트 가져오기  **/
     void updateUserBaekjoon(Long userId);
+    /** 해당 유저가 해당 날짜에 푼 알고리즘 리스트 조회 **/
+    SolvedListResponseDto checkDateUserBaekjoon(Long userId, String selectDate);
+
     /** 스케줄러 저장 메서드 **/
     void createDailyRecord();
     /** 알고리즘 인증 기록 생성하기 **/

@@ -10,7 +10,6 @@ import style from './login.module.scss';
 import { Button } from '../../components/Button';
 import { InputText } from '../../components/InputText';
 import { ReturnArrow } from '../../components/ReturnArrow';
-import { LOGIN_URL } from '../api/constants';
 import http from '../api/http';
 
 import { InputLabel } from '@/components/InputLabel';
@@ -60,7 +59,7 @@ const login = props => {
   const onClickLogin = e => {
     e.preventDefault();
     http
-      .post(LOGIN_URL, user)
+      .post('LOGIN_URL', user)
       .then(data => {
         // data.data.data.accessToken + data.data.data.refreshToken;
       })
@@ -98,7 +97,6 @@ const login = props => {
             <InputText
               name="email"
               type="email"
-              value={user.email}
               inputType="text"
               content="welcome@devday.com"
               onChange={handleChange}
@@ -109,7 +107,6 @@ const login = props => {
             <InputText
               name="password"
               type="password"
-              value={user.password}
               content="12자리 이상, 대문자 소문자 특수문자"
               onChange={handleChange}
             />

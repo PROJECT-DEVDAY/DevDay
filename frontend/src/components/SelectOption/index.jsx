@@ -42,7 +42,7 @@ SelectOption.propTypes = {
 };
 
 SelectOption.defaultProps = {
-  fill: true,
+  fill: false,
   onClick: undefined,
   iconUrl: null,
 };

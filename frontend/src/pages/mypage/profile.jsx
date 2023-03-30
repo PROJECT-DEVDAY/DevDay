@@ -9,7 +9,7 @@ import { SelectArrow } from '@/components/SelectArrow';
 import { UserAvatar } from '@/components/UserAvatar';
 import http from '@/pages/api/http';
 
-const profile = props => {
+const profile = () => {
   const router = useRouter();
 
   const user = http.get(PROFILE_URL, {
@@ -36,7 +36,7 @@ const profile = props => {
       </div>
       <div className="div-body pt-6 pb-4">
         <div className="pt-20 flex justify-center">
-          <UserAvatar imageURL={user.profileImgUrl} />
+          <UserAvatar imageURL={user.profileImgUrl} width={150} height={150} />
         </div>
         <p className="text-center font-medium mb-10">{user.nickname}</p>
       </div>

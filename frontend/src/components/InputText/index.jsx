@@ -14,6 +14,7 @@ export const InputText = ({
   name,
   onClick,
   onChange,
+  ...props
 }) => {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -31,7 +32,8 @@ export const InputText = ({
         placeholder={content}
         name={name}
         className={classNames(style.Content, `w-full h-6`)}
-        onChange={onChange}
+        onChange={onchange}
+        {...props}
       />
     );
     buttonValue = (
@@ -46,7 +48,8 @@ export const InputText = ({
         name={name}
         placeholder={content}
         className={classNames(style.Content, `w-full h-6`)}
-        onChange={onChange}
+        onChange={onchange}
+        {...props}
       />
     );
     buttonValue = (
@@ -61,7 +64,8 @@ export const InputText = ({
         name={name}
         placeholder={content}
         className={classNames(style.Content, `w-full h-6`)}
-        onChange={onChange}
+        onChange={onchange}
+        {...props}
       />
     );
   }
