@@ -67,12 +67,6 @@ logging:
 
 batchSize: 500
 
-#eureka-service:
-#  ip: 172.18.0.5/16
-#
-#network-gateway:
-#  ip: 172.18.0.1/16
-
 gateway:
   ip: 172.18.0.8/16
 
