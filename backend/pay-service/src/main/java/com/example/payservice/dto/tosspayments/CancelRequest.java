@@ -4,10 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CancelRequest {
+public class CancelRequest implements Serializable {
 	private String cancelReason;
 	private Integer cancelAmount;
 

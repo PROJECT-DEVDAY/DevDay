@@ -41,12 +41,11 @@ public class PaymentsController {
 			SuccessRequest successRequest
 	) {
 		Long userId = Utils.parseAuthorizedUserId(request);
-		log.info("클라이언트 toss 결제 완료 -> challengeId: {}, userId: {}, request: {}", challengeId, userId, request);
+		log.info("클라이언트 toss 결제 완료 -> challengeId: {}, userId: {}, request: {}", challengeId, userId,  successRequest);
+
 		Payment payment = paymentService.confirm(successRequest);
 		ChallengeJoinResponse joinResponse = paymentService.saveTransaction(payment, userId, challengeId);
-
 		userService.sendJoinMessageToChallengeService(userId, challengeId);
-
 		return ResponseEntity.ok(new InternalResponse<>(joinResponse));
 	}
 

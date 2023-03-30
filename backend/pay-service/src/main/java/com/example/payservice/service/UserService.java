@@ -119,6 +119,10 @@ public class UserService {
      * @param challengeId
      */
     public void sendJoinMessageToChallengeService(long userId, long challengeId) {
-        challengeServiceClient.sendApproveUserJoinChallenge(userId, challengeId);
+        try {
+            challengeServiceClient.sendApproveUserJoinChallenge(userId, challengeId);
+        } catch(FeignException ex) {
+            log.error("challenge-service로 참가 승인 메시지를 보내는 데 실패했습니다. userId: {}, challengeId: {}", userId, challengeId);
+        }
     }
 }
