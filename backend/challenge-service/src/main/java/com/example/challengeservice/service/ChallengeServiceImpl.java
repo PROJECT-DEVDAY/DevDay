@@ -238,7 +238,7 @@ public class ChallengeServiceImpl implements ChallengeService{
         githubUrl+=githubId;
         Connection conn = Jsoup.connect(githubUrl);
         List<String> solvedList= new ArrayList<>();
-        int count=0;
+        int commitCount=0;
         try {
             Document document = conn.get();
             Elements imageUrlElements = document.getElementsByClass("js-calendar-graph-svg");
@@ -247,7 +247,6 @@ public class ChallengeServiceImpl implements ChallengeService{
             Element todayElement= element.getElementsByTag("Rect").last().getElementsByAttributeValue("data-date", today).first();
             StringTokenizer st= new StringTokenizer(todayElement.text(), " ");
             String commitString=st.nextToken();
-            int commitCount=0;
             if(!commitString.equals("No")){
                 commitCount=Integer.parseInt(commitString);
             }
@@ -255,7 +254,7 @@ public class ChallengeServiceImpl implements ChallengeService{
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return count;
+        return commitCount;
     }
 
     /**
