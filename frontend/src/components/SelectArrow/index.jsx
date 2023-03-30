@@ -12,6 +12,8 @@ export const SelectArrow = ({
   iconname,
   title,
   content,
+  color,
+  onClick,
   ...props
 }) => {
   return (
@@ -23,10 +25,17 @@ export const SelectArrow = ({
       )}
     >
       <div style={{ flex: 1 }}>
-        <p className={style.ArrowTitle}>{title}</p>
+        <p
+          className={classNames(
+            style.ArrowTitle,
+            color && style[`SelectArrow-color-warning`],
+          )}
+        >
+          {title}
+        </p>
         <p className={style.ArrowContent}>{content}</p>
       </div>
-      <div className={style.ArrowDiv}>
+      <div className={classNames(style.ArrowDiv)} onClick={onClick}>
         <SlArrowRight className={style.Arrow} width={30} />
       </div>
     </div>
@@ -35,6 +44,7 @@ export const SelectArrow = ({
 
 SelectArrow.propTypes = {
   fill: PropTypes.bool,
+  color: PropTypes.bool,
   title: PropTypes.string.isRequired,
   content: PropTypes.string.isRequired,
   onClick: PropTypes.func,
