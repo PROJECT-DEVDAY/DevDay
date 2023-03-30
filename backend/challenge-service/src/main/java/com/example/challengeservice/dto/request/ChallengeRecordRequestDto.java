@@ -1,11 +1,11 @@
 package com.example.challengeservice.dto.request;
 
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
 @Getter
-@Setter
+@Builder
 public class ChallengeRecordRequestDto {
 
     /** 유저 아이디 **/
@@ -16,4 +16,10 @@ public class ChallengeRecordRequestDto {
     /** 인증 URL **/
     private MultipartFile photoCertFile;
 
+    public static ChallengeRecordRequestDto from(Long userId, Long challengeRoomId){
+        return ChallengeRecordRequestDto.builder()
+                .userId(userId)
+                .challengeRoomId(challengeRoomId)
+                .build();
+    }
 }

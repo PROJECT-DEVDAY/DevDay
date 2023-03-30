@@ -64,7 +64,7 @@ public class ChallengeRecord {
     }
 
     // 알고리즘 생성자
-    public static ChallengeRecord algoFrom(ChallengeRecordRequestDto dto ,String date, int algorithmCount, UserChallenge userChallenge){
+    public static ChallengeRecord fromAlgo(String date, int algorithmCount, UserChallenge userChallenge){
         return ChallengeRecord.builder()
                 .createAt(date)
                 .userChallenge(userChallenge)

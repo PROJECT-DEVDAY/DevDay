@@ -16,6 +16,11 @@ public interface UserChallengeRepository extends JpaRepository<UserChallenge,Lon
     Optional<UserChallenge> findByChallengeRoomIdAndUserId(Long challengeId, Long userId);
 
     Optional<UserChallenge> findById(Long id);
+
+    /** 해당 날짜에 그 카테고리로 만들어진 UserChallenge 리스트 가져오기 **/
+    @Query("select uc from UserChallenge uc join ChallengeRoom cr on uc.challengeRoom.id=cr.id where uc.challengeRoom.startDate<=:getDate and uc.challengeRoom.endDate >=:getDate and uc.challengeRoom.category =:category")
+    List<UserChallenge> findAllByDateAndCategory(@Param("getDate") String getDate, @Param("category") String category);
+
     int countByChallengeRoomId(Long challengeId);
     List<UserChallenge> findAllByUserId(Long userId);
 
