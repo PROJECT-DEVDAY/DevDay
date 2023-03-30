@@ -6,6 +6,7 @@ import com.example.payservice.dto.response.ChallengeJoinResponse;
 import com.example.payservice.dto.tosspayments.Payment;
 import com.example.payservice.dto.tosspayments.SuccessRequest;
 import com.example.payservice.service.PaymentService;
+import com.example.payservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 public class PaymentsController {
 
 	private final PaymentService paymentService;
+	private final UserService userService;
 
 	/**
 	 * tosspayments에서 승인이 된 후 redirect된 devday페이지에서 호출을 하는 URL입니다.
@@ -42,7 +44,24 @@ public class PaymentsController {
 		log.info("클라이언트 toss 결제 완료 -> challengeId: {}, userId: {}, request: {}", challengeId, userId, request);
 		Payment payment = paymentService.confirm(successRequest);
 		ChallengeJoinResponse joinResponse = paymentService.saveTransaction(payment, userId, challengeId);
-		// TODO: 필요시, challenge-service로 결제완료 메시지를 함께 알려준다.
+
+		userService.sendJoinMessageToChallengeService(userId, challengeId);
+
 		return ResponseEntity.ok(new InternalResponse<>(joinResponse));
+	}
+
+	/**
+	 * [TEST] 챌린지 JOIN 메세지 전송 API입니다.
+	 * @param challengeId
+	 * @param userId
+	 * @return
+	 */
+	@GetMapping("/{challengeId}/join/{userId}")
+	public ResponseEntity<InternalResponse<Boolean>> joinChallenge(
+			@PathVariable Long challengeId,
+			@PathVariable Long userId
+	) {
+		userService.sendJoinMessageToChallengeService(userId, challengeId);
+		return ResponseEntity.ok(new InternalResponse<>(true));
 	}
 }

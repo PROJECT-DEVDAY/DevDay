@@ -19,7 +19,7 @@ public class DepositTransactionHistoryEntity extends BaseEntity {
 	@Column(name = "transaction_history_id")
 	private Long id;
 
-	@ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
 	private PayUserEntity user;
 
 	private int amount;
@@ -35,5 +35,12 @@ public class DepositTransactionHistoryEntity extends BaseEntity {
 
 	public static boolean hasChallengeFields(DepositTransactionType type) {
 		return type == DepositTransactionType.REFUND || type == DepositTransactionType.PAY;
+	}
+
+	public void setUser(PayUserEntity user) {
+		this.user = user;
+		if(!user.getDepositTransactionHistories().contains(this)) {
+			user.getDepositTransactionHistories().add(this);
+		}
 	}
 }

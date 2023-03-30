@@ -56,3 +56,4 @@ openapi:
 logging:
   level:
     com.example.payservice: debug
+    org.springframework.jdbc: debug

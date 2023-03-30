@@ -12,6 +12,7 @@ import com.example.challengeservice.dto.response.ChallengeRoomResponseDto;
 import com.example.challengeservice.dto.response.SimpleChallengeResponseDto;
 import com.example.challengeservice.dto.response.*;
 import com.example.challengeservice.dto.response.SolvedListResponseDto;
+import com.example.challengeservice.infra.amazons3.service.AmazonS3Service;
 import com.example.challengeservice.service.ChallengeService;
 import com.example.challengeservice.service.ChallengeServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +20,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +34,8 @@ import java.util.Map;
 public class ChallengeController {
     private final ResponseService responseService;
     private final ChallengeService challengeService;
+
+    private final AmazonS3Service s3Service;
 
     /** 홍금비
      * 챌린지 생성 **/
@@ -63,8 +68,23 @@ public class ChallengeController {
 
     /** 신대득
      * 챌린지 참가하기 **/
+
+    /**
+     * pay-service로부터 호출되는 API입니다.
+     * 챌린지에 유저가 결제가 완료된 뒤, 응답으로 받습니다.
+     * @author djunnni
+     * @param challengeId
+     * @param request
+     * @return
+     */
+    @PostMapping("/{challengeId}/users")
+    public SingleResult<Long> joinChallenge(@PathVariable("challengeId") Long challengeId, HttpServletRequest request){
+        String userId = request.getHeader("userId");
+        log.info("pay-service로 부터 받은 데이터 => challengeId: {}, userId: {}", challengeId, userId);
+        return responseService.getSingleResult(1L);
+    }
     @PostMapping("/{challengeId}/users/{userId}")
-    public SingleResult<Long> joinChallenge(@PathVariable("challengeId") Long challengeId, @PathVariable("userId") Long userId){
+    public SingleResult<Boolean> joinChallenge(@PathVariable("challengeId") Long challengeId, @PathVariable("userId") Long userId){
         return responseService.getSingleResult(challengeService.joinChallenge(challengeId, userId));
     }
 
@@ -130,11 +150,11 @@ public class ChallengeController {
         return ResponseEntity.status(HttpStatus.OK).body("인증기록 저장완료");
     }
 
-    /** 사진 인증 상세 조회 **/
-    @GetMapping("photo-record/{recordId}")
-    public SingleResult<PhotoRecordDetailResponseDto> getPhotoRecordDetail(@PathVariable("recordId") Long recordId){
+    /** 사진 인증 상세 조회 (Auth) 로그인이 반드시 필요함) api 변경필요합니다. **/
+    @GetMapping("photo-record/{recordId}/users/{userId}")
+    public SingleResult<PhotoRecordDetailResponseDto> getPhotoRecordDetail(@PathVariable("recordId") Long recordId , @PathVariable("userId") Long userId){
 
-        return responseService.getSingleResult(challengeService.getPhotoRecordDetail(recordId));
+        return responseService.getSingleResult(challengeService.getPhotoRecordDetail(userId ,recordId));
 
     }
 
@@ -156,7 +176,7 @@ public class ChallengeController {
     }
      */
 
-    /** 팀원의 인증 기록 불러오기 테스트 코드**/
+    /** 팀원의 인증 기록 불러오기 테스트 코드 (로그인이 되어있어야함) **/
     @GetMapping("{challengeId}/record")
     public ListResult<?> getTeamChallengeRecord(@PathVariable("challengeId")Long challengeRoomId ,@RequestParam("view") String viewType){
 
@@ -165,7 +185,7 @@ public class ChallengeController {
     }
 
 
-    /** 사진 기록 신고하기   -> 이거 유효한 유저인지 체크하고 넘겨줘야하지 않나? **/
+    /** 사진 기록 신고하기(반드시 로그인이 되어있어야함) **/
 
     @PostMapping ("report/record")
     @ResponseStatus(HttpStatus.ACCEPTED)
@@ -177,6 +197,17 @@ public class ChallengeController {
     }
 
 
+
+
+
+
+    /** 기본 사진 업로드 **/
+
+    @PostMapping("upload/image")
+    public String updateDefaultImage(@RequestParam("file") MultipartFile multipartFile , @RequestParam("dir") String dir) throws IOException{
+
+        return  s3Service.upload(multipartFile,dir);
+    }
 
 
 

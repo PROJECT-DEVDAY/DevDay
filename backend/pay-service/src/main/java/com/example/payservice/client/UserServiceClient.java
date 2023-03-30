@@ -1,4 +1,4 @@
-package com.example.payservice.common.client;
+package com.example.payservice.client;
 
 import com.example.payservice.dto.InternalResponse;
 import com.example.payservice.dto.response.UserResponse;

@@ -29,7 +29,7 @@ public class PrizeHistoryEntity extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private PrizeHistoryType prizeHistoryType;
 
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne
     @JoinColumn(name = "USER_ID")
     @JsonBackReference
     private PayUserEntity user;

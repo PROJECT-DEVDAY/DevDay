@@ -5,7 +5,7 @@
   background-color: #fff;
   font-size: 1rem;
   cursor: pointer;
-  border: 2px solid var(--gray-border);
+  // border: 2px solid var(--gray-border);
   display: flex;
   justify-content: space-between;
   padding: 10px;
@@ -15,16 +15,16 @@
   color: white;
 }
 .ArrowTitle {
-  font-size: x-large;
+  font-size: large;
   font-weight: bolder;
   margin: 0;
-  margin: 15px 0px 0 0px;
+  // margin: 15px 0px 0 0px;
 }
 
 .ArrowContent {
   margin: 0;
   font-size: small;
-  margin: 0 0 15px 0;
+  // margin: 0 0 15px 0;
 }
 .Arrow {
   width: 100%;

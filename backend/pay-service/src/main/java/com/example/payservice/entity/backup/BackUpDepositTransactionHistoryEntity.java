@@ -20,7 +20,7 @@ public class BackUpDepositTransactionHistoryEntity extends BaseEntity {
     @Column(name = "transaction_history_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private BackUpPayUserEntity user;
 
     private int amount;

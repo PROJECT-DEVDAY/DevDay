@@ -22,8 +22,8 @@ public class ChallengeRoomRequestDto {
     private int entryFee;
 
 
-    /** 인원 수 **/
-    private int userCount;
+    /** 최대 참가 인원 수 **/
+    private int maxParticipantsSize;
 
     /** 설명 **/
     private String introduce;

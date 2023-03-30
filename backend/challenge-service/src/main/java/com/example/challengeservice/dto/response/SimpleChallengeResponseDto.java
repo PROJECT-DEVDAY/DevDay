@@ -7,7 +7,6 @@ import lombok.Setter;
 @Getter
 public class SimpleChallengeResponseDto {
 
-
     private Long id;
     /** 제목 **/
     private String title;
@@ -15,11 +14,10 @@ public class SimpleChallengeResponseDto {
     private Long hostId;
     /** 참가비용 **/
     private int entryFee;
-    /** 인원수 **/
 
     /** 분류 **/
-    private String type;
-    private int userCount;
+    private String category;
+
     /** 시작기간 **/
     private String startDate;
     /** 종료 기간 **/
@@ -27,6 +25,11 @@ public class SimpleChallengeResponseDto {
     /** 첼린지 이미지 **/
     private String backGroundUrl;
 
-    /** 참여자 인원 **/
-    private int participantsSize;
+    /** 현재 참여자 수 **/
+    private int curParticipantsSize;
+
+    /** 최대 참여자 수 **/
+    private int maxParticipantsSize;
+
+
 }

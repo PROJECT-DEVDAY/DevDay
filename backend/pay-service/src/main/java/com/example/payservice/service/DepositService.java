@@ -1,6 +1,6 @@
 package com.example.payservice.service;
 
-import com.example.payservice.common.client.ChallengeServiceClient;
+import com.example.payservice.client.ChallengeServiceClient;
 import com.example.payservice.dto.CustomPage;
 import com.example.payservice.dto.challenge.SimpleChallengeInfo;
 import com.example.payservice.dto.deposit.DepositTransactionHistoryDto;
@@ -245,6 +245,7 @@ public class DepositService {
     public void settle(long challengeId, ChallengeSettleRequest.ChallengeSettleInfo result) {
         try {
             PayUserEntity challengeUser = userService.getPayUserEntityForUpdate(result.getUserId());
+
             DepositTransactionHistoryEntity history = depositTransactionHistoryRepository.findByUserAndChallengeIdAndType(
                     challengeUser, challengeId, DepositTransactionType.PAY
             ).orElseThrow(() -> new UnRefundableException("결제 이력이 없는 유저입니다."));

@@ -24,14 +24,10 @@ public class PayUserEntity extends BaseEntity {
     private Integer deposit;
     private Integer prize;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     @JsonManagedReference
     List<PrizeHistoryEntity> prizeHistories = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, orphanRemoval = true)
-    @JsonIgnoreProperties
-    List<DepositTransactionEntity> depositTransactions = new ArrayList<>();
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     @JsonIgnoreProperties
     List<DepositTransactionHistoryEntity> depositTransactionHistories = new ArrayList<>();
 
