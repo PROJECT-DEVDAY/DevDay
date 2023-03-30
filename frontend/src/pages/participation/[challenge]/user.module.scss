@@ -1,0 +1,28 @@
+.boxStyle {
+  border-bottom: 4px solid var(--gray-border);
+}
+.RadioGroup {
+  flex-direction: row;
+
+  label {
+    background-color: var(--gray-bg);
+    cursor: pointer;
+
+    &.selected {
+      border-bottom: 2px solid black;
+    }
+  }
+
+  input[type='radio'] {
+    display: none;
+  }
+}
+.greybox {
+  display: flex;
+  border-radius: 12px;
+  border: 2px solid var(--gray-border);
+  color: var(--gray-extra);
+}
+.peopleBox {
+  height: 200px;
+}
