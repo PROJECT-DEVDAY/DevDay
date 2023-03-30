@@ -25,9 +25,10 @@ public class SolvedacRepositoryImpl implements SolvedacRepositoryCustom {
                 )
                 .from(solvedac)
                 .join(solvedac.user, user)
-                .where(solvedac.user.id.eq(userId),
-                       solvedac.successDate.goe(startDate),
-                       solvedac.successDate.loe(endDate))
+                .where(solvedac.user.id.eq(userId)
+                        .and(solvedac.successDate.goe(startDate))
+                        .and(solvedac.successDate.loe(endDate))
+                        )
                 .fetch();
     }
 }
