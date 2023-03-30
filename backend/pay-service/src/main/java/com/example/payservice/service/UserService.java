@@ -48,8 +48,8 @@ public class UserService {
     public void deletePayUser(Long userId) {
         PayUserEntity entity = getPayUserEntityForUpdate(userId);
         // 백업
-        backupService.backup(entity);
-        payUserRepository.deleteByUserId(userId);
+        backupService.backupUserData(entity);
+        backupService.deleteOriginalUserData(entity);
     }
 
     @Transactional

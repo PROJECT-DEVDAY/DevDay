@@ -26,15 +26,11 @@ public class BackUpPayUserEntity extends BaseEntity {
     private Integer deposit;
     private Integer prize;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     @JsonManagedReference
     List<BackUpPrizeHistoryEntity> prizeHistories = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, orphanRemoval = true)
-    @JsonIgnoreProperties
-    List<BackUpDepositTransactionEntity> depositTransactions = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     @JsonIgnoreProperties
     List<BackUpDepositTransactionHistoryEntity> depositTransactionHistories = new ArrayList<>();
 
