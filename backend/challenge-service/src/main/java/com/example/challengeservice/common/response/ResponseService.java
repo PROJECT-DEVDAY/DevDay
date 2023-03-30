@@ -26,6 +26,15 @@ public class ResponseService {
         return result;
     }
 
+    public <T> SingleResult<T> getSingleResult(int code,T data) {
+        SingleResult<T> result = new SingleResult<>();
+        setSuccessResult(result);
+        result.setCode(code);
+        result.setData(data);
+
+        return result;
+    }
+
     public <T> ListResult<T> getListResult(List<T> data){
         ListResult<T> result = new ListResult<>();
         setSuccessResult(result);

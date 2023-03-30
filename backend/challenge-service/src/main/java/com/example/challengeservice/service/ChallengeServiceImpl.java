@@ -63,8 +63,7 @@ public class ChallengeServiceImpl implements ChallengeService{
      * @param offset 마지막으로 검색된 challengeRoomId
      * **/
     @Override
-    public List<SimpleChallengeResponseDto> getListSimpleChallenge(String category ,String search,int size,Long offset ) {
-
+    public List<SimpleChallengeResponseDto> getListSimpleChallenge(String category,String search,int size,Long offset ) {
         //searchParam :검색에 필요한 조건을 담은 객체
         SearchParam searchParam = new SearchParam(category,search,size,offset,commonService.getDate());
 
@@ -74,12 +73,15 @@ public class ChallengeServiceImpl implements ChallengeService{
         Type listType = new TypeToken<List<SimpleChallengeResponseDto>>() {}.getType(); // 리스트 타입 지정
         List<SimpleChallengeResponseDto> dtoList = modelMapper.map(challengeRooms, listType); // 변환
 
+        log.info(dtoList.size()+" 찾은 방 개수");
+        log.info(commonService.getDate()+" 현재 날짜");
+
         return dtoList;
     }
 
     /**
      * author : 홍금비
-     * explain : ChallengeRoom 생성
+     * explain : 챌린지방  생성
      * @param challengeRoomRequestDto ChallengeRoom를 생성하는데 필요한 필드 값
      * @return 생성된 ChallengeRoomID
      * @throws IOException
@@ -90,16 +92,15 @@ public class ChallengeServiceImpl implements ChallengeService{
     @Override
     public Long createChallenge(ChallengeRoomRequestDto challengeRoomRequestDto)  throws IOException {
 
-
-
         String successUrl = "";
         String failUrl = "";
         String backgroundUrl = "";
+        String s3DirName ="ChallengeRoom";
 
-        //TODO [예외 체크] 1. 자유 챌린지인 경우 , 인증 성공 , 실패에 대한 이미지 파일이 존재한지 판단한다.
+        //TODO [예외 체크] 1. 자유 챌린지인 경우 , 인증 성공 , 실패에 대한 이미지 파일값이 존재한지 확인한다.
         if(challengeRoomRequestDto.getCategory().equals("FREE")){
             if(challengeRoomRequestDto.getCertSuccessFile()==null || challengeRoomRequestDto.getCertFailFile()==null)
-                throw new ApiException(ExceptionEnum.CHALLENGE_BAD_REQUEST);
+                throw new ApiException(ExceptionEnum.CHALLENGE_FILE_PARAMETER_EXCEPTION);
         }
 
         ChallengeRoom challengeRoom = ChallengeRoom.from(challengeRoomRequestDto);
@@ -123,16 +124,14 @@ public class ChallengeServiceImpl implements ChallengeService{
                         break;
                 }
             }else{
-                    backgroundUrl = amazonS3Service.upload(challengeRoomRequestDto.getBackGroundFile(),"ChallengeRoom");
+                    backgroundUrl = amazonS3Service.upload(challengeRoomRequestDto.getBackGroundFile(),s3DirName);
                     challengeRoom.setBackGroundUrl(backgroundUrl);
                 }
 
-
-
         if(challengeRoomRequestDto.getCategory().equals("FREE")) {
             //인증 성공,실패의 사진을 업로드
-            successUrl = amazonS3Service.upload(challengeRoomRequestDto.getCertSuccessFile(),"ChallengeRoom");
-            failUrl = amazonS3Service.upload(challengeRoomRequestDto.getCertFailFile(),"ChallengeRoom");
+            successUrl = amazonS3Service.upload(challengeRoomRequestDto.getCertSuccessFile(),s3DirName);
+            failUrl = amazonS3Service.upload(challengeRoomRequestDto.getCertFailFile(),s3DirName);
             challengeRoom.setCertificationUrl(successUrl,failUrl);
         }
 

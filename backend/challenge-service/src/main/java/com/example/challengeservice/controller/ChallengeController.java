@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -37,14 +38,32 @@ public class ChallengeController {
 
     private final AmazonS3Service s3Service;
 
-    /** 홍금비
-     * 챌린지 생성 **/
+    /**
+     * author  : 홍금비
+     * explain :챌린지 생성
+     * **/
     @PostMapping()
-    public ResponseEntity<ChallengeCreateResponseDto> createChallenge(@ModelAttribute ChallengeRoomRequestDto challengeRoomRequestDto) throws IOException {
+    public ResponseEntity<ChallengeCreateResponseDto> createChallenge(@Valid @ModelAttribute ChallengeRoomRequestDto challengeRoomRequestDto) throws IOException {
         Long id=challengeService.createChallenge(challengeRoomRequestDto);
         String message="[Success] 챌린지 방이 생성되었습니다.";
         return ResponseEntity.status(HttpStatus.CREATED).body(ChallengeCreateResponseDto.from(id, message));
     }
+
+
+
+    /**
+     * author : 홍금비
+     * explain: 메인 페이지에서 참여가능한 첼린지 목록 조회
+     * */
+    @GetMapping("")
+    public  ResponseEntity<List<SimpleChallengeResponseDto>> getListSimpleChallenge (@RequestParam ("category") String category, @RequestParam (value = "offset", required = false) Long offset , @RequestParam (value = "search" ,required = false) String search , @RequestParam ("size") int size){
+
+        List<SimpleChallengeResponseDto> list = challengeService.getListSimpleChallenge(category,search,size,offset);
+        return  ResponseEntity.status(HttpStatus.OK).body(list);
+
+
+    }
+
 
     /** 신대득
      * 챌린지 조회 **/
@@ -145,16 +164,6 @@ public class ChallengeController {
      */
 
 
-
-    /** 메인 페이지 조회 **/
-    @GetMapping("")
-    public  ResponseEntity<List<SimpleChallengeResponseDto>> getListSimpleChallenge (@RequestParam ("type") String type, @RequestParam (value = "offset", required = false) Long offset , @RequestParam (value = "search" ,required = false) String search , @RequestParam ("size") int size){
-
-        List<SimpleChallengeResponseDto> list = challengeService.getListSimpleChallenge(type,search,size,offset);
-        return  ResponseEntity.status(HttpStatus.OK).body(list);
-
-
-    }
 
 
     /** 사진 인증 저장 **/

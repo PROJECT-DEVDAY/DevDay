@@ -8,7 +8,8 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor
 public enum ExceptionEnum {
     USER_CHALLENGE_EXIST_EXCEPTION(HttpStatus.BAD_REQUEST,"UC0001","이미 이 챌린지에 존재하는 유저입니다."),
-    CHALLENGE_BAD_REQUEST(HttpStatus.BAD_REQUEST ,"UC002" ,"요청한 값이 유효하지 않습니다."),
+    CHALLENGE_BAD_REQUEST(HttpStatus.BAD_REQUEST ,"C002" ,"요청한 값이 유효하지 않습니다."),
+    CHALLENGE_FILE_PARAMETER_EXCEPTION(HttpStatus.BAD_REQUEST ,"C003" ,"인증 기준 사진의 값이 존재하지 않습니다."),
     CHALLENGE_RECORD_BAD_REQUEST(HttpStatus.BAD_REQUEST ,"UC003" ,"날짜가 다릅니다.."),
     CHALLENGE_RECORD_SELF_REPORT(HttpStatus.BAD_REQUEST ,"UC003" ,"자기 자신의 인증 기록은 신고하실 수 없습니다."),
     CHALLENGE_NOT_EXIST_EXCEPTION(HttpStatus.NOT_FOUND, "C0003", "존재하지 않는 챌린지 입니다."),
