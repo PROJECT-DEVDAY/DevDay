@@ -25,7 +25,7 @@ export const ChallengeItem = ({
 
   const goToChallengDetail = () => {
     onClick(id);
-    // router.push(`${디테일/id}`);
+    router.push(`participation/{디테일 / id}`);
   };
   const handleKeyPress = event => {
     if (event.key === 'Enter' || event.key === ' ') {
