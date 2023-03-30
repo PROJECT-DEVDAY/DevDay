@@ -15,6 +15,9 @@ public enum ExceptionEnum {
     USER_CHALLENGE_LIST_NOT_EXIST(HttpStatus.NOT_FOUND, "UC0003", "이 유저의 챌린지가 존재하지 않습니다."),
     UNABLE_TO_JOIN_CHALLENGEROOM(HttpStatus.FORBIDDEN,"?","해당 챌린지에 참가 인원 수가 초과하였습니다."),
 
+    ALGO_ALREADY_UPDATE(HttpStatus.BAD_REQUEST,"A0010","이미 해당 계정의 알고리즘 정보가 최신입니다."),
+    ALGO_NOT_EXIST_ID(HttpStatus.NOT_FOUND, "A0020", "해당 유저의 백준 아이디를 찾을 수 없습니다."),
+
     USER_CHALLENGE_NOT_EXIST_EXCEPTION(HttpStatus.NOT_FOUND, "C0004", "해당 챌린지에 존재하지 않는 참여자 입니다."),
     CONFIRM_FAILURE_ALGO_EXCEPTION(HttpStatus.NOT_FOUND, "CF0001", "인증에 실패했습니다. 알고리즘 인증 회수가 부족합니다."),
 

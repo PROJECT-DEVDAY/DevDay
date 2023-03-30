@@ -22,10 +22,10 @@ public class ChallengeServiceApplication {
     }
     
     /* Feign 예외 1번 방법 */
-    @Bean
-    public Logger.Level feignLoggerLevel(){
-        return Logger.Level.FULL;
-    }
+//    @Bean
+//    public Logger.Level feignLoggerLevel(){
+//        return Logger.Level.FULL;
+//    }
 
 //    @Bean
 //    public FeignErrorDecoder getFeignErrorDecoder(){
