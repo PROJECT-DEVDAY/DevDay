@@ -53,8 +53,7 @@ public class ChallengeRoom {
     private boolean isOpen;
 
     /** 분류 **/
-
-    private String type;
+    private String category;
 
     /** 비밀번호 (추후 추가) **/
 
@@ -91,7 +90,7 @@ public class ChallengeRoom {
                  .entryFee(dto.getEntryFee())
                  .userCount(dto.getUserCount())
                  .introduce(dto.getIntroduce())
-                 .type(dto.getType())
+                 .category(dto.getCategory())
                  .startDate(dto.getStartDate())
                  .endDate(dto.getEndDate())
                  .commitCount(dto.getCommitCount())
