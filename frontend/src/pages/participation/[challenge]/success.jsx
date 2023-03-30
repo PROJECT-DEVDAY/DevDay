@@ -41,15 +41,17 @@ const success = ({ result, hasError }) => {
 export const getServerSideProps = async context => {
   const { challenge } = context.params;
   let hasError = false;
+
   try {
-    let { data } = await fetch(
+    let { data } = await axios.get(
       `http://localhost:8003/payments/${challenge}/success`,
       {
         headers: {
           userId: 1,
         },
+        params: context.query,
       },
-    ).then(res => res.json());
+    );
   } catch (e) {
     hasError = true;
   }
