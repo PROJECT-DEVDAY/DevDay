@@ -4,7 +4,7 @@ import { SlArrowRight } from 'react-icons/sl';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 
-import './selectarrow.css';
+import style from './index.module.scss';
 
 export const SelectArrow = ({
   fill,
@@ -17,17 +17,17 @@ export const SelectArrow = ({
   return (
     <div
       className={classNames(
-        'SelectArrow',
+        style.SelectArrow,
         className,
         fill && 'SelectArrow-background-fill',
       )}
     >
       <div style={{ flex: 1 }}>
-        <p className="ArrowTitle">{title}</p>
-        <p className="ArrowContent">{content}</p>
+        <p className={style.ArrowTitle}>{title}</p>
+        <p className={style.ArrowContent}>{content}</p>
       </div>
-      <div className="ArrowDiv">
-        <SlArrowRight className="Arrow" width={30} />
+      <div className={style.ArrowDiv}>
+        <SlArrowRight className={style.Arrow} width={30} />
       </div>
     </div>
   );
