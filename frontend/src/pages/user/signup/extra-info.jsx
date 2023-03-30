@@ -13,10 +13,10 @@ import { ReturnArrow } from '../../../components/ReturnArrow';
 
 import { JOIN_URL } from '@/pages/api/constants';
 import http from '@/pages/api/http';
-import { saveExtraInfos } from '@/store/signup/signupSlice';
+import { saveExtraInfos, reset } from '@/store/signup/signupSlice';
 
 const signup = props => {
-  const Router = useRouter();
+  const router = useRouter();
   const dispatch = useDispatch();
   const signUpInfos = useSelector(state => state.signUp);
 
@@ -35,25 +35,54 @@ const signup = props => {
   };
 
   const onClickJoin = () => {
+    let timerInterval;
+
     dispatch(
       saveExtraInfos({
         baekjoon,
         github,
       }),
     );
-    const signUpInfosData = { ...signUpInfos, ...inputs };
 
-    // api
     http
-      .post(JOIN_URL(signUpInfosData.email), signUpInfosData)
-      .then
-      // 리셋 시켜주고 , 로그인 창으로 이동시키기
-      // 건너뛰기 누르면 경고창 한번 나오고 예 누르면 가입시켜주고 넘어가기
-      ();
-
-    // Router.push('/main');
+      .post(JOIN_URL(signUpInfos.emailAuthId), signUpInfos)
+      .then(() => {
+        Swal.fire({
+          icon: 'success',
+          title: '회원가입 성공',
+          timer: 1000,
+          timerProgressBar: true,
+          text: 'Dev Day를 즐겨보세요',
+          didOpen: () => {
+            Swal.showLoading();
+            const b = Swal.getHtmlContainer().querySelector('b');
+            timerInterval = setInterval(() => {
+              b.textContent = Swal.getTimerLeft();
+            }, 100);
+          },
+          willClose: () => {
+            clearInterval(timerInterval);
+          },
+        })
+          .then(dispatch.reset())
+          .then(router.push('./user/login'));
+      })
+      .catch(error => {
+        Swal.fire({
+          icon: 'error',
+          title: '실패!',
+          text: error.message,
+        });
+      });
   };
   const onClickPass = () => {
+    dispatch(
+      saveExtraInfos({
+        baekjoon,
+        github,
+      }),
+    );
+
     Swal.fire({
       title: '다음에 입력하실 건가요?',
       text: '나중에 다시 입력할 수 있습니다!',
@@ -65,13 +94,24 @@ const signup = props => {
       cancelButtonText: '아니요',
     }).then(result => {
       if (result.isConfirmed) {
-        // 회원가입 로직 실행
+        http
+          .post(JOIN_URL(signUpInfos.emailAuthId), signUpInfos)
+          .then(() => {
+            router.push('./user/login');
+          })
+          .catch(error => {
+            Swal.fire({
+              icon: 'error',
+              title: '실패!',
+              text: error.message,
+            });
+          });
       }
     });
   };
   return (
     <div className={style.signup}>
-      <div className={classNames(`style.div-header`, `sticky top-0`)}>
+      <div className={`style.div-header sticky top-0`}>
         <ReturnArrow title="회원가입" />
       </div>
       <div className="div-body p-6 pb-32">

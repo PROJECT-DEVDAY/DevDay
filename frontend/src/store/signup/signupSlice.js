@@ -12,6 +12,7 @@ const signupSlice = createSlice({
     nickname: '',
     baekjoon: '',
     github: '',
+    emailAuthId: '',
   },
   reducers: {
     saveSignUpInfos: (state, action) => {
@@ -33,6 +34,7 @@ const signupSlice = createSlice({
         nickname: '',
         baekjoon: '',
         github: '',
+        emailAuthId: '',
       });
     },
   },

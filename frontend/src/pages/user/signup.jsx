@@ -18,14 +18,14 @@ import { saveSignUpInfos } from '@/store/signup/signupSlice';
 
 const signup = props => {
   const [emailValidCheck, setEmailValidCheck] = useState(false);
-  const [emailCertificatedCheck, setEmailCertificatedCheck] = useState(false);
+  const [emailAuthenticated, setEmailAuthenticated] = useState(false);
 
   // 인증 고유번호
   const [emailAuthId, setEmailAuthId] = useState(-1);
   const [emailAuthToken, setEmailAuthtoken] = useState('');
 
   const [nickNameValidCheck, setNickNameValidCheck] = useState(false);
-  const [nickNameDuplicateChk, setNickNameDuplicateChk] = useState(false);
+  const [nickNameDuplicatedChk, setNickNameDuplicatedChk] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
   const router = useRouter();
@@ -42,9 +42,9 @@ const signup = props => {
     return errors;
   };
 
+  const [minutes, setMinutes] = useState(parseInt(4, 10));
+  const [seconds, setSeconds] = useState(parseInt(59, 10));
   const Timer = () => {
-    const [minutes, setMinutes] = useState(parseInt(4, 10));
-    const [seconds, setSeconds] = useState(parseInt(59, 10));
     useEffect(() => {
       const countdown = setInterval(() => {
         if (parseInt(seconds, 10) > parseInt(0, 10)) {
@@ -55,10 +55,7 @@ const signup = props => {
             clearInterval(countdown);
             setEmailValidCheck(false);
           } else {
-            setMinutes(
-              parseInt(minutes, 10) - parseInt(1, 10),
-              parseInt(seconds, 10) - parseInt(1, 10),
-            );
+            setMinutes(parseInt(minutes, 10) - parseInt(1, 10));
             setSeconds(parseInt(59, 10));
           }
         }
@@ -98,6 +95,8 @@ const signup = props => {
 
   const onClickEmailValidation = () => {
     setEmailValidCheck(true);
+    setMinutes(parseInt(4, 10));
+    setSeconds(parseInt(59, 10));
 
     http
       .post(EMAIL_URL, {
@@ -114,30 +113,47 @@ const signup = props => {
         id: emailAuthId,
         authToken: emailAuthToken,
       })
-      .then(setEmailCertificatedCheck(true))
+      .then(() => {
+        setEmailAuthenticated(true);
+        setSeconds(parseInt(0, 10));
+        setMinutes(parseInt(0, 10));
+
+        Swal.fire({
+          icon: 'success',
+          title: '인증 성공',
+          text: '인증에 성공했습니다!',
+        });
+      })
+      .then(setEmailValidCheck(false))
       .catch(error => {
         Swal.fire({
           icon: 'error',
           title: '인증 실패',
           text: error.response.data.message,
         });
-        setEmailCertificatedCheck(false);
+        setEmailAuthenticated(false);
       });
   };
 
   // nickname check logic
   const onClickDuplicateCheck = () => {
-    setNickNameValidCheck(true);
-
     http
-      .post(NICKNAME_URL, { nickname: watch('nickname') })
-      .then(setNickNameDuplicateChk(true));
-    // .catch(setNickNameDuplicateChk(false));
+      .post(NICKNAME_URL, { nickn: watch('nickname') })
+      .then(() => {
+        setNickNameDuplicatedChk(true);
+      })
+      .then(() => {
+        setNickNameValidCheck(prev => !prev);
+      })
+      .catch(() => {
+        setNickNameDuplicatedChk(false);
+      });
   };
 
   const onSubmit = data => {
-    if (emailCertificatedCheck && nickNameDuplicateChk) {
-      dispatch(saveSignUpInfos(data));
+    if (emailAuthenticated && nickNameDuplicatedChk) {
+      const inputData = { ...data, emailAuthId };
+      dispatch(saveSignUpInfos(inputData));
       router.push('./signup/extra-info');
     } else {
       Swal.fire({
@@ -161,6 +177,7 @@ const signup = props => {
               className={classNames(style.Content, `w-full h-6`)}
               type="text"
               placeholder="welcome@devday.com"
+              readOnly={emailValidCheck || emailAuthenticated}
               {...register('email', {
                 required: true,
                 pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
@@ -199,6 +216,7 @@ const signup = props => {
                   )}
                   onChange={onChangeAuthToken}
                 />
+                {{ emailAuthenticated } && <Timer />}
                 <button
                   type="button"
                   className="ml-2 whitespace-nowrap"
@@ -307,6 +325,7 @@ const signup = props => {
               <input
                 className={classNames(style.Content, `w-full h-6`)}
                 type="text"
+                readOnly={nickNameValidCheck}
                 placeholder="닉네임을 입력해주세요"
                 {...register('nickname', {
                   required: true,
@@ -349,24 +368,39 @@ const signup = props => {
                 errors.nickname.type === 'pattern'
               ) &&
               nickNameValidCheck &&
-              (nickNameDuplicateChk ? (
+              (nickNameDuplicatedChk ? (
                 <div
                   className={classNames(
-                    `flex p-2 rounded-lg`,
+                    `flex justify-between p-2 rounded-lg`,
                     style.nickNamePass,
                   )}
                 >
-                  {' '}
-                  정상{' '}
+                  <p> 사용가능한 닉네임입니다 </p>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setNickNameValidCheck(prev => !prev);
+                    }}
+                  >
+                    다시 입력하기
+                  </button>
                 </div>
               ) : (
                 <div
                   className={classNames(
-                    `flex p-2 rounded-lg`,
+                    `flex justify-between p-2 rounded-lg`,
                     style.nickNameFail,
                   )}
                 >
-                  중복{' '}
+                  <p> 중복된 닉네임입니다 </p>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setNickNameValidCheck(prev => !prev);
+                    }}
+                  >
+                    다시 입력하기
+                  </button>
                 </div>
               ))}
           </div>
