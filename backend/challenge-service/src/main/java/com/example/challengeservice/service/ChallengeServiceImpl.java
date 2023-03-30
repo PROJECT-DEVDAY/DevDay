@@ -31,7 +31,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import feign.FeignException;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -203,6 +202,8 @@ public class ChallengeServiceImpl implements ChallengeService{
             UserChallenge userChallenge = UserChallenge.from(challengeRoom, userId);
             userChallengeRepository.save(userChallenge);
             challengeRoom.plusCurParticipantsSize(); // +1 증가
+        }else {
+            throw new ApiException(ExceptionEnum.UNABLE_TO_JOIN_CHALLENGEROOM);
         }
 
         return isJoinUser;
@@ -279,7 +280,7 @@ public class ChallengeServiceImpl implements ChallengeService{
                 solvedList.add(problem.text());
                 count++;
             }
-            System.out.printf("총 %d 문제 풀이하셨습니다\n", count);
+            log.info("총 %d 문제 풀이하셨습니다\n", count);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -300,7 +301,6 @@ public class ChallengeServiceImpl implements ChallengeService{
             List<String> newSolvedList=solvedProblemList(baekjoonId).getSolvedList();
             for(String s:newSolvedList){
                 if(problemList.get(s)==null){
-//                problemList.put(s, commonService.getDate());
                     diffSolvedList.add(s);
                 }
             }
@@ -309,21 +309,11 @@ public class ChallengeServiceImpl implements ChallengeService{
         } catch(Exception e){
             e.printStackTrace();
         }
-//        List<String> diffSolvedList=new ArrayList<>();
-//        SingleResult<BaekjoonListResponseDto> baekjoonListResponseDto = userServiceClient.getUserBaekjoonList(userId);
-//        String baekjoonId = baekjoonListResponseDto.getData().getBaekjoonId();
-//        Map<String, String> problemList = baekjoonListResponseDto.getData().getProblemList();
-//        List<String> newSolvedList=solvedProblemList(baekjoonId).getSolvedList();
-//        for(String s:newSolvedList){
-//            if(problemList.get(s)==null){
-////                problemList.put(s, commonService.getDate());
-//                diffSolvedList.add(s);
-//            }
-//        }
+
         if(diffSolvedList.size()>0)
             userServiceClient.createProblem(userId, ProblemRequestDto.from(diffSolvedList));
-        return;
-    };
+
+    }
 
     /** 신대득
      * 인증 정보 저장 (알고리즘)
@@ -339,7 +329,7 @@ public class ChallengeServiceImpl implements ChallengeService{
         // 현재 진행중인 알고리즘 챌린지 리스트 조회
         List<UserChallenge> userChallengeList = userChallengeRepository.findAllByDateAndCategory(today, "ALGO");
 
-        System.out.println("유저 챌린지 리스트는 : "+userChallengeList);
+        log.info("유저 챌린지 리스트는 : "+userChallengeList);
         // Algo 기록 저장
         for(UserChallenge userChallenge:userChallengeList){
             createAlgoRecord(ChallengeRecordRequestDto.from(userChallenge.getUserId(), userChallenge.getChallengeRoom().getId()));
@@ -363,7 +353,7 @@ public class ChallengeServiceImpl implements ChallengeService{
         // user의 solved ac에서 오늘 푼 문제들만 조회하기!
         List<DateProblemResponseDto> todayProblemList = userServiceClient.getDateBaekjoonList(user.getUserId(), date, date).getData();
 
-        System.out.println("today problem list is :"+todayProblemList);
+        log.info("today problem list is :"+todayProblemList);
         // challengeRoom에서 최소 알고리즘 개수 가져오기 미달이면 Exception 발생
         if(todayProblemList.size()<challengeRoom.getAlgorithmCount()){
             throw new ApiException(ExceptionEnum.CONFIRM_FAILURE_ALGO_EXCEPTION);
@@ -375,7 +365,7 @@ public class ChallengeServiceImpl implements ChallengeService{
 
         // 기존에 이 날짜에 인증기록이 있는지 검사
         List<AlgoRecordResponseDto> checkRecordList = challengeRecordRepository.findByCreateAtAndUserChallenge(date, userChallenge);
-        System.out.println("checkRecordList is : "+checkRecordList);
+        log.info("checkRecordList is : "+checkRecordList);
         if(checkRecordList.size()>0){
             log.error("이미 인증기록이 존재합니다.");
             throw new ApiException(ExceptionEnum.EXIST_CHALLENGE_RECORD);
@@ -440,6 +430,7 @@ public class ChallengeServiceImpl implements ChallengeService{
                 //userChallenge 값을 찾아야함
                 selfRecord=getSelfPhotoRecord(challengeRoomId,userId,viewType);
                 break;
+            default:break;
         }
         return selfRecord;
     }
