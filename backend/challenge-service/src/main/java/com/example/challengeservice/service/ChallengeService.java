@@ -4,6 +4,7 @@ import com.example.challengeservice.dto.request.ChallengeRecordRequestDto;
 import com.example.challengeservice.dto.request.ChallengeRoomRequestDto;
 import com.example.challengeservice.dto.request.ReportRecordRequestDto;
 import com.example.challengeservice.dto.response.*;
+import com.example.challengeservice.entity.ChallengeRoom;
 
 import java.io.IOException;
 import java.util.List;
@@ -17,7 +18,7 @@ public interface ChallengeService {
     /** 챌린지 번호들로 챌린지 정보들 조회 **/
     Map<Long, ChallengeInfoResponseDto> challengeInfoList(List<Long> challengeIdList);
     /** 챌린지 참여 **/
-    Long joinChallenge(Long challengeId, Long userId);
+    boolean joinChallenge(Long challengeId, Long userId);
     /** 해당 유저의 챌린지 리스트 조회 **/
     UserChallengeInfoResponseDto myChallengeList(Long userId);
     List<SimpleChallengeResponseDto> getListSimpleChallenge (String type , String search , int size , Long offset);
@@ -38,7 +39,10 @@ public interface ChallengeService {
 
     List<PhotoRecordResponseDto> getTeamPhotoRecord(Long challengeRoomId , String viewType);
 
-    PhotoRecordDetailResponseDto getPhotoRecordDetail(Long challengeRecordId);
+    PhotoRecordDetailResponseDto getPhotoRecordDetail(Long userId ,Long challengeRecordId);
 
     void reportRecord(ReportRecordRequestDto reportRecordRequestDto);
+
+    /** 챌린지방 Entity 가져오기*/
+    ChallengeRoom getChallengeRoomEntity(Long challengeRoomId);
 }
