@@ -66,9 +66,9 @@ public class ChallengeController {
 
     /** 챌린지 상세 조회 ** (입장 페이지)*/
 
+
     /** 신대득
      * 챌린지 참가하기 **/
-
     /**
      * pay-service로부터 호출되는 API입니다.
      * 챌린지에 유저가 결제가 완료된 뒤, 응답으로 받습니다.
@@ -87,6 +87,7 @@ public class ChallengeController {
     public SingleResult<Boolean> joinChallenge(@PathVariable("challengeId") Long challengeId, @PathVariable("userId") Long userId){
         return responseService.getSingleResult(challengeService.joinChallenge(challengeId, userId));
     }
+
 
     /** 신대득
      * 현재 user가 참가중인 챌린지 개수 반환
@@ -115,8 +116,8 @@ public class ChallengeController {
      * Todo : userId로 commit 가져오는걸로 바꾸기
      */
     @GetMapping("/github/{githubId}")
-    public String getGithubList(@PathVariable("githubId") String githubId){
-        return ("총"+challengeService.getGithubCommit(githubId)+"개 커밋하셨습니다.");
+    public SingleResult<CommitCountResponseDto> getGithubList(@PathVariable("githubId") String githubId){
+        return responseService.getSingleResult(challengeService.getGithubCommit(githubId));
     }
 
 
@@ -135,14 +136,16 @@ public class ChallengeController {
 
     /**
      * 신대득
-     * 해당 날짜 푼 문제들 조회
+     * 선택한 유저가
+     * 해당 날짜에 푼 문제를 조회하는 API
+     * @param userId // 조회 할 유저의 id
+     * @param selectDate // 조회 할 날짜
+     * @return
      */
-    /*
-    @GetMapping("/baekjoon/users/{userId}")
-    public SingleResult<SolvedListResponseDto> checkDateUserBaekjoon(@PathVariable Long userId){
-        return responseService.getSingleResult(challengeService.checkDateUserBaekjoon(userId));
+    @GetMapping("/baekjoon/users/date")
+    public SingleResult<SolvedListResponseDto> checkDateUserBaekjoon(@RequestParam Long userId, @RequestParam String selectDate){
+        return responseService.getSingleResult(challengeService.checkDateUserBaekjoon(userId, selectDate));
     }
-     */
 
 
 
@@ -211,7 +214,11 @@ public class ChallengeController {
         return responseService.getSuccessResult();
     }
 
-    @GetMapping("/myTest")
+    /**
+     * 스케줄링으로 실행되는 메서드의 테스트
+     * @return
+     */
+    @GetMapping("/schedulingTest")
     public Result testRecord (){
         challengeService.createDailyRecord();
         return responseService.getSuccessResult();

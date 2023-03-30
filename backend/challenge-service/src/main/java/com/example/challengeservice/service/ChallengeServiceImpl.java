@@ -233,7 +233,7 @@ public class ChallengeServiceImpl implements ChallengeService{
      * @param githubId
      */
     @Override
-    public int getGithubCommit(String githubId){
+    public CommitCountResponseDto getGithubCommit(String githubId){
         String githubUrl = "https://github.com/";
         githubUrl+=githubId;
         Connection conn = Jsoup.connect(githubUrl);
@@ -253,8 +253,10 @@ public class ChallengeServiceImpl implements ChallengeService{
             System.out.printf("총 %d개 커밋하셨습니다.\n", commitCount);
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (Exception e){
+            e.printStackTrace();
         }
-        return commitCount;
+        return CommitCountResponseDto.from(commitCount);
     }
 
     /**
@@ -291,7 +293,6 @@ public class ChallengeServiceImpl implements ChallengeService{
      * Todo : 예외처리 추가
      * **/
     public void updateUserBaekjoon(Long userId){
-        /* Feign Exception Handling */
         SingleResult<UserResponseDto> userResponseDtoTemp = userServiceClient.getUserInfo(userId);
         log.info("userResponseDto is : {}",userResponseDtoTemp);
         UserResponseDto userResponseDto=userResponseDtoTemp.getData();
@@ -303,20 +304,6 @@ public class ChallengeServiceImpl implements ChallengeService{
             throw new ApiException(ExceptionEnum.ALGO_NOT_EXIST_ID);
         }
         List<String> diffSolvedList=new ArrayList<>();
-//        try {
-//            Map<String, String> problemList = baekjoonListResponseDto.getData().getProblemList();
-//            List<String> newSolvedList=solvedProblemList(baekjoonId).getSolvedList();
-//            for(String s:newSolvedList){
-//                if(problemList.get(s)==null){
-//                    diffSolvedList.add(s);
-//                }
-//            }
-//        } catch(FeignException ex){
-//            log.error(ex.getMessage());
-//        } catch(Exception e){
-//            e.printStackTrace();
-//        }
-
         Map<String, String> problemList = baekjoonListResponseDto.getData().getProblemList();
         List<String> newSolvedList=solvedProblemList(baekjoonId).getSolvedList();
         for(String s:newSolvedList){
@@ -329,6 +316,21 @@ public class ChallengeServiceImpl implements ChallengeService{
             throw new ApiException(ExceptionEnum.ALGO_ALREADY_UPDATE);
         }
         userServiceClient.createProblem(userId, ProblemRequestDto.from(diffSolvedList));
+    }
+
+    /**
+     * 신대득
+     * 선택한 유저가 선택한 날짜에
+     * 푼 문제 리스트를 반환하는 메서드
+     */
+    public SolvedListResponseDto checkDateUserBaekjoon(Long userId, String selectDate){
+        UserResponseDto userInfo = userServiceClient.getUserInfo(userId).getData();
+        List<DateProblemResponseDto> dateBaekjoonList = userServiceClient.getDateBaekjoonList(userInfo.getUserId(), selectDate, selectDate).getData();
+        List<String> problemList=new ArrayList<>();
+        for(DateProblemResponseDto problem:dateBaekjoonList){
+            problemList.add(problem.getProblemId());
+        }
+        return SolvedListResponseDto.from(userInfo.getUserId(), problemList, problemList.size(), selectDate);
     }
 
     /** 신대득
