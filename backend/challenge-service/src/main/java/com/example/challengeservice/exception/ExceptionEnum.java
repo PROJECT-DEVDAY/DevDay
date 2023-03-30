@@ -13,6 +13,7 @@ public enum ExceptionEnum {
     CHALLENGE_RECORD_SELF_REPORT(HttpStatus.BAD_REQUEST ,"UC003" ,"자기 자신의 인증 기록은 신고하실 수 없습니다."),
     CHALLENGE_NOT_EXIST_EXCEPTION(HttpStatus.NOT_FOUND, "C0003", "존재하지 않는 챌린지 입니다."),
     USER_CHALLENGE_LIST_NOT_EXIST(HttpStatus.NOT_FOUND, "UC0003", "이 유저의 챌린지가 존재하지 않습니다."),
+    UNABLE_TO_JOIN_CHALLENGEROOM(HttpStatus.FORBIDDEN,"?","해당 챌린지에 참가 인원 수가 초과하였습니다."),
 
     USER_CHALLENGE_NOT_EXIST_EXCEPTION(HttpStatus.NOT_FOUND, "C0004", "해당 챌린지에 존재하지 참여자 입니다."),
 

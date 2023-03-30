@@ -14,7 +14,6 @@ import java.util.Optional;
 @Repository
 public interface UserChallengeRepository extends JpaRepository<UserChallenge,Long> {
     Optional<UserChallenge> findByChallengeRoomIdAndUserId(Long challengeId, Long userId);
-//    List<UserChallenge> findAllByChallengeId(Long challengeId);
 
     Optional<UserChallenge> findById(Long id);
     int countByChallengeRoomId(Long challengeId);
@@ -43,6 +42,9 @@ public interface UserChallengeRepository extends JpaRepository<UserChallenge,Lon
      */
     @Query("select uc from UserChallenge uc where uc.userId=:userId and uc.challengeRoom.hostId =:userId")
     List<UserChallenge> findUserHostChallengesUserId(@Param("userId") Long userId);
+
+
+    boolean existsByChallengeRoomIdAndUserId(Long challengeRoomId , Long userId);
 
 
 }
