@@ -161,7 +161,7 @@ public class ChallengeServiceImpl implements ChallengeService{
     public Map<Long, ChallengeInfoResponseDto> challengeInfoList(List<Long> challengeIdList){
         Map<Long, ChallengeInfoResponseDto> challengeInfoResponseDtoMap=new HashMap<>();
         for(Long challengeId: challengeIdList){
-            ChallengeRoom challengeRoom=challengeRoomRepository.findChallengeRoomById(challengeId)
+            ChallengeRoom challengeRoom = challengeRoomRepository.findChallengeRoomById(challengeId)
                     .orElseThrow(() -> new ApiException(ExceptionEnum.CHALLENGE_NOT_EXIST_EXCEPTION));
             ModelMapper mapper=new ModelMapper();
             mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
@@ -177,13 +177,13 @@ public class ChallengeServiceImpl implements ChallengeService{
      * @param challengeRoomId 챌린지방 ID
      * @param userId 유저 ID
      * @return
-     * retouch : find 대신 exist 함수로 존재 유무 확인  Optional<UserChallenge> -> UserChallenge orElseThrow로 변경
+     * retouch 홍금비 : find 대신 exist 함수로 존재 유무 확인  Optional<UserChallenge> -> UserChallenge orElseThrow로 변경
      *           해당 챌린지에 참여가능한 인원 수가 넘으면 참가할 수 없도록 예외처리 작성
      */
 
     @Override
     @Transactional
-    public boolean joinChallenge(Long challengeRoomId, Long userId) {
+    public  String  joinChallenge(Long challengeRoomId, Long userId) {
 
         //해당 challengeRoom Entity 조회
         ChallengeRoom challengeRoom = getChallengeRoomEntity(challengeRoomId);
@@ -202,10 +202,10 @@ public class ChallengeServiceImpl implements ChallengeService{
             userChallengeRepository.save(userChallenge);
             challengeRoom.plusCurParticipantsSize(); // +1 증가
         }else {
-            throw new ApiException(ExceptionEnum.UNABLE_TO_JOIN_CHALLENGEROOM);
+            throw new ApiException(ExceptionEnum.ALREADY_JOIN_CHALLENGEROOM);
         }
 
-        return isJoinUser;
+        return "참가 성공";
     }
 
     @Override

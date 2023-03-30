@@ -60,8 +60,6 @@ public class ChallengeController {
 
         List<SimpleChallengeResponseDto> list = challengeService.getListSimpleChallenge(category,search,size,offset);
         return  ResponseEntity.status(HttpStatus.OK).body(list);
-
-
     }
 
 
@@ -103,7 +101,7 @@ public class ChallengeController {
         return responseService.getSingleResult(1L);
     }
     @PostMapping("/{challengeId}/users/{userId}")
-    public SingleResult<Boolean> joinChallenge(@PathVariable("challengeId") Long challengeId, @PathVariable("userId") Long userId){
+    public SingleResult<String> joinChallenge(@PathVariable("challengeId") Long challengeId, @PathVariable("userId") Long userId){
         return responseService.getSingleResult(challengeService.joinChallenge(challengeId, userId));
     }
 
@@ -210,13 +208,11 @@ public class ChallengeController {
 
 
     /** 사진 기록 신고하기(반드시 로그인이 되어있어야함) **/
-
     @PostMapping ("report/record")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public Result reportRecord (@RequestBody ReportRecordRequestDto reportRequestDto){
 
         challengeService.reportRecord(reportRequestDto);
-
         return responseService.getSuccessResult();
     }
 
@@ -227,12 +223,7 @@ public class ChallengeController {
     }
 
 
-
-
-
-
     /** 기본 사진 업로드 **/
-
     @PostMapping("upload/image")
     public String updateDefaultImage(@RequestParam("file") MultipartFile multipartFile , @RequestParam("dir") String dir) throws IOException{
 
