@@ -109,6 +109,20 @@ public class ChallengeController {
 
     /**
      * 신대득
+     * 유저 깃허브 아이디를 통해 해당 유저의 커밋 찾기 (크롤링)
+     * 나온 결과를 계산해서 user에 넣어줘야한다.
+     * Todo : userId로 commit 가져오는걸로 바꾸기
+     */
+    @GetMapping("/github/{githubId}")
+    public String getGithubList(@PathVariable("githubId") String githubId){
+        return ("총"+challengeService.getGithubCommit(githubId)+"개 커밋하셨습니다.");
+    }
+
+
+
+
+    /**
+     * 신대득
      * 유저가 푼 문제 리스트 갱신
      */
     @GetMapping("/baekjoon/users/{userId}")
@@ -193,6 +207,12 @@ public class ChallengeController {
 
         challengeService.reportRecord(reportRequestDto);
 
+        return responseService.getSuccessResult();
+    }
+
+    @GetMapping("/myTest")
+    public Result testRecord (){
+        challengeService.createDailyRecord();
         return responseService.getSuccessResult();
     }
 

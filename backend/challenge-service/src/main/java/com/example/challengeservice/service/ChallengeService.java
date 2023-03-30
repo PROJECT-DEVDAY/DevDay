@@ -22,12 +22,16 @@ public interface ChallengeService {
     /** 해당 유저의 챌린지 리스트 조회 **/
     UserChallengeInfoResponseDto myChallengeList(Long userId);
     List<SimpleChallengeResponseDto> getListSimpleChallenge (String type , String search , int size , Long offset);
+    /** 깃허브 커밋 리스트 찾기 **/
+    int getGithubCommit(String githubId);
     /** 푼 문제 리스트 찾기 **/
     SolvedListResponseDto solvedProblemList(String baekjoonId);
     /** 유저의 백준리스트 가져오기  **/
     void updateUserBaekjoon(Long userId);
+    /** 스케줄러 저장 메서드 **/
+    void createDailyRecord();
     /** 알고리즘 인증 기록 생성하기 **/
-    // void createAlgoRecord(ChallengeRecordRequestDto requestDto) throws IOException;
+    void createAlgoRecord(ChallengeRecordRequestDto requestDto) throws IOException;
 
     /** 사진 인증 기록 생성하기 **/
     void createPhotoRecord (ChallengeRecordRequestDto requestDto) throws IOException;

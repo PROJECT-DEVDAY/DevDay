@@ -46,7 +46,6 @@ eureka:
 
 
 
-
 logging:
   level:
     com.example.challengeservice.client: DEBUG
