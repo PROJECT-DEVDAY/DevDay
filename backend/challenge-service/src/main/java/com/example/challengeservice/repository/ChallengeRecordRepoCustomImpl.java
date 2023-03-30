@@ -1,5 +1,6 @@
 package com.example.challengeservice.repository;
 
+import com.example.challengeservice.dto.response.AlgoRecordResponseDto;
 import com.example.challengeservice.dto.response.PhotoRecordResponseDto;
 import com.example.challengeservice.entity.*;
 
@@ -70,6 +71,20 @@ public class ChallengeRecordRepoCustomImpl implements ChallengeRecordRepoCustom 
         return query.fetch();
     }
 
+    @Override
+    public List<AlgoRecordResponseDto> findByCreateAtAndUserChallenge(String createAt, UserChallenge userChallenge){
+        JPAQuery<AlgoRecordResponseDto> query = jpaQueryFactory.select(Projections.constructor(
+                AlgoRecordResponseDto.class,
+                challengeRecord.id,
+                challengeRecord.createAt,
+                challengeRecord.algorithmCount,
+                challengeRecord.success
+                ))
+                .from(challengeRecord)
+                .where(challengeRecord.userChallenge.id.eq(userChallenge.getId())
+                        .and(challengeRecord.createAt.eq(createAt)));
+        return query.fetch();
+    }
 
     private BooleanExpression isPreview(String viewType) {
 

@@ -14,6 +14,7 @@ public interface ChallengeRecordRepository extends JpaRepository<ChallengeRecord
 
     Optional<ChallengeRecord> findChallengeRecordByUserChallengeChallengeRoomId (Long challengeRoomId);*/
 
+
     Optional<ChallengeRecord> findById(Long challengeRecordId);
 
 
