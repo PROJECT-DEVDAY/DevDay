@@ -111,6 +111,7 @@ public class ChallengeController {
      * 신대득
      * 유저 깃허브 아이디를 통해 해당 유저의 커밋 찾기 (크롤링)
      * 나온 결과를 계산해서 user에 넣어줘야한다.
+     * Todo : 반환 타입 등 다시 만들 예정
      * Todo : userId로 commit 가져오는걸로 바꾸기
      */
     @GetMapping("/github/{githubId}")
