@@ -37,11 +37,9 @@ public class SecurityConfig {
                 .antMatchers("/error/**").permitAll()
                 .antMatchers("/h2-console/**").permitAll()
                 .antMatchers("/**")
-                .access("hasIpAddress('" + gatewayIpAddress + "')")
-                .antMatchers("/**")
-                .access("hasIpAddress('" + challengeIpAddress + "')")
-                .antMatchers("/**")
-                .access("hasIpAddress('" + payIpAddress + "')")
+                .access("hasIpAddress('" + gatewayIpAddress + "') or " +
+                        "hasIpAddreess('" + challengeIpAddress + "') or " +
+                        "hasIpAddreess('" + payIpAddress + "')")
                 .and()
                 .headers().frameOptions().disable();
         return http.build();
