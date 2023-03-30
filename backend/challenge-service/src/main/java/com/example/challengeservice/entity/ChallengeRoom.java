@@ -8,7 +8,6 @@ import javax.persistence.*;
 
 @Entity
 @Getter
-@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -33,29 +32,23 @@ public class ChallengeRoom {
     private int entryFee;
 
     /** 성공인증 URL **/
+    @Column(columnDefinition = "VARCHAR(500)")
     private String successUrl;
 
     /** 실패 인증 URL **/
+    @Column(columnDefinition = "VARCHAR(500)")
     private String failUrl;
 
-    /** 생성날짜 **/
-
-    /** 인원수 **/
-    @Column(nullable = false)
-    private int userCount;
 
     /** 설명 **/
     @Column(nullable = false)
     private String introduce;
 
-    /** 공개 / 비공개 여부(추후 추가) **/
 
     private boolean isOpen;
 
     /** 분류 **/
     private String category;
-
-    /** 비밀번호 (추후 추가) **/
 
     /** 시작기간 **/
     @Column(nullable = false)
@@ -74,13 +67,20 @@ public class ChallengeRoom {
     /** 최소 알고리즘 문제 수 **/
     private int algorithmCount;
 
-    /** 현재 참여자 수 **/
-    private int participantsSize;
-
-
     /** 첼린지 이미지 **/
     @Column(columnDefinition = "VARCHAR(500) DEFAULT 'default_value'")
     private String backGroundUrl;
+
+    /** 현재 참여자 수 **/
+    @Column(name = "CUR_NUMBER_PARTICIPANTS")
+    private int curParticipantsSize;
+
+
+    /** 최대 참여자 수 **/
+    @Column(name = "MAXIMUM_NUMBER_PARTICIPANTS")
+    private int maxParticipantsSize;
+
+
 
 
     public static ChallengeRoom from(ChallengeRoomRequestDto dto){
@@ -88,7 +88,7 @@ public class ChallengeRoom {
                  .title(dto.getTitle())
                  .hostId(dto.getHostId())
                  .entryFee(dto.getEntryFee())
-                 .userCount(dto.getUserCount())
+                 .maxParticipantsSize(dto.getMaxParticipantsSize())
                  .introduce(dto.getIntroduce())
                  .category(dto.getCategory())
                  .startDate(dto.getStartDate())
@@ -98,7 +98,7 @@ public class ChallengeRoom {
                  .build();
      }
 
-     public void setCertificationUrl (String successUrl ,String failUrl){
+     public void setCertificationUrl (String successUrl,String failUrl){
         this.successUrl = successUrl;
         this.failUrl = failUrl;
      }
@@ -107,5 +107,8 @@ public class ChallengeRoom {
         this.backGroundUrl = backGroundUrl;
     }
 
+    public void plusCurParticipantsSize (){
+        this.curParticipantsSize++;
+    }
 
 }
