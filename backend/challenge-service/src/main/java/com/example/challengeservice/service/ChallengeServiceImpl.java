@@ -16,6 +16,7 @@ import com.example.challengeservice.exception.ExceptionEnum;
 import com.example.challengeservice.infra.querydsl.SearchParam;
 import com.example.challengeservice.infra.amazons3.service.AmazonS3Service;
 import com.example.challengeservice.repository.*;
+import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Connection;
@@ -26,6 +27,7 @@ import org.jsoup.select.Elements;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.modelmapper.convention.MatchingStrategies;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -224,6 +226,43 @@ public class ChallengeServiceImpl implements ChallengeService{
         return userChallengeInfoResponseDto;
     }
 
+    /**
+     * 신대득
+     * githubId로 commit 정보들을 가져오는 메서드
+     * @param githubId
+     */
+    @Override
+    public int getGithubCommit(String githubId){
+        String githubUrl = "https://github.com/";
+        githubUrl+=githubId;
+        Connection conn = Jsoup.connect(githubUrl);
+        List<String> solvedList= new ArrayList<>();
+        int count=0;
+        try {
+            Document document = conn.get();
+            Elements imageUrlElements = document.getElementsByClass("js-calendar-graph-svg");
+            Element element = imageUrlElements.get(0);
+            String today = commonService.getDate();
+            Element todayElement= element.getElementsByTag("Rect").last().getElementsByAttributeValue("data-date", today).first();
+            StringTokenizer st= new StringTokenizer(todayElement.text(), " ");
+            String commitString=st.nextToken();
+            int commitCount=0;
+            if(!commitString.equals("No")){
+                commitCount=Integer.parseInt(commitString);
+            }
+            System.out.printf("총 %d개 커밋하셨습니다.\n", commitCount);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return count;
+    }
+
+    /**
+     * 신대득
+     * baekjoonId를 받아서 그 사람이 푼 문제들을 클롤링하는 메서드
+     * @param baekjoonId
+     * @return
+     */
     @Override
     public SolvedListResponseDto solvedProblemList(String baekjoonId) {
         String baekJoonUrl = "https://www.acmicpc.net/user/";
@@ -288,32 +327,63 @@ public class ChallengeServiceImpl implements ChallengeService{
 
     /** 신대득
      * 인증 정보 저장 (알고리즘)
-     * 제작중
+     * 매일 오후 11시 50분에 메서드를 실행시킬 스케줄러
      *  **/
-    /*
+    @Scheduled(cron = "0 50 23 * * ?") // 매일 오후 11시 50분
+    public void createDailyRecord(){
+        log.info("createDailyRecord 시작");
+        // 현재 진행중인 UserChallenge 중에 Category가 ALGO인 것들을 조회해서 저장시킨다.
+
+        String today=commonService.getDate();
+
+        // 현재 진행중인 알고리즘 챌린지 리스트 조회
+        List<UserChallenge> userChallengeList = userChallengeRepository.findAllByDateAndCategory(today, "ALGO");
+
+        System.out.println("유저 챌린지 리스트는 : "+userChallengeList);
+        // Algo 기록 저장
+        for(UserChallenge userChallenge:userChallengeList){
+            createAlgoRecord(ChallengeRecordRequestDto.from(userChallenge.getUserId(), userChallenge.getChallengeRoom().getId()));
+        }
+    }
+
+    /**
+     * 신대득
+     * 알고리즘 문제 풀이 인증 기록을 저장하는 메서드
+     * @param requestDto
+     */
     @Override
-    public void createAlgoRecord(ChallengeRecordRequestDto requestDto) throws IOException {
-        log.info("챌린지id "+ requestDto.getChallengeRoomId()+"유저아이디id"+requestDto.getUserId());
-        ChallengeRoomResponseDto challengeRoom=readChallenge(requestDto.getChallengeRoomId());
-        UserResponseDto user= userServiceClient.getUserInfo(requestDto.getUserId()).getData();
+    public void createAlgoRecord(ChallengeRecordRequestDto requestDto) {
+        log.info("챌린지id " + requestDto.getChallengeRoomId() + "유저아이디id" + requestDto.getUserId());
+        ChallengeRoomResponseDto challengeRoom = readChallenge(requestDto.getChallengeRoomId());
+        UserResponseDto user = userServiceClient.getUserInfo(requestDto.getUserId()).getData();
 
         //오늘 날짜
         String date = commonService.getDate();
 
         // user의 solved ac에서 오늘 푼 문제들만 조회하기!
-        // challengeRoom에서 최소 알고리즘 개수 가져오기
-        // 두개 비교
+        List<DateProblemResponseDto> todayProblemList = userServiceClient.getDateBaekjoonList(user.getUserId(), date, date).getData();
 
-//        if(requestDto.getPhotoCertFile()==null)
-//            throw new ApiException(ExceptionEnum.CHALLENGE_BAD_REQUEST);
+        System.out.println("today problem list is :"+todayProblemList);
+        // challengeRoom에서 최소 알고리즘 개수 가져오기 미달이면 Exception 발생
+        if(todayProblemList.size()<challengeRoom.getAlgorithmCount()){
+            throw new ApiException(ExceptionEnum.CONFIRM_FAILURE_ALGO_EXCEPTION);
+        }
 
         // UserChallenge 조회
-        UserChallenge userChallenge = userChallengeRepository.findByChallengeRoomIdAndUserId(requestDto.getChallengeRoomId(), requestDto.getUserId()).orElseThrow(()-> new ApiException(ExceptionEnum.USER_CHALLENGE_NOT_EXIST_EXCEPTION) );
-        log.info("[userChallenge id값]"+ userChallenge.getId());
-        ChallengeRecord challengeRecord = ChallengeRecord.from(requestDto,date,,userChallenge);
+        UserChallenge userChallenge = userChallengeRepository.findByChallengeRoomIdAndUserId(requestDto.getChallengeRoomId(), requestDto.getUserId()).orElseThrow(() -> new ApiException(ExceptionEnum.USER_CHALLENGE_NOT_EXIST_EXCEPTION));
+        log.info("[userChallenge id값]" + userChallenge.getId());
+
+        // 기존에 이 날짜에 인증기록이 있는지 검사
+        List<AlgoRecordResponseDto> checkRecordList = challengeRecordRepository.findByCreateAtAndUserChallenge(date, userChallenge);
+        System.out.println("checkRecordList is : "+checkRecordList);
+        if(checkRecordList.size()>0){
+            log.error("이미 인증기록이 존재합니다.");
+            throw new ApiException(ExceptionEnum.EXIST_CHALLENGE_RECORD);
+        }
+
+        ChallengeRecord challengeRecord = ChallengeRecord.fromAlgo(date, todayProblemList.size() , userChallenge);
         challengeRecordRepository.save(challengeRecord);
     }
-     */
 
     /**인증 정보 저장 (사진)**/
     @Override
