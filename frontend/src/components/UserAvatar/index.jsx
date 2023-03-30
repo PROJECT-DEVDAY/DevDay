@@ -37,10 +37,10 @@ export const UserAvatar = ({ imageURL, width, height, ...props }) => {
       <Image
         src={imgFile || require('../../image/default-user.png')}
         alt="프로필 이미지"
-        className={style.Image}
+        className="style.Image rounded-full"
         onClick={onImgeInputBtnClick}
-        width={150}
-        height={150}
+        width={width}
+        height={height}
       />
       <input
         style={{ display: 'none' }}
