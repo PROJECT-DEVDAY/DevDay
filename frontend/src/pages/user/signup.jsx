@@ -38,7 +38,6 @@ const signup = props => {
     if (values.password !== values.passwordCheck) {
       errors.passwordCheck = '비밀번호가 일치하지 않습니다.';
     }
-
     return errors;
   };
 
@@ -94,7 +93,6 @@ const signup = props => {
   };
 
   const onClickEmailValidation = () => {
-    setEmailValidCheck(true);
     setMinutes(parseInt(4, 10));
     setSeconds(parseInt(59, 10));
 
@@ -103,7 +101,17 @@ const signup = props => {
         email: watch('email'),
       })
       .then(data => {
+        setEmailValidCheck(true);
         setEmailAuthId(data.data.data);
+      })
+      .catch(error => {
+        setEmailValidCheck(false);
+
+        Swal.fire({
+          icon: 'error',
+          title: '인증 실패',
+          text: error.response.data.message,
+        });
       });
   };
 

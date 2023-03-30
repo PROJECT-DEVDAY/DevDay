@@ -6,7 +6,15 @@ import PropTypes from 'prop-types';
 
 import style from './index.module.scss';
 
-export const InputText = ({ content, icon, inputType, type, onClick }) => {
+export const InputText = ({
+  content,
+  icon,
+  inputType,
+  type,
+  name,
+  onClick,
+  onChange,
+}) => {
   const [showPassword, setShowPassword] = useState(false);
 
   const toggleShowPassword = () => {
@@ -21,7 +29,9 @@ export const InputText = ({ content, icon, inputType, type, onClick }) => {
       <input
         type={showPassword ? 'text' : 'password'}
         placeholder={content}
+        name={name}
         className={classNames(style.Content, `w-full h-6`)}
+        onChange={onChange}
       />
     );
     buttonValue = (
@@ -33,8 +43,10 @@ export const InputText = ({ content, icon, inputType, type, onClick }) => {
     inputValue = (
       <input
         type={type}
+        name={name}
         placeholder={content}
         className={classNames(style.Content, `w-full h-6`)}
+        onChange={onChange}
       />
     );
     buttonValue = (
@@ -46,8 +58,10 @@ export const InputText = ({ content, icon, inputType, type, onClick }) => {
     inputValue = (
       <input
         type={type}
+        name={name}
         placeholder={content}
         className={classNames(style.Content, `w-full h-6`)}
+        onChange={onChange}
       />
     );
   }

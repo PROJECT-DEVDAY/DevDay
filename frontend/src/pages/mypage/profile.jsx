@@ -2,11 +2,12 @@ import React from 'react';
 
 import { useRouter } from 'next/router';
 
-import { ReturnArrow } from '@/components/ReturnArrow';
-import { UserAvatar } from '@/components/UserAvatar';
-import { SelectArrow } from '@/components/SelectArrow';
-import http from '@/pages/api/http';
 import { PROFILE_URL } from '../api/constants';
+
+import { ReturnArrow } from '@/components/ReturnArrow';
+import { SelectArrow } from '@/components/SelectArrow';
+import { UserAvatar } from '@/components/UserAvatar';
+import http from '@/pages/api/http';
 
 const profile = props => {
   const router = useRouter();
@@ -30,7 +31,7 @@ const profile = props => {
 
   return (
     <div>
-      <div className={`style.div-header sticky top-0`}>
+      <div className="style.div-header sticky top-0">
         <ReturnArrow title="프로필" />
       </div>
       <div className="div-body pt-6 pb-4">
@@ -41,9 +42,12 @@ const profile = props => {
       </div>
       <hr className="border-gray-400 w-full" />
       <div className="div-body p-6">
-        <SelectArrow title={'개인 정보 설정'} onClick={privateInfo}/>
-        <SelectArrow title={'챌린지 인증서 목록'} onClick={challengeCertification}/>
-        <SelectArrow title={'로그아웃'} color={true} onClick={logout}/>
+        <SelectArrow title="개인 정보 설정" onClick={privateInfo} />
+        <SelectArrow
+          title="챌린지 인증서 목록"
+          onClick={challengeCertification}
+        />
+        <SelectArrow title="로그아웃" color onClick={logout} />
       </div>
     </div>
   );

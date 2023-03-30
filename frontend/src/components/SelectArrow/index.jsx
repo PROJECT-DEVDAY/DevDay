@@ -35,9 +35,13 @@ export const SelectArrow = ({
         </p>
         <p className={style.ArrowContent}>{content}</p>
       </div>
-      <div className={classNames(style.ArrowDiv)} onClick={onClick}>
+      <button
+        type="button"
+        className={classNames(style.ArrowDiv)}
+        onClick={onClick}
+      >
         <SlArrowRight className={style.Arrow} width={30} />
-      </div>
+      </button>
     </div>
   );
 };
