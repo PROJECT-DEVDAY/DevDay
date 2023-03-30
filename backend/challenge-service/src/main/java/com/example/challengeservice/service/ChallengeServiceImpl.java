@@ -292,26 +292,43 @@ public class ChallengeServiceImpl implements ChallengeService{
      * **/
     public void updateUserBaekjoon(Long userId){
         /* Feign Exception Handling */
+        SingleResult<UserResponseDto> userResponseDtoTemp = userServiceClient.getUserInfo(userId);
+        log.info("userResponseDto is : {}",userResponseDtoTemp);
+        UserResponseDto userResponseDto=userResponseDtoTemp.getData();
+        SingleResult<BaekjoonListResponseDto> baekjoonListResponseDto = userServiceClient.getUserBaekjoonList(userResponseDto.getUserId());
+
+        log.info("baekjoonListResponseDto is : {}", baekjoonListResponseDto);
+        String baekjoonId = baekjoonListResponseDto.getData().getBaekjoonId();
+        if(baekjoonId==null){
+            throw new ApiException(ExceptionEnum.ALGO_NOT_EXIST_ID);
+        }
         List<String> diffSolvedList=new ArrayList<>();
-        try {
-            SingleResult<BaekjoonListResponseDto> baekjoonListResponseDto = userServiceClient.getUserBaekjoonList(userId);
-            String baekjoonId = baekjoonListResponseDto.getData().getBaekjoonId();
-            Map<String, String> problemList = baekjoonListResponseDto.getData().getProblemList();
-            List<String> newSolvedList=solvedProblemList(baekjoonId).getSolvedList();
-            for(String s:newSolvedList){
-                if(problemList.get(s)==null){
-                    diffSolvedList.add(s);
-                }
+//        try {
+//            Map<String, String> problemList = baekjoonListResponseDto.getData().getProblemList();
+//            List<String> newSolvedList=solvedProblemList(baekjoonId).getSolvedList();
+//            for(String s:newSolvedList){
+//                if(problemList.get(s)==null){
+//                    diffSolvedList.add(s);
+//                }
+//            }
+//        } catch(FeignException ex){
+//            log.error(ex.getMessage());
+//        } catch(Exception e){
+//            e.printStackTrace();
+//        }
+
+        Map<String, String> problemList = baekjoonListResponseDto.getData().getProblemList();
+        List<String> newSolvedList=solvedProblemList(baekjoonId).getSolvedList();
+        for(String s:newSolvedList){
+            if(problemList.get(s)==null){
+                diffSolvedList.add(s);
             }
-        } catch(FeignException ex){
-            log.error(ex.getMessage());
-        } catch(Exception e){
-            e.printStackTrace();
         }
 
-        if(diffSolvedList.size()>0)
-            userServiceClient.createProblem(userId, ProblemRequestDto.from(diffSolvedList));
-
+        if(diffSolvedList.size()==0){
+            throw new ApiException(ExceptionEnum.ALGO_ALREADY_UPDATE);
+        }
+        userServiceClient.createProblem(userId, ProblemRequestDto.from(diffSolvedList));
     }
 
     /** 신대득
