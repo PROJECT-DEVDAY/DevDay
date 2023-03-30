@@ -41,8 +41,7 @@ public class ChallengeRoomResponseDto {
     private boolean isOpen;
 
     /** 분류 **/
-
-    private String type;
+    private String category;
 
     /** 비밀번호 (추후 추가) **/
 
