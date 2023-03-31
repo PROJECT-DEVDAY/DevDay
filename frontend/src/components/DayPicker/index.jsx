@@ -1,25 +1,57 @@
 import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
-import { FiCalendar } from 'react-icons/fi';
+import { useDispatch } from 'react-redux';
 
 import PropTypes from 'prop-types';
 
 import style from './index.module.scss';
 
+import { setChangeDate } from '@/store/challengeCreate/challengeCreateSlice';
 import 'react-datepicker/dist/react-datepicker.css';
 
-export const DayPicker = ({ minDate, ...props }) => {
+export const DayPicker = ({ day, showDatePicker }) => {
+  const dispatch = useDispatch();
   const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
+  const onChange = dates => {
+    const [start, end] = dates;
+    setStartDate(start);
+    setEndDate(end);
+    dispatch(setChangeDate({ startDate: start, endDate: end }));
+    if (start && end) {
+      showDatePicker();
+    }
+  };
   return (
-    <label className={style.DateBox} htmlFor="dayPicker">
-      <DatePicker
-        className={style.DateSelect}
-        dateFormat="yy. MM. dd"
-        selected={startDate}
-        onChange={date => setStartDate(date)}
-        minDate={minDate}
-      />
-      <FiCalendar className={style.Icon} />
-    </label>
+    <>
+      {day && (
+        <DatePicker
+          className={style.DateSelect}
+          dateFormat="yy. MM. dd"
+          selected={startDate}
+          onChange={onChange}
+          startDate={startDate}
+          endDate={endDate}
+          selectsRange
+          inline
+        />
+      )}
+      {!day && (
+        <DatePicker
+          className={style.DateSelect}
+          dateFormat="yy. MM. dd"
+          selected={startDate}
+          onChange={date => setStartDate(date)}
+        />
+      )}
+    </>
   );
+};
+
+DayPicker.propTypes = {
+  day: PropTypes.bool,
+};
+
+DayPicker.defaultProps = {
+  day: true,
 };
