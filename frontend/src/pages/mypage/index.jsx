@@ -27,7 +27,7 @@ const index = () => {
       <div className="div-body p-4 relative">
         <div className="absolute top-5 left-7">
           {/* <UserAvatar imageURL={mypageInfo.profileImgUrl} width={50} height={50} /> */}
-          <UserAvatar width={50} height={50} />
+          <UserAvatar imageURL="" width={50} height={50} />
         </div>
         {/* <SelectArrow title={mypageInfo.nickname} fill /> */}
         <SelectArrow title="nickname" fill />
