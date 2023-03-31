@@ -5,11 +5,11 @@ import Chart from 'chart.js/auto';
 import classNames from 'classnames';
 import Image from 'next/image';
 import Link from 'next/link';
+import Swal from 'sweetalert2';
 
 import style from './index.module.scss';
 
 import { Button } from '@/components/Button';
-import Swal from 'sweetalert2';
 
 const challengeintro = props => {
   const expData = {
