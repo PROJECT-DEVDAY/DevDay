@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import Swal from 'sweetalert2';
-import { LOGIN_URL } from '@/constants';
+
 import style from './login.module.scss';
 import { Button } from '../../components/Button';
 import { InputText } from '../../components/InputText';
@@ -13,6 +13,7 @@ import { ReturnArrow } from '../../components/ReturnArrow';
 import http from '../api/http';
 
 import { InputLabel } from '@/components/InputLabel';
+import { LOGIN_URL } from '@/constants';
 
 const login = props => {
   const router = useRouter();

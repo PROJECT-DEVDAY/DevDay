@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { BiPlus, BiMinus } from 'react-icons/bi';
-import { TbTilde } from 'react-icons/tb';
+import { useSelector } from 'react-redux';
 
 import classNames from 'classnames';
 
@@ -13,10 +13,10 @@ import { InputLabel } from '@/components/InputLabel';
 import { ReturnArrow } from '@/components/ReturnArrow';
 
 const algo = props => {
-  const [text, setText] = useState('');
-  const setTextValue = e => {
-    setText(e.target.value);
-  };
+  const { startDate, endDate } = useSelector(state => state.challengeCreate);
+  const start = new Date(startDate).toLocaleDateString();
+  const end = new Date(endDate).toLocaleDateString();
+
   const memberCheckButton = [
     {
       id: 0,
@@ -38,6 +38,25 @@ const algo = props => {
     }
   };
   const [member, setMember] = useState(0);
+
+  const [room, setRoom] = useState({
+    category: 'ALGO',
+    title: '',
+    hostId: '',
+    entryFee: '',
+    introduce: '',
+    algorithmCount: '',
+  });
+  const handleChange = e => {
+    setRoom({
+      ...room,
+      [e.target.name]: e.target.value,
+    });
+  };
+  const [openDatePicker, setOpenDatePicker] = useState(false);
+  const showDatePicker = () => {
+    setOpenDatePicker(!openDatePicker);
+  };
   return (
     <div>
       <div className={classNames(`style.div-header`, `sticky top-0`)}>
@@ -48,11 +67,11 @@ const algo = props => {
           <InputLabel content="챌린지 제목" asterisk />
           <ContentInput
             placeholder="예) 1일 1알고리즘 3주 도전"
-            onChange={setTextValue}
-            value={text}
             maxLength="30"
+            name="title"
+            onChange={handleChange}
           />
-          <p className="text-right">{text.length}/30</p>
+          <p className="text-right">{room.title.length}/30</p>
         </div>
         <div className="mt-6">
           <InputLabel content="참여 인원" asterisk />
@@ -116,16 +135,18 @@ const algo = props => {
           )}
         </div>
         <div className="mt-8">
-          <InputLabel content="챌린지 기간" asterisk />
-          <div className="flex">
-            <div className="w-2/5">
-              <DayPicker />
-            </div>
-            <div className="mx-2">
-              <TbTilde size={18} className="h-full align-middle" />
-            </div>
-            <div className="w-2/5">
-              <DayPicker />
+          <div className={style.bws}>
+            <InputLabel content="챌린지 기간" asterisk />
+            <button type="button" onClick={showDatePicker} className="w-1/2">
+              입력
+            </button>
+          </div>
+          <p>
+            {start} ~ {end}
+          </p>
+          <div>
+            <div>
+              {openDatePicker && <DayPicker showDatePicker={showDatePicker} />}
             </div>
           </div>
         </div>
@@ -133,9 +154,9 @@ const algo = props => {
           <InputLabel content="챌린지 소개" asterisk={false} />
           <ContentInput
             placeholder="예) 1일 1알고리즘 실천해서 코테 뿌셔봅시다"
-            onChange={setTextValue}
-            value={text}
             maxLength="30"
+            name="introduce"
+            onChange={handleChange}
           />
         </div>
       </div>

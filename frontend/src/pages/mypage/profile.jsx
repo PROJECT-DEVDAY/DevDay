@@ -2,11 +2,10 @@ import React from 'react';
 
 import { useRouter } from 'next/router';
 
-import { PROFILE_URL } from '@/constants';
-
 import { ReturnArrow } from '@/components/ReturnArrow';
 import { SelectArrow } from '@/components/SelectArrow';
 import { UserAvatar } from '@/components/UserAvatar';
+import { PROFILE_URL } from '@/constants';
 import http from '@/pages/api/http';
 
 const profile = () => {
