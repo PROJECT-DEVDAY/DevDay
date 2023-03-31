@@ -2,7 +2,7 @@ import React from 'react';
 
 import { useRouter } from 'next/router';
 
-import { PROFILE_URL } from '../api/constants';
+import { PROFILE_URL } from '@/constants';
 
 import { ReturnArrow } from '@/components/ReturnArrow';
 import { SelectArrow } from '@/components/SelectArrow';

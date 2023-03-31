@@ -1,9 +1,10 @@
 package com.example.userservice.controller;
 
 import com.example.userservice.dto.BaseResponseDto;
-import com.example.userservice.dto.request.*;
-import com.example.userservice.dto.response.TokenResponseDto;
-import com.example.userservice.dto.response.UserResponseDto;
+import com.example.userservice.dto.request.user.*;
+import com.example.userservice.dto.response.user.LoginResponseDto;
+import com.example.userservice.dto.response.user.TokenResponseDto;
+import com.example.userservice.dto.response.user.UserResponseDto;
 import com.example.userservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -38,7 +39,7 @@ public class UserController {
      * @return
      * */
     @PostMapping("/login")
-    public ResponseEntity<BaseResponseDto<TokenResponseDto>> login(@Valid @RequestBody LoginRequestDto requestDto) {
+    public ResponseEntity<BaseResponseDto<LoginResponseDto>> login(@Valid @RequestBody LoginRequestDto requestDto) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new BaseResponseDto<>(200, "success", userService.login(requestDto)));
     }

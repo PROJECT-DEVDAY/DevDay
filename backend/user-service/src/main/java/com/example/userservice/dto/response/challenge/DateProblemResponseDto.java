@@ -1,4 +1,4 @@
-package com.example.userservice.dto.response;
+package com.example.userservice.dto.response.challenge;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

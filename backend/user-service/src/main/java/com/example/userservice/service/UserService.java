@@ -1,15 +1,16 @@
 package com.example.userservice.service;
 
-import com.example.userservice.dto.request.*;
-import com.example.userservice.dto.response.TokenResponseDto;
-import com.example.userservice.dto.response.UserResponseDto;
+import com.example.userservice.dto.request.user.*;
+import com.example.userservice.dto.response.user.LoginResponseDto;
+import com.example.userservice.dto.response.user.TokenResponseDto;
+import com.example.userservice.dto.response.user.UserResponseDto;
 
 import javax.servlet.http.HttpServletRequest;
 
 public interface UserService {
     void join(Long emailAuthId, SignUpRequestDto requestDto);
 
-    TokenResponseDto login(LoginRequestDto requestDto);
+    LoginResponseDto login(LoginRequestDto requestDto);
 
     String findId(FindIdRequestDto requestDto);
 

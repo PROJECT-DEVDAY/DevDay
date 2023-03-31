@@ -1,9 +1,9 @@
 package com.example.userservice.controller;
 
 import com.example.userservice.dto.BaseResponseDto;
-import com.example.userservice.dto.request.ProblemRequestDto;
-import com.example.userservice.dto.response.BaekjoonListResponseDto;
-import com.example.userservice.dto.response.DateProblemResponseDto;
+import com.example.userservice.dto.request.challenge.ProblemRequestDto;
+import com.example.userservice.dto.response.challenge.BaekjoonListResponseDto;
+import com.example.userservice.dto.response.challenge.DateProblemResponseDto;
 import com.example.userservice.service.ChallengeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
