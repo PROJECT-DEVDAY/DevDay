@@ -2,7 +2,6 @@ import React from 'react';
 
 import Container from '.';
 import Header from './components/Header';
-import MainHeader from './components/MainHeader';
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {

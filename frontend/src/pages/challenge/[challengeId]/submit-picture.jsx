@@ -6,8 +6,8 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import Swal from 'sweetalert2';
 
-import { CheckBoxBtn } from '@/components/CheckBoxBtn';
-import { ReturnArrow } from '@/components/ReturnArrow';
+import { Button } from '@/components/Button';
+import Container from '@/components/Container';
 
 const SubmitPicture = () => {
   const router = useRouter();
@@ -94,11 +94,9 @@ const SubmitPicture = () => {
     }
   };
   return (
-    <div className="font-medium">
-      <div className="style.div-header sticky top-0">
-        <ReturnArrow title={challengeInfo.name} />
-      </div>
-      <div className="div-body p-6 pb-12 mt-8">
+    <Container>
+      <Container.SubPageHeader title={challengeInfo.name} />
+      <Container.Body className="mt-4 px-4">
         <div className="col-span-full">
           <div
             onClick={onClickImage}
@@ -145,15 +143,15 @@ const SubmitPicture = () => {
         </div>
         <div className="pt-13">
           <p className="text-xl">
-            제출 후에는 챌린지 인증사진을 <br /> 수정할 수 없습니다.
+            제출 후에는 챌린지 인증사진을 수정할 수 없습니다.
           </p>
           <p className="text-xl pt-5">제출하시겠습니까?</p>
         </div>
-      </div>
-      <div className="absolute w-full bottom-0">
-        <CheckBoxBtn check={false} label="인증하기" onClick={onClick} />
-      </div>
-    </div>
+      </Container.Body>
+      <Container.Footer className="flex items-center border-t-2 p-4 z-30 bg-white">
+        <Button label="인증하기" onClick={onClick} disabled={!isSelect} />
+      </Container.Footer>
+    </Container>
   );
 };
 

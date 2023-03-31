@@ -9,6 +9,7 @@ import Header from './components/Header';
 import MainBody from './components/MainBody';
 import MainFooter from './components/MainFooter';
 import MainHeader from './components/MainHeader';
+import SubPageHeader from './components/SubPageHeader';
 import style from './index.module.scss';
 
 const Container = ({ children, className }) => {
@@ -28,5 +29,6 @@ Container.Body = Body;
 Container.MainBody = MainBody;
 Container.Footer = Footer;
 Container.MainFooter = MainFooter;
+Container.SubPageHeader = SubPageHeader;
 
 export default Container;

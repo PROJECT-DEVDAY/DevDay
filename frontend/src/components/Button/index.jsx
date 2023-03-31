@@ -6,7 +6,15 @@ import PropTypes from 'prop-types';
 
 import style from './index.module.scss';
 
-export const Button = ({ color, fill, className, label, type, ...props }) => {
+export const Button = ({
+  color,
+  fill,
+  className,
+  label,
+  type,
+  disabled,
+  ...props
+}) => {
   return (
     <button
       type={type || 'button'}
@@ -15,8 +23,11 @@ export const Button = ({ color, fill, className, label, type, ...props }) => {
         style[`Button-${color}`],
         fill && style['Button-background-fill'],
         className,
-        `font-medium`,
+        'font-medium',
+        disabled && 'disabled:opacity-25',
+        disabled ? 'cursor-not-allowed' : 'cursor-pointer',
       )}
+      disabled={disabled}
       {...props}
     >
       {label}
@@ -30,6 +41,7 @@ Button.propTypes = {
   fill: PropTypes.bool,
   label: PropTypes.string.isRequired,
   onClick: PropTypes.func,
+  disabled: PropTypes.bool,
 };
 
 Button.defaultProps = {
@@ -37,4 +49,5 @@ Button.defaultProps = {
   color: 'primary',
   fill: true,
   onClick: undefined,
+  disabled: false,
 };
