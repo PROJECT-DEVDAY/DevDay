@@ -1,11 +1,12 @@
 package com.example.userservice.controller;
 
 import com.example.userservice.dto.BaseResponseDto;
-import com.example.userservice.dto.request.GithubBaekjoonRequestDto;
-import com.example.userservice.dto.request.NicknameRequestDto;
-import com.example.userservice.dto.request.PasswordRequestDto;
-import com.example.userservice.dto.response.MypageResponseDto;
-import com.example.userservice.dto.response.ProfileResponseDto;
+import com.example.userservice.dto.request.user.GithubBaekjoonRequestDto;
+import com.example.userservice.dto.request.user.NicknameRequestDto;
+import com.example.userservice.dto.request.user.PasswordRequestDto;
+import com.example.userservice.dto.response.user.GithubBaekjoonResponseDto;
+import com.example.userservice.dto.response.user.MypageResponseDto;
+import com.example.userservice.dto.response.user.ProfileResponseDto;
 import com.example.userservice.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -80,10 +81,11 @@ public class AuthController {
      * @param profileImg
      * */
     @PatchMapping("/user/img")
-    public ResponseEntity<BaseResponseDto<?>> updateProfileImg(HttpServletRequest request,
+    public ResponseEntity<BaseResponseDto<String>> updateProfileImg(HttpServletRequest request,
                                                                @RequestPart MultipartFile profileImg) {
-        authService.updateProfileImg(getUserId(request), profileImg);
-        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseDto<>(200, "success"));
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new BaseResponseDto<>(200, "success", authService.updateProfileImg(getUserId(request), profileImg)));
     }
 
     /**
@@ -104,10 +106,11 @@ public class AuthController {
      * @param requestDto
      * */
     @PatchMapping("/user/nickname")
-    public ResponseEntity<BaseResponseDto<?>> updateNickname(HttpServletRequest request,
+    public ResponseEntity<BaseResponseDto<String>> updateNickname(HttpServletRequest request,
                                                              @RequestBody NicknameRequestDto requestDto) {
-        authService.updateNickname(getUserId(request), requestDto);
-        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseDto<>(200, "success"));
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new BaseResponseDto<>(200, "success", authService.updateNickname(getUserId(request), requestDto)));
     }
 
     /**
@@ -116,10 +119,11 @@ public class AuthController {
      * @param requestDto
      * */
     @PatchMapping("/user/githubandbaekjoon")
-    public ResponseEntity<BaseResponseDto<?>> updateGithubAndBaekjoon(HttpServletRequest request,
-                                                                      @RequestBody GithubBaekjoonRequestDto requestDto) {
-        authService.updateGithubAndBaekjoon(getUserId(request), requestDto);
-        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseDto<>(200, "success"));
+    public ResponseEntity<BaseResponseDto<GithubBaekjoonResponseDto>> updateGithubAndBaekjoon(HttpServletRequest request,
+                                                                                              @RequestBody GithubBaekjoonRequestDto requestDto) {
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new BaseResponseDto<>(200, "success", authService.updateGithubAndBaekjoon(getUserId(request), requestDto)));
     }
 
     private Long getUserId(HttpServletRequest request) {

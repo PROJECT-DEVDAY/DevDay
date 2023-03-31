@@ -1,8 +1,8 @@
 package com.example.userservice.client;
 
 import com.example.userservice.dto.BaseResponseDto;
-import com.example.userservice.dto.response.ChallengeResponseDto;
-import com.example.userservice.dto.response.ProblemResponseDto;
+import com.example.userservice.dto.response.challenge.ChallengeResponseDto;
+import com.example.userservice.dto.response.challenge.ProblemResponseDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

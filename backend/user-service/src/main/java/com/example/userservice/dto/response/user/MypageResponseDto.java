@@ -1,5 +1,7 @@
-package com.example.userservice.dto.response;
+package com.example.userservice.dto.response.user;
 
+import com.example.userservice.dto.response.challenge.ChallengeResponseDto;
+import com.example.userservice.dto.response.pay.MoneyResponseDto;
 import com.example.userservice.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

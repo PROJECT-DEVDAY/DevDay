@@ -1,4 +1,4 @@
-package com.example.userservice.dto.response;
+package com.example.userservice.dto.response.user;
 
 import com.example.userservice.entity.User;
 import lombok.AllArgsConstructor;
