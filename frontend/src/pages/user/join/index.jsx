@@ -7,10 +7,10 @@ import classNames from 'classnames';
 import { useRouter } from 'next/router';
 import Swal from 'sweetalert2';
 
-import style from './signup.module.scss';
-import { Button } from '../../components/Button';
-import { ReturnArrow } from '../../components/ReturnArrow';
-import http from '../api/http';
+import style from './index.module.scss';
+import { Button } from '../../../components/Button';
+import { ReturnArrow } from '../../../components/ReturnArrow';
+import http from '../../api/http';
 
 import { InputLabel } from '@/components/InputLabel';
 import { CONFIRM_EMAIL_URL, EMAIL_URL, NICKNAME_URL } from '@/constants';
@@ -159,17 +159,9 @@ const signup = props => {
   };
 
   const onSubmit = data => {
-    if (emailAuthenticated && nickNameDuplicatedChk) {
-      const inputData = { ...data, emailAuthId };
-      dispatch(saveSignUpInfos(inputData));
-      router.push('./signup/extra-info');
-    } else {
-      Swal.fire({
-        icon: 'error',
-        title: '잠시만요!',
-        text: '이메일 인증, 닉네임 중복체크를 해주세요',
-      });
-    }
+    const inputData = { ...data, emailAuthId };
+    dispatch(saveSignUpInfos(inputData));
+    router.push('./join/extra-info');
   };
 
   return (
@@ -177,7 +169,7 @@ const signup = props => {
       <div className={classNames(`style.div-header`, `sticky top-0`)}>
         <ReturnArrow title="회원가입" />
       </div>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form>
         <div className="div-body p-6 pb-32">
           <InputLabel content="이메일" />
           <div className={classNames(style.InputText, 'flex w-full my-2 pb-1')}>
@@ -413,21 +405,21 @@ const signup = props => {
               ))}
           </div>
         </div>
-        <div
-          className={classNames(
-            `font-sans text-center absolute w-full bottom-0 p-4`,
-          )}
-        >
-          <Button
-            type="submit"
-            // onClick={() => router.push('/user/signup/extra-info')}
-            color="primary"
-            fill
-            label="다음으로"
-          />
-          <div className="mt-2"> 회원 가입</div>
-        </div>
       </form>
+      <div
+        className={classNames(
+          `font-sans text-center absolute w-full bottom-0 p-4`,
+        )}
+      >
+        <Button
+          type="submit"
+          onClick={handleSubmit(onSubmit)}
+          color="primary"
+          fill
+          label="다음으로"
+        />
+        <div className="mt-2"> 회원 가입</div>
+      </div>
     </div>
   );
 };
