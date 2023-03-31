@@ -89,11 +89,23 @@ const login = props => {
     event.preventDefault();
     dispatch(loginAsync(user))
       .unwrap()
-      .then(() => {
-        // console.log('Logged in successfully');
-      })
+      .then(
+        Swal.fire({
+          position: 'center',
+          icon: 'success',
+          title: '로그인 성공',
+          showConfirmButton: false,
+          timer: 1500,
+        }),
+      )
       .catch(error => {
-        // console.log('Login failed:', error);
+        Swal.fire({
+          position: 'center',
+          icon: 'error',
+          title: error.message,
+          showConfirmButton: false,
+          timer: 1500,
+        });
       });
   };
   return (
