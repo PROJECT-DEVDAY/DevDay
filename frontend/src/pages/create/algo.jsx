@@ -38,6 +38,7 @@ const algo = props => {
     }
   };
   const [member, setMember] = useState(0);
+  const [algoithmCount, setAlgoithmCount] = useState(1);
 
   const [room, setRoom] = useState({
     category: 'ALGO',
@@ -45,7 +46,6 @@ const algo = props => {
     hostId: '',
     entryFee: '',
     introduce: '',
-    algorithmCount: '',
   });
   const handleChange = e => {
     setRoom({
@@ -92,6 +92,46 @@ const algo = props => {
                 </button>
               );
             })}
+          </div>
+          <div className="mt-6 flex">
+            <InputLabel content="최소 알고리즘 커밋 수" asterisk />
+            <div className={classNames('flex', style.changeMember)}>
+              {algoithmCount > 1 ? (
+                <button
+                  type="button"
+                  className={classNames(style.plusMinus, 'rounded-l-lg')}
+                  onClick={() => {
+                    setAlgoithmCount(algoithmCount - 1);
+                  }}
+                >
+                  <BiMinus className="m-auto" />
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className={classNames(style.plusMinus, 'rounded-l-lg')}
+                  onClick={() => setAlgoithmCount(algoithmCount - 1)}
+                  disabled
+                >
+                  <BiMinus className="m-auto" />
+                </button>
+              )}
+              <div
+                className={classNames(
+                  'font-medium whitespace-nowrap text-center',
+                  style.plusMinus,
+                )}
+              >
+                {algoithmCount}개
+              </div>
+              <button
+                type="button"
+                className={classNames(style.plusMinus, 'rounded-r-lg')}
+                onClick={() => setAlgoithmCount(algoithmCount + 1)}
+              >
+                <BiPlus className="m-auto" />
+              </button>
+            </div>
           </div>
           {checking[1] && (
             <div className="mt-6 flex">
