@@ -7,6 +7,7 @@ import lombok.Setter;
 @Getter
 public class SimpleChallengeResponseDto {
 
+    /** 챌린지 Room id **/
     private Long id;
     /** 제목 **/
     private String title;

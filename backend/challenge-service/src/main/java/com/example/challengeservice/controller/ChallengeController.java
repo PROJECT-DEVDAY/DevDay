@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -237,6 +238,22 @@ public class ChallengeController {
         return  s3Service.upload(multipartFile,dir);
     }
 
+
+    /** (헤더 유저 id **) 나의 챌린지 기록 조회 (완료 , 진행중 , 시작전)
+
+     */
+
+
+    /**
+     * author : 홍금비
+     * explain : 내가 참여한 챌린지 조회
+     * @param status : PROCEED | DONE | NOT_OPEN
+     */
+    @GetMapping("my-challenge")
+    public  ListResult<MyChallengeResponseDto> getMyChallengeList(@NotBlank @RequestParam ("status") String status){
+
+        return responseService.getListResult(challengeService.getMyChallengeList(1L,status));
+    }
 
 
 
