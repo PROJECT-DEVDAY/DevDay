@@ -5,7 +5,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.Period;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Locale;
 
 @Service
 @RequiredArgsConstructor
@@ -17,5 +22,39 @@ public class CommonServiceImpl implements CommonService {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
         return formatter.format(date);
+    }
+
+    @Override
+    public String getPastDay(int n) {
+        Date date = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+
+        Calendar cal = new GregorianCalendar(Locale.KOREA);
+        cal.setTime(date);
+        cal.add(Calendar.DATE,-n);
+
+        System.out.println("cal is : "+cal.getTime());
+
+        //return formatter.format(date);
+        return formatter.format(cal.getTime());
+    }
+
+    @Override
+    public Long diffDay(String startDate, String endDate){
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+
+        Long diffDays=0L;
+        // 문자열 -> Date
+        try {
+            Date stDate = format.parse(startDate);
+            Date enDate = format.parse(endDate);
+
+            long diff = enDate.getTime() - stDate.getTime();
+            diffDays = diff / (24 * 60 * 60 * 1000);
+            System.out.println("날짜의 차이는 : " + diffDays);
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+        return diffDays;
     }
 }
