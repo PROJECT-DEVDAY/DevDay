@@ -1,13 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import Image from 'next/image';
-
+import { useRouter } from 'next/router';
 import classNames from 'classnames';
 
 import { CheckBoxBtn } from '@/components/CheckBoxBtn';
 import { ReturnArrow } from '@/components/ReturnArrow';
 
 const SubmitPicture = ({}) => {
+  const router = useRouter();
   const challengeInfo = {
     id: 1,
     name: '1일 1회의',
@@ -35,8 +36,32 @@ const SubmitPicture = ({}) => {
     reader.readAsDataURL(inputRef.current.files[0]);
   };
 
-  const onClick = () => {
-    alert('이미지를 전송합니다.');
+  const onClick = async () => {
+    if (!isSelect) {
+      window.alert('이미지를 선택해주세요.');
+      return;
+    }
+    // formData 설정
+    const formData = new FormData();
+    formData.append('photoCertFile', inputRef.current.files[0]);
+    formData.append('challengeRoomId', challengeInfo.id);
+    // 전송
+    try {
+      const result = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_HOST}/challenge-service/photo-record`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        },
+      );
+      window.alert('이미지 전송 완료!');
+      router.back(); // 이전페이지로 이동하기
+    } catch (e) {
+      console.error(e);
+      window.alert('이미지를 전송하는 데 실패했습니다.');
+    }
   };
   return (
     <div className="font-medium">
