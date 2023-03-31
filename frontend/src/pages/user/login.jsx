@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import Swal from 'sweetalert2';
-
+import { LOGIN_URL } from '@/constants';
 import style from './login.module.scss';
 import { Button } from '../../components/Button';
 import { InputText } from '../../components/InputText';
@@ -18,13 +18,40 @@ const login = props => {
   const router = useRouter();
   const [service, setService] = useState(false);
   const [show, setShow] = useState(false);
-
+  const [check, setCheck] = useState(false);
   const [user, setUser] = useState({ email: '', password: '' });
 
   const showModal = () => {
     setShow(prev => !prev);
   };
+  const clickCheck = () => {
+    setCheck(prev => !prev);
+    localStorage.removeItem('savedEmail');
+  };
+  useEffect(() => {
+    const saveEmail = localStorage.getItem('savedEmail');
+    const accessToken = sessionStorage.getItem('accessToken');
+    if (accessToken) {
+      Swal.fire({
+        position: 'center',
+        icon: 'error',
+        title: '로그인 되어있습니다',
+        showConfirmButton: false,
+        timer: 1600,
+      }).then(() => {
+        router.push('/');
+      });
+    }
 
+    if (saveEmail) {
+      setCheck(true);
+    }
+    setUser({
+      ...user,
+      email: saveEmail,
+      password: '',
+    });
+  }, []);
   const bottomSheetRef = useRef(null);
 
   useEffect(() => {
@@ -42,6 +69,7 @@ const login = props => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [bottomSheetRef]);
+
   const goToId = () => {
     router.push('/user/find/idInquiry');
   };
@@ -59,9 +87,10 @@ const login = props => {
   const onClickLogin = e => {
     e.preventDefault();
     http
-      .post('LOGIN_URL', user)
+      .post(LOGIN_URL, user)
       .then(data => {
-        // data.data.data.accessToken + data.data.data.refreshToken;
+        sessionStorage.setItem('accessToken', data.data.data.accessToken);
+        sessionStorage.setItem('refreshToken', data.data.data.refreshToken);
       })
       .then(() => {
         Swal.fire({
@@ -70,6 +99,11 @@ const login = props => {
           title: '로그인 성공',
           showConfirmButton: false,
           timer: 1600,
+        }).then(() => {
+          if (check) {
+            localStorage.setItem('savedEmail', user.email);
+          }
+          router.push('/');
         });
       })
       .catch(error => {
@@ -97,6 +131,7 @@ const login = props => {
             <InputText
               name="email"
               type="email"
+              value={user.email}
               inputType="text"
               content="welcome@devday.com"
               onChange={handleChange}
@@ -115,7 +150,13 @@ const login = props => {
         <div className={classNames(`mt-3`, style.option)}>
           <label htmlFor="toggle" className="flex">
             <label htmlFor="toggle" className={style.togglelabel}>
-              <input className={style.toggle} type="checkbox" id="toggle" />
+              <input
+                className={style.toggle}
+                type="checkbox"
+                id="toggle"
+                checked={check}
+                onChange={clickCheck}
+              />
               <div className={style.togglelabelhandle} />
             </label>
             <div className={classNames('ml-4', style.font)}>
