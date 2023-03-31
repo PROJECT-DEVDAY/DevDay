@@ -1,5 +1,7 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { PURGE } from 'redux-persist';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+
+import { JOIN_URL } from '@/constants';
+import http from '@/pages/api/http';
 
 const initialState = {
   email: '',
@@ -11,6 +13,18 @@ const initialState = {
   github: '',
   emailAuthId: '',
 };
+
+export const saveExtraInfosAsync = createAsyncThunk(
+  'signUp/saveExtraInfosAsync',
+  async (extraInfos, thunkAPI) => {
+    const response = await http.post(
+      JOIN_URL(thunkAPI.getState().signUp.emailAuthId),
+      extraInfos,
+    );
+    return response.data;
+  },
+);
+
 const signupSlice = createSlice({
   name: 'signUp',
   initialState,
@@ -18,13 +32,7 @@ const signupSlice = createSlice({
     saveSignUpInfos: (state, action) => {
       return action.payload;
     },
-    saveExtraInfos: (state, action) => {
-      return {
-        ...state,
-        baekjoon: action.payload.baekjoon,
-        github: action.payload.github,
-      };
-    },
+
     reset(state) {
       Object.assign(state, {
         email: '',
@@ -39,9 +47,18 @@ const signupSlice = createSlice({
     },
   },
   extraReducers: builder => {
-    builder.addCase(PURGE, () => initialState);
+    builder
+      .addCase(saveExtraInfosAsync.pending, state => {
+        return { ...state, status: 'Loading' };
+      })
+      .addCase(saveExtraInfosAsync.fulfilled, (state, action) => {
+        return { ...state, token: action.payload, status: 'Success' };
+      })
+      .addCase(saveExtraInfosAsync.rejected, state => {
+        return { ...state, token: null, status: 'Fail' };
+      });
   },
 });
 
-export const { saveSignUpInfos, saveExtraInfos, reset } = signupSlice.actions;
+export const { saveSignUpInfos, reset } = signupSlice.actions;
 export default signupSlice.reducer;

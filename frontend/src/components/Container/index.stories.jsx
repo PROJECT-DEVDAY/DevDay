@@ -19,6 +19,6 @@ const Template = args => (
   </Container>
 );
 
-export const defaultContainer = Template.bind({});
+export const DefaultContainer = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
-defaultContainer.args = {};
+DefaultContainer.args = {};
