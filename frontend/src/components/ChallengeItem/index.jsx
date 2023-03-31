@@ -7,6 +7,7 @@ import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 
 import style from './index.module.scss';
+import Link from 'next/link';
 
 export const ChallengeItem = ({
   className,
@@ -23,22 +24,12 @@ export const ChallengeItem = ({
 
   const router = useRouter();
 
-  const goToChallengDetail = () => {
-    onClick(id);
-    router.push(`participation/{디테일 / id}`);
-  };
-  const handleKeyPress = event => {
-    if (event.key === 'Enter' || event.key === ' ') {
-      goToChallengDetail();
-    }
-  };
   return (
-    <div
+    <Link
+      href={`participation/${id}`}
       className={style.ChallengeItem}
       role="button"
       tabIndex={0}
-      onClick={goToChallengDetail}
-      onKeyPress={handleKeyPress}
     >
       <div className={classNames(style.ImageContainer, `relative`)}>
         <Image
@@ -66,7 +57,7 @@ export const ChallengeItem = ({
           {period}
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 

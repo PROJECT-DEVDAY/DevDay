@@ -5,9 +5,10 @@ import Chart from 'chart.js/auto';
 import classNames from 'classnames';
 import Image from 'next/image';
 
-import style from './ChallengeIntro.module.scss';
+import style from './index.module.scss';
 
 import { Button } from '@/components/Button';
+import Link from 'next/link';
 
 const challengeintro = props => {
   const expData = {
@@ -134,7 +135,12 @@ const challengeintro = props => {
           <p>매일 2주 동안</p>
         </div>
         <div className="w-1/2">
-          <Button label="참여하기" />
+          <Button
+            label="참여하기"
+            onClick={() => {
+              window.alert('구현하기!');
+            }}
+          />
         </div>
       </div>
     </div>
