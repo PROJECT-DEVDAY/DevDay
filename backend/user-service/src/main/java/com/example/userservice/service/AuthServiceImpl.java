@@ -2,14 +2,14 @@ package com.example.userservice.service;
 
 import com.example.userservice.client.ChallengeServiceClient;
 import com.example.userservice.client.PayServiceClient;
-import com.example.userservice.dto.request.GithubBaekjoonRequestDto;
-import com.example.userservice.dto.request.NicknameRequestDto;
-import com.example.userservice.dto.request.PasswordRequestDto;
-import com.example.userservice.dto.response.ChallengeResponseDto;
-import com.example.userservice.dto.response.MoneyResponseDto;
-import com.example.userservice.dto.response.MypageResponseDto;
-import com.example.userservice.dto.response.ProfileResponseDto;
-import com.example.userservice.entity.Solvedac;
+import com.example.userservice.dto.request.user.GithubBaekjoonRequestDto;
+import com.example.userservice.dto.request.user.NicknameRequestDto;
+import com.example.userservice.dto.request.user.PasswordRequestDto;
+import com.example.userservice.dto.response.challenge.ChallengeResponseDto;
+import com.example.userservice.dto.response.pay.MoneyResponseDto;
+import com.example.userservice.dto.response.user.GithubBaekjoonResponseDto;
+import com.example.userservice.dto.response.user.MypageResponseDto;
+import com.example.userservice.dto.response.user.ProfileResponseDto;
 import com.example.userservice.entity.User;
 import com.example.userservice.exception.ApiException;
 import com.example.userservice.exception.ExceptionEnum;
@@ -22,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -69,7 +68,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public void updateProfileImg(Long userId, MultipartFile profileImg) {
+    public String updateProfileImg(Long userId, MultipartFile profileImg) {
         User user = getUser(userId);
 
         deleteS3Img(user);
@@ -77,10 +76,12 @@ public class AuthServiceImpl implements AuthService {
         String fileName = saveS3Img(profileImg);
         String fileUrl = amazonS3Service.getFileUrl(fileName);
         user.updateProfile(fileName, fileUrl);
+
+        return user.getProfileImgUrl();
     }
 
     private void deleteS3Img(User user) {
-        if (user.getProfileImgKey() != null) amazonS3Service.delete(user.getProfileImgKey());
+        if (!user.getProfileImgKey().isBlank()) amazonS3Service.delete(user.getProfileImgKey());
     }
 
     private String saveS3Img(MultipartFile profileImg) {
@@ -93,7 +94,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public void updateNickname(Long userId, NicknameRequestDto requestDto) {
+    public String updateNickname(Long userId, NicknameRequestDto requestDto) {
         User user = getUser(userId);
 
         if (!passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {
@@ -101,6 +102,7 @@ public class AuthServiceImpl implements AuthService {
         }
 
         user.updateNickname(requestDto.getNickname());
+        return user.getNickname();
     }
 
     @Override
@@ -117,13 +119,15 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public void updateGithubAndBaekjoon(Long userId, GithubBaekjoonRequestDto requestDto) {
+    public GithubBaekjoonResponseDto updateGithubAndBaekjoon(Long userId, GithubBaekjoonRequestDto requestDto) {
 
         User user = getUser(userId);
         user.updateEmail(requestDto.getGithub(), requestDto.getBaekjoon());
 
         solvedacRepository.deleteAllByUserId(user.getId());
         if (!user.getBaekjoon().isBlank()) commonService.saveProblemList(user);
+
+        return GithubBaekjoonResponseDto.from(user.getGithub(), user.getBaekjoon());
     }
 
     @Override

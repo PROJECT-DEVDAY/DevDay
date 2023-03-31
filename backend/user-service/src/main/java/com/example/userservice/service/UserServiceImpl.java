@@ -1,9 +1,10 @@
 package com.example.userservice.service;
 
 import com.example.userservice.client.PayServiceClient;
-import com.example.userservice.dto.request.*;
-import com.example.userservice.dto.response.TokenResponseDto;
-import com.example.userservice.dto.response.UserResponseDto;
+import com.example.userservice.dto.request.user.*;
+import com.example.userservice.dto.response.user.LoginResponseDto;
+import com.example.userservice.dto.response.user.TokenResponseDto;
+import com.example.userservice.dto.response.user.UserResponseDto;
 import com.example.userservice.entity.EmailAuth;
 import com.example.userservice.entity.User;
 import com.example.userservice.exception.ApiException;
@@ -67,7 +68,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     @Transactional
-    public TokenResponseDto login(LoginRequestDto requestDto) {
+    public LoginResponseDto login(LoginRequestDto requestDto) {
         User user = userRepository.findByEmail(requestDto.getEmail())
                 .orElseThrow(() -> new ApiException(ExceptionEnum.MEMBER_NOT_EXIST_EXCEPTION));
 
@@ -80,7 +81,7 @@ public class UserServiceImpl implements UserService{
 
         redisService.setValues(refreshToken, user.getId());
 
-        return TokenResponseDto.of(accessToken, refreshToken);
+        return LoginResponseDto.of(UserResponseDto.from(user), accessToken, refreshToken);
     }
 
     @Override

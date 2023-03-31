@@ -1,8 +1,8 @@
 package com.example.userservice.service;
 
-import com.example.userservice.dto.request.ProblemRequestDto;
-import com.example.userservice.dto.response.BaekjoonListResponseDto;
-import com.example.userservice.dto.response.DateProblemResponseDto;
+import com.example.userservice.dto.request.challenge.ProblemRequestDto;
+import com.example.userservice.dto.response.challenge.BaekjoonListResponseDto;
+import com.example.userservice.dto.response.challenge.DateProblemResponseDto;
 
 import java.util.List;
 

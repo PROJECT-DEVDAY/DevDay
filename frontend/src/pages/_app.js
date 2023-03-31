@@ -33,18 +33,17 @@ function App({ Component, pageProps }) {
   }, []);
 
   return (
-    <>
-      <span className="flex justify-center items-center">
-        {loading && <Spinner />}
-      </span>
-      {!loading && (
-        <Provider store={store}>
-          <PersistGate persistor={persistor}>
-            <Component {...pageProps} />
-          </PersistGate>
-        </Provider>
-      )}
-    </>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        {loading ? (
+          <span className="flex justify-center items-center">
+            <Spinner />
+          </span>
+        ) : (
+          <Component {...pageProps} />
+        )}
+      </PersistGate>
+    </Provider>
   );
 }
 

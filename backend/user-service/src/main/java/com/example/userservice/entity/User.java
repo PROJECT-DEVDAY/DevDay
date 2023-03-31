@@ -1,6 +1,6 @@
 package com.example.userservice.entity;
 
-import com.example.userservice.dto.request.SignUpRequestDto;
+import com.example.userservice.dto.request.user.SignUpRequestDto;
 import lombok.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 

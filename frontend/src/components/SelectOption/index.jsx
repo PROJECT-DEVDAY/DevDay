@@ -20,6 +20,7 @@ export const SelectOption = ({
         !check && style.Select,
         check && style.Selected,
         'flex',
+        fill && style[`SelectOption-background-fill`],
       )}
     >
       <div>

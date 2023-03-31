@@ -1,7 +1,7 @@
 package com.example.userservice.client;
 
 import com.example.userservice.dto.BaseResponseDto;
-import com.example.userservice.dto.response.MoneyResponseDto;
+import com.example.userservice.dto.response.pay.MoneyResponseDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;

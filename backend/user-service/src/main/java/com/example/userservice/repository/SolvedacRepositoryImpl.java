@@ -1,6 +1,6 @@
 package com.example.userservice.repository;
 
-import com.example.userservice.dto.response.DateProblemResponseDto;
+import com.example.userservice.dto.response.challenge.DateProblemResponseDto;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;

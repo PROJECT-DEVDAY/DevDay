@@ -2,17 +2,17 @@ import React from 'react';
 
 import { useRouter } from 'next/router';
 
-import { PROFILE_URL } from '../api/constants';
+import http from '../api/http';
 
 import { ReturnArrow } from '@/components/ReturnArrow';
 import { SelectArrow } from '@/components/SelectArrow';
 import { UserAvatar } from '@/components/UserAvatar';
-import http from '@/pages/api/http';
+import { PROFILE_URL } from '@/constants';
 
 const profile = () => {
   const router = useRouter();
 
-  const user = http.get(PROFILE_URL, {
+  const profileInfo = http.get(PROFILE_URL, {
     Authorization: localStorage.getItem('accessToken'),
   });
 
@@ -26,6 +26,7 @@ const profile = () => {
 
   const logout = () => {
     localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
     router.push('/user/login');
   };
 
@@ -36,9 +37,13 @@ const profile = () => {
       </div>
       <div className="div-body pt-6 pb-4">
         <div className="pt-20 flex justify-center">
-          <UserAvatar imageURL={user.profileImgUrl} width={150} height={150} />
+          <UserAvatar
+            imageURL={profileInfo.profileImgUrl}
+            width={150}
+            height={150}
+          />
         </div>
-        <p className="text-center font-medium mb-10">{user.nickname}</p>
+        <p className="text-center font-medium mb-10">{profileInfo.nickname}</p>
       </div>
       <hr className="border-gray-400 w-full" />
       <div className="div-body p-6">

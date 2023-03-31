@@ -12,7 +12,7 @@ export const loginAsync = createAsyncThunk(
       email,
       password,
     });
-    return response.data;
+    return response.data.data;
   },
 );
 
