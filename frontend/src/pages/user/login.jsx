@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { AiOutlineCloseCircle } from 'react-icons/ai';
+import { useDispatch } from 'react-redux';
 
 import classNames from 'classnames';
 import Image from 'next/image';
@@ -10,14 +10,14 @@ import style from './login.module.scss';
 import { Button } from '../../components/Button';
 import { InputText } from '../../components/InputText';
 import { ReturnArrow } from '../../components/ReturnArrow';
-import http from '../api/http';
 
 import { InputLabel } from '@/components/InputLabel';
-import { LOGIN_URL } from '@/constants';
+import { loginAsync } from '@/store/user/userSlice';
 
 const login = props => {
   const router = useRouter();
-  const [service, setService] = useState(false);
+  const dispatch = useDispatch();
+
   const [show, setShow] = useState(false);
   const [check, setCheck] = useState(false);
   const [user, setUser] = useState({ email: '', password: '' });
@@ -85,33 +85,26 @@ const login = props => {
     });
   };
 
-  const onClickLogin = e => {
-    e.preventDefault();
-    http
-      .post(LOGIN_URL, user)
-      .then(data => {
-        sessionStorage.setItem('accessToken', data.data.data.accessToken);
-        sessionStorage.setItem('refreshToken', data.data.data.refreshToken);
-      })
-      .then(() => {
+  const onSubmitLogin = event => {
+    event.preventDefault();
+    dispatch(loginAsync(user))
+      .unwrap()
+      .then(
         Swal.fire({
           position: 'center',
           icon: 'success',
           title: '로그인 성공',
           showConfirmButton: false,
-          timer: 1600,
-        }).then(() => {
-          if (check) {
-            localStorage.setItem('savedEmail', user.email);
-          }
-          router.push('/');
-        });
-      })
+          timer: 1500,
+        }),
+      )
       .catch(error => {
         Swal.fire({
+          position: 'center',
           icon: 'error',
-          title: '로그인 실패',
-          text: error.response.data.message,
+          title: error.message,
+          showConfirmButton: false,
+          timer: 1500,
         });
       });
   };
@@ -126,13 +119,13 @@ const login = props => {
           className="w-full"
           alt="loginImage"
         />
-        <form onSubmit={onClickLogin}>
+        <form>
           <div>
             <InputLabel content="이메일" />
             <InputText
               name="email"
               type="email"
-              value={user.email}
+              value={user.email || ''}
               inputType="text"
               content="welcome@devday.com"
               onChange={handleChange}
@@ -147,47 +140,51 @@ const login = props => {
               onChange={handleChange}
             />
           </div>
-        </form>
-        <div className={classNames(`mt-3`, style.option)}>
-          <label htmlFor="toggle" className="flex">
-            <label htmlFor="toggle" className={style.togglelabel}>
-              <input
-                className={style.toggle}
-                type="checkbox"
-                id="toggle"
-                checked={check}
-                onChange={clickCheck}
-              />
-              <div className={style.togglelabelhandle} />
+
+          <div className={classNames(`mt-3`, style.option)}>
+            <label htmlFor="toggle" className="flex">
+              <label htmlFor="toggle" className={style.togglelabel}>
+                <input
+                  className={style.toggle}
+                  type="checkbox"
+                  id="toggle"
+                  checked={check}
+                  onChange={clickCheck}
+                />
+                <div className={style.togglelabelhandle} />
+              </label>
+              <div className={classNames('ml-4', style.font)}>
+                아이디 기억하기
+              </div>
             </label>
-            <div className={classNames('ml-4', style.font)}>
-              아이디 기억하기
+            <button onClick={showModal} className={style.font} type="button">
+              아이디/비밀번호 찾기
+            </button>
+          </div>
+          <div
+            className={classNames(`text-center absolute w-full bottom-0 p-4`)}
+          >
+            <div className="mt-2">
+              회원 가입할래?
+              <button
+                type="button"
+                className={style.signup}
+                onClick={() => router.push('/user/signup')}
+              >
+                회원가입
+              </button>
             </div>
-          </label>
-          <button onClick={showModal} className={style.font} type="button">
-            아이디/비밀번호 찾기
-          </button>
-        </div>
-      </div>
-      <div className={classNames(`text-center absolute w-full bottom-0 p-4`)}>
+          </div>
+        </form>
         <Button
           type="submit"
+          onClick={onSubmitLogin}
           color="primary"
           fill
           label="로그인"
-          onClick={onClickLogin}
         />
-        <div className="mt-2">
-          회원 가입할래?
-          <button
-            type="button"
-            className={style.signup}
-            onClick={() => router.push('/user/signup')}
-          >
-            회원가입
-          </button>
-        </div>
       </div>
+
       <div
         className={classNames(
           style[`bottom-sheet`],

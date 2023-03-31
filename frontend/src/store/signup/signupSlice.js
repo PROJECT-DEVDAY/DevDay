@@ -1,19 +1,19 @@
 import { createSlice } from '@reduxjs/toolkit';
-import produce from 'immer';
+import { PURGE } from 'redux-persist';
 
+const initialState = {
+  email: '',
+  password: '',
+  passwordCheck: '',
+  name: '',
+  nickname: '',
+  baekjoon: '',
+  github: '',
+  emailAuthId: '',
+};
 const signupSlice = createSlice({
-  name: 'signUpInfos',
-
-  initialState: {
-    email: '',
-    password: '',
-    passwordCheck: '',
-    name: '',
-    nickname: '',
-    baekjoon: '',
-    github: '',
-    emailAuthId: '',
-  },
+  name: 'signUp',
+  initialState,
   reducers: {
     saveSignUpInfos: (state, action) => {
       return action.payload;
@@ -38,7 +38,9 @@ const signupSlice = createSlice({
       });
     },
   },
-  extraReducers: builder => {},
+  extraReducers: builder => {
+    builder.addCase(PURGE, () => initialState);
+  },
 });
 
 export const { saveSignUpInfos, saveExtraInfos, reset } = signupSlice.actions;

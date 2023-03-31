@@ -83,13 +83,11 @@ export const InputText = ({
 
 InputText.propTypes = {
   type: PropTypes.string.isRequired,
-  labelName: PropTypes.string,
   content: PropTypes.string,
   onClick: PropTypes.func,
 };
 
 InputText.defaultProps = {
-  labelName: '',
   content: null,
   onClick: () => {},
 };

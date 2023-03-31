@@ -9,6 +9,7 @@ export const CONFIRM_EMAIL_URL = `${USER_SERVICE}/confirm-email`;
 
 export const NICKNAME_URL = `${USER_SERVICE}/nickname`;
 
+export const MYPAGE_URL = `${USER_SERVICE}/auth/user`;
 export const PROFILE_URL = `${USER_SERVICE}/auth/user/detail`;
 
 // 챌린지

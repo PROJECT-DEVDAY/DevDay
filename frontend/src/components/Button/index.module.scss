@@ -29,3 +29,11 @@
 .Button-warning.Button-background-fill {
   background-color: var(--color-guembi);
 }
+
+.Button-danger {
+  color: var(--color-warning);
+  border: 1.5px solid var(--color-warning);
+}
+.Button-danger.Button-background-fill {
+  background-color: var(--color-warning);
+}

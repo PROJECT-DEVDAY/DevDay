@@ -16,7 +16,6 @@ import com.example.challengeservice.exception.ExceptionEnum;
 import com.example.challengeservice.infra.querydsl.SearchParam;
 import com.example.challengeservice.infra.amazons3.service.AmazonS3Service;
 import com.example.challengeservice.repository.*;
-import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Connection;
@@ -122,6 +121,7 @@ public class ChallengeServiceImpl implements ChallengeService{
                     case "COMMIT":
                         challengeRoom.setBackGroundUrl(env.getProperty("default-image.commit"));
                         break;
+                    default: break;
                 }
             }else{
                     backgroundUrl = amazonS3Service.upload(challengeRoomRequestDto.getBackGroundFile(),s3DirName);
@@ -218,12 +218,11 @@ public class ChallengeServiceImpl implements ChallengeService{
         System.out.println("userChallengingList = "+userChallengingList);
         System.out.println("userChallengedList = "+userChallengedList);
         System.out.println("userHostChallengesList = "+userHostChallengesList);
-        UserChallengeInfoResponseDto userChallengeInfoResponseDto=UserChallengeInfoResponseDto.from(
+        return UserChallengeInfoResponseDto.from(
                 userChallengingList.size(),
                 userChallengedList.size(),
                 userHostChallengesList.size()
         );
-        return userChallengeInfoResponseDto;
     }
 
     /**
@@ -284,8 +283,7 @@ public class ChallengeServiceImpl implements ChallengeService{
         } catch (IOException e) {
             e.printStackTrace();
         }
-        SolvedListResponseDto solvedListResponseDto = SolvedListResponseDto.from(solvedList, count);
-        return solvedListResponseDto;
+        return SolvedListResponseDto.from(solvedList, count);
     }
 
     /** 유저의 백준리스트 업데이트
@@ -422,8 +420,7 @@ public class ChallengeServiceImpl implements ChallengeService{
         //userChallenge 값을 찾아야함
 
       UserChallenge userChallenge =  userChallengeRepository.findByChallengeRoomIdAndUserId(challengeRoomId , userId).orElseThrow(()->new ApiException(ExceptionEnum.USER_CHALLENGE_NOT_EXIST_EXCEPTION));
-        List<PhotoRecordResponseDto> challengeRecords = challengeRecordRepository.getSelfPhotoRecord(userChallenge, viewType );
-        return challengeRecords;
+        return challengeRecordRepository.getSelfPhotoRecord(userChallenge, viewType );
     }
 
     /**
@@ -453,8 +450,7 @@ public class ChallengeServiceImpl implements ChallengeService{
     }
     @Override
     public List<PhotoRecordResponseDto> getTeamPhotoRecord(Long challengeRoomId, String viewType) {
-        List<PhotoRecordResponseDto> challengeRecords = challengeRecordRepository.getTeamPhotoRecord(challengeRoomId, viewType );
-        return challengeRecords;
+        return challengeRecordRepository.getTeamPhotoRecord(challengeRoomId, viewType );
 
     }
 
@@ -471,11 +467,9 @@ public class ChallengeServiceImpl implements ChallengeService{
         log.info("[인증 기록 작성자 닉네임] : " + userResponseDto.getNickname());
 
         //TODO 2. 인증 기록을 조회하는 사용자의 신고 기록을 리턴해야한다. 존재하면 true를 그렇지 않으면 false를 리턴한다.
-        boolean reportStatus = reportRecordRepository.existsByUserIdAndChallengeRecordId(userId,challengeRecordId) ? true : false;
+        boolean reportStatus = reportRecordRepository.existsByUserIdAndChallengeRecordId(userId, challengeRecordId);
 
-        PhotoRecordDetailResponseDto responseDto = new PhotoRecordDetailResponseDto(challengeRecord,userResponseDto.getNickname(),reportStatus);
-
-        return responseDto;
+        return new PhotoRecordDetailResponseDto(challengeRecord,userResponseDto.getNickname(),reportStatus);
     }
 
 
@@ -542,8 +536,21 @@ public class ChallengeServiceImpl implements ChallengeService{
     @Override
     public ChallengeRoom getChallengeRoomEntity(Long challengeRoomId) {
 
-        ChallengeRoom challengeRoom = challengeRoomRepository.findChallengeRoomById(challengeRoomId)
+        return challengeRoomRepository.findChallengeRoomById(challengeRoomId)
                 .orElseThrow(()->new ApiException(ExceptionEnum.CHALLENGE_NOT_EXIST_EXCEPTION));
-        return challengeRoom;
+    }
+
+
+    /**
+     * author : 홍금비
+     * explain : 내가 참여중인 챌린지 목록 가져오기
+     * @param userId
+     * @return
+     */
+
+    @Override
+    public List<MyChallengeResponseDto> getMyChallengeList(Long userId , String status) {
+
+        return challengeRoomRepository.findMyChallengeList(userId,status,commonService.getDate());
     }
 }
