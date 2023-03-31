@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { BiPlus, BiMinus } from 'react-icons/bi';
-import { TbTilde } from 'react-icons/tb';
+import { useSelector } from 'react-redux';
 
 import classNames from 'classnames';
 
-import style from './normal.module.scss';
+import style from './algo.module.scss';
 
 import { BtnFooter } from '@/components/BtnFooter';
 import { ContentInput } from '@/components/ContentInput';
@@ -13,10 +13,10 @@ import { InputLabel } from '@/components/InputLabel';
 import { ReturnArrow } from '@/components/ReturnArrow';
 
 const normal = props => {
-  const [text, setText] = useState('');
-  const setTextValue = e => {
-    setText(e.target.value);
-  };
+  const { startDate, endDate } = useSelector(state => state.challengeCreate);
+  const start = new Date(startDate).toLocaleDateString();
+  const end = new Date(endDate).toLocaleDateString();
+
   const memberCheckButton = [
     {
       id: 0,
@@ -38,22 +38,40 @@ const normal = props => {
     }
   };
   const [member, setMember] = useState(0);
+  const [commitCount, setCommitCount] = useState(1);
 
+  const [room, setRoom] = useState({
+    category: 'ALGO',
+    title: '',
+    hostId: '',
+    entryFee: '',
+    introduce: '',
+  });
+  const handleChange = e => {
+    setRoom({
+      ...room,
+      [e.target.name]: e.target.value,
+    });
+  };
+  const [openDatePicker, setOpenDatePicker] = useState(false);
+  const showDatePicker = () => {
+    setOpenDatePicker(!openDatePicker);
+  };
   return (
     <div>
       <div className={classNames(`style.div-header`, `sticky top-0`)}>
         <ReturnArrow title="챌린지 만들기" />
       </div>
-      <div className="div-body p-6 pb-8 mt-4">
+      <div className="div-body p-6 pb-32 mt-4">
         <div>
           <InputLabel content="챌린지 제목" asterisk />
           <ContentInput
-            placeholder="예) 헬스 3주 도전"
-            onChange={setTextValue}
-            value={text}
+            placeholder="예) 매일 매일 커밋하기 챌린지"
             maxLength="30"
+            name="title"
+            onChange={handleChange}
           />
-          <p className="text-right">{text.length}/30</p>
+          <p className="text-right">{room.title.length}/30</p>
         </div>
         <div className="mt-6">
           <InputLabel content="참여 인원" asterisk />
@@ -117,45 +135,49 @@ const normal = props => {
           )}
         </div>
         <div className="mt-8">
-          <InputLabel content="챌린지 기간" asterisk />
-          <div className="flex">
-            <div className="w-2/5">
-              <DayPicker />
-            </div>
-            <div className="mx-2">
-              <TbTilde size={18} className="h-full align-middle" />
-            </div>
-            <div className="w-2/5">
-              <DayPicker />
+          <div className={style.bws}>
+            <InputLabel content="챌린지 기간" asterisk />
+            <button type="button" onClick={showDatePicker} className="w-1/2">
+              입력
+            </button>
+          </div>
+          <p>
+            {start} ~ {end}
+          </p>
+          <div>
+            <div>
+              {openDatePicker && <DayPicker showDatePicker={showDatePicker} />}
             </div>
           </div>
         </div>
         <div className="mt-8">
           <InputLabel content="인증 방법" asterisk />
           <ContentInput
-            placeholder="예) 헬스장 거울 앞에서 사진 찍기"
-            onChange={setTextValue}
-            value={text}
+            placeholder="예) 헬스장 거울앞에서 사진찍기"
             maxLength="30"
+            name="introduce"
+            onChange={handleChange}
           />
         </div>
         <div className="mt-8">
           <InputLabel content="챌린지 소개" asterisk={false} />
           <ContentInput
-            placeholder="예) 3대 500 가능할때까지 무한 반복한다."
-            onChange={setTextValue}
-            value={text}
+            placeholder="예) 3대 500 가능할때까지 무한 반복한다"
             maxLength="30"
+            name="introduce"
+            onChange={handleChange}
           />
         </div>
       </div>
-      <div className={classNames(`text-center absolute w-full bottom-0 m-0`)}>
+      <div
+        className={classNames(`text-center absolute w-full bottom-0 pb-4 m-0`)}
+      >
         <BtnFooter
           content=""
           label="다음"
           disable
           goToUrl="/create/algo"
-          warningMessage="알고리즘 챌린지는 solved.AC ID가 필요해요."
+          warningMessage="Commit 챌린지는 GitHub ID가 필요해요."
         />
       </div>
     </div>
