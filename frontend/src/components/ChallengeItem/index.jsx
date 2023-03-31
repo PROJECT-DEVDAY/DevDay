@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 
 import classNames from 'classnames';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 // import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 
 import style from './index.module.scss';
-import Link from 'next/link';
 
 export const ChallengeItem = ({
   className,
