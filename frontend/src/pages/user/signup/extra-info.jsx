@@ -11,6 +11,7 @@ import style from './extra-info.module.scss';
 import { Button } from '../../../components/Button';
 import { ReturnArrow } from '../../../components/ReturnArrow';
 
+import { persistor } from '@/pages/_app';
 import http from '@/pages/api/http';
 import { saveExtraInfos, reset } from '@/store/signup/signupSlice';
 
@@ -32,6 +33,17 @@ const signup = props => {
       [name]: value,
     });
   };
+  const signsInfoReset = async () => {
+    try {
+      // 리덕스 스토어 초기화
+      dispatch(reset());
+
+      // 캐시 데이터 초기화
+      await persistor.purge();
+    } catch (error) {
+      // console.error(error);
+    }
+  };
 
   const onClickJoin = () => {
     let timerInterval;
@@ -47,27 +59,18 @@ const signup = props => {
       .post(`/user-service/join/${signUpInfos.emailAuthId}`, signUpInfos)
       .then(() => {
         Swal.fire({
+          position: 'center',
           icon: 'success',
-          title: '회원가입 성공',
-          timer: 1000,
-          timerProgressBar: true,
-          text: 'Dev Day를 즐겨보세요',
-          didOpen: () => {
-            Swal.showLoading();
-            const b = Swal.getHtmlContainer().querySelector('b');
-            timerInterval = setInterval(() => {
-              b.textContent = Swal.getTimerLeft();
-            }, 100);
-          },
-          willClose: () => {
-            clearInterval(timerInterval);
-          },
-        })
-          .then(() => {
-            dispatch(reset);
-          })
-          .then(router.push('./user/login'));
+          title: '회원가입 성공!',
+          showConfirmButton: false,
+          timer: 1500,
+        });
       })
+      .then(() => {
+        dispatch(reset);
+      })
+      .then(signsInfoReset)
+      .then(router.push('/user/login'))
       .catch(error => {
         Swal.fire({
           icon: 'error',
@@ -101,11 +104,9 @@ const signup = props => {
                 github,
               }),
             );
-            router.push('./user/login');
           })
-          .then(() => {
-            dispatch(reset);
-          })
+          .then(signsInfoReset)
+          .then(router.push('/user/login'))
           .catch(error => {
             Swal.fire({
               icon: 'error',
@@ -116,6 +117,7 @@ const signup = props => {
       }
     });
   };
+
   return (
     <div className={style.signup}>
       <div className="style.div-header sticky top-0">

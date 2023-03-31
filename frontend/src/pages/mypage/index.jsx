@@ -1,9 +1,7 @@
 import React from 'react';
 import { AiOutlineSetting } from 'react-icons/ai';
-import { HiOutlineBell } from 'react-icons/hi';
 import { BsQuestionSquare } from 'react-icons/bs';
-
-import { MYPAGE_URL } from '@/constants';
+import { HiOutlineBell } from 'react-icons/hi';
 
 import Image from 'next/image';
 
@@ -11,6 +9,7 @@ import Footer from '@/components/Footer';
 import { SelectArrow } from '@/components/SelectArrow';
 import { SelectOption } from '@/components/SelectOption';
 import { UserAvatar } from '@/components/UserAvatar';
+import { MYPAGE_URL } from '@/constants';
 
 const index = () => {
   // const mypageInfo = http.get(MYPAGE_URL, {

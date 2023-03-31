@@ -14,15 +14,15 @@ import {
 } from 'chart.js/auto';
 import classNames from 'classnames';
 import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 import style from './challenge.module.scss';
 
 import { ChallengeList } from '@/components/ChallengeList';
-import Footer from '@/components/Footer';
 import { CheckBoxBtn } from '@/components/CheckBoxBtn';
+import Footer from '@/components/Footer';
 import { SelectArrow } from '@/components/SelectArrow';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
 
 ChartJS.register(
   CategoryScale,
