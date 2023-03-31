@@ -19,7 +19,10 @@ import style from './challenge.module.scss';
 
 import { ChallengeList } from '@/components/ChallengeList';
 import Footer from '@/components/Footer';
+import { CheckBoxBtn } from '@/components/CheckBoxBtn';
 import { SelectArrow } from '@/components/SelectArrow';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 ChartJS.register(
   CategoryScale,
@@ -63,9 +66,9 @@ const data = {
 const challenge = props => {
   const title = ['매일 1주동안', <br />, '2023.3.6(월) ~ 2023.3.12(일)'];
   const HEADER_ITEMS = ['나의 인증 현황', '참가자 인증 현황'];
-
+  const router = useRouter();
   const [selectedItem, setSelectedItem] = useState('나의 인증 현황');
-
+  const { challengeId } = router.query;
   const handleItemChange = event => {
     setSelectedItem(event.target.value);
   };
@@ -77,7 +80,7 @@ const challenge = props => {
     ['3월 28일', ['골드 2 127번', '골드 2 140번']],
   ];
   return (
-    <div>
+    <>
       <div className="relative">
         <div>
           <Image
@@ -163,9 +166,11 @@ const challenge = props => {
         </div>
       )}
       <div className={classNames('sticky w-full bottom-0 m-0')}>
-        <Footer />
+        <Link href={`/challenge/${challengeId}/submit-picture`}>
+          <CheckBoxBtn check={false} label="인증하기" />
+        </Link>
       </div>
-    </div>
+    </>
   );
 };
 
