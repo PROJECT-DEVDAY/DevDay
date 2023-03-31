@@ -119,7 +119,7 @@ const login = props => {
           className="w-full"
           alt="loginImage"
         />
-        <form>
+        <form className="my-5">
           <div>
             <InputLabel content="이메일" />
             <InputText
