@@ -81,7 +81,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     private void deleteS3Img(User user) {
-        if (user.getProfileImgKey() != null) amazonS3Service.delete(user.getProfileImgKey());
+        if (!user.getProfileImgKey().isBlank()) amazonS3Service.delete(user.getProfileImgKey());
     }
 
     private String saveS3Img(MultipartFile profileImg) {
