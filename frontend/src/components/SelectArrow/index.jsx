@@ -20,6 +20,7 @@ export const SelectArrow = ({
     <div
       className={classNames(
         style.SelectArrow,
+        className,
         fill && style[`SelectArrow-background-fill`],
       )}
     >

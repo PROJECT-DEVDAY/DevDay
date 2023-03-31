@@ -5,9 +5,9 @@ import Image from 'next/image';
 import style from './index.module.scss';
 
 export const UserAvatar = ({ imageURL, width, height, ...props }) => {
-  const [imgFile, setImgeFile] = useState({ imageURL });
+  const [imgFile, setImgeFile] = useState(require('../../image/default-user.png'));
 
-  const logoImgInput = useRef();
+  const logoImgInput = useRef(null);
 
   const onImgeInputBtnClick = event => {
     event.preventDefault();
@@ -35,7 +35,7 @@ export const UserAvatar = ({ imageURL, width, height, ...props }) => {
   return (
     <div className={style.UserAvatar}>
       <Image
-        src={imgFile || require('../../image/default-user.png')}
+        src={imgFile}
         alt="프로필 이미지"
         className="style.Image rounded-full"
         onClick={onImgeInputBtnClick}
