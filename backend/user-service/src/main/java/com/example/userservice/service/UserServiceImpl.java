@@ -55,9 +55,7 @@ public class UserServiceImpl implements UserService{
         User user = User.from(requestDto);
         User saveUser = userRepository.save(user);
 
-        System.out.println(saveUser.getBaekjoon().isEmpty());
-
-        if (!saveUser.getBaekjoon().isEmpty()) commonService.saveProblemList(saveUser);
+        if (!saveUser.getBaekjoon().isBlank()) commonService.saveProblemList(saveUser);
 
         // 이메일 인증 기록 삭제
         List<EmailAuth> emailAuthList = emailAuthRepository.findAllByEmail(saveUser.getEmail());

@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,7 +27,7 @@ public class UserController {
      * */
     @PostMapping("/join/{emailAuthId}")
     public ResponseEntity<BaseResponseDto<?>> join(@PathVariable Long emailAuthId,
-                                                   @RequestBody SignUpRequestDto requestDto) {
+                                                   @Valid @RequestBody SignUpRequestDto requestDto) {
         userService.join(emailAuthId, requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(new BaseResponseDto<>(201, "success"));
     }
@@ -37,7 +38,7 @@ public class UserController {
      * @return
      * */
     @PostMapping("/login")
-    public ResponseEntity<BaseResponseDto<TokenResponseDto>> login(@RequestBody LoginRequestDto requestDto) {
+    public ResponseEntity<BaseResponseDto<TokenResponseDto>> login(@Valid @RequestBody LoginRequestDto requestDto) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new BaseResponseDto<>(200, "success", userService.login(requestDto)));
     }

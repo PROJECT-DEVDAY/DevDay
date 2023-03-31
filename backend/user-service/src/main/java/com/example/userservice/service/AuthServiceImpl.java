@@ -123,7 +123,7 @@ public class AuthServiceImpl implements AuthService {
         user.updateEmail(requestDto.getGithub(), requestDto.getBaekjoon());
 
         solvedacRepository.deleteAllByUserId(user.getId());
-        commonService.saveProblemList(user);
+        if (!user.getBaekjoon().isBlank()) commonService.saveProblemList(user);
     }
 
     @Override
