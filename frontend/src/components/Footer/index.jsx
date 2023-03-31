@@ -7,7 +7,7 @@ import { useRouter } from 'next/router';
 import style from './footer.module.scss';
 
 const FOOTER_ITEMS = [
-  { label: '홈', icon: <FiHome size={28} />, to: '/main' },
+  { label: '홈', icon: <FiHome size={28} />, to: '/' },
   {
     label: '인증',
     icon: <FiCamera size={36} />,
