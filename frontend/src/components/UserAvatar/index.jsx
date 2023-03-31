@@ -5,7 +5,9 @@ import Image from 'next/image';
 import style from './index.module.scss';
 
 export const UserAvatar = ({ imageURL, width, height, ...props }) => {
-  const [imgFile, setImgeFile] = useState(require('../../image/default-user.png'));
+  const [imgFile, setImgeFile] = useState(
+    require('../../image/default-user.png'),
+  );
 
   const logoImgInput = useRef(null);
 

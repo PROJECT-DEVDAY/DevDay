@@ -12,7 +12,7 @@ import { PROFILE_URL } from '@/constants';
 const profile = () => {
   const router = useRouter();
 
-  const profileInfo = "";
+  const profileInfo = '';
   // const profileInfo = http.get(PROFILE_URL, {
   //   Authorization: localStorage.getItem('accessToken'),
   // });
