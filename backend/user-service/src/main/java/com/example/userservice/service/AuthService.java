@@ -1,10 +1,11 @@
 package com.example.userservice.service;
 
-import com.example.userservice.dto.request.GithubBaekjoonRequestDto;
-import com.example.userservice.dto.request.NicknameRequestDto;
-import com.example.userservice.dto.request.PasswordRequestDto;
-import com.example.userservice.dto.response.MypageResponseDto;
-import com.example.userservice.dto.response.ProfileResponseDto;
+import com.example.userservice.dto.request.user.GithubBaekjoonRequestDto;
+import com.example.userservice.dto.request.user.NicknameRequestDto;
+import com.example.userservice.dto.request.user.PasswordRequestDto;
+import com.example.userservice.dto.response.user.GithubBaekjoonResponseDto;
+import com.example.userservice.dto.response.user.MypageResponseDto;
+import com.example.userservice.dto.response.user.ProfileResponseDto;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface AuthService {
@@ -12,13 +13,13 @@ public interface AuthService {
 
     void updateProfileDefaultImg(Long userId);
 
-    void updateProfileImg(Long userId, MultipartFile profileImg);
+    String updateProfileImg(Long userId, MultipartFile profileImg);
 
-    void updateNickname(Long userId, NicknameRequestDto requestDto);
+    String updateNickname(Long userId, NicknameRequestDto requestDto);
 
     void updatePassword(Long userId, PasswordRequestDto requestDto);
 
-    void updateGithubAndBaekjoon(Long userId, GithubBaekjoonRequestDto requestDto);
+    GithubBaekjoonResponseDto updateGithubAndBaekjoon(Long userId, GithubBaekjoonRequestDto requestDto);
 
     ProfileResponseDto getProfileDetail(Long userId);
 

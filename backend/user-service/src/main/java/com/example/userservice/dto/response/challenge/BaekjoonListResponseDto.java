@@ -1,4 +1,4 @@
-package com.example.userservice.dto.response;
+package com.example.userservice.dto.response.challenge;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.HashMap;
-import java.util.List;
 
 @Getter
 @NoArgsConstructor

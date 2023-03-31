@@ -1,7 +1,7 @@
 package com.example.userservice.service;
 
 import com.example.userservice.client.ChallengeServiceClient;
-import com.example.userservice.dto.response.ProblemResponseDto;
+import com.example.userservice.dto.response.challenge.ProblemResponseDto;
 import com.example.userservice.entity.Solvedac;
 import com.example.userservice.entity.User;
 import com.example.userservice.repository.BatchInsertRepository;
