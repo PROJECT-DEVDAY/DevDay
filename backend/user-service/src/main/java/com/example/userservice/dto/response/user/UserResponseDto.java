@@ -24,6 +24,8 @@ public class UserResponseDto {
 
     private String baekjoon;
 
+    private String profileImageUrl;
+
     public static UserResponseDto from (User user) {
         return UserResponseDto.builder()
                 .userId(user.getId())
@@ -32,6 +34,7 @@ public class UserResponseDto {
                 .nickname(user.getNickname())
                 .github(user.getGithub())
                 .baekjoon(user.getBaekjoon())
+                .profileImageUrl(user.getProfileImgUrl())
                 .build();
     }
 }
