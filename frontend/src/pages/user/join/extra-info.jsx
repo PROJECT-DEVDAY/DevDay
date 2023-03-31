@@ -13,7 +13,11 @@ import { ReturnArrow } from '../../../components/ReturnArrow';
 
 import { persistor } from '@/pages/_app';
 import http from '@/pages/api/http';
-import { saveExtraInfos, reset } from '@/store/signup/signupSlice';
+import {
+  saveExtraInfos,
+  reset,
+  saveExtraInfosAsync,
+} from '@/store/signup/signupSlice';
 
 const signup = props => {
   const router = useRouter();
@@ -46,18 +50,15 @@ const signup = props => {
   };
 
   const onClickJoin = () => {
-    let timerInterval;
-
     dispatch(
-      saveExtraInfos({
+      saveExtraInfosAsync({
+        ...signUpInfos,
         baekjoon,
         github,
       }),
-    );
-
-    http
-      .post(`/user-service/join/${signUpInfos.emailAuthId}`, signUpInfos)
-      .then(() => {
+    )
+      .unwrap()
+      .then(data => {
         Swal.fire({
           position: 'center',
           icon: 'success',
@@ -65,9 +66,6 @@ const signup = props => {
           showConfirmButton: false,
           timer: 1500,
         });
-      })
-      .then(() => {
-        dispatch(reset);
       })
       .then(signsInfoReset)
       .then(router.push('/user/login'))
@@ -81,7 +79,7 @@ const signup = props => {
   };
   const onClickPass = () => {
     Swal.fire({
-      title: '다음에 입력하실 건가요?',
+      title: '다음에\n 입력하실 건가요?',
       text: '나중에 다시 입력할 수 있습니다!',
       icon: 'warning',
       showCancelButton: true,
@@ -91,29 +89,7 @@ const signup = props => {
       cancelButtonText: '아니요',
     }).then(result => {
       if (result.isConfirmed) {
-        http
-          .post(`/user-service/join/${signUpInfos.emailAuthId}`, {
-            ...signUpInfos,
-            baekjoon: '',
-            github: '',
-          })
-          .then(() => {
-            dispatch(
-              saveExtraInfos({
-                baekjoon,
-                github,
-              }),
-            );
-          })
-          .then(signsInfoReset)
-          .then(router.push('/user/login'))
-          .catch(error => {
-            Swal.fire({
-              icon: 'error',
-              title: '실패!',
-              text: error.message,
-            });
-          });
+        onClickJoin();
       }
     });
   };

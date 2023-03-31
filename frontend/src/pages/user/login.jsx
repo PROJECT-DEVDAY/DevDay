@@ -131,7 +131,7 @@ const login = props => {
               onChange={handleChange}
             />
           </div>
-          <div className={classNames(`mt-3`)}>
+          <div className={classNames(`mt-6`)}>
             <InputLabel content="비밀번호" />
             <InputText
               name="password"
@@ -141,8 +141,9 @@ const login = props => {
             />
           </div>
 
-          <div className={classNames(`mt-3`, style.option)}>
+          <div className={classNames(`mt-4 flex justify-between`)}>
             <label htmlFor="toggle" className="flex">
+              <div className="mr-2 text-sm">아이디 기억하기</div>
               <label htmlFor="toggle" className={style.togglelabel}>
                 <input
                   className={style.toggle}
@@ -153,27 +154,10 @@ const login = props => {
                 />
                 <div className={style.togglelabelhandle} />
               </label>
-              <div className={classNames('ml-4', style.font)}>
-                아이디 기억하기
-              </div>
             </label>
-            <button onClick={showModal} className={style.font} type="button">
+            <button className="text-sm" onClick={showModal} type="button">
               아이디/비밀번호 찾기
             </button>
-          </div>
-          <div
-            className={classNames(`text-center absolute w-full bottom-0 p-4`)}
-          >
-            <div className="mt-2">
-              회원 가입할래?
-              <button
-                type="button"
-                className={style.signup}
-                onClick={() => router.push('/user/signup')}
-              >
-                회원가입
-              </button>
-            </div>
           </div>
         </form>
         <Button
@@ -183,6 +167,18 @@ const login = props => {
           fill
           label="로그인"
         />
+        <div className="text-center  w-full bottom-0 p-4">
+          <div className="mt-2">
+            아직 회원이 아니신가요?
+            <button
+              type="button"
+              className={classNames(style.signup, 'ml-2')}
+              onClick={() => router.push('/user/join')}
+            >
+              회원가입
+            </button>
+          </div>
+        </div>
       </div>
 
       <div
@@ -196,16 +192,16 @@ const login = props => {
           <span className="flex">
             <div className="w-1/2 m-2">
               <Button
-                className="mt-4"
+                className="mt-4 text-sm"
                 onClick={goToId}
                 color="primary"
                 fill
                 label="아이디 찾기"
               />
             </div>
-            <div className="w-1/2 m-2">
+            <div className="w-1/2 m-2 ">
               <Button
-                className="mt-4"
+                className="mt-4 "
                 onClick={goToPw}
                 color="primary"
                 fill
