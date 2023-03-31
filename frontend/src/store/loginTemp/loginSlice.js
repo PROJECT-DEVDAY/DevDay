@@ -20,7 +20,7 @@ const loginSlice = createSlice({
     });
 
     builder.addCase(loginAsync.rejected, state => {
-      return { ...state, status: 'fail' };
+      return { ...state, status: 'Fail' };
     });
   },
 });

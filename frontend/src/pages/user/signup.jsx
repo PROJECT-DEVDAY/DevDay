@@ -14,6 +14,7 @@ import http from '../api/http';
 
 import { InputLabel } from '@/components/InputLabel';
 import { saveSignUpInfos } from '@/store/signup/signupSlice';
+import { CONFIRM_EMAIL_URL, EMAIL_URL, NICKNAME_URL } from '@/constants';
 
 const signup = props => {
   const [emailValidCheck, setEmailValidCheck] = useState(false);
@@ -96,7 +97,7 @@ const signup = props => {
     setSeconds(parseInt(59, 10));
 
     http
-      .post(`/user-service/email`, {
+      .post(EMAIL_URL, {
         email: watch('email'),
       })
       .then(data => {
@@ -116,7 +117,7 @@ const signup = props => {
 
   const onClickEmailAuthTokenCheck = () => {
     http
-      .patch(`/user-service/confirm-email`, {
+      .patch(CONFIRM_EMAIL_URL, {
         id: emailAuthId,
         authToken: emailAuthToken,
       })
@@ -145,7 +146,7 @@ const signup = props => {
   // nickname check logic
   const onClickDuplicateCheck = () => {
     http
-      .post(`/user-service/nickname`, { nickn: watch('nickname') })
+      .post(NICKNAME_URL, { nickn: watch('nickname') })
       .then(() => {
         setNickNameDuplicatedChk(true);
       })
