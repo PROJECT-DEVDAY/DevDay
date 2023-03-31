@@ -1,9 +1,12 @@
 package com.example.challengeservice.repository;
 
 
+import com.example.challengeservice.dto.response.MyChallengeResponseDto;
 import com.example.challengeservice.entity.ChallengeRoom;
 import com.example.challengeservice.infra.querydsl.SearchParam;
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -11,11 +14,12 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 import static com.example.challengeservice.entity.QChallengeRoom.challengeRoom;
+import static com.example.challengeservice.entity.QUserChallenge.userChallenge;
 
 
 @RequiredArgsConstructor
 @Repository
-public class ChallengeRoomRepoCustomImpl  implements ChallengeRoomRepoCustom{
+public class ChallengeRoomRepoCustomImpl  implements ChallengeRoomRepoCustom {
 
     private final JPAQueryFactory jpaQueryFactory;
 
@@ -27,13 +31,42 @@ public class ChallengeRoomRepoCustomImpl  implements ChallengeRoomRepoCustom{
                 .selectFrom(challengeRoom)
                 .where(hasSearch(searchParam.getSearch()),
                         hasOffset(searchParam.getOffset())
-                        ,isCategoryAll(searchParam.getCategory())
-                                ,challengeRoom.startDate.gt(searchParam.getNowDate())
-                        )
-                        .orderBy(challengeRoom.id.desc()).
+                        , isCategoryAll(searchParam.getCategory())
+                        , challengeRoom.startDate.gt(searchParam.getNowDate())
+                )
+                .orderBy(challengeRoom.id.desc()).
                 limit(searchParam.getSize()).
                 fetch();
 
+    }
+
+    @Override
+    public List<MyChallengeResponseDto> findMyChallengeList(Long userId, String status ,String curDate) {
+
+        JPAQuery<MyChallengeResponseDto> query = jpaQueryFactory.select(Projections.constructor(
+                        MyChallengeResponseDto.class,
+                        challengeRoom.id,
+                        challengeRoom.title,
+                        challengeRoom.startDate,
+                        challengeRoom.endDate
+                )).from(userChallenge)
+                .join(userChallenge.challengeRoom, challengeRoom)
+                .where(userChallenge.userId.eq(userId));
+
+        switch (status) {
+            case "PROCEED":
+                query = query.where(challengeRoom.startDate.loe(curDate).and(challengeRoom.endDate.goe(curDate)));
+                break;
+            case "DONE":
+                query = query.where(challengeRoom.endDate.lt(curDate));
+                break;
+            case "NOT_OPEN":
+                query = query.where(challengeRoom.startDate.gt(curDate));
+                break;
+            default:
+        }
+
+        return query.fetch();
     }
 
     //검색어가 존재하는지 체크
@@ -41,8 +74,9 @@ public class ChallengeRoomRepoCustomImpl  implements ChallengeRoomRepoCustom{
         if (search.equals("")) {
             return null;
         }
-        return challengeRoom.title.like("%"+search+"%");
+        return challengeRoom.title.like("%" + search + "%");
     }
+
     //offset (마지막으로 검색된 challengeId)
     private BooleanExpression hasOffset(Long offset) {
         if (offset == null) {
@@ -50,9 +84,10 @@ public class ChallengeRoomRepoCustomImpl  implements ChallengeRoomRepoCustom{
         }
         return challengeRoom.id.lt(offset);
     }
+
     // category 값의 유무 및 값에 따라 where 조건 실행
-    private BooleanExpression isCategoryAll(String category){
-        if(category.equals("ALL") || category.equals("")){
+    private BooleanExpression isCategoryAll(String category) {
+        if (category.equals("ALL") || category.equals("")) {
             return null;
         }
         return challengeRoom.category.eq(category);
