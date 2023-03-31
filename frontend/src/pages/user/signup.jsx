@@ -13,8 +13,8 @@ import { ReturnArrow } from '../../components/ReturnArrow';
 import http from '../api/http';
 
 import { InputLabel } from '@/components/InputLabel';
-import { saveSignUpInfos } from '@/store/signup/signupSlice';
 import { CONFIRM_EMAIL_URL, EMAIL_URL, NICKNAME_URL } from '@/constants';
+import { saveSignUpInfos } from '@/store/signup/signupSlice';
 
 const signup = props => {
   const [emailValidCheck, setEmailValidCheck] = useState(false);
