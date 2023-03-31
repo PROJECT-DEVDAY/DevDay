@@ -1,13 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
+
 import axios from 'axios';
+import classNames from 'classnames';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import classNames from 'classnames';
+import Swal from 'sweetalert2';
 
 import { CheckBoxBtn } from '@/components/CheckBoxBtn';
 import { ReturnArrow } from '@/components/ReturnArrow';
 
-const SubmitPicture = ({}) => {
+const SubmitPicture = () => {
   const router = useRouter();
   const challengeInfo = {
     id: 1,
@@ -33,12 +35,29 @@ const SubmitPicture = ({}) => {
       imageRef.current.src = target.result;
       setIsSelect(true);
     };
+
+    if (!inputRef.current.files[0]) {
+      Swal.fire({
+        position: 'center',
+        icon: 'warning',
+        title: '사진을 선택해주세요',
+        showConfirmButton: false,
+        timer: 1000,
+      });
+      return;
+    }
     reader.readAsDataURL(inputRef.current.files[0]);
   };
 
   const onClick = async () => {
     if (!isSelect) {
-      window.alert('이미지를 선택해주세요.');
+      Swal.fire({
+        position: 'center',
+        icon: 'warning',
+        title: '사진을 선택해주세요',
+        showConfirmButton: false,
+        timer: 1000,
+      });
       return;
     }
     // formData 설정
@@ -56,11 +75,22 @@ const SubmitPicture = ({}) => {
           },
         },
       );
-      window.alert('이미지 전송 완료!');
+      Swal.fire({
+        position: 'center',
+        icon: 'success',
+        title: '이미지 선택 완료',
+        showConfirmButton: false,
+        timer: 1000,
+      });
       router.back(); // 이전페이지로 이동하기
     } catch (e) {
-      console.error(e);
-      window.alert('이미지를 전송하는 데 실패했습니다.');
+      Swal.fire({
+        position: 'center',
+        icon: 'error',
+        title: '이미지를 전송을 \n 실패했습니다.',
+        showConfirmButton: false,
+        timer: 1000,
+      });
     }
   };
   return (

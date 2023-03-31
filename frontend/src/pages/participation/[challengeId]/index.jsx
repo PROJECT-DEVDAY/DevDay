@@ -4,11 +4,12 @@ import { Doughnut } from 'react-chartjs-2';
 import Chart from 'chart.js/auto';
 import classNames from 'classnames';
 import Image from 'next/image';
+import Link from 'next/link';
+import Swal from 'sweetalert2';
 
 import style from './index.module.scss';
 
 import { Button } from '@/components/Button';
-import Link from 'next/link';
 
 const challengeintro = props => {
   const expData = {
@@ -138,7 +139,13 @@ const challengeintro = props => {
           <Button
             label="참여하기"
             onClick={() => {
-              window.alert('구현하기!');
+              Swal.fire({
+                position: 'center',
+                icon: 'warning',
+                title: '구현하기!',
+                showConfirmButton: false,
+                timer: 1000,
+              });
             }}
           />
         </div>
