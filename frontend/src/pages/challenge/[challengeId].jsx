@@ -15,7 +15,7 @@ import {
 import classNames from 'classnames';
 import Image from 'next/image';
 
-import style from './user.module.scss';
+import style from './challenge.module.scss';
 
 import { ChallengeList } from '@/components/ChallengeList';
 import Footer from '@/components/Footer';
@@ -60,7 +60,7 @@ const data = {
   ],
 };
 
-const user = props => {
+const challenge = props => {
   const title = ['매일 1주동안', <br />, '2023.3.6(월) ~ 2023.3.12(일)'];
   const HEADER_ITEMS = ['나의 인증 현황', '참가자 인증 현황'];
 
@@ -169,4 +169,4 @@ const user = props => {
   );
 };
 
-export default user;
+export default challenge;
