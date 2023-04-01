@@ -10,6 +10,8 @@ import { SelectArrow } from '@/components/SelectArrow';
 import { SelectOption } from '@/components/SelectOption';
 import { UserAvatar } from '@/components/UserAvatar';
 import { MYPAGE_URL } from '@/constants';
+import { PrivateRouter } from '@/components/PrivateRouter/PrivateRouter';
+import Container from '@/components/Container';
 
 const index = () => {
   // const mypageInfo = http.get(MYPAGE_URL, {
@@ -17,7 +19,7 @@ const index = () => {
   // });
 
   return (
-    <div>
+    <Container>
       <div className="style.div-header p-4 flex justify-between items-center">
         <h1 className="font-medium text-2xl">마이페이지</h1>
         <div className="rounded-full bg-purple-300 w-10 h-10 flex justify-center items-center">
@@ -92,10 +94,10 @@ const index = () => {
           <SelectOption content="문의하기" fill />
         </div>
       </div>
-      <div className="sticky w-full bottom-0 m-0">
+      <Container.MainFooter>
         <Footer />
-      </div>
-    </div>
+      </Container.MainFooter>
+    </Container>
   );
 };
 
