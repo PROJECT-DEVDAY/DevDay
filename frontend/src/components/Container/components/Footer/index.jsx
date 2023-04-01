@@ -18,12 +18,13 @@ const Footer = ({ className, children }) => {
   const footerRef = useRef();
   const height = useSizeHeight(footerRef);
 
+  // devday-body에 footer의 높이만큼 주되 32px 정도를 여분으로 더 줍니다.
   useEffect(() => {
     let bodyRef = document.getElementById('devday-body');
-    console.log(height);
-    bodyRef.style.paddingBottom = height + 'px';
-    bodyRef.style.marginBottom = height + 'px';
-  });
+    if (bodyRef) {
+      bodyRef.style.marginBottom = height + 32 + 'px';
+    }
+  }, [height]);
 
   return (
     <div
