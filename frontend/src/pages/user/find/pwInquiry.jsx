@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { AiOutlineCloseCircle } from 'react-icons/Ai';
+import { AiOutlineCloseCircle } from 'react-icons/ai';
 
 import classNames from 'classnames';
 import { useRouter } from 'next/router';
