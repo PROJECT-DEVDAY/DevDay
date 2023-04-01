@@ -22,7 +22,14 @@
   width: 50px;
   padding: 8px;
 }
-.clock {
-  width: 100% !important;
-  text-align: center;
+.datePick {
+  margin-top: 32px;
+  display: flex;
+  justify-content: space-between;
+  input[type='date'] {
+    background-color: transparent;
+  }
+  input[type='date']:focus {
+    outline: none;
+  }
 }

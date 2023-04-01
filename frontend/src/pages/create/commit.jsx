@@ -1,22 +1,17 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useRef } from 'react';
 import { BiPlus, BiMinus } from 'react-icons/bi';
-import { useSelector } from 'react-redux';
-
 import classNames from 'classnames';
 
 import style from './algo.module.scss';
-
+import Image from 'next/image';
 import { BtnFooter } from '@/components/BtnFooter';
 import { ContentInput } from '@/components/ContentInput';
-import { DayPicker } from '@/components/DayPicker';
 import { InputLabel } from '@/components/InputLabel';
 import { ReturnArrow } from '@/components/ReturnArrow';
+import { InputText } from '@/components/InputText';
+import Container from '@/components/Container';
 
 const commit = props => {
-  const { startDate, endDate } = useSelector(state => state.challengeCreate);
-  const start = new Date(startDate).toLocaleDateString();
-  const end = new Date(endDate).toLocaleDateString();
-
   const memberCheckButton = [
     {
       id: 0,
@@ -37,15 +32,17 @@ const commit = props => {
       setChecking([false, true]);
     }
   };
-  const [member, setMember] = useState(0);
-  const [commitCount, setCommitCount] = useState(1);
+  const [member, setMember] = useState(1);
+  const [algoithmCount, setAlgoithmCount] = useState(1);
 
   const [room, setRoom] = useState({
-    category: 'ALGO',
+    category: 'COMMIT',
     title: '',
     hostId: '',
     entryFee: '',
     introduce: '',
+    startDate: '',
+    endDate: '',
   });
   const handleChange = e => {
     setRoom({
@@ -56,6 +53,34 @@ const commit = props => {
   const [openDatePicker, setOpenDatePicker] = useState(false);
   const showDatePicker = () => {
     setOpenDatePicker(!openDatePicker);
+  };
+  const [imgFile, setImgeFile] = useState(
+    require('../../image/backgroundImage.jpg'),
+  );
+
+  const challengeImageInput = useRef(null);
+
+  const onClickImageInput = event => {
+    event.preventDefault();
+    challengeImageInput.current.click();
+  };
+
+  const onChangeImage = e => {
+    if (e.target.files[0]) {
+      setImgeFile(e.target.files[0]);
+    } else {
+      setImgeFile(require('../../image/default-user.png'));
+      return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      if (reader.readyState === 2) {
+        setImgeFile(reader.result);
+      }
+    };
+    reader.readAsDataURL(e.target.files[0]);
   };
   return (
     <div>
@@ -72,6 +97,37 @@ const commit = props => {
             onChange={handleChange}
           />
           <p className="text-right">{room.title.length}/30</p>
+        </div>
+        <div>
+          <InputLabel content="챌린지 이미지" />
+          <div className="w-full h-40 relative">
+            <Image
+              src={imgFile}
+              alt="프로필 이미지"
+              onClick={onClickImageInput}
+              fill
+            />
+          </div>
+          <input
+            style={{ display: 'none' }}
+            ref={challengeImageInput}
+            type="file"
+            className={style.ImgInput}
+            id="logoImg"
+            accept="image/*"
+            name="file"
+            onChange={onChangeImage}
+          />
+        </div>
+        <div className="mt-6">
+          <InputLabel content="참가 비용" asterisk />
+          <InputText
+            inputType="text"
+            type="number"
+            content="최소 금액 1000원"
+            name="entryFee"
+            onChange={handleChange}
+          />
         </div>
         <div className="mt-6">
           <InputLabel content="참여 인원" asterisk />
@@ -93,51 +149,11 @@ const commit = props => {
               );
             })}
           </div>
-          <div className="mt-6 flex">
-            <InputLabel content="최소 인증 커밋 수" asterisk />
-            <div className={classNames('flex', style.changeMember)}>
-              {commitCount > 1 ? (
-                <button
-                  type="button"
-                  className={classNames(style.plusMinus, 'rounded-l-lg')}
-                  onClick={() => {
-                    setCommitCount(commitCount - 1);
-                  }}
-                >
-                  <BiMinus className="m-auto" />
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  className={classNames(style.plusMinus, 'rounded-l-lg')}
-                  onClick={() => setCommitCount(commitCount - 1)}
-                  disabled
-                >
-                  <BiMinus className="m-auto" />
-                </button>
-              )}
-              <div
-                className={classNames(
-                  'font-medium whitespace-nowrap text-center',
-                  style.plusMinus,
-                )}
-              >
-                {commitCount}개
-              </div>
-              <button
-                type="button"
-                className={classNames(style.plusMinus, 'rounded-r-lg')}
-                onClick={() => setCommitCount(commitCount + 1)}
-              >
-                <BiPlus className="m-auto" />
-              </button>
-            </div>
-          </div>
           {checking[1] && (
             <div className="mt-6 flex">
               <InputLabel content="참여 인원 수" asterisk />
               <div className={classNames('flex', style.changeMember)}>
-                {member > 0 ? (
+                {member > 1 ? (
                   <button
                     type="button"
                     className={classNames(style.plusMinus, 'rounded-l-lg')}
@@ -174,35 +190,79 @@ const commit = props => {
             </div>
           )}
         </div>
-        <div className="mt-8">
-          <div className={style.bws}>
-            <InputLabel content="챌린지 기간" asterisk />
-            <button type="button" onClick={showDatePicker} className="w-1/2">
-              입력
+        <div className="mt-6 flex">
+          <InputLabel content="최소 알고리즘 커밋 수" asterisk />
+          <div className={classNames('flex', style.changeMember)}>
+            {algoithmCount > 1 ? (
+              <button
+                type="button"
+                className={classNames(style.plusMinus, 'rounded-l-lg')}
+                onClick={() => {
+                  setAlgoithmCount(algoithmCount - 1);
+                }}
+              >
+                <BiMinus className="m-auto" />
+              </button>
+            ) : (
+              <button
+                type="button"
+                className={classNames(style.plusMinus, 'rounded-l-lg')}
+                onClick={() => setAlgoithmCount(algoithmCount - 1)}
+                disabled
+              >
+                <BiMinus className="m-auto" />
+              </button>
+            )}
+            <div
+              className={classNames(
+                'font-medium whitespace-nowrap text-center',
+                style.plusMinus,
+              )}
+            >
+              {algoithmCount}개
+            </div>
+            <button
+              type="button"
+              className={classNames(style.plusMinus, 'rounded-r-lg')}
+              onClick={() => setAlgoithmCount(algoithmCount + 1)}
+            >
+              <BiPlus className="m-auto" />
             </button>
           </div>
-          <p>
-            {start} ~ {end}
-          </p>
-          <div>
+        </div>
+        <div className={style.datePick}>
+          <label htmlFor="inputStartDate">
+            <InputLabel content="챌린지 시작일" asterisk />
+            <input
+              id="inputStartDate"
+              type="date"
+              name="startDate"
+              onChange={handleChange}
+            />
+          </label>
+          {room.startDate && (
             <div>
-              {openDatePicker && <DayPicker showDatePicker={showDatePicker} />}
+              <InputLabel content="챌린지 종료일" asterisk />
+              <input
+                type="date"
+                name="endDate"
+                onChange={handleChange}
+                min={room.startDate}
+              />
             </div>
-          </div>
+          )}
         </div>
         <div className="mt-8">
           <InputLabel content="챌린지 소개" asterisk={false} />
           <ContentInput
-            placeholder="예) 매일 매일 커밋해서 잔디밭 꽉꽉 채웁시다!!"
+            placeholder="예) 매일 매일 커밋해서 잔디밭 꽉꽉 채웁시다"
             maxLength="30"
             name="introduce"
             onChange={handleChange}
           />
         </div>
       </div>
-      <div
-        className={classNames(`text-center absolute w-full bottom-0 pb-4 m-0`)}
-      >
+      <div className={classNames(`text-center sticky w-full bottom-0 m-0`)}>
         <BtnFooter
           content=""
           label="다음"

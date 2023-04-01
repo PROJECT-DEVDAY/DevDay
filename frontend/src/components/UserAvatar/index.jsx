@@ -11,7 +11,7 @@ export const UserAvatar = ({ imageURL, width, height, ...props }) => {
 
   const logoImgInput = useRef(null);
 
-  const onImgeInputBtnClick = event => {
+  const onClickImageInput = event => {
     event.preventDefault();
     logoImgInput.current.click();
   };
@@ -40,7 +40,7 @@ export const UserAvatar = ({ imageURL, width, height, ...props }) => {
         src={imgFile}
         alt="프로필 이미지"
         className="style.Image rounded-full"
-        onClick={onImgeInputBtnClick}
+        onClick={onClickImageInput}
         width={width}
         height={height}
       />
