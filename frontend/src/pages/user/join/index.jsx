@@ -133,11 +133,12 @@ const signup = props => {
         });
       })
       .then(setEmailValidCheck(false))
+
       .catch(error => {
         Swal.fire({
           icon: 'error',
           title: '인증 실패',
-          text: error.response.data.message,
+          text: error,
         });
         setEmailAuthenticated(false);
       });

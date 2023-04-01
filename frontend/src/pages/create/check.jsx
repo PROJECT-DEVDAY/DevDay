@@ -73,9 +73,7 @@ const check = props => {
           />
         </div>
       </div>
-      <div
-        className={classNames(`text-center absolute w-full bottom-0 pb-4 m-0`)}
-      >
+      <div className={classNames(`text-center absolute w-full bottom-0 m-0`)}>
         <BtnFooter
           content=""
           label="네! 약속할게요"

@@ -4,6 +4,7 @@ import { BsQuestionSquare } from 'react-icons/bs';
 import { HiOutlineBell } from 'react-icons/hi';
 
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 
 import Container from '@/components/Container';
 import Footer from '@/components/Footer';
@@ -11,12 +12,17 @@ import { PrivateRouter } from '@/components/PrivateRouter/PrivateRouter';
 import { SelectArrow } from '@/components/SelectArrow';
 import { SelectOption } from '@/components/SelectOption';
 import { UserAvatar } from '@/components/UserAvatar';
-import { MYPAGE_URL } from '@/constants';
 
 const index = () => {
+  const router = useRouter();
+
   // const mypageInfo = http.get(MYPAGE_URL, {
   //   Authorization: localStorage.getItem('accessToken'),
   // });
+
+  const goToProfile = () => {
+    router.push('/mypage/profile');
+  };
 
   return (
     <Container>
@@ -32,7 +38,7 @@ const index = () => {
           <UserAvatar imageURL="" width={50} height={50} />
         </div>
         {/* <SelectArrow title={mypageInfo.nickname} fill /> */}
-        <SelectArrow title="nickname" fill />
+        <SelectArrow title="nickname" fill onClick={goToProfile} />
         <div className="px-6 py-8">
           <div className="flex justify-between mb-6">
             <div className="flex items-center">

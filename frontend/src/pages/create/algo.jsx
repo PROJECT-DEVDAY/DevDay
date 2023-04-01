@@ -1,22 +1,22 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useRef } from 'react';
 import { BiPlus, BiMinus } from 'react-icons/bi';
 import { useSelector } from 'react-redux';
 
 import classNames from 'classnames';
+import Image from 'next/image';
 
 import style from './algo.module.scss';
+import http from '../api/http';
 
 import { BtnFooter } from '@/components/BtnFooter';
+import Container from '@/components/Container';
 import { ContentInput } from '@/components/ContentInput';
-import { DayPicker } from '@/components/DayPicker';
 import { InputLabel } from '@/components/InputLabel';
+import { InputText } from '@/components/InputText';
 import { ReturnArrow } from '@/components/ReturnArrow';
+import { CHALLENGES_URL } from '@/constants';
 
 const algo = props => {
-  const { startDate, endDate } = useSelector(state => state.challengeCreate);
-  const start = new Date(startDate).toLocaleDateString();
-  const end = new Date(endDate).toLocaleDateString();
-
   const memberCheckButton = [
     {
       id: 0,
@@ -37,32 +37,86 @@ const algo = props => {
       setChecking([false, true]);
     }
   };
-  const [member, setMember] = useState(0);
+  const [member, setMember] = useState(1);
   const [algoithmCount, setAlgoithmCount] = useState(1);
 
-  const [room, setRoom] = useState({
+  const user = useSelector(state => state.user);
+
+  const [room, setChallenge] = useState({
     category: 'ALGO',
     title: '',
-    hostId: '',
-    entryFee: '',
+    hostId: user.state.userInfo.userId,
+    entryFee: 1000,
     introduce: '',
+    startDate: '',
+    endDate: '',
   });
+
   const handleChange = e => {
-    setRoom({
+    if (e.target.name === 'entryFee') {
+      const entry = parseInt(e.target.value);
+      setChallenge({
+        ...room,
+        [e.target.name]: entry,
+      });
+    } else {
+      setChallenge({
+        ...room,
+        [e.target.name]: e.target.value,
+      });
+    }
+  };
+
+  const challengeImageInput = useRef(null);
+
+  const [imgFile, setImgeFile] = useState(
+    require('../../image/backgroundImage.jpg'),
+  );
+
+  const onClickImageInput = event => {
+    event.preventDefault();
+    challengeImageInput.current.click();
+  };
+
+  const onChangeImage = e => {
+    if (e.target.files[0]) {
+      setImgeFile(e.target.files[0]);
+    } else {
+      setImgeFile(require('../../image/default-user.png'));
+      return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      if (reader.readyState === 2) {
+        setImgeFile(reader.result);
+      }
+    };
+    reader.readAsDataURL(e.target.files[0]);
+  };
+
+  const onClickCreateChallenge = () => {
+    const data = {
       ...room,
-      [e.target.name]: e.target.value,
-    });
+      // backGroundFile: imgFile,
+      maxParticipantsSize: member,
+      algorithmCount: algoithmCount,
+    };
+    http
+      .post(CHALLENGES_URL, data)
+      .then()
+      .catch(error => {
+        // console.log(`error :${error}`);
+      });
   };
-  const [openDatePicker, setOpenDatePicker] = useState(false);
-  const showDatePicker = () => {
-    setOpenDatePicker(!openDatePicker);
-  };
+
   return (
     <div>
       <div className={classNames(`style.div-header`, `sticky top-0`)}>
         <ReturnArrow title="챌린지 만들기" />
       </div>
-      <div className="div-body p-6 pb-32 mt-4">
+      <div className="div-body p-6 mt-4">
         <div>
           <InputLabel content="챌린지 제목" asterisk />
           <ContentInput
@@ -72,6 +126,37 @@ const algo = props => {
             onChange={handleChange}
           />
           <p className="text-right">{room.title.length}/30</p>
+        </div>
+        <div>
+          <InputLabel content="챌린지 이미지" />
+          <div className="w-full h-40 relative">
+            <Image
+              src={imgFile}
+              alt="프로필 이미지"
+              onClick={onClickImageInput}
+              fill
+            />
+          </div>
+          <input
+            style={{ display: 'none' }}
+            ref={challengeImageInput}
+            type="file"
+            className={style.ImgInput}
+            id="logoImg"
+            accept="image/*"
+            name="file"
+            onChange={onChangeImage}
+          />
+        </div>
+        <div className="mt-6">
+          <InputLabel content="참가 비용" asterisk />
+          <InputText
+            inputType="text"
+            name="entryFee"
+            onChange={handleChange}
+            type="number"
+            content="최소 금액 1000원"
+          />
         </div>
         <div className="mt-6">
           <InputLabel content="참여 인원" asterisk />
@@ -93,51 +178,11 @@ const algo = props => {
               );
             })}
           </div>
-          <div className="mt-6 flex">
-            <InputLabel content="최소 알고리즘 커밋 수" asterisk />
-            <div className={classNames('flex', style.changeMember)}>
-              {algoithmCount > 1 ? (
-                <button
-                  type="button"
-                  className={classNames(style.plusMinus, 'rounded-l-lg')}
-                  onClick={() => {
-                    setAlgoithmCount(algoithmCount - 1);
-                  }}
-                >
-                  <BiMinus className="m-auto" />
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  className={classNames(style.plusMinus, 'rounded-l-lg')}
-                  onClick={() => setAlgoithmCount(algoithmCount - 1)}
-                  disabled
-                >
-                  <BiMinus className="m-auto" />
-                </button>
-              )}
-              <div
-                className={classNames(
-                  'font-medium whitespace-nowrap text-center',
-                  style.plusMinus,
-                )}
-              >
-                {algoithmCount}개
-              </div>
-              <button
-                type="button"
-                className={classNames(style.plusMinus, 'rounded-r-lg')}
-                onClick={() => setAlgoithmCount(algoithmCount + 1)}
-              >
-                <BiPlus className="m-auto" />
-              </button>
-            </div>
-          </div>
           {checking[1] && (
             <div className="mt-6 flex">
               <InputLabel content="참여 인원 수" asterisk />
               <div className={classNames('flex', style.changeMember)}>
-                {member > 0 ? (
+                {member > 1 ? (
                   <button
                     type="button"
                     className={classNames(style.plusMinus, 'rounded-l-lg')}
@@ -174,21 +219,68 @@ const algo = props => {
             </div>
           )}
         </div>
-        <div className="mt-8">
-          <div className={style.bws}>
-            <InputLabel content="챌린지 기간" asterisk />
-            <button type="button" onClick={showDatePicker} className="w-1/2">
-              입력
+        <div className="mt-6 flex">
+          <InputLabel content="최소 알고리즘 커밋 수" asterisk />
+          <div className={classNames('flex', style.changeMember)}>
+            {algoithmCount > 1 ? (
+              <button
+                type="button"
+                className={classNames(style.plusMinus, 'rounded-l-lg')}
+                onClick={() => {
+                  setAlgoithmCount(algoithmCount - 1);
+                }}
+              >
+                <BiMinus className="m-auto" />
+              </button>
+            ) : (
+              <button
+                type="button"
+                className={classNames(style.plusMinus, 'rounded-l-lg')}
+                onClick={() => setAlgoithmCount(algoithmCount - 1)}
+                disabled
+              >
+                <BiMinus className="m-auto" />
+              </button>
+            )}
+            <div
+              className={classNames(
+                'font-medium whitespace-nowrap text-center',
+                style.plusMinus,
+              )}
+            >
+              {algoithmCount}개
+            </div>
+            <button
+              type="button"
+              className={classNames(style.plusMinus, 'rounded-r-lg')}
+              onClick={() => setAlgoithmCount(algoithmCount + 1)}
+            >
+              <BiPlus className="m-auto" />
             </button>
           </div>
-          <p>
-            {start} ~ {end}
-          </p>
-          <div>
+        </div>
+        <div className={style.datePick}>
+          <label htmlFor="inputStartDate">
+            <InputLabel content="챌린지 시작일" asterisk />
+            <input
+              id="inputStartDate"
+              type="date"
+              name="startDate"
+              onChange={handleChange}
+              max={room.endDate}
+            />
+          </label>
+          {room.startDate && (
             <div>
-              {openDatePicker && <DayPicker showDatePicker={showDatePicker} />}
+              <InputLabel content="챌린지 종료일" asterisk />
+              <input
+                type="date"
+                name="endDate"
+                onChange={handleChange}
+                min={room.startDate}
+              />
             </div>
-          </div>
+          )}
         </div>
         <div className="mt-8">
           <InputLabel content="챌린지 소개" asterisk={false} />
@@ -201,13 +293,14 @@ const algo = props => {
         </div>
       </div>
       <div
-        className={classNames(`text-center absolute w-full bottom-0 pb-4 m-0`)}
+        className={classNames(`text-center sticky w-full bottom-0 pb-4 m-0`)}
       >
         <BtnFooter
           content=""
           label="다음"
           disable
-          goToUrl="/create/algo"
+          goToUrl="/"
+          onClick={onClickCreateChallenge}
           warningMessage="알고리즘 챌린지는 solved.AC ID가 필요해요."
         />
       </div>
