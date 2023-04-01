@@ -177,7 +177,7 @@ const main = props => {
         <div className="mb-4">
           <HeaderButtons />
         </div>
-        <div className="grid gap-0 grid-cols-1 mob:grid-cols-2 mob:gap-4 tablet:grid-cols-3">
+        <div className="grid gap-0 grid-cols-1 mob:grid-cols-2 mob:gap-4">
           {CHALLENGE_ITEMS.map(item => {
             const { id, imgURL, participants, leader, title, period } = item;
             const key = `challenge-item-${id}`;
@@ -195,9 +195,7 @@ const main = props => {
           })}
         </div>
       </Container.MainBody>
-      <Container.MainFooter>
-        <Footer />
-      </Container.MainFooter>
+      <Container.MainFooterWithNavigation />
     </Container>
   );
 };
