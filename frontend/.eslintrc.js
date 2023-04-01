@@ -1,5 +1,4 @@
 module.exports = {
-  presets: ['next/babel'],
   env: {
     browser: true,
     es6: true,
@@ -69,6 +68,7 @@ module.exports = {
     'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx'] }],
     'react/jsx-props-no-spreading': 'off',
     'react/no-unused-prop-types': ['off'],
+    'react/no-array-index-key': 'off',
     'no-unused-vars': 'off',
     'global-require': 'off',
     'react/prop-types': 'off',

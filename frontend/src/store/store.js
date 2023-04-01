@@ -15,7 +15,7 @@ const combinedReducer = combineReducers({
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['signUp', 'user', 'challengeCreate'],
+  whitelist: ['signUp', 'user', 'user.token', 'challengeCreate'],
 };
 
 const persistedReducer = persistReducer(persistConfig, combinedReducer);
