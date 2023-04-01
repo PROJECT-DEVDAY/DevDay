@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, Fragment } from 'react';
 
 import classNames from 'classnames';
+import PropTypes from 'prop-types';
 
 import style from './index.module.scss';
 
-export const HeaderButtons = props => {
-  const HEADER_ITEMS = ['전체', '기본', '알고리즘', 'commit'];
-
-  const [selectedItem, setSelectedItem] = useState('전체');
+export const HeaderButtons = ({ items, select }) => {
+  const [selectedItem, setSelectedItem] = useState(items[0]);
 
   const handleItemChange = event => {
     setSelectedItem(event.target.value);
+    select(event.target.value);
   };
 
   return (
@@ -20,11 +20,12 @@ export const HeaderButtons = props => {
         `flex justify-between items-center`,
       )}
     >
-      {HEADER_ITEMS.map(item => (
+      {items.map((item, index) => (
         <label
+          key={index}
           className={classNames(
-            selectedItem === item ? style.selected : '',
-            `inline-block rounded-2xl px-5 py-2 font-medium`,
+            selectedItem === item && style.selected,
+            `inline-block rounded-2xl px-5 py-2 font-medium text-sm bg-white`,
           )}
         >
           <input
@@ -39,4 +40,14 @@ export const HeaderButtons = props => {
       ))}
     </div>
   );
+};
+
+HeaderButtons.propTypes = {
+  items: PropTypes.arrayOf(PropTypes.string),
+  select: PropTypes.func,
+};
+
+HeaderButtons.defaultProps = {
+  select: () => {},
+  items: ['전체', '기본', '알고리즘', 'commit'],
 };

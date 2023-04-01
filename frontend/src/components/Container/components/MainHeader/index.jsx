@@ -8,7 +8,7 @@ const MainHeader = ({ className, children }) => {
   return (
     <Header
       className={cx(
-        'flex items-center border-b-2 sticky top-0 z-30 bg-white',
+        'flex items-center border-b-2 sticky top-0 z-30 bg-white touch-none',
         className,
       )}
     >
