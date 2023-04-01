@@ -53,7 +53,7 @@ public interface ChallengeService {
     /** 챌린지방 Entity 가져오기*/
     ChallengeRoom getChallengeRoomEntity(Long challengeRoomId);
 
-
-
     List<MyChallengeResponseDto> getMyChallengeList (Long userId , String status);
+    public void oneDayCulc(ChallengeRoom challengeRoom);
+    public void culcDailyPayment();
 }

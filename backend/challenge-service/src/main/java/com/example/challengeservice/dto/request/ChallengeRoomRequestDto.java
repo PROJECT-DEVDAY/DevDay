@@ -19,7 +19,7 @@ public class ChallengeRoomRequestDto {
 
     /** 제목 **/
     @NotBlank(message = "제목을 반드시 입력해 주세요")
-    @Size(min = 10, message = "제목은 10자 이상으로 입력해 주세요")
+    @Size(min = 5, message = "제목은 5자 이상으로 입력해 주세요")
     private String title;
 
     /** 방장 ID **/

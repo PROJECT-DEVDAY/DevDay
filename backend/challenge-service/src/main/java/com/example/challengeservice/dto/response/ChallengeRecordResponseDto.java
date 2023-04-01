@@ -1,4 +1,5 @@
- package com.example.challengeservice.dto.response;
+package com.example.challengeservice.dto.response;
+
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
@@ -12,30 +13,31 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class AlgoRecordResponseDto {
-
+public class ChallengeRecordResponseDto {
     /** 아이디 값 **/
     Long challengeRecordId;
-
-    /** 유저 아이디 **/
-    Long userChallengeId;
 
     /** 인증 날짜 **/
     String createAt;
 
-    /** 알고리즘 푼 개수 **/
-    int algorithmCount;
+    /** 유저챌린지 아이디 **/
+    Long userChallengeId;
 
     /** 성공 여부 **/
     private boolean success;
 
-    public static AlgoRecordResponseDto from(Long challengeRecordId, Long userChallengeId,String createAt, int algorithmCount, boolean success){
-        return AlgoRecordResponseDto.builder()
+    private boolean hostReport;
+
+    private int reportCount;
+
+    public static ChallengeRecordResponseDto from(Long challengeRecordId, String createAt, Long userChallengeId, boolean success, boolean hostReport, int reportCount ){
+        return ChallengeRecordResponseDto.builder()
                 .challengeRecordId(challengeRecordId)
-                .userChallengeId(userChallengeId)
                 .createAt(createAt)
-                .algorithmCount(algorithmCount)
+                .userChallengeId(userChallengeId)
                 .success(success)
+                .hostReport(hostReport)
+                .reportCount(reportCount)
                 .build();
     }
 }

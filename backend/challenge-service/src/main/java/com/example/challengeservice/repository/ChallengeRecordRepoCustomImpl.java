@@ -1,6 +1,7 @@
 package com.example.challengeservice.repository;
 
 import com.example.challengeservice.dto.response.AlgoRecordResponseDto;
+import com.example.challengeservice.dto.response.ChallengeRecordResponseDto;
 import com.example.challengeservice.dto.response.PhotoRecordResponseDto;
 import com.example.challengeservice.entity.*;
 
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.example.challengeservice.entity.QChallengeRecord.challengeRecord;
 
@@ -72,10 +74,11 @@ public class ChallengeRecordRepoCustomImpl implements ChallengeRecordRepoCustom 
     }
 
     @Override
-    public List<AlgoRecordResponseDto> findByCreateAtAndUserChallenge(String createAt, UserChallenge userChallenge){
+    public Optional<AlgoRecordResponseDto> findByCreateAtAndUserChallenge(String createAt, UserChallenge userChallenge){
         JPAQuery<AlgoRecordResponseDto> query = jpaQueryFactory.select(Projections.constructor(
                 AlgoRecordResponseDto.class,
-                challengeRecord.id,
+                challengeRecord.id.as("challengeRecordId"),
+                challengeRecord.userChallenge.id,
                 challengeRecord.createAt,
                 challengeRecord.algorithmCount,
                 challengeRecord.success
@@ -83,7 +86,7 @@ public class ChallengeRecordRepoCustomImpl implements ChallengeRecordRepoCustom 
                 .from(challengeRecord)
                 .where(challengeRecord.userChallenge.id.eq(userChallenge.getId())
                         .and(challengeRecord.createAt.eq(createAt)));
-        return query.fetch();
+        return Optional.ofNullable(query.fetchOne());
     }
 
     private BooleanExpression isPreview(String viewType) {
@@ -94,5 +97,20 @@ public class ChallengeRecordRepoCustomImpl implements ChallengeRecordRepoCustom 
         return null;
     }
 
-
+    @Override
+    public Optional<ChallengeRecordResponseDto> findByUserChallengeIdAndCreateAt(Long userChallengeId, String createAt) {
+        JPAQuery<ChallengeRecordResponseDto> query= jpaQueryFactory.select(Projections.constructor(
+                        ChallengeRecordResponseDto.class,
+                        challengeRecord.id,
+                        challengeRecord.createAt,
+                        challengeRecord.userChallenge.id,
+                        challengeRecord.success,
+                        challengeRecord.hostReport,
+                        challengeRecord.reportCount
+                ))
+                .from(challengeRecord)
+                .where(challengeRecord.userChallenge.id.eq(userChallengeId)
+                        .and(challengeRecord.createAt.eq(createAt)));
+        return Optional.ofNullable(query.fetchOne());
+    }
 }

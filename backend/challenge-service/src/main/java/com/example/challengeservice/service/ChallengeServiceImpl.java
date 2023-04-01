@@ -353,6 +353,20 @@ public class ChallengeServiceImpl implements ChallengeService{
 
     /**
      * 신대득
+     * 하루정산 시키기 (1일전 인증기록을 통해서)
+     *
+     */
+    @Scheduled(cron = "0 59 23 * * ?") // 매일 오후 11시 59분
+    public void culcDailyPayment(){
+        log.info("culcDailyPayment 시작");
+        List<ChallengeRoom> challengingRoomList = challengeRoomRepository.findChallengingRoomByDate(commonService.getPastDay(0));
+        for(ChallengeRoom challengeRoom: challengingRoomList){
+            oneDayCulc(challengeRoom);
+        }
+    }
+
+    /**
+     * 신대득
      * 알고리즘 문제 풀이 인증 기록을 저장하는 메서드
      * @param requestDto
      */
@@ -371,7 +385,8 @@ public class ChallengeServiceImpl implements ChallengeService{
         log.info("today problem list is :"+todayProblemList);
         // challengeRoom에서 최소 알고리즘 개수 가져오기 미달이면 Exception 발생
         if(todayProblemList.size()<challengeRoom.getAlgorithmCount()){
-            throw new ApiException(ExceptionEnum.CONFIRM_FAILURE_ALGO_EXCEPTION);
+            return;
+//            throw new ApiException(ExceptionEnum.CONFIRM_FAILURE_ALGO_EXCEPTION);
         }
 
         // UserChallenge 조회
@@ -379,15 +394,67 @@ public class ChallengeServiceImpl implements ChallengeService{
         log.info("[userChallenge id값]" + userChallenge.getId());
 
         // 기존에 이 날짜에 인증기록이 있는지 검사
-        List<AlgoRecordResponseDto> checkRecordList = challengeRecordRepository.findByCreateAtAndUserChallenge(date, userChallenge);
-        log.info("checkRecordList is : "+checkRecordList);
-        if(checkRecordList.size()>0){
-            log.error("이미 인증기록이 존재합니다.");
+        Optional<AlgoRecordResponseDto> checkRecordList = challengeRecordRepository.findByCreateAtAndUserChallenge(date, userChallenge);
+        if(checkRecordList.isPresent()){
             throw new ApiException(ExceptionEnum.EXIST_CHALLENGE_RECORD);
         }
+        log.info("checkRecordList is : "+checkRecordList);
 
         ChallengeRecord challengeRecord = ChallengeRecord.fromAlgo(date, todayProblemList.size() , userChallenge);
         challengeRecordRepository.save(challengeRecord);
+    }
+
+    /** 하루 정산
+     * 일단 현재 진행중인 챌린지 방을 받아와야함 입력값으로!!
+     * **/
+    @Override
+    @Transactional
+    public void oneDayCulc(ChallengeRoom challengeRoom) {
+        Integer period = commonService.diffDay(challengeRoom.getStartDate(), challengeRoom.getEndDate()).intValue();
+        int oneDayFee = (int)Math.ceil((double) challengeRoom.getEntryFee() / period); // 하루 가격
+
+        String toDay = commonService.getDate(); // 오늘 날짜 조회
+
+        // 방에 참여한 참여자들
+        List<UserChallenge> userChallengeList = userChallengeRepository.findUserChallengesByChallengeRoomId(challengeRoom.getId());
+        List<UserChallenge> successList=new ArrayList<>();
+        List<UserChallenge> failList=new ArrayList<>();
+        for (UserChallenge userChallenge : userChallengeList) {
+            /**
+             * 인증은 무조건 1개!
+             * 여러개 들어올 경우 에러처리 필요
+             */
+            Optional<ChallengeRecordResponseDto> challengeRecord = challengeRecordRepository.findByUserChallengeIdAndCreateAt(userChallenge.getId(), toDay);
+            log.info("challenge Record is : {}",challengeRecord);
+            if(challengeRecord.isEmpty()){ // 기록이 없다면 => 무조건 실패
+                failList.add(userChallenge);
+            }else{ // 기록이 있다면 (사진 인증인 경우 검사)
+                if (!challengeRecord.get().isSuccess()) { // 인증이 인정되지 않았다면
+                    failList.add(userChallenge);
+                } else{
+                    successList.add(userChallenge);
+                }
+            }
+        }
+        // 실패자들 돈 뺐기
+        Long sum=0L;
+        for(UserChallenge userChallenge: failList){
+            log.info("실패한 사람은 {}", userChallenge.getId());
+            log.info("onedayFee is : {}",oneDayFee);
+            userChallenge.setDiffPrice(userChallenge.getDiffPrice()-oneDayFee);
+            userChallengeRepository.save(userChallenge);
+            sum+=oneDayFee;
+        }
+
+        // 성공자들 돈 나눠 갖기
+        Long todayMoney=Long.valueOf((long)Math.ceil((double)sum/successList.size()));
+        for(UserChallenge userChallenge: successList){
+            log.info("todayMoney is {}",todayMoney);
+            log.info("성공한 사람은 {}", userChallenge.getId());
+            userChallenge.setDiffPrice(userChallenge.getDiffPrice()+todayMoney);
+            userChallengeRepository.save(userChallenge);
+        }
+
     }
 
     /**인증 정보 저장 (사진)**/
@@ -444,7 +511,8 @@ public class ChallengeServiceImpl implements ChallengeService{
                 //userChallenge 값을 찾아야함
                 selfRecord=getSelfPhotoRecord(challengeRoomId,userId,viewType);
                 break;
-            default:break;
+            default:
+                break;
         }
         return selfRecord;
     }
