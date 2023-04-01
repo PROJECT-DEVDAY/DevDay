@@ -11,15 +11,20 @@ export const loginAsync = createAsyncThunk(
       email,
       password,
     });
-    return response.data.data;
+    return [
+      { userInfo: response.data.data.userInfo },
+      { accessToken: response.data.data.accessToken },
+      { refreshToken: response.data.data.refreshToken },
+    ];
   },
 );
 
 export const userSlice = createSlice({
   name: 'user',
   initialState: {
-    token: {},
     userInfo: {},
+    accessToken: '',
+    refreshToken: '',
   },
   reducers: {},
   extraReducers: builder => {
@@ -28,7 +33,14 @@ export const userSlice = createSlice({
         return { ...state, status: 'Loading' };
       })
       .addCase(loginAsync.fulfilled, (state, action) => {
-        return { ...state, state: action.payload, status: 'Success' };
+        const [userInfo, accessToken, refreshToken] = action.payload;
+        return {
+          ...state,
+          userInfo: userInfo.userInfo,
+          accessToken: accessToken.accessToken,
+          refreshToken: refreshToken.refreshToken,
+          status: 'Success',
+        };
       })
       .addCase(loginAsync.rejected, state => {
         return { ...state, token: null, status: 'Fail' };

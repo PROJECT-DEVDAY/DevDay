@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
-import cx from 'classnames';
 
 import useResizeObserver from '@react-hook/resize-observer';
+import cx from 'classnames';
 
 const useSizeHeight = target => {
   const [size, setSize] = React.useState();
@@ -20,9 +20,9 @@ const Footer = ({ className, children }) => {
 
   // devday-body에 footer의 높이만큼 주되 32px 정도를 여분으로 더 줍니다.
   useEffect(() => {
-    let bodyRef = document.getElementById('devday-body');
+    const bodyRef = document.getElementById('devday-body');
     if (bodyRef) {
-      bodyRef.style.marginBottom = height + 32 + 'px';
+      bodyRef.style.marginBottom = `${height + 32}px`;
     }
   }, [height]);
 

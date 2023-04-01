@@ -19,9 +19,7 @@ export const BtnFooter = ({
 }) => {
   const router = useRouter();
   const goTo = () => {
-    props.onClick ? props.onClick() : '';
-    // console.log(props.onClick ? props.onClick() : '');
-    // router.push(`${goToUrl}`);
+    props.onClick();
   };
   return (
     <div className={style.btnFooter}>
