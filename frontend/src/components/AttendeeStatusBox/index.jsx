@@ -1,5 +1,5 @@
 import React from 'react';
-import { AiOutlineCheck } from 'react-icons/Ai';
+import { AiOutlineCheck } from 'react-icons/ai';
 
 import cx from 'classnames';
 
