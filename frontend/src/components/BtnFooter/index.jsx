@@ -19,13 +19,15 @@ export const BtnFooter = ({
 }) => {
   const router = useRouter();
   const goTo = () => {
-    router.push(`${goToUrl}`);
+    props.onClick ? props.onClick() : '';
+    // console.log(props.onClick ? props.onClick() : '');
+    // router.push(`${goToUrl}`);
   };
   return (
     <div className={style.btnFooter}>
       {content && <p className={style.content}>{content}</p>}
-      <div className={classNames(style.button, !disable && style.check)}>
-        <Button onClick={goTo} className="mt-3 mb-3" label={label} />
+      <div className={classNames(`p-4`, style.button, !disable && style.check)}>
+        <Button onClick={goTo} label={label} />
       </div>
       <div className={classNames(disable && style.check, style.text)}>
         {warningMessage}
