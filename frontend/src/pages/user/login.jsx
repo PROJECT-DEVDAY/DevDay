@@ -11,9 +11,9 @@ import { Button } from '../../components/Button';
 import { InputText } from '../../components/InputText';
 import { ReturnArrow } from '../../components/ReturnArrow';
 
+import Container from '@/components/Container';
 import { InputLabel } from '@/components/InputLabel';
 import { loginAsync } from '@/store/user/userSlice';
-import Container from '@/components/Container';
 
 const login = props => {
   const router = useRouter();
@@ -84,11 +84,6 @@ const login = props => {
     });
   };
 
-  const onSubmitLoginEnter = event => {
-    if (event.key === 'Enter') {
-      onSubmitLogin();
-    }
-  };
   const onSubmitLogin = event => {
     event.preventDefault();
 
@@ -114,9 +109,15 @@ const login = props => {
         });
       });
   };
+
+  const onSubmitLoginEnter = event => {
+    if (event.key === 'Enter') {
+      onSubmitLogin();
+    }
+  };
   return (
     <Container>
-      <Container.SubPageHeader title={'로그인'}>
+      <Container.SubPageHeader title="로그인">
         {' '}
         <ReturnArrow title="로그인" />
       </Container.SubPageHeader>

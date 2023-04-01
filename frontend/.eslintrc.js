@@ -68,6 +68,7 @@ module.exports = {
     'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx'] }],
     'react/jsx-props-no-spreading': 'off',
     'react/no-unused-prop-types': ['off'],
+    'react/no-array-index-key': 'off',
     'no-unused-vars': 'off',
     'global-require': 'off',
     'react/prop-types': 'off',
@@ -76,6 +77,7 @@ module.exports = {
     'import/prefer-default-export': 'off',
     'import/no-unresolved': 'off',
     'import/extensions': 'off',
+    radix: 'off',
 
     'import/no-extraneous-dependencies': [
       1,

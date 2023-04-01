@@ -10,8 +10,8 @@ import style from './pay.module.scss';
 
 import { Button } from '@/components/Button';
 import { CheckBoxBtn } from '@/components/CheckBoxBtn';
-import { ReturnArrow } from '@/components/ReturnArrow';
 import Container from '@/components/Container';
+import { ReturnArrow } from '@/components/ReturnArrow';
 
 const pay = ({ challengeInfo }) => {
   const router = useRouter();

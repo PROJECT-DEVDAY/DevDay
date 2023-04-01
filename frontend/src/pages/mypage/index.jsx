@@ -4,16 +4,14 @@ import { BsQuestionSquare } from 'react-icons/bs';
 import { HiOutlineBell } from 'react-icons/hi';
 
 import Image from 'next/image';
-
 import { useRouter } from 'next/router';
 
+import Container from '@/components/Container';
 import Footer from '@/components/Footer';
+import { PrivateRouter } from '@/components/PrivateRouter/PrivateRouter';
 import { SelectArrow } from '@/components/SelectArrow';
 import { SelectOption } from '@/components/SelectOption';
 import { UserAvatar } from '@/components/UserAvatar';
-import { MYPAGE_URL } from '@/constants';
-import { PrivateRouter } from '@/components/PrivateRouter/PrivateRouter';
-import Container from '@/components/Container';
 
 const index = () => {
   const router = useRouter();

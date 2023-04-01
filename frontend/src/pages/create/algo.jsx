@@ -1,18 +1,20 @@
 import React, { useState, useContext, useRef } from 'react';
 import { BiPlus, BiMinus } from 'react-icons/bi';
+import { useSelector } from 'react-redux';
+
 import classNames from 'classnames';
+import Image from 'next/image';
 
 import style from './algo.module.scss';
-import Image from 'next/image';
+import http from '../api/http';
+
 import { BtnFooter } from '@/components/BtnFooter';
+import Container from '@/components/Container';
 import { ContentInput } from '@/components/ContentInput';
 import { InputLabel } from '@/components/InputLabel';
-import { ReturnArrow } from '@/components/ReturnArrow';
 import { InputText } from '@/components/InputText';
-import Container from '@/components/Container';
-import http from '../api/http';
+import { ReturnArrow } from '@/components/ReturnArrow';
 import { CHALLENGES_URL } from '@/constants';
-import { useSelector } from 'react-redux';
 
 const algo = props => {
   const memberCheckButton = [
@@ -105,7 +107,7 @@ const algo = props => {
       .post(CHALLENGES_URL, data)
       .then()
       .catch(error => {
-        console.log('error :' + error);
+        // console.log(`error :${error}`);
       });
   };
 
