@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 
 import Header from '../Header';
 
-const SubPageHeader = ({ className, title, goNext = null }) => {
+const SubPageHeader = ({ sticky = true, className, title, goNext = null }) => {
   const router = useRouter();
 
   const goToBack = () => {
@@ -20,6 +20,7 @@ const SubPageHeader = ({ className, title, goNext = null }) => {
   return (
     <Header
       className={cx(
+        sticky && 'sticky top-0 touch-none',
         'bg-white flex items-center justify-between bg-white',
         className,
       )}
