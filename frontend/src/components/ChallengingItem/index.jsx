@@ -1,7 +1,7 @@
 import React from 'react';
 
-import PropTypes from 'prop-types';
 import Image from 'next/image';
+import PropTypes from 'prop-types';
 
 export const ChallengingItem = ({
   picture,
@@ -13,7 +13,12 @@ export const ChallengingItem = ({
   return (
     <div className="m-4 p-2 rounded-2xl bg-white flex items-center">
       <div className="w-1/4 me-4">
-        <Image src={picture} className="aspect-auto w-20 rounded" width={0} height={0} />
+        <Image
+          src={picture}
+          className="aspect-auto w-20 rounded"
+          width={0}
+          height={0}
+        />
       </div>
       <div className="w-3/4">
         <p className="font-medium">[챌린지] {title}</p>

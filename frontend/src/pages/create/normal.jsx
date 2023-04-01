@@ -1,15 +1,17 @@
 import React, { useState, useContext, useRef } from 'react';
 import { BiPlus, BiMinus } from 'react-icons/bi';
+
 import classNames from 'classnames';
+import Image from 'next/image';
 
 import style from './algo.module.scss';
-import Image from 'next/image';
+
 import { BtnFooter } from '@/components/BtnFooter';
+import Container from '@/components/Container';
 import { ContentInput } from '@/components/ContentInput';
 import { InputLabel } from '@/components/InputLabel';
-import { ReturnArrow } from '@/components/ReturnArrow';
 import { InputText } from '@/components/InputText';
-import Container from '@/components/Container';
+import { ReturnArrow } from '@/components/ReturnArrow';
 
 const normal = props => {
   const memberCheckButton = [
