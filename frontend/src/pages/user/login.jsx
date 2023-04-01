@@ -13,6 +13,7 @@ import { ReturnArrow } from '../../components/ReturnArrow';
 
 import { InputLabel } from '@/components/InputLabel';
 import { loginAsync } from '@/store/user/userSlice';
+import Container from '@/components/Container';
 
 const login = props => {
   const router = useRouter();
@@ -39,9 +40,7 @@ const login = props => {
         title: '로그인 되어있습니다',
         showConfirmButton: false,
         timer: 1600,
-      }).then(() => {
-        router.push('/');
-      });
+      }).then(router.push('/'));
     }
 
     if (saveEmail) {
@@ -85,8 +84,14 @@ const login = props => {
     });
   };
 
+  const onSubmitLoginEnter = event => {
+    if (event.key === 'Enter') {
+      onSubmitLogin();
+    }
+  };
   const onSubmitLogin = event => {
     event.preventDefault();
+
     dispatch(loginAsync(user))
       .unwrap()
       .then(
@@ -98,6 +103,7 @@ const login = props => {
           timer: 1500,
         }),
       )
+      .then(router.push('/'))
       .catch(error => {
         Swal.fire({
           position: 'center',
@@ -109,109 +115,112 @@ const login = props => {
       });
   };
   return (
-    <div>
-      <div className={classNames(`style.div-header`, `sticky top-0`)}>
+    <Container>
+      <Container.SubPageHeader title={'로그인'}>
+        {' '}
         <ReturnArrow title="로그인" />
-      </div>
-      <div className="div-body p-6 ">
+      </Container.SubPageHeader>
+      <Container.MainBody>
         <Image
           src={require('@/image/main_logo.png')}
           className="w-full"
           alt="loginImage"
         />
-        <form className="my-5">
-          <div>
-            <InputLabel content="이메일" />
-            <InputText
-              name="email"
-              type="email"
-              value={user.email || ''}
-              inputType="text"
-              content="welcome@devday.com"
-              onChange={handleChange}
-            />
-          </div>
-          <div className={classNames(`mt-6`)}>
-            <InputLabel content="비밀번호" />
-            <InputText
-              name="password"
-              type="password"
-              content="12자리 이상, 대문자 소문자 특수문자"
-              onChange={handleChange}
-            />
-          </div>
+        <div className="px-3">
+          <form className="my-5">
+            <div>
+              <InputLabel content="이메일" />
+              <InputText
+                name="email"
+                type="email"
+                value={user.email || ''}
+                inputType="text"
+                content="welcome@devday.com"
+                onChange={handleChange}
+              />
+            </div>
+            <div className={classNames(`mt-6`)}>
+              <InputLabel content="비밀번호" />
+              <InputText
+                name="password"
+                type="password"
+                content="12자리 이상, 대문자 소문자 특수문자"
+                onChange={handleChange}
+              />
+            </div>
 
-          <div className={classNames(`mt-4 flex justify-between`)}>
-            <label htmlFor="toggle" className="flex">
-              <div className="mr-2 text-sm">아이디 기억하기</div>
-              <label htmlFor="toggle" className={style.togglelabel}>
-                <input
-                  className={style.toggle}
-                  type="checkbox"
-                  id="toggle"
-                  checked={check}
-                  onChange={clickCheck}
-                />
-                <div className={style.togglelabelhandle} />
+            <div className={classNames(`mt-4 flex justify-between`)}>
+              <label htmlFor="toggle" className="flex">
+                <div className="mr-2 text-sm">아이디 기억하기</div>
+                <label htmlFor="toggle" className={style.togglelabel}>
+                  <input
+                    className={style.toggle}
+                    type="checkbox"
+                    id="toggle"
+                    checked={check}
+                    onChange={clickCheck}
+                  />
+                  <div className={style.togglelabelhandle} />
+                </label>
               </label>
-            </label>
-            <button className="text-sm" onClick={showModal} type="button">
-              아이디/비밀번호 찾기
-            </button>
-          </div>
-        </form>
-        <Button
-          type="submit"
-          onClick={onSubmitLogin}
-          color="primary"
-          fill
-          label="로그인"
-        />
-        <div className="text-center  w-full bottom-0 p-4">
-          <div className="mt-2">
-            아직 회원이 아니신가요?
-            <button
-              type="button"
-              className={classNames(style.signup, 'ml-2')}
-              onClick={() => router.push('/user/join')}
-            >
-              회원가입
-            </button>
+              <button className="text-sm" onClick={showModal} type="button">
+                아이디/비밀번호 찾기
+              </button>
+            </div>
+          </form>
+          <Button
+            type="submit"
+            onClick={onSubmitLogin}
+            onKeyUp={onSubmitLoginEnter}
+            color="primary"
+            fill
+            label="로그인"
+          />
+          <div className="text-center  w-full bottom-0 p-4">
+            <div className="mt-2">
+              아직 회원이 아니신가요?
+              <button
+                type="button"
+                className={classNames(style.signup, 'ml-2')}
+                onClick={() => router.push('/user/join')}
+              >
+                회원가입
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-
-      <div
-        className={classNames(
-          style[`bottom-sheet`],
-          style[`${show ? 'show' : ''}`],
-        )}
-        ref={bottomSheetRef}
-      >
-        <div className={classNames(style[`modal-content`], 'pl-6 pr-6 h-12')}>
-          <span className="flex">
-            <div className="w-1/2 m-2">
-              <Button
-                className="mt-4 text-sm"
-                onClick={goToId}
-                color="primary"
-                fill
-                label="아이디 찾기"
-              />
-            </div>
-            <div className="w-1/2 m-2 ">
-              <Button
-                className="mt-4 "
-                onClick={goToPw}
-                color="primary"
-                fill
-                label="비밀번호 찾기"
-              />
-            </div>
-          </span>
+        <div
+          className={classNames(
+            style[`bottom-sheet`],
+            style[`${show ? 'show' : ''}`],
+          )}
+          ref={bottomSheetRef}
+        >
+          <div className={classNames(style[`modal-content`], 'pl-6 pr-6 h-12')}>
+            <span className="flex">
+              <div className="w-1/2 m-2">
+                <Button
+                  className="mt-4 text-sm"
+                  onClick={goToId}
+                  color="primary"
+                  fill
+                  label="아이디 찾기"
+                />
+              </div>
+              <div className="w-1/2 m-2 ">
+                <Button
+                  className="mt-4 "
+                  onClick={goToPw}
+                  color="primary"
+                  fill
+                  label="비밀번호 찾기"
+                />
+              </div>
+            </span>
+          </div>
         </div>
-      </div>
-    </div>
+      </Container.MainBody>
+    </Container>
   );
 };
 

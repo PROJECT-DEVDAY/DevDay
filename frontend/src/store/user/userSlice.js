@@ -19,6 +19,7 @@ export const userSlice = createSlice({
   name: 'user',
   initialState: {
     token: {},
+    userInfo: {},
   },
   reducers: {},
   extraReducers: builder => {
@@ -27,7 +28,7 @@ export const userSlice = createSlice({
         return { ...state, status: 'Loading' };
       })
       .addCase(loginAsync.fulfilled, (state, action) => {
-        return { ...state, token: action.payload, status: 'Success' };
+        return { ...state, state: action.payload, status: 'Success' };
       })
       .addCase(loginAsync.rejected, state => {
         return { ...state, token: null, status: 'Fail' };
