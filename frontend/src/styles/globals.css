@@ -60,3 +60,8 @@ a {
 .gray-extra {
   background-color: #595959;
 }
+
+/* 작은 글시 */
+.very-very-small {
+  font-size: 8px;
+}
