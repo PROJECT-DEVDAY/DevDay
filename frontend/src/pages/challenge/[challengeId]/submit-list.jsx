@@ -1,8 +1,41 @@
 import React from 'react';
 
-import Footer from '@/components/Footer';
-import { ReturnArrow } from '@/components/ReturnArrow';
+import Container from '@/components/Container';
+import AttendeeStatusBox from '@/components/AttendeeStatusBox';
+import AttendeeStatusBoxList from '@/components/AttendeeStatusBoxList';
 
+const LIST = [
+  {
+    name: '이동준',
+    date: new Date().toLocaleString(),
+    check: true,
+  },
+  {
+    name: '박태환',
+    date: new Date().toLocaleString(),
+    check: true,
+  },
+  {
+    name: '최형운',
+    date: new Date().toLocaleString(),
+    check: true,
+  },
+  {
+    name: '신대득',
+    date: new Date().toLocaleString(),
+    check: true,
+  },
+  {
+    name: '홍금비',
+    date: new Date().toLocaleString(),
+    check: true,
+  },
+  {
+    name: '김기윤',
+    date: new Date().toLocaleString(),
+    check: true,
+  },
+];
 const SubmitList = () => {
   const challengeInfo = {
     id: 1,
@@ -15,15 +48,19 @@ const SubmitList = () => {
   };
 
   return (
-    <div className="font-medium">
-      <div className="style.div-header sticky top-0">
-        <ReturnArrow title={challengeInfo.name} />
-      </div>
-      <div className="div-body p-6 pb-12 mt-8" />
-      <div className="sticky w-full bottom-0 m-0">
-        <Footer />
-      </div>
-    </div>
+    <Container>
+      <Container.SubPageHeader title={challengeInfo.name} />
+      <Container.MainBody className="px-0 bg-white text-center">
+        <h5 className="font-bold text-center text-2xl pb-4 border-b-2">
+          참여자 인증 상세보기
+        </h5>
+        <input type="date" className="font-bold py-4" />
+        <div className="px-4">
+          <AttendeeStatusBoxList list={LIST} />
+        </div>
+      </Container.MainBody>
+      <Container.MainFooterWithNavigation />
+    </Container>
   );
 };
 
