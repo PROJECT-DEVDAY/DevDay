@@ -8,7 +8,6 @@ import user from './user/userSlice';
 
 const combinedReducer = combineReducers({
   signUp,
-
   challengeCreate,
   user,
 });
@@ -16,7 +15,7 @@ const combinedReducer = combineReducers({
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['signUp', 'login', 'challengeCreate'],
+  whitelist: ['signUp', 'user', 'challengeCreate'],
 };
 
 const persistedReducer = persistReducer(persistConfig, combinedReducer);
