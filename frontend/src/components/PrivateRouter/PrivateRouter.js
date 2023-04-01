@@ -1,7 +1,7 @@
+import { useRouter } from 'next/router';
 import React from 'react';
 import { useSelector } from 'react-redux';
-
-import { useRouter } from 'next/router';
+import { Route, Redirect } from 'react-router-dom';
 
 export const PrivateRouter = ({ childeren }) => {
   const router = useRouter();
