@@ -256,9 +256,9 @@ public class ChallengeController {
      * @param status : PROCEED | DONE | NOT_OPEN
      */
     @GetMapping("my-challenge")
-    public  ListResult<MyChallengeResponseDto> getMyChallengeList(@NotBlank @RequestParam ("status") String status){
-
-        return responseService.getListResult(challengeService.getMyChallengeList(1L,status));
+    public  ListResult<MyChallengeResponseDto> getMyChallengeList(HttpServletRequest request,@NotBlank @RequestParam ("status") String status){
+        Long userId= Long.parseLong(request.getHeader("userId"));
+        return responseService.getListResult(challengeService.getMyChallengeList(userId,status));
     }
 
 
