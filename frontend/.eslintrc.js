@@ -1,4 +1,5 @@
 module.exports = {
+  presets: ['next/babel'],
   env: {
     browser: true,
     es6: true,
