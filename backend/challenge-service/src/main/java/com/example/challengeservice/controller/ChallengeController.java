@@ -224,9 +224,15 @@ public class ChallengeController {
      * 스케줄링으로 실행되는 메서드의 테스트
      * @return
      */
-    @GetMapping("/schedulingTest")
+    @GetMapping("/test/record")
     public Result testRecord (){
         challengeService.createDailyRecord();
+        return responseService.getSuccessResult();
+    }
+
+    @GetMapping("/test/payment")
+    public Result testPayment (){
+        challengeService.culcDailyPayment();
         return responseService.getSuccessResult();
     }
 

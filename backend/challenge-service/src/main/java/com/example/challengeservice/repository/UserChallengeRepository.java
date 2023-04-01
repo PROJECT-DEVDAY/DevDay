@@ -1,8 +1,6 @@
 package com.example.challengeservice.repository;
 
 import com.example.challengeservice.entity.UserChallenge;
-import org.apache.catalina.User;
-import org.bouncycastle.asn1.cmp.Challenge;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -48,6 +46,8 @@ public interface UserChallengeRepository extends JpaRepository<UserChallenge,Lon
     @Query("select uc from UserChallenge uc where uc.userId=:userId and uc.challengeRoom.hostId =:userId")
     List<UserChallenge> findUserHostChallengesUserId(@Param("userId") Long userId);
 
+    @Query("select uc from UserChallenge uc where uc.challengeRoom.id=:challengeId")
+    List<UserChallenge> findUserChallengesByChallengeRoomId(@Param("challengeId") Long challengeId);
 
     boolean existsByChallengeRoomIdAndUserId(Long challengeRoomId , Long userId);
 
