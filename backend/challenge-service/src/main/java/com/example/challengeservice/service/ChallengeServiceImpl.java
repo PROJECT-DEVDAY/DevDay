@@ -426,7 +426,7 @@ public class ChallengeServiceImpl implements ChallengeService{
              */
             Optional<ChallengeRecordResponseDto> challengeRecord = challengeRecordRepository.findByUserChallengeIdAndCreateAt(userChallenge.getId(), toDay);
             log.info("challenge Record is : {}",challengeRecord);
-            if(challengeRecord.isEmpty()){ // 기록이 없다면 => 무조건 실패
+            if(challengeRecord.isPresent()){ // 기록이 없다면 => 무조건 실패
                 failList.add(userChallenge);
             }else{ // 기록이 있다면 (사진 인증인 경우 검사)
                 if (!challengeRecord.get().isSuccess()) { // 인증이 인정되지 않았다면
