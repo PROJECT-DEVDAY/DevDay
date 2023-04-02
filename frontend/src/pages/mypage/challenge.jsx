@@ -1,11 +1,11 @@
 import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import classNames from 'classnames';
 import { useRouter } from 'next/router';
-import { useDispatch, useSelector } from 'react-redux';
 
-import http from '../api/http';
 import style from './challenge.module.scss';
+import http from '../api/http';
 
 import { ChallengingItem } from '@/components/ChallengingItem';
 import Footer from '@/components/Footer';
@@ -25,12 +25,8 @@ const challenge = () => {
     .get(MY_CHALLENGES_URL('PROCEED'), {
       headers,
     })
-    .then(res => {
-      console.log(res);
-    })
-    .catch(e => {
-      console.log(e);
-    });
+    .then(res => {})
+    .catch(e => {});
 
   const goToChallengeDetail = id => {
     router.push('/challenge/id');
@@ -63,13 +59,15 @@ const challenge = () => {
         </div>
       </div>
 
-      {myChallengeInfo.map(myChallengeInfo => {
-        <ChallengingItem
-          picture={myChallengeInfo.backGroundUrl}
-          title={myChallengeInfo.title}
-          category={myChallengeInfo.category}
-          date={myChallengeInfo.startDate + " " + myChallengeInfo.endDate}
-        />;
+      {myChallengeInfo.map(myChallengeInfoItem => {
+        return (
+          <ChallengingItem
+            picture={myChallengeInfoItem.backGroundUrl}
+            title={myChallengeInfoItem.title}
+            category={myChallengeInfoItem.category}
+            date={`${myChallengeInfoItem.startDate} ${myChallengeInfoItem.endDate}`}
+          />
+        );
       })}
 
       <ChallengingItem
