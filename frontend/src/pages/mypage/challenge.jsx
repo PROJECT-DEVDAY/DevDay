@@ -1,11 +1,11 @@
 import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import classNames from 'classnames';
 import { useRouter } from 'next/router';
-import { useDispatch, useSelector } from 'react-redux';
 
-import http from '../api/http';
 import style from './challenge.module.scss';
+import http from '../api/http';
 
 import { ChallengingItem } from '@/components/ChallengingItem';
 import Footer from '@/components/Footer';
@@ -26,10 +26,10 @@ const challenge = () => {
       headers,
     })
     .then(res => {
-      console.log(res);
+      // console.log(res);
     })
     .catch(e => {
-      console.log(e);
+      // console.log(e);
     });
 
   const goToChallengeDetail = id => {
@@ -68,7 +68,7 @@ const challenge = () => {
           picture={myChallengeInfo.backGroundUrl}
           title={myChallengeInfo.title}
           category={myChallengeInfo.category}
-          date={myChallengeInfo.startDate + " " + myChallengeInfo.endDate}
+          date={`${myChallengeInfo.startDate} ${myChallengeInfo.endDate}`}
         />;
       })}
 
