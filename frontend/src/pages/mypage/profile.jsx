@@ -14,10 +14,19 @@ const profile = () => {
   const router = useRouter();
   const userInfo = useSelector(state => state.user);
 
-  const profileInfo = '';
-  // const profileInfo = http.get(PROFILE_URL, {
-  //   Authorization: userInfo.accessToken,
-  // });
+  const headers = {
+    Authorization: userInfo.accessToken,
+  };
+
+  const profileInfo = http
+    .get(PROFILE_URL, {
+      headers,
+    })
+    .then(res => {
+      console.log(res);
+    }).catch(e => {
+      console.log(e);
+    });
 
   const privateInfo = () => {
     router.push('');
