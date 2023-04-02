@@ -77,15 +77,6 @@ public class AuthController {
         return responseService.getListResult(challengeService.getMyChallengeList(userId,status));
     }
 
-    /** 신대득
-     * 현재 user가 참가중인 챌린지 개수 반환
-     */
-    @GetMapping("/challengeInfo/users")
-    public SingleResult<UserChallengeInfoResponseDto> userChallengeInfo(HttpServletRequest request){
-        Long userId=Long.parseLong(request.getHeader("userId"));
-        return responseService.getSingleResult(challengeService.myChallengeList(userId));
-    }
-
     /** 사진 인증 상세 조회 (Auth) 로그인이 반드시 필요함) api 변경필요합니다. **/
     @GetMapping("photo-record/{recordId}/users/")
     public SingleResult<PhotoRecordDetailResponseDto> getPhotoRecordDetail(@PathVariable("recordId") Long recordId , HttpServletRequest request){
