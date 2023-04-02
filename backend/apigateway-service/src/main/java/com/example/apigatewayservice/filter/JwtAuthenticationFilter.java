@@ -18,6 +18,7 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import javax.naming.ServiceUnavailableException;
 import java.nio.charset.StandardCharsets;
 
 @Component
@@ -90,7 +91,7 @@ public class JwtAuthenticationFilter extends AbstractGatewayFilterFactory<JwtAut
                 log.error("JWT 형식이 잘못되었습니다.");
                 errorCode = 405;
                 exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
-            } else {
+            } else if (ex.getClass() == ServiceUnavailableException.class) {
                 log.error("서비스가 연결되지 않았습니다.");
                 exchange.getResponse().setStatusCode(HttpStatus.SERVICE_UNAVAILABLE);
             }
