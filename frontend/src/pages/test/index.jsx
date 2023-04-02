@@ -1,34 +1,40 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Web3 from 'web3';
 
 function App() {
-  const [walletAddress, setWalletAddress] = useState('');
+  const [web3, setWeb3] = useState(null);
+  const [accounts, setAccounts] = useState([]);
 
   useEffect(() => {
     async function loadWeb3() {
       if (window.ethereum) {
+        // Connect to Metamask
         const web3 = new Web3(window.ethereum);
-        try {
-          // Request account access if needed
-          await window.ethereum.enable();
+        setWeb3(web3);
 
-          // Get the user's wallet address
+        try {
+          // Request access to user's accounts
+          await window.ethereum.enable();
           const accounts = await web3.eth.getAccounts();
-          setWalletAddress(accounts[0]);
+          setAccounts(accounts);
         } catch (error) {
           console.error(error);
         }
-      } else {
-        console.log('Please install MetaMask to use this application');
       }
     }
-
     loadWeb3();
   }, []);
 
   return (
     <div>
-      <h1>My Wallet Address: {walletAddress}</h1>
+      {web3 ? (
+        <div>
+          <h1>Connected to Web3</h1>
+          <h2>Wallet Address: {accounts[0]}</h2>
+        </div>
+      ) : (
+        <h1>Not connected to Web3</h1>
+      )}
     </div>
   );
 }
