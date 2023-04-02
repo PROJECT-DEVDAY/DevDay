@@ -2,13 +2,12 @@ import React from 'react';
 import { AiOutlineSetting } from 'react-icons/ai';
 import { BsQuestionSquare } from 'react-icons/bs';
 import { HiOutlineBell } from 'react-icons/hi';
-
-import http from '../api/http';
-import { MYPAGE_URL } from '@/constants';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { useDispatch, useSelector } from 'react-redux';
+
+import http from '../api/http';
 
 import Container from '@/components/Container';
 import Footer from '@/components/Footer';
@@ -16,6 +15,7 @@ import PrivateRouter from '@/components/PrivateRouter/PrivateRouter';
 import { SelectArrow } from '@/components/SelectArrow';
 import { SelectOption } from '@/components/SelectOption';
 import { UserAvatar } from '@/components/UserAvatar';
+import { MYPAGE_URL } from '@/constants';
 
 const index = () => {
   const router = useRouter();
@@ -30,10 +30,10 @@ const index = () => {
       headers,
     })
     .then(res => {
-      console.log(res);
+      // console.log(res);
     })
     .catch(e => {
-      console.log(e);
+      // console.log(e);
     });
 
   const goToProfile = () => {

@@ -1,6 +1,6 @@
 import React from 'react';
-
 import { useDispatch, useSelector } from 'react-redux';
+
 import { useRouter } from 'next/router';
 
 import http from '../api/http';
@@ -23,9 +23,10 @@ const profile = () => {
       headers,
     })
     .then(res => {
-      console.log(res);
-    }).catch(e => {
-      console.log(e);
+      // console.log(res);
+    })
+    .catch(e => {
+      // console.log(e);
     });
 
   const privateInfo = () => {
