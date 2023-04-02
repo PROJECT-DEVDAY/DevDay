@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import PrivateRouter from '@/components/PrivateRouter/PrivateRouter';
 
 import { useRouter } from 'next/router';
 
@@ -72,4 +73,4 @@ const profile = () => {
   );
 };
 
-export default profile;
+export default PrivateRouter(profile);

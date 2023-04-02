@@ -1,5 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import PrivateRouter from '@/components/PrivateRouter/PrivateRouter';
 
 import classNames from 'classnames';
 import { useRouter } from 'next/router';
@@ -84,4 +85,4 @@ const challenge = () => {
   );
 };
 
-export default challenge;
+export default PrivateRouter(challenge);
