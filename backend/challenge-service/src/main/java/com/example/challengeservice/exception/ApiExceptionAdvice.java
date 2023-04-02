@@ -83,10 +83,10 @@ public class ApiExceptionAdvice {
         );
     }
 
-    /**
+   /* *//**
      * 전체 예외에 대한 기본 처리입니다.
      * @return
-     */
+     *//*
     @ExceptionHandler({Exception.class})
     public ResponseEntity<ApiExceptionEntity> internalServerExceptionHandler() {
 
@@ -98,7 +98,7 @@ public class ApiExceptionAdvice {
                 ),
                 e.getError().getStatus()
         );
-    }
+    }*/
 
     /**
      * 파라미터 검증에서 실패했을 경우 기본 처리입니다.
