@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useRouter } from 'next/router';
@@ -13,21 +13,22 @@ import { PROFILE_URL } from '@/constants';
 const profile = () => {
   const router = useRouter();
   const userInfo = useSelector(state => state.user);
+  const [profileInfo, setProfileInfo] = useState({});
 
   const headers = {
     Authorization: userInfo.accessToken,
   };
 
-  const profileInfo = http
-    .get(PROFILE_URL, {
-      headers,
-    })
-    .then(res => {
-      // console.log(res);
-    })
-    .catch(e => {
-      // console.log(e);
-    });
+  useEffect(() => {
+    http
+      .get(PROFILE_URL, {
+        headers,
+      })
+      .then(res => {
+        setProfileInfo(res.data.data);
+      })
+      .catch(e => {});
+  });
 
   const privateInfo = () => {
     router.push('');
@@ -56,7 +57,7 @@ const profile = () => {
             height={150}
           />
         </div>
-        <p className="text-center font-medium mb-10">{profileInfo.nickname}</p>
+        <p className="text-center text-xl font-medium mt-4 mb-10">{profileInfo.nickname}</p>
       </div>
       <hr className="border-gray-400 w-full" />
       <div className="div-body p-6">
