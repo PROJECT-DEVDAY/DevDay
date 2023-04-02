@@ -108,7 +108,7 @@ public class ChallengeServiceImpl implements ChallengeService{
 
 
 
-            if(challengeRoomRequestDto.getBackGroundFile().isEmpty()) {
+            if(challengeRoomRequestDto.getBackGroundFile()==null) {
 
                 switch (challengeRoom.getCategory()) {
 
