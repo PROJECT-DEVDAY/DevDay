@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { AiOutlineSetting } from 'react-icons/ai';
 import { BsQuestionSquare } from 'react-icons/bs';
 import { HiOutlineBell } from 'react-icons/hi';
@@ -20,21 +20,22 @@ import { MYPAGE_URL } from '@/constants';
 const index = () => {
   const router = useRouter();
   const userInfo = useSelector(state => state.user);
-
+  const [myPageInfo, setMyPageInfo] = useState({});
+  
   const headers = {
     Authorization: userInfo.accessToken,
   };
 
-  const mypageInfo = http
-    .get(MYPAGE_URL, {
-      headers,
-    })
-    .then(res => {
-      // console.log(res);
-    })
-    .catch(e => {
-      // console.log(e);
-    });
+  useEffect(() => {
+    http
+      .get(MYPAGE_URL, {
+        headers,
+      })
+      .then(res => {
+        setMyPageInfo(res.data.data);
+      })
+      .catch(e => {});
+  });
 
   const goToProfile = () => {
     router.push('/mypage/profile');
@@ -54,14 +55,13 @@ const index = () => {
         <div className="div-body p-4 relative">
           <div className="absolute top-5 left-7">
             <UserAvatar
-              imageURL={mypageInfo.data.profileImgUrl}
+              imageURL={myPageInfo.profileImgUrl}
               width={50}
               height={50}
             />
             {/* <UserAvatar imageURL="" width={50} height={50} /> */}
           </div>
-          <SelectArrow title={mypageInfo.nickname} fill onClick={goToProfile} />
-          {/* <SelectArrow title="nickname" fill onClick={goToProfile} /> */}
+          <SelectArrow title={myPageInfo.nickname} fill onClick={goToProfile} />
           <div className="px-6 py-8">
             <div className="flex justify-between mb-6">
               <div className="flex items-center">
@@ -74,7 +74,7 @@ const index = () => {
                 </div>
                 <p>예치금</p>
               </div>
-              <p>0원</p>
+              <p>{myPageInfo.prize}원</p>
             </div>
             <div className="flex justify-between mb-4">
               <div className="flex items-center">
@@ -82,9 +82,9 @@ const index = () => {
                   src={require('../../image/reward.png')}
                   className="aspect-auto w-6 mr-2"
                 />
-                <p>예치금</p>
+                <p>상금</p>
               </div>
-              <p>0원</p>
+              <p>{myPageInfo.deposit}원</p>
             </div>
           </div>
         </div>
@@ -93,18 +93,15 @@ const index = () => {
           <hr className="w-full" />
           <div className="flex justify-between my-5 mx-12">
             <div>
-              {/* <p className="text-center">15</p> */}
-              <p className="text-center">{mypageInfo.challengingCnt}</p>
+              <p className="text-center">{myPageInfo.challengingCnt}</p>
               <p>참가중</p>
             </div>
             <div>
-              {/* <p className="text-center">10</p> */}
-              <p className="text-center">{mypageInfo.challengedCnt}</p>
+              <p className="text-center">{myPageInfo.challengedCnt}</p>
               <p>완료</p>
             </div>
             <div>
-              {/* <p className="text-center">7</p> */}
-              <p className="text-center">{mypageInfo.leaderCnt}</p>
+              <p className="text-center">{myPageInfo.leaderCnt}</p>
               <p>리더</p>
             </div>
           </div>
