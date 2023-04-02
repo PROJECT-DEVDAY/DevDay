@@ -92,6 +92,15 @@ public class ChallengeController {
         return responseService.getSingleResult(challengeService.checkDateUserBaekjoon(userId, selectDate));
     }
 
+    /** 신대득
+     * 현재 user가 참가중인 챌린지 개수 반환
+     */
+    @GetMapping("/challengeInfo/users/{userId}")
+    public SingleResult<UserChallengeInfoResponseDto> userChallengeInfo(@PathVariable Long userId){
+        return responseService.getSingleResult(challengeService.myChallengeList(userId));
+
+    }
+
     /**
      * 스케줄링으로 실행되는 메서드의 테스트
      * @return
