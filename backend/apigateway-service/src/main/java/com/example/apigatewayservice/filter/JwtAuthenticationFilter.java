@@ -11,6 +11,7 @@ import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.buffer.DataBuffer;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
@@ -72,18 +73,26 @@ public class JwtAuthenticationFilter extends AbstractGatewayFilterFactory<JwtAut
             if (ex.getClass() == NullPointerException.class) {
                 log.error("토큰이 비어있습니다.");
                 errorCode = 401;
+                exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
             } else if (ex.getClass() == ExpiredJwtException.class) {
                 log.error("토큰이 만료되었습니다.");
                 errorCode = 402;
+                exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
             } else if (ex.getClass() == MalformedJwtException.class) {
                 log.error("JWT 토큰 구조가 잘못되었습니다.");
                 errorCode = 403;
+                exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
             } else if (ex.getClass() == SignatureException.class) {
                 log.error("변조된 토큰입니다.");
                 errorCode = 404;
+                exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
             } else if (ex.getClass() == UnsupportedJwtException.class) {
                 log.error("JWT 형식이 잘못되었습니다.");
                 errorCode = 405;
+                exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
+            } else {
+                log.error("서비스가 연결되지 않았습니다.");
+                exchange.getResponse().setStatusCode(HttpStatus.SERVICE_UNAVAILABLE);
             }
 
             byte[] bytes = getErrorCode(errorCode).getBytes(StandardCharsets.UTF_8);
