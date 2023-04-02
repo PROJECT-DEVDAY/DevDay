@@ -16,7 +16,8 @@ export const PROFILE_URL = `${USER_SERVICE}/auth/user/detail`;
 const CHALLENGE_SERVICE = 'challenge-service';
 
 export const CHALLENGES_URL = `${CHALLENGE_SERVICE}/challenges`;
-export const MY_CHALLENGES_URL = param => `${CHALLENGE_SERVICE}/challenges/my-challenge?status=${param}`;
+export const MY_CHALLENGES_URL = param =>
+  `${CHALLENGE_SERVICE}/challenges/my-challenge?status=${param}`;
 export const CHALLENGES_LIST_URL = param =>
   `${CHALLENGE_SERVICE}/challenges/list?category=${param}`;
 
