@@ -6,6 +6,7 @@ axios.defaults.withCredentials = true;
 export default axios.create({
   baseURL: 'http://j8c209.p.ssafy.io:8000/',
   headers: {
-    'Content-Type': 'application/json;charset=utf-8',
+    // 'Content-Type': 'application/json;charset=utf-8',
+    'Content-Type': 'multipart/form-data',
   },
 });

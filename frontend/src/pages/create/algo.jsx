@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 
 import classNames from 'classnames';
 import Image from 'next/image';
+import Swal from 'sweetalert2';
 
 import style from './algo.module.scss';
 import http from '../api/http';
@@ -50,6 +51,7 @@ const algo = props => {
     introduce: '',
     startDate: '',
     endDate: '',
+    backGroudFile: '',
   });
 
   const handleChange = e => {
@@ -72,6 +74,7 @@ const algo = props => {
   const [imgFile, setImgeFile] = useState(
     require('../../image/backgroundImage.jpg'),
   );
+  const [isSelect, setIsSelect] = useState(false);
 
   const onClickImageInput = event => {
     event.preventDefault();
@@ -79,6 +82,12 @@ const algo = props => {
   };
 
   const onChangeImage = e => {
+    const reader = new FileReader();
+    reader.onload = ({ target }) => {
+      challengeImageInput.current.src = target.result;
+      setIsSelect(true);
+    };
+
     if (e.target.files[0]) {
       setImgeFile(e.target.files[0]);
     } else {
@@ -86,26 +95,43 @@ const algo = props => {
       return;
     }
 
-    const reader = new FileReader();
-
-    reader.onload = () => {
-      if (reader.readyState === 2) {
-        setImgeFile(reader.result);
-      }
+    reader.onload = ({ target }) => {
+      challengeImageInput.current.src = target.result;
+      setIsSelect(true);
+      setImgeFile(target.result);
     };
-    reader.readAsDataURL(e.target.files[0]);
+
+    if (!challengeImageInput.current.files[0]) {
+      Swal.fire({
+        position: 'center',
+        icon: 'warning',
+        title: '사진을 선택해주세요',
+        showConfirmButton: false,
+        timer: 1000,
+      });
+      return;
+    }
+    reader.readAsDataURL(challengeImageInput.current.files[0]);
   };
 
   const onClickCreateChallenge = () => {
-    const data = {
-      ...room,
-      // backGroundFile: imgFile,
-      maxParticipantsSize: member,
-      algorithmCount: algoithmCount,
-    };
+    const data = new FormData();
+    data.append('title', room.title);
+    data.append('hostId', user.state.userInfo.userId);
+    data.append('category', room.category);
+    data.append('entryFee', room.entryFee);
+    data.append('introduce', room.introduce);
+    data.append('startDate', room.startDate);
+    data.append('endDate', room.endDate);
+    data.append('maxParticipantsSize', member);
+    data.append('algorithmCount', algoithmCount);
+    data.append('backGroundFile', challengeImageInput.current.files[0]);
+
     http
       .post(CHALLENGES_URL, data)
-      .then()
+      .then(res => {
+        // console.log(res);
+      })
       .catch(error => {
         // console.log(`error :${error}`);
       });
