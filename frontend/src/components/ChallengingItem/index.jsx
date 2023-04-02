@@ -8,10 +8,11 @@ export const ChallengingItem = ({
   title,
   category,
   date,
+  onClick,
   ...props
 }) => {
   return (
-    <div className="m-4 p-2 rounded-2xl bg-white flex items-center">
+    <div className="m-4 p-2 rounded-2xl bg-white flex items-center" onClick={onClick}>
       <div className="w-1/4 me-4">
         <Image
           src={picture}
@@ -36,6 +37,7 @@ ChallengingItem.propTypes = {
   title: PropTypes.string,
   category: PropTypes.string,
   date: PropTypes.string,
+  onClick: PropTypes.func
 };
 
 ChallengingItem.defaultProps = {};

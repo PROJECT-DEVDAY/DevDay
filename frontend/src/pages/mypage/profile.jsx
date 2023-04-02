@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 
 import http from '../api/http';
@@ -11,10 +12,11 @@ import { PROFILE_URL } from '@/constants';
 
 const profile = () => {
   const router = useRouter();
+  const userInfo = useSelector(state => state.user);
 
   const profileInfo = '';
   // const profileInfo = http.get(PROFILE_URL, {
-  //   Authorization: localStorage.getItem('accessToken'),
+  //   Authorization: userInfo.accessToken,
   // });
 
   const privateInfo = () => {

@@ -2,16 +2,28 @@ import React from 'react';
 
 import classNames from 'classnames';
 import { useRouter } from 'next/router';
+import { useDispatch, useSelector } from 'react-redux';
 
+import http from '../api/http';
 import style from './challenge.module.scss';
 
 import { ChallengingItem } from '@/components/ChallengingItem';
 import Footer from '@/components/Footer';
 import { HeaderButtons } from '@/components/HeaderButtons';
 import { ReturnArrow } from '@/components/ReturnArrow';
+import { MY_CHALLENGES_URL } from '@/constants';
 
 const challenge = () => {
   const router = useRouter();
+  const userInfo = useSelector(state => state.user);
+
+  // const myChallengeInfo = http.get(MY_CHALLENGES_URL, {
+  //   Authorization: userInfo.accessToken,
+  // })
+
+  const goToChallengeDetail = (id) => {
+    router.push('/challenge/id');
+  }
 
   return (
     <div>
