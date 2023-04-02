@@ -46,7 +46,6 @@ public class ChallengeController {
     @PostMapping()
     public ResponseEntity<ChallengeCreateResponseDto> createChallenge(@Valid @ModelAttribute ChallengeRoomRequestDto challengeRoomRequestDto) throws IOException {
         log.info(challengeRoomRequestDto.getTitle());
-        log.info(challengeRoomRequestDto.getBackGroundFile().isEmpty()+" ");
         log.info(challengeRoomRequestDto.getAlgorithmCount()+" ");
         log.info(challengeRoomRequestDto.getStartDate());
         log.info(challengeRoomRequestDto.getEndDate());
