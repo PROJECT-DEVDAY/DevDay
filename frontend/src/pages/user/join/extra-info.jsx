@@ -157,7 +157,7 @@ const signup = props => {
           </p>
         </div>
       </Container.MainBody>
-      <Container.MainFooter>
+      <Container.MainFooter className="bg-white">
         <div
           className={classNames(
             `font-sans text-center absolute w-full bottom-0 p-4`,
