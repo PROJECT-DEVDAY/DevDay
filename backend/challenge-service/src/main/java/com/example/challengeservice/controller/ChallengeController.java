@@ -45,6 +45,12 @@ public class ChallengeController {
      * **/
     @PostMapping()
     public ResponseEntity<ChallengeCreateResponseDto> createChallenge(@Valid @ModelAttribute ChallengeRoomRequestDto challengeRoomRequestDto) throws IOException {
+        log.info(challengeRoomRequestDto.getTitle());
+        log.info(challengeRoomRequestDto.getAlgorithmCount()+" ");
+        log.info(challengeRoomRequestDto.getStartDate());
+        log.info(challengeRoomRequestDto.getEndDate());
+        log.info(challengeRoomRequestDto.getIntroduce());
+
         Long id=challengeService.createChallenge(challengeRoomRequestDto);
         String message="[Success] 챌린지 방이 생성되었습니다.";
         return ResponseEntity.status(HttpStatus.CREATED).body(ChallengeCreateResponseDto.from(id, message));

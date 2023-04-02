@@ -54,7 +54,7 @@ public class ApiExceptionAdvice {
      * 런타임 예외에 대한 처리입니다.
      * @return
      */
-    @ExceptionHandler({RuntimeException.class})
+   /* @ExceptionHandler({RuntimeException.class})
     public ResponseEntity<ApiExceptionEntity> runTimeExceptionHandler() {
         ApiException e = new ApiException(ExceptionEnum.RUNTIME_EXCEPTION);
         return new ResponseEntity<>(
@@ -64,7 +64,7 @@ public class ApiExceptionAdvice {
                 ),
                 e.getError().getStatus()
         );
-    }
+    }*/
 
     /**
      * 경로는 있으나 메서드가 다를 경우 405 예외를 리턴합니다.
@@ -83,10 +83,10 @@ public class ApiExceptionAdvice {
         );
     }
 
-    /**
+   /* *//**
      * 전체 예외에 대한 기본 처리입니다.
      * @return
-     */
+     *//*
     @ExceptionHandler({Exception.class})
     public ResponseEntity<ApiExceptionEntity> internalServerExceptionHandler() {
 
@@ -98,7 +98,7 @@ public class ApiExceptionAdvice {
                 ),
                 e.getError().getStatus()
         );
-    }
+    }*/
 
     /**
      * 파라미터 검증에서 실패했을 경우 기본 처리입니다.
