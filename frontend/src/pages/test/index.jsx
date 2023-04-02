@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+
 import { ethers } from 'ethers';
 
 function App() {
@@ -17,16 +18,18 @@ function App() {
         const connectedAddress = await signer.getAddress();
         setAddress(connectedAddress);
       } catch (error) {
-        console.error(error);
+        // console.error(error);
       }
     } else {
-      console.error('Coinbase Wallet is not installed');
+      // console.error('Coinbase Wallet is not installed');
     }
   };
 
   return (
     <div>
-      <button onClick={connectWallet}>Connect to Coinbase Wallet</button>
+      <button type="button" onClick={connectWallet}>
+        Connect to Coinbase Wallet
+      </button>
       {address && <p>Your wallet address is: {address}</p>}
     </div>
   );

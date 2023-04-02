@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 
 import classNames from 'classnames';
 import Image from 'next/image';
@@ -9,15 +10,24 @@ import { ReturnArrow } from '../../components/ReturnArrow';
 import { SelectOption } from '../../components/SelectOption';
 
 const check = props => {
+  const user = useSelector(state => state.user);
   const [checking, setChecking] = useState([false, false, false]);
   const [goUrl, setGoUrl] = useState('');
   const changeCheck = index => {
     if (index === 0) {
       setChecking([true, false, false]);
-      setGoUrl('/create/category/inputSolvedAC');
+      if (user.userInfo.baekjoon) {
+        setGoUrl('/create/algo');
+      } else {
+        setGoUrl('/create/category/inputSolvedAC');
+      }
     } else if (index === 1) {
       setChecking([false, true, false]);
-      setGoUrl('/create/category/inputGithub');
+      if (user.userInfo.github) {
+        setGoUrl('/create/commit');
+      } else {
+        setGoUrl('/create/category/inputGithub');
+      }
     } else {
       setChecking([false, false, true]);
       setGoUrl('/create/normal');
