@@ -7,7 +7,7 @@ import Image from 'next/image';
 import Swal from 'sweetalert2';
 
 import style from './algo.module.scss';
-import http from '../api/http';
+import { httpForm } from '../api/http';
 
 import { BtnFooter } from '@/components/BtnFooter';
 import Container from '@/components/Container';
@@ -46,7 +46,7 @@ const algo = props => {
   const [room, setChallenge] = useState({
     category: 'ALGO',
     title: '',
-    hostId: user.state.userInfo.userId,
+    hostId: user.userInfo.userId,
     entryFee: 1000,
     introduce: '',
     startDate: '',
@@ -117,7 +117,7 @@ const algo = props => {
   const onClickCreateChallenge = () => {
     const data = new FormData();
     data.append('title', room.title);
-    data.append('hostId', user.state.userInfo.userId);
+    data.append('hostId', user.userInfo.userId);
     data.append('category', room.category);
     data.append('entryFee', room.entryFee);
     data.append('introduce', room.introduce);
@@ -127,14 +127,36 @@ const algo = props => {
     data.append('algorithmCount', algoithmCount);
     data.append('backGroundFile', challengeImageInput.current.files[0]);
 
-    http
-      .post(CHALLENGES_URL, data)
-      .then(res => {
-        // console.log(res);
-      })
-      .catch(error => {
-        // console.log(`error :${error}`);
-      });
+    Swal.fire({
+      title: '챌린지를 \n 생성하시겠습니까?',
+      text: '챌린지는 수정할 수 없어요!',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: '네',
+      cancelButtonText: '아니요',
+    }).then(result => {
+      if (result.isConfirmed) {
+        httpForm
+          .post(CHALLENGES_URL, data)
+          .then(() => {
+            Swal.fire({
+              position: 'center',
+              icon: 'success',
+              title: '성공!',
+              showConfirmButton: false,
+              timer: 1500,
+            });
+          })
+          .catch(error => {
+            Swal.fire({
+              icon: 'error',
+              title: '다시 한번 확인해주세요!',
+              text: error.message,
+            });
+          });
+      }
+    });
   };
 
   return (
@@ -325,7 +347,6 @@ const algo = props => {
           content=""
           label="다음"
           disable
-          goToUrl="/"
           onClick={onClickCreateChallenge}
           warningMessage="알고리즘 챌린지는 solved.AC ID가 필요해요."
         />
