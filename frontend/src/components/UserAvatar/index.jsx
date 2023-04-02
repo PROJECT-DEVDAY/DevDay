@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 
 import Image from 'next/image';
+import Swal from 'sweetalert2';
 
 import style from './index.module.scss';
 
@@ -9,29 +10,32 @@ export const UserAvatar = ({ imageURL, width, height, ...props }) => {
     require('../../image/default-user.png'),
   );
 
-  const logoImgInput = useRef(null);
+  const inputRef = useRef(null);
 
   const onClickImageInput = event => {
     event.preventDefault();
-    logoImgInput.current.click();
+    inputRef.current.click();
   };
 
   const onChange = e => {
-    if (e.target.files[0]) {
-      setImgeFile(e.target.files[0]);
-    } else {
-      setImgeFile(require('../../image/default-user.png'));
+    const reader = new FileReader();
+    reader.onload = ({ target }) => {
+      inputRef.current.src = target.result;
+    };
+
+    if (!e.current.files[0]) {
+      Swal.fire({
+        position: 'center',
+        icon: 'warning',
+        title: '사진을 선택해주세요',
+        showConfirmButton: false,
+        timer: 1000,
+      });
       return;
     }
 
-    const reader = new FileReader();
-
-    reader.onload = () => {
-      if (reader.readyState === 2) {
-        setImgeFile(reader.result);
-      }
-    };
-    reader.readAsDataURL(e.target.files[0]);
+    reader.readAsDataURL(inputRef.current.files[0]);
+    setImgeFile(inputRef.current.files[0]);
   };
 
   return (
@@ -46,7 +50,7 @@ export const UserAvatar = ({ imageURL, width, height, ...props }) => {
       />
       <input
         style={{ display: 'none' }}
-        ref={logoImgInput}
+        ref={inputRef}
         type="file"
         className={style.ImgInput}
         id="logoImg"

@@ -15,9 +15,9 @@ export const PROFILE_URL = `${USER_SERVICE}/auth/user/detail`;
 // 챌린지
 const CHALLENGE_SERVICE = 'challenge-service';
 
-export const CHALLENGES_URL = `${CHALLENGE_SERVICE}/challenges`;
+export const CHALLENGES_URL = `${CHALLENGE_SERVICE}/auth/challenges`;
 export const MY_CHALLENGES_URL = param =>
-  `${CHALLENGE_SERVICE}/challenges/my-challenge?status=${param}`;
+  `${CHALLENGE_SERVICE}/auth/challenges/my-challenge?status=${param}`;
 export const CHALLENGES_LIST_URL = param =>
   `${CHALLENGE_SERVICE}/challenges/list?category=${param}`;
 

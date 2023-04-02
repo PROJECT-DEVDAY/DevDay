@@ -20,8 +20,13 @@ export const BtnFooter = ({
 }) => {
   const router = useRouter();
   const goTo = () => {
-    props.onClick();
-    // router.push(goToUrl);
+    if (props.onClick) {
+      props.onClick();
+    }
+
+    if (goToUrl) {
+      router.push(goToUrl);
+    }
   };
   return (
     <div className={style.btnFooter}>

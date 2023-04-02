@@ -57,7 +57,9 @@ const profile = () => {
             height={150}
           />
         </div>
-        <p className="text-center text-xl font-medium mt-4 mb-10">{profileInfo.nickname}</p>
+        <p className="text-center text-xl font-medium mt-4 mb-10">
+          {profileInfo.nickname}
+        </p>
       </div>
       <hr className="border-gray-400 w-full" />
       <div className="div-body p-6">
