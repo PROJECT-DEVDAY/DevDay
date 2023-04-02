@@ -13,8 +13,8 @@ export const loginAsync = createAsyncThunk(
     });
     return [
       { userInfo: response.data.data.userInfo },
-      { accessToken: `Bearer : ${response.data.data.accessToken}` },
-      { refreshToken: `Bearer : ${response.data.data.refreshToken}` },
+      { accessToken: `Bearer ${response.data.data.accessToken}` },
+      { refreshToken: `Bearer ${response.data.data.refreshToken}` },
     ];
   },
 );
