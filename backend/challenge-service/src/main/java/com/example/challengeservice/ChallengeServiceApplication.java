@@ -31,5 +31,6 @@ public class ChallengeServiceApplication {
 //    public FeignErrorDecoder getFeignErrorDecoder(){
 //        return new FeignErrorDecoder();
 //    }
+// 재배포
 
 }

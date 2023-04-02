@@ -1,35 +1,36 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
-import Web3 from 'web3';
+import { ethers } from 'ethers';
 
 function App() {
-  const [walletAddress, setWalletAddress] = useState('');
+  const [address, setAddress] = useState('');
 
-  useEffect(() => {
-    async function loadWeb3() {
-      if (window.ethereum) {
-        const web3 = new Web3(window.ethereum);
-        try {
-          // Request account access if needed
-          await window.ethereum.enable();
+  const connectWallet = async () => {
+    // Check if the user has Coinbase Wallet installed
+    if (window.ethereum && window.ethereum.isCoinbaseWallet) {
+      try {
+        // Request access to the user's Coinbase Wallet account
+        await window.ethereum.request({ method: 'eth_requestAccounts' });
 
-          // Get the user's wallet address
-          const accounts = await web3.eth.getAccounts();
-          setWalletAddress(accounts[0]);
-        } catch (error) {
-          // console.error(error);
-        }
-      } else {
-        // console.log('Please install MetaMask to use this application');
+        // Create an ethers provider and get the user's address
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        const connectedAddress = await signer.getAddress();
+        setAddress(connectedAddress);
+      } catch (error) {
+        // console.error(error);
       }
+    } else {
+      // console.error('Coinbase Wallet is not installed');
     }
-
-    loadWeb3();
-  }, []);
+  };
 
   return (
     <div>
-      <h1>My Wallet Address: {walletAddress}</h1>
+      <button type="button" onClick={connectWallet}>
+        Connect to Coinbase Wallet
+      </button>
+      {address && <p>Your wallet address is: {address}</p>}
     </div>
   );
 }
