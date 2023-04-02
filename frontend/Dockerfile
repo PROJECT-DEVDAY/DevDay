@@ -18,7 +18,7 @@ COPY . .
 # Build the production version of the app
 RUN npm run build
 
-# Expose the port that the app will run on
+# Expose the port that the app will run on23
 EXPOSE 80
 
 # Start the app 이거는 docker run이 될때 이 명령어가 불리는거임
