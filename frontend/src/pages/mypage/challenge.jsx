@@ -17,13 +17,24 @@ const challenge = () => {
   const router = useRouter();
   const userInfo = useSelector(state => state.user);
 
-  // const myChallengeInfo = http.get(MY_CHALLENGES_URL, {
-  //   Authorization: userInfo.accessToken,
-  // })
+  const headers = {
+    Authorization: userInfo.accessToken,
+  };
 
-  const goToChallengeDetail = (id) => {
+  const myChallengeInfo = http
+    .get(MY_CHALLENGES_URL("PROCEED"), {
+      headers,
+    })
+    .then(res => {
+      console.log(res);
+    })
+    .catch(e => {
+      console.log(e);
+    });
+
+  const goToChallengeDetail = id => {
     router.push('/challenge/id');
-  }
+  };
 
   return (
     <div>

@@ -4,6 +4,7 @@ import { BsQuestionSquare } from 'react-icons/bs';
 import { HiOutlineBell } from 'react-icons/hi';
 
 import http from '../api/http';
+import { MYPAGE_URL } from '@/constants';
 
 import Image from 'next/image';
 import { useRouter } from 'next/router';
@@ -20,9 +21,20 @@ const index = () => {
   const router = useRouter();
   const userInfo = useSelector(state => state.user);
 
-  // const mypageInfo = http.get(MYPAGE_URL, {
-  //   Authorization: userInfo.accessToken,
-  // });
+  const headers = {
+    Authorization: userInfo.accessToken,
+  };
+
+  const mypageInfo = http
+    .get(MYPAGE_URL, {
+      headers,
+    })
+    .then(res => {
+      console.log(res);
+    })
+    .catch(e => {
+      console.log(e);
+    });
 
   const goToProfile = () => {
     router.push('/mypage/profile');
@@ -41,17 +53,22 @@ const index = () => {
       <Container.Body>
         <div className="div-body p-4 relative">
           <div className="absolute top-5 left-7">
-            {/* <UserAvatar imageURL={mypageInfo.profileImgUrl} width={50} height={50} /> */}
-            <UserAvatar imageURL="" width={50} height={50} />
+            <UserAvatar
+              imageURL={mypageInfo.data.profileImgUrl}
+              width={50}
+              height={50}
+            />
+            {/* <UserAvatar imageURL="" width={50} height={50} /> */}
           </div>
-          {/* <SelectArrow title={mypageInfo.nickname} fill /> */}
-          <SelectArrow title="nickname" fill onClick={goToProfile} />
+          <SelectArrow title={mypageInfo.nickname} fill onClick={goToProfile} />
+          {/* <SelectArrow title="nickname" fill onClick={goToProfile} /> */}
           <div className="px-6 py-8">
             <div className="flex justify-between mb-6">
               <div className="flex items-center">
                 <div>
                   <Image
                     src={require('../../image/money.png')}
+                    alt="프로필 이미지"
                     className="aspect-auto w-6 mr-2"
                   />
                 </div>
@@ -76,18 +93,18 @@ const index = () => {
           <hr className="w-full" />
           <div className="flex justify-between my-5 mx-12">
             <div>
-              <p className="text-center">15</p>
-              {/* <p className='text-center'>{mypageInfo.challengingCnt}</p> */}
+              {/* <p className="text-center">15</p> */}
+              <p className="text-center">{mypageInfo.challengingCnt}</p>
               <p>참가중</p>
             </div>
             <div>
-              <p className="text-center">10</p>
-              {/* <p className='text-center'>{mypageInfo.challengedCnt}</p> */}
+              {/* <p className="text-center">10</p> */}
+              <p className="text-center">{mypageInfo.challengedCnt}</p>
               <p>완료</p>
             </div>
             <div>
-              <p className="text-center">7</p>
-              {/* <p className='text-center'>{mypageInfo.leaderCnt}</p> */}
+              {/* <p className="text-center">7</p> */}
+              <p className="text-center">{mypageInfo.leaderCnt}</p>
               <p>리더</p>
             </div>
           </div>
