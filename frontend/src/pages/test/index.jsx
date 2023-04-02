@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+
 import Web3 from 'web3';
 
 function App() {
@@ -16,10 +17,10 @@ function App() {
           const accounts = await web3.eth.getAccounts();
           setWalletAddress(accounts[0]);
         } catch (error) {
-          console.error(error);
+          // console.error(error);
         }
       } else {
-        console.log('Please install MetaMask to use this application');
+        // console.log('Please install MetaMask to use this application');
       }
     }
 

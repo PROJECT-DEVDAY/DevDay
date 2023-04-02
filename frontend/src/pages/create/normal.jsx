@@ -6,7 +6,7 @@ import classNames from 'classnames';
 import Image from 'next/image';
 import Swal from 'sweetalert2';
 
-import style from './algo.module.scss';
+import style from './normal.module.scss';
 import { httpForm } from '../api/http';
 
 import { BtnFooter } from '@/components/BtnFooter';
@@ -158,7 +158,7 @@ const normal = props => {
 
     wrong.onload = ({ target }) => {
       wrongImageInput.current.src = target.result;
-      setCorrectImage(target.result);
+      setWrongImage(target.result);
     };
 
     if (!wrongImageInput.current.files[0]) {

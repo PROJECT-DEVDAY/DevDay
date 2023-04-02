@@ -25,7 +25,14 @@ export const ReturnArrow = ({
         <SlArrowLeft className={style.arrow} width={30} />
       </button>
       <div>
-        <p className={classNames(style.arrowtitle, `text-xl`, `font-bold`, `pr-4`)}>
+        <p
+          className={classNames(
+            style.arrowtitle,
+            `text-xl`,
+            `font-bold`,
+            `pr-4`,
+          )}
+        >
           {title}
         </p>
       </div>
