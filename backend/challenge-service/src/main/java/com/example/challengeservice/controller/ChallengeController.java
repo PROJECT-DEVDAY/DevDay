@@ -224,9 +224,15 @@ public class ChallengeController {
      * 스케줄링으로 실행되는 메서드의 테스트
      * @return
      */
-    @GetMapping("/schedulingTest")
+    @GetMapping("/test/record")
     public Result testRecord (){
         challengeService.createDailyRecord();
+        return responseService.getSuccessResult();
+    }
+
+    @GetMapping("/test/payment")
+    public Result testPayment (){
+        challengeService.culcDailyPayment();
         return responseService.getSuccessResult();
     }
 
@@ -250,9 +256,9 @@ public class ChallengeController {
      * @param status : PROCEED | DONE | NOT_OPEN
      */
     @GetMapping("my-challenge")
-    public  ListResult<MyChallengeResponseDto> getMyChallengeList(@NotBlank @RequestParam ("status") String status){
-
-        return responseService.getListResult(challengeService.getMyChallengeList(1L,status));
+    public  ListResult<MyChallengeResponseDto> getMyChallengeList(HttpServletRequest request,@NotBlank @RequestParam ("status") String status){
+        Long userId= Long.parseLong(request.getHeader("userId"));
+        return responseService.getListResult(challengeService.getMyChallengeList(userId,status));
     }
 
 

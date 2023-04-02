@@ -48,7 +48,9 @@ public class ChallengeRoomRepoCustomImpl  implements ChallengeRoomRepoCustom {
                         challengeRoom.id,
                         challengeRoom.title,
                         challengeRoom.startDate,
-                        challengeRoom.endDate
+                        challengeRoom.endDate,
+                        challengeRoom.category,
+                        challengeRoom.backGroundUrl
                 )).from(userChallenge)
                 .join(userChallenge.challengeRoom, challengeRoom)
                 .where(userChallenge.userId.eq(userId));

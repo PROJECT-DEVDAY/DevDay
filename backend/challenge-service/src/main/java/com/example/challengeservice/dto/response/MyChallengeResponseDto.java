@@ -24,5 +24,10 @@ public class MyChallengeResponseDto {
     /** 종료 날짜 **/
     String endDate;
 
+    /** 카테고리 **/
+    String category;
+
+    /** 챌린지 이미지 **/
+    String backGroundUrl;
 
 }
