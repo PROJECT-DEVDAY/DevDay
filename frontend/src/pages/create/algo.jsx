@@ -18,32 +18,12 @@ import { ReturnArrow } from '@/components/ReturnArrow';
 import { CHALLENGES_URL } from '@/constants';
 
 const algo = props => {
-  const memberCheckButton = [
-    {
-      id: 0,
-      title: '제한 없음',
-      content: '인원 제한이 없는 챌린지',
-    },
-    {
-      id: 1,
-      title: '인원 제한',
-      content: '인원을 제한하는 챌린지',
-    },
-  ];
-  const [checking, setChecking] = useState([false, false]);
-  const changeCheck = index => {
-    if (index === 0) {
-      setChecking([true, false]);
-    } else {
-      setChecking([false, true]);
-    }
-  };
   const [member, setMember] = useState(1);
   const [algoithmCount, setAlgoithmCount] = useState(1);
 
   const user = useSelector(state => state.user);
 
-  const [room, setChallenge] = useState({
+  const [challenge, setChallenge] = useState({
     category: 'ALGO',
     title: '',
     hostId: user.userInfo.userId,
@@ -58,12 +38,12 @@ const algo = props => {
     if (e.target.name === 'entryFee') {
       const entry = parseInt(e.target.value);
       setChallenge({
-        ...room,
+        ...challenge,
         [e.target.name]: entry,
       });
     } else {
       setChallenge({
-        ...room,
+        ...challenge,
         [e.target.name]: e.target.value,
       });
     }
@@ -116,13 +96,13 @@ const algo = props => {
 
   const onClickCreateChallenge = () => {
     const data = new FormData();
-    data.append('title', room.title);
+    data.append('title', challenge.title);
     data.append('hostId', user.userInfo.userId);
-    data.append('category', room.category);
-    data.append('entryFee', room.entryFee);
-    data.append('introduce', room.introduce);
-    data.append('startDate', room.startDate);
-    data.append('endDate', room.endDate);
+    data.append('category', challenge.category);
+    data.append('entryFee', challenge.entryFee);
+    data.append('introduce', challenge.introduce);
+    data.append('startDate', challenge.startDate);
+    data.append('endDate', challenge.endDate);
     data.append('maxParticipantsSize', member);
     data.append('algorithmCount', algoithmCount);
     data.append('backGroundFile', challengeImageInput.current.files[0]);
@@ -173,7 +153,7 @@ const algo = props => {
             name="title"
             onChange={handleChange}
           />
-          <p className="text-right">{room.title.length}/30</p>
+          <p className="text-right">{challenge.title.length}/30</p>
         </div>
         <div>
           <InputLabel content="챌린지 이미지" />
@@ -207,65 +187,44 @@ const algo = props => {
           />
         </div>
         <div className="mt-6">
-          <InputLabel content="참여 인원" asterisk />
-          <div className="flex">
-            {memberCheckButton.map(item => {
-              const { id, title, content } = item;
-              return (
+          <div className="mt-6 flex">
+            <InputLabel content="참여 인원 수" asterisk />
+            <div className={classNames('flex', style.changeMember)}>
+              {member > 1 ? (
                 <button
                   type="button"
-                  onClick={() => changeCheck(id)}
-                  key={id}
-                  className={classNames(
-                    checking[id] === false ? style.membercheck : style.selected,
-                  )}
+                  className={classNames(style.plusMinus, 'rounded-l-lg')}
+                  onClick={() => setMember(member - 1)}
                 >
-                  <div className="font-medium text-xl">{title}</div>
-                  <div className="text-sm">{content}</div>
+                  <BiMinus className="m-auto" />
                 </button>
-              );
-            })}
-          </div>
-          {checking[1] && (
-            <div className="mt-6 flex">
-              <InputLabel content="참여 인원 수" asterisk />
-              <div className={classNames('flex', style.changeMember)}>
-                {member > 1 ? (
-                  <button
-                    type="button"
-                    className={classNames(style.plusMinus, 'rounded-l-lg')}
-                    onClick={() => setMember(member - 1)}
-                  >
-                    <BiMinus className="m-auto" />
-                  </button>
-                ) : (
-                  <button
-                    type="button"
-                    className={classNames(style.plusMinus, 'rounded-l-lg')}
-                    onClick={() => setMember(member - 1)}
-                    disabled
-                  >
-                    <BiMinus className="m-auto" />
-                  </button>
+              ) : (
+                <button
+                  type="button"
+                  className={classNames(style.plusMinus, 'rounded-l-lg')}
+                  onClick={() => setMember(member - 1)}
+                  disabled
+                >
+                  <BiMinus className="m-auto" />
+                </button>
+              )}
+              <div
+                className={classNames(
+                  'font-medium whitespace-nowrap text-center',
+                  style.plusMinus,
                 )}
-                <div
-                  className={classNames(
-                    'font-medium whitespace-nowrap text-center',
-                    style.plusMinus,
-                  )}
-                >
-                  {member}명
-                </div>
-                <button
-                  type="button"
-                  className={classNames(style.plusMinus, 'rounded-r-lg')}
-                  onClick={() => setMember(member + 1)}
-                >
-                  <BiPlus className="m-auto" />
-                </button>
+              >
+                {member}명
               </div>
+              <button
+                type="button"
+                className={classNames(style.plusMinus, 'rounded-r-lg')}
+                onClick={() => setMember(member + 1)}
+              >
+                <BiPlus className="m-auto" />
+              </button>
             </div>
-          )}
+          </div>
         </div>
         <div className="mt-6 flex">
           <InputLabel content="최소 알고리즘 커밋 수" asterisk />
@@ -315,17 +274,17 @@ const algo = props => {
               type="date"
               name="startDate"
               onChange={handleChange}
-              max={room.endDate}
+              max={challenge.endDate}
             />
           </label>
-          {room.startDate && (
+          {challenge.startDate && (
             <div>
               <InputLabel content="챌린지 종료일" asterisk />
               <input
                 type="date"
                 name="endDate"
                 onChange={handleChange}
-                min={room.startDate}
+                min={challenge.startDate}
               />
             </div>
           )}

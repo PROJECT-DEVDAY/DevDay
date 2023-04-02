@@ -1,6 +1,5 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import PrivateRouter from '@/components/PrivateRouter/PrivateRouter';
 
 import classNames from 'classnames';
 import { useRouter } from 'next/router';
@@ -11,6 +10,7 @@ import http from '../api/http';
 import { ChallengingItem } from '@/components/ChallengingItem';
 import Footer from '@/components/Footer';
 import { HeaderButtons } from '@/components/HeaderButtons';
+import PrivateRouter from '@/components/PrivateRouter/PrivateRouter';
 import { ReturnArrow } from '@/components/ReturnArrow';
 import { MY_CHALLENGES_URL } from '@/constants';
 
