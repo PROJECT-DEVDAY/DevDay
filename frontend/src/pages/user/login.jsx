@@ -96,9 +96,8 @@ const login = props => {
           title: '로그인 성공',
           showConfirmButton: false,
           timer: 1500,
-        }),
+        }).then(router.push('/')),
       )
-      .then(router.push('/'))
       .catch(error => {
         Swal.fire({
           position: 'center',

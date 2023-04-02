@@ -21,7 +21,7 @@ const index = () => {
   const router = useRouter();
   const userInfo = useSelector(state => state.user);
   const [myPageInfo, setMyPageInfo] = useState({});
-  
+
   const headers = {
     Authorization: userInfo.accessToken,
   };
