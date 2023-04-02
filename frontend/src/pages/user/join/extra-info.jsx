@@ -58,17 +58,17 @@ const signup = props => {
       }),
     )
       .unwrap()
-      .then(data => {
-        Swal.fire({
+      .then(async () => {
+        await Swal.fire({
           position: 'center',
           icon: 'success',
           title: '회원가입 성공!',
           showConfirmButton: false,
           timer: 1500,
         });
+        signsInfoReset();
+        router.push('/user/login');
       })
-      .then(signsInfoReset)
-      .then(router.push('/user/login'))
       .catch(error => {
         Swal.fire({
           icon: 'error',

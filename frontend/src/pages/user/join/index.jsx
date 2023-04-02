@@ -41,26 +41,25 @@ const signup = props => {
     return errors;
   };
 
-  const [minutes, setMinutes] = useState(parseInt(4, 10));
-  const [seconds, setSeconds] = useState(parseInt(59, 10));
+  const [remainingTime, setRemainingTime] = useState(4 * 60 + 59);
   const Timer = () => {
     useEffect(() => {
       const countdown = setInterval(() => {
-        if (parseInt(seconds, 10) > parseInt(0, 10)) {
-          setSeconds(parseInt(seconds, 10) - parseInt(1, 10));
-        }
-        if (parseInt(seconds, 10) === parseInt(1, 10)) {
-          if (parseInt(minutes, 10) === parseInt(0, 10)) {
-            clearInterval(countdown);
-            setEmailValidCheck(false);
-          } else {
-            setMinutes(parseInt(minutes, 10) - parseInt(1, 10));
-            setSeconds(parseInt(59, 10));
-          }
-        }
+        setRemainingTime(prevTime => prevTime - 1);
       }, 1000);
+
       return () => clearInterval(countdown);
-    }, [minutes, seconds]);
+    }, []);
+
+    useEffect(() => {
+      if (remainingTime === 0) {
+        setEmailValidCheck(false);
+      }
+    }, [remainingTime]);
+
+    const minutes = Math.floor(remainingTime / 60);
+    const seconds = remainingTime % 60;
+
     return (
       <div className="text-red-500">
         {minutes}:{seconds < 10 ? `0${seconds}` : seconds}
@@ -92,71 +91,84 @@ const signup = props => {
     setEmailAuthtoken(event.target.value);
   };
 
-  const onClickEmailValidation = () => {
-    setMinutes(parseInt(4, 10));
-    setSeconds(parseInt(59, 10));
+  const onClickEmailValidation = async () => {
+    try {
+      setRemainingTime(4 * 60 + 59);
 
-    http
-      .post(EMAIL_URL, {
-        email: watch('email'),
-      })
-      .then(data => {
-        setEmailValidCheck(true);
-        setEmailAuthId(data.data.data);
-      })
-      .catch(error => {
-        setEmailValidCheck(false);
+      const { data } = await http.post(EMAIL_URL, { email: watch('email') });
 
-        Swal.fire({
-          icon: 'error',
-          title: '인증 실패',
-          text: error.response.data.message,
-        });
+      setEmailValidCheck(true);
+      setEmailAuthId(data.data);
+    } catch (error) {
+      setEmailValidCheck(false);
+      let errorMessage;
+      if (
+        error &&
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        errorMessage = error.response.data.message;
+      } else {
+        errorMessage = '알 수 없는 오류가 발생했습니다.';
+      }
+
+      Swal.fire({
+        icon: 'error',
+        title: '인증 실패',
+        text: errorMessage,
       });
+    }
   };
-
-  const onClickEmailAuthTokenCheck = () => {
-    http
-      .patch(CONFIRM_EMAIL_URL, {
+  const onClickEmailAuthTokenCheck = async () => {
+    try {
+      await http.patch(CONFIRM_EMAIL_URL, {
         id: emailAuthId,
         authToken: emailAuthToken,
-      })
-      .then(() => {
-        setEmailAuthenticated(true);
-        setSeconds(parseInt(0, 10));
-        setMinutes(parseInt(0, 10));
-
-        Swal.fire({
-          icon: 'success',
-          title: '인증 성공',
-          text: '인증에 성공했습니다!',
-        });
-      })
-      .then(setEmailValidCheck(false))
-
-      .catch(error => {
-        Swal.fire({
-          icon: 'error',
-          title: '인증 실패',
-          text: error,
-        });
-        setEmailAuthenticated(false);
       });
+
+      setEmailAuthenticated(true);
+      setRemainingTime(0);
+
+      Swal.fire({
+        icon: 'success',
+        title: '인증 성공',
+        text: '인증에 성공했습니다!',
+      });
+
+      setEmailValidCheck(false);
+    } catch (error) {
+      setEmailAuthenticated(false);
+
+      let errorMessage;
+      if (
+        error &&
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        errorMessage = error.response.data.message;
+      } else {
+        errorMessage = '알 수 없는 오류가 발생했습니다.';
+      }
+      Swal.fire({
+        icon: 'error',
+        title: '인증 실패',
+        text: errorMessage,
+      });
+    }
   };
 
   // nickname check logic
-  const onClickDuplicateCheck = () => {
-    http
-      .post(NICKNAME_URL, { nickn: watch('nickname') })
-      .then(() => {
-        setNickNameDuplicatedChk(true);
-      })
-      .then(() => {
-        setNickNameValidCheck(prev => !prev);
-      })
-      .catch(() => {
-        setNickNameDuplicatedChk(false);
-      });
+  const onClickDuplicateCheck = async () => {
+    try {
+      await http.post(NICKNAME_URL, { nickn: watch('nickname') });
+
+      setNickNameDuplicatedChk(true);
+      setNickNameValidCheck(prev => !prev);
+    } catch (error) {
+      setNickNameDuplicatedChk(false);
+    }
   };
 
   const onSubmit = data => {
@@ -235,7 +247,7 @@ const signup = props => {
             >
               <input
                 type={showPassword ? 'text' : 'password'}
-                placeholder="12자리 이상, 대문자 + 소문자 + 특수문자"
+                placeholder="8자리 이상, 대문자, 소문자, 특수문자가 포함되어야 합니다."
                 className={classNames(style.Content, `w-full h-6`)}
                 {...register('password', {
                   required: true,
