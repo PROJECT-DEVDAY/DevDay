@@ -12,10 +12,10 @@ import { Button } from '../../../components/Button';
 import { ReturnArrow } from '../../../components/ReturnArrow';
 import http from '../../api/http';
 
+import Container from '@/components/Container';
 import { InputLabel } from '@/components/InputLabel';
 import { CONFIRM_EMAIL_URL, EMAIL_URL, NICKNAME_URL } from '@/constants';
 import { saveSignUpInfos } from '@/store/signup/signupSlice';
-import Container from '@/components/Container';
 
 const signup = props => {
   const [emailValidCheck, setEmailValidCheck] = useState(false);
