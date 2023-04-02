@@ -8,7 +8,14 @@ import style from './index.module.scss';
 export const InputLabel = ({ content, asterisk, ...props }) => {
   return (
     <div className={classNames('flex w-full', style.inputLabel)}>
-      <span className="text-lg font-medium">{content}</span>
+      <span
+        className={classNames(
+          'text-lg font-medium',
+          props.smallTextSize ? 'text-sm' : 'text-lg',
+        )}
+      >
+        {content}
+      </span>
       {asterisk && (
         <span className="text-red-500 text-lg font-bold ml-1">*</span>
       )}

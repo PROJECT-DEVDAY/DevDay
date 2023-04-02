@@ -49,39 +49,26 @@ const commit = props => {
     }
   };
 
-  const challengeImageInput = useRef(null);
+  const challengeImgInput = useRef(null);
 
-  const [imgFile, setImgeFile] = useState(
-    require('../../image/backgroundImage.jpg'),
-  );
+  const [imgFile, setImgFile] = useState(require('../../image/add-image.png'));
   const [isSelect, setIsSelect] = useState(false);
 
-  const onClickImageInput = event => {
+  const onClickImgInput = event => {
     event.preventDefault();
-    challengeImageInput.current.click();
+    challengeImgInput.current.click();
   };
 
-  const onChangeImage = e => {
+  const onChangeImg = e => {
     const reader = new FileReader();
-    reader.onload = ({ target }) => {
-      challengeImageInput.current.src = target.result;
-      setIsSelect(true);
-    };
-
-    if (e.target.files[0]) {
-      setImgeFile(e.target.files[0]);
-    } else {
-      setImgeFile(require('../../image/default-user.png'));
-      return;
-    }
 
     reader.onload = ({ target }) => {
-      challengeImageInput.current.src = target.result;
+      challengeImgInput.current.src = target.result;
       setIsSelect(true);
-      setImgeFile(target.result);
+      setImgFile(target.result);
     };
 
-    if (!challengeImageInput.current.files[0]) {
+    if (!challengeImgInput.current.files[0]) {
       Swal.fire({
         position: 'center',
         icon: 'warning',
@@ -91,10 +78,21 @@ const commit = props => {
       });
       return;
     }
-    reader.readAsDataURL(challengeImageInput.current.files[0]);
+    reader.readAsDataURL(challengeImgInput.current.files[0]);
   };
 
   const onClickCreateChallenge = () => {
+    if (!isSelect) {
+      Swal.fire({
+        position: 'center',
+        icon: 'warning',
+        title: '사진을 선택해주세요',
+        showConfirmButton: false,
+        timer: 1000,
+      });
+      return;
+    }
+
     const data = new FormData();
     data.append('title', challenge.title);
     data.append('hostId', user.userInfo.userId);
@@ -105,7 +103,7 @@ const commit = props => {
     data.append('endDate', challenge.endDate);
     data.append('maxParticipantsSize', member);
     data.append('commitCount', commitCount);
-    data.append('backGroundFile', challengeImageInput.current.files[0]);
+    data.append('backGroundFile', challengeImgInput.current.files[0] || null);
 
     Swal.fire({
       title: '챌린지를 \n 생성하시겠습니까?',
@@ -118,7 +116,9 @@ const commit = props => {
     }).then(result => {
       if (result.isConfirmed) {
         httpForm
-          .post(CHALLENGES_URL, data)
+          .post(CHALLENGES_URL, data, {
+            headers: { Authorization: user.accessToken },
+          })
           .then(() => {
             Swal.fire({
               position: 'center',
@@ -156,24 +156,24 @@ const commit = props => {
           <p className="text-right">{challenge.title.length}/30</p>
         </div>
         <div>
-          <InputLabel content="챌린지 이미지" />
+          <InputLabel content="챌린지 이미지" asterisk />
           <div className="w-full h-40 relative">
             <Image
               src={imgFile}
               alt="프로필 이미지"
-              onClick={onClickImageInput}
+              onClick={onClickImgInput}
               fill
             />
           </div>
           <input
             style={{ display: 'none' }}
-            ref={challengeImageInput}
+            ref={challengeImgInput}
             type="file"
             className={style.ImgInput}
             id="logoImg"
             accept="image/*"
             name="file"
-            onChange={onChangeImage}
+            onChange={onChangeImg}
           />
         </div>
         <div className="mt-6">
@@ -290,7 +290,7 @@ const commit = props => {
           )}
         </div>
         <div className="mt-8">
-          <InputLabel content="챌린지 소개" asterisk={false} />
+          <InputLabel content="챌린지 소개" />
           <ContentInput
             placeholder="예) 매일 매일 커밋해서 잔디밭 꽉꽉 채웁시다!!"
             maxLength="30"

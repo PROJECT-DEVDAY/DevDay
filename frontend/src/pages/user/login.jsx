@@ -39,7 +39,7 @@ const login = props => {
         icon: 'error',
         title: '로그인 되어있습니다',
         showConfirmButton: false,
-        timer: 1600,
+        timer: 1400,
       }).then(router.push('/'));
     }
 
@@ -84,19 +84,21 @@ const login = props => {
     });
   };
 
-  const onSubmitLogin = event => {
+  const onSubmitLogin = async event => {
     event.preventDefault();
 
     dispatch(loginAsync(user))
       .unwrap()
       .then(
-        Swal.fire({
+        await Swal.fire({
           position: 'center',
           icon: 'success',
           title: '로그인 성공',
           showConfirmButton: false,
-          timer: 1500,
-        }).then(router.push('/')),
+          timer: 1200,
+        }),
+
+        router.push('/'),
       )
       .catch(error => {
         Swal.fire({
@@ -104,14 +106,14 @@ const login = props => {
           icon: 'error',
           title: error.message,
           showConfirmButton: false,
-          timer: 1500,
+          timer: 1200,
         });
       });
   };
 
   const onSubmitLoginEnter = event => {
     if (event.key === 'Enter') {
-      onSubmitLogin();
+      onSubmitLogin(event);
     }
   };
   return (
