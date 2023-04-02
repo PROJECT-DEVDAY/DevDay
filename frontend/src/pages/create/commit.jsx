@@ -1,10 +1,13 @@
 import React, { useState, useContext, useRef } from 'react';
 import { BiPlus, BiMinus } from 'react-icons/bi';
+import { useSelector } from 'react-redux';
 
 import classNames from 'classnames';
 import Image from 'next/image';
+import Swal from 'sweetalert2';
 
 import style from './algo.module.scss';
+import { httpForm } from '../api/http';
 
 import { BtnFooter } from '@/components/BtnFooter';
 import Container from '@/components/Container';
@@ -12,55 +15,46 @@ import { ContentInput } from '@/components/ContentInput';
 import { InputLabel } from '@/components/InputLabel';
 import { InputText } from '@/components/InputText';
 import { ReturnArrow } from '@/components/ReturnArrow';
+import { CHALLENGES_URL } from '@/constants';
 
 const commit = props => {
-  const memberCheckButton = [
-    {
-      id: 0,
-      title: '제한 없음',
-      content: '인원 제한이 없는 챌린지',
-    },
-    {
-      id: 1,
-      title: '인원 제한',
-      content: '인원을 제한하는 챌린지',
-    },
-  ];
-  const [checking, setChecking] = useState([false, false]);
-  const changeCheck = index => {
-    if (index === 0) {
-      setChecking([true, false]);
-    } else {
-      setChecking([false, true]);
-    }
-  };
   const [member, setMember] = useState(1);
-  const [algoithmCount, setAlgoithmCount] = useState(1);
+  const [commitCount, setCommitCount] = useState(1);
 
-  const [room, setRoom] = useState({
+  const user = useSelector(state => state.user);
+
+  const [challenge, setChallenge] = useState({
     category: 'COMMIT',
     title: '',
-    hostId: '',
-    entryFee: '',
+    hostId: user.userInfo.userId,
+    entryFee: 1000,
     introduce: '',
     startDate: '',
     endDate: '',
+    backGroudFile: '',
   });
+
   const handleChange = e => {
-    setRoom({
-      ...room,
-      [e.target.name]: e.target.value,
-    });
+    if (e.target.name === 'entryFee') {
+      const entry = parseInt(e.target.value);
+      setChallenge({
+        ...challenge,
+        [e.target.name]: entry,
+      });
+    } else {
+      setChallenge({
+        ...challenge,
+        [e.target.name]: e.target.value,
+      });
+    }
   };
-  const [openDatePicker, setOpenDatePicker] = useState(false);
-  const showDatePicker = () => {
-    setOpenDatePicker(!openDatePicker);
-  };
+
+  const challengeImageInput = useRef(null);
+
   const [imgFile, setImgeFile] = useState(
     require('../../image/backgroundImage.jpg'),
   );
-
-  const challengeImageInput = useRef(null);
+  const [isSelect, setIsSelect] = useState(false);
 
   const onClickImageInput = event => {
     event.preventDefault();
@@ -68,6 +62,12 @@ const commit = props => {
   };
 
   const onChangeImage = e => {
+    const reader = new FileReader();
+    reader.onload = ({ target }) => {
+      challengeImageInput.current.src = target.result;
+      setIsSelect(true);
+    };
+
     if (e.target.files[0]) {
       setImgeFile(e.target.files[0]);
     } else {
@@ -75,21 +75,76 @@ const commit = props => {
       return;
     }
 
-    const reader = new FileReader();
-
-    reader.onload = () => {
-      if (reader.readyState === 2) {
-        setImgeFile(reader.result);
-      }
+    reader.onload = ({ target }) => {
+      challengeImageInput.current.src = target.result;
+      setIsSelect(true);
+      setImgeFile(target.result);
     };
-    reader.readAsDataURL(e.target.files[0]);
+
+    if (!challengeImageInput.current.files[0]) {
+      Swal.fire({
+        position: 'center',
+        icon: 'warning',
+        title: '사진을 선택해주세요',
+        showConfirmButton: false,
+        timer: 1000,
+      });
+      return;
+    }
+    reader.readAsDataURL(challengeImageInput.current.files[0]);
   };
+
+  const onClickCreateChallenge = () => {
+    const data = new FormData();
+    data.append('title', challenge.title);
+    data.append('hostId', user.userInfo.userId);
+    data.append('category', challenge.category);
+    data.append('entryFee', challenge.entryFee);
+    data.append('introduce', challenge.introduce);
+    data.append('startDate', challenge.startDate);
+    data.append('endDate', challenge.endDate);
+    data.append('maxParticipantsSize', member);
+    data.append('commitCount', commitCount);
+    data.append('backGroundFile', challengeImageInput.current.files[0]);
+
+    Swal.fire({
+      title: '챌린지를 \n 생성하시겠습니까?',
+      text: '챌린지는 수정할 수 없어요!',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: '네',
+      cancelButtonText: '아니요',
+    }).then(result => {
+      if (result.isConfirmed) {
+        httpForm
+          .post(CHALLENGES_URL, data)
+          .then(() => {
+            Swal.fire({
+              position: 'center',
+              icon: 'success',
+              title: '성공!',
+              showConfirmButton: false,
+              timer: 1500,
+            });
+          })
+          .catch(error => {
+            Swal.fire({
+              icon: 'error',
+              title: '다시 한번 확인해주세요!',
+              text: error.message,
+            });
+          });
+      }
+    });
+  };
+
   return (
     <div>
       <div className={classNames(`style.div-header`, `sticky top-0`)}>
         <ReturnArrow title="챌린지 만들기" />
       </div>
-      <div className="div-body p-6 pb-32 mt-4">
+      <div className="div-body p-6 mt-4">
         <div>
           <InputLabel content="챌린지 제목" asterisk />
           <ContentInput
@@ -98,7 +153,7 @@ const commit = props => {
             name="title"
             onChange={handleChange}
           />
-          <p className="text-right">{room.title.length}/30</p>
+          <p className="text-right">{challenge.title.length}/30</p>
         </div>
         <div>
           <InputLabel content="챌린지 이미지" />
@@ -125,82 +180,61 @@ const commit = props => {
           <InputLabel content="참가 비용" asterisk />
           <InputText
             inputType="text"
-            type="number"
-            content="최소 금액 1000원"
             name="entryFee"
             onChange={handleChange}
+            type="number"
+            content="최소 금액 1000원"
           />
         </div>
         <div className="mt-6">
-          <InputLabel content="참여 인원" asterisk />
-          <div className="flex">
-            {memberCheckButton.map(item => {
-              const { id, title, content } = item;
-              return (
+          <div className="mt-6 flex">
+            <InputLabel content="참여 인원 수" asterisk />
+            <div className={classNames('flex', style.changeMember)}>
+              {member > 1 ? (
                 <button
                   type="button"
-                  onClick={() => changeCheck(id)}
-                  key={id}
-                  className={classNames(
-                    checking[id] === false ? style.membercheck : style.selected,
-                  )}
+                  className={classNames(style.plusMinus, 'rounded-l-lg')}
+                  onClick={() => setMember(member - 1)}
                 >
-                  <div className="font-medium text-xl">{title}</div>
-                  <div className="text-sm">{content}</div>
+                  <BiMinus className="m-auto" />
                 </button>
-              );
-            })}
-          </div>
-          {checking[1] && (
-            <div className="mt-6 flex">
-              <InputLabel content="참여 인원 수" asterisk />
-              <div className={classNames('flex', style.changeMember)}>
-                {member > 1 ? (
-                  <button
-                    type="button"
-                    className={classNames(style.plusMinus, 'rounded-l-lg')}
-                    onClick={() => setMember(member - 1)}
-                  >
-                    <BiMinus className="m-auto" />
-                  </button>
-                ) : (
-                  <button
-                    type="button"
-                    className={classNames(style.plusMinus, 'rounded-l-lg')}
-                    onClick={() => setMember(member - 1)}
-                    disabled
-                  >
-                    <BiMinus className="m-auto" />
-                  </button>
+              ) : (
+                <button
+                  type="button"
+                  className={classNames(style.plusMinus, 'rounded-l-lg')}
+                  onClick={() => setMember(member - 1)}
+                  disabled
+                >
+                  <BiMinus className="m-auto" />
+                </button>
+              )}
+              <div
+                className={classNames(
+                  'font-medium whitespace-nowrap text-center',
+                  style.plusMinus,
                 )}
-                <div
-                  className={classNames(
-                    'font-medium whitespace-nowrap text-center',
-                    style.plusMinus,
-                  )}
-                >
-                  {member}명
-                </div>
-                <button
-                  type="button"
-                  className={classNames(style.plusMinus, 'rounded-r-lg')}
-                  onClick={() => setMember(member + 1)}
-                >
-                  <BiPlus className="m-auto" />
-                </button>
+              >
+                {member}명
               </div>
+              <button
+                type="button"
+                className={classNames(style.plusMinus, 'rounded-r-lg')}
+                onClick={() => setMember(member + 1)}
+              >
+                <BiPlus className="m-auto" />
+              </button>
             </div>
-          )}
+          </div>
         </div>
         <div className="mt-6 flex">
-          <InputLabel content="최소 알고리즘 커밋 수" asterisk />
+          <InputLabel content="최소 인증 커밋 수" asterisk />
           <div className={classNames('flex', style.changeMember)}>
-            {algoithmCount > 1 ? (
+            {commitCount > 1 ? (
               <button
                 type="button"
                 className={classNames(style.plusMinus, 'rounded-l-lg')}
                 onClick={() => {
-                  setAlgoithmCount(algoithmCount - 1);
+                  setCommitCount(commitCount - 1);
                 }}
               >
                 <BiMinus className="m-auto" />
@@ -209,7 +243,7 @@ const commit = props => {
               <button
                 type="button"
                 className={classNames(style.plusMinus, 'rounded-l-lg')}
-                onClick={() => setAlgoithmCount(algoithmCount - 1)}
+                onClick={() => setCommitCount(commitCount - 1)}
                 disabled
               >
                 <BiMinus className="m-auto" />
@@ -221,12 +255,12 @@ const commit = props => {
                 style.plusMinus,
               )}
             >
-              {algoithmCount}개
+              {commitCount}개
             </div>
             <button
               type="button"
               className={classNames(style.plusMinus, 'rounded-r-lg')}
-              onClick={() => setAlgoithmCount(algoithmCount + 1)}
+              onClick={() => setCommitCount(commitCount + 1)}
             >
               <BiPlus className="m-auto" />
             </button>
@@ -240,16 +274,17 @@ const commit = props => {
               type="date"
               name="startDate"
               onChange={handleChange}
+              max={challenge.endDate}
             />
           </label>
-          {room.startDate && (
+          {challenge.startDate && (
             <div>
               <InputLabel content="챌린지 종료일" asterisk />
               <input
                 type="date"
                 name="endDate"
                 onChange={handleChange}
-                min={room.startDate}
+                min={challenge.startDate}
               />
             </div>
           )}
@@ -257,19 +292,21 @@ const commit = props => {
         <div className="mt-8">
           <InputLabel content="챌린지 소개" asterisk={false} />
           <ContentInput
-            placeholder="예) 매일 매일 커밋해서 잔디밭 꽉꽉 채웁시다"
+            placeholder="예) 매일 매일 커밋해서 잔디밭 꽉꽉 채웁시다!!"
             maxLength="30"
             name="introduce"
             onChange={handleChange}
           />
         </div>
       </div>
-      <div className={classNames(`text-center sticky w-full bottom-0 m-0`)}>
+      <div
+        className={classNames(`text-center sticky w-full bottom-0 pb-4 m-0`)}
+      >
         <BtnFooter
           content=""
           label="다음"
           disable
-          goToUrl="/create/algo"
+          onClick={onClickCreateChallenge}
           warningMessage="Commit 챌린지는 GitHub ID가 필요해요."
         />
       </div>
