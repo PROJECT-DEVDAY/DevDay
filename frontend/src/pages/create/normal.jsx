@@ -48,36 +48,27 @@ const normal = props => {
     }
   };
 
-  const challengeImageInput = useRef(null);
+  const challengeImgInput = useRef(null);
 
-  const [imgFile, setImgeFile] = useState(
-    require('../../image/backgroundImage.jpg'),
-  );
+  const [imgFile, setImgeFile] = useState(require('../../image/add-image.png'));
+
+  const [isSelect, setIsSelect] = useState(false);
 
   const onClickImageInput = event => {
     event.preventDefault();
-    challengeImageInput.current.click();
+    challengeImgInput.current.click();
   };
 
   const onChangeImage = e => {
     const reader = new FileReader();
-    reader.onload = ({ target }) => {
-      challengeImageInput.current.src = target.result;
-    };
-
-    if (e.target.files[0]) {
-      setImgeFile(e.target.files[0]);
-    } else {
-      setImgeFile(require('../../image/default-user.png'));
-      return;
-    }
 
     reader.onload = ({ target }) => {
-      challengeImageInput.current.src = target.result;
+      challengeImgInput.current.src = target.result;
+      setIsSelect(true);
       setImgeFile(target.result);
     };
 
-    if (!challengeImageInput.current.files[0]) {
+    if (!challengeImgInput.current.files[0]) {
       Swal.fire({
         position: 'center',
         icon: 'warning',
@@ -87,39 +78,32 @@ const normal = props => {
       });
       return;
     }
-    reader.readAsDataURL(challengeImageInput.current.files[0]);
+    reader.readAsDataURL(challengeImgInput.current.files[0]);
   };
 
-  const correctImageInput = useRef(null);
+  const correctImgInputRef = useRef(null);
 
-  const [correctImage, setCorrectImage] = useState(
+  const [correctImg, setCorrectImg] = useState(
     require('../../image/correct.jpg'),
   );
 
+  const [correctImgSelect, setCorrectImgSelect] = useState(false);
+
   const onClickCorrectImage = event => {
     event.preventDefault();
-    correctImageInput.current.click();
+    correctImgInputRef.current.click();
   };
 
-  const onChangeCorrectImage = e => {
-    const correct = new FileReader();
-    correct.onload = ({ target }) => {
-      correctImageInput.current.src = target.result;
+  const onChangeCorrectImg = e => {
+    const reader = new FileReader();
+
+    reader.onload = ({ target }) => {
+      correctImgInputRef.current.src = target.result;
+      setCorrectImgSelect(true);
+      setCorrectImg(target.result);
     };
 
-    if (e.target.files[0]) {
-      setCorrectImage(e.target.files[0]);
-    } else {
-      setCorrectImage(require('../../image/default-user.png'));
-      return;
-    }
-
-    correct.onload = ({ target }) => {
-      correctImageInput.current.src = target.result;
-      setCorrectImage(target.result);
-    };
-
-    if (!correctImageInput.current.files[0]) {
+    if (!correctImgInputRef.current.files[0]) {
       Swal.fire({
         position: 'center',
         icon: 'warning',
@@ -129,39 +113,30 @@ const normal = props => {
       });
       return;
     }
-    correct.readAsDataURL(correctImageInput.current.files[0]);
+    reader.readAsDataURL(correctImgInputRef.current.files[0]);
   };
 
-  const wrongImageInput = useRef(null);
+  const wrongImgInput = useRef(null);
 
-  const [wrongImage, setWrongImage] = useState(
-    require('../../image/wrong.jpg'),
-  );
+  const [wrongImg, setWrongImg] = useState(require('../../image/wrong.jpg'));
 
-  const onClickWrongImage = event => {
+  const [wrongImgSelect, setWrongImgSelect] = useState(false);
+
+  const onClickWrongImg = event => {
     event.preventDefault();
-    wrongImageInput.current.click();
+    wrongImgInput.current.click();
   };
 
-  const onChangeWrongImage = e => {
-    const wrong = new FileReader();
-    wrong.onload = ({ target }) => {
-      wrongImageInput.current.src = target.result;
+  const onChangeWrongImg = e => {
+    const reader = new FileReader();
+
+    reader.onload = ({ target }) => {
+      wrongImgInput.current.src = target.result;
+      setWrongImgSelect(true);
+      setWrongImg(target.result);
     };
 
-    if (e.target.files[0]) {
-      setWrongImage(e.target.files[0]);
-    } else {
-      setWrongImage(require('../../image/default-user.png'));
-      return;
-    }
-
-    wrong.onload = ({ target }) => {
-      wrongImageInput.current.src = target.result;
-      setWrongImage(target.result);
-    };
-
-    if (!wrongImageInput.current.files[0]) {
+    if (!wrongImgInput.current.files[0]) {
       Swal.fire({
         position: 'center',
         icon: 'warning',
@@ -171,10 +146,20 @@ const normal = props => {
       });
       return;
     }
-    wrong.readAsDataURL(wrongImageInput.current.files[0]);
+    reader.readAsDataURL(wrongImgInput.current.files[0]);
   };
 
   const onClickCreateChallenge = () => {
+    if (!(isSelect && correctImgSelect && wrongImgSelect)) {
+      Swal.fire({
+        position: 'center',
+        icon: 'warning',
+        title: '사진을 선택해주세요',
+        showConfirmButton: false,
+        timer: 1000,
+      });
+      return;
+    }
     const data = new FormData();
     data.append('title', challenge.title);
     data.append('hostId', user.userInfo.userId);
@@ -184,9 +169,10 @@ const normal = props => {
     data.append('startDate', challenge.startDate);
     data.append('endDate', challenge.endDate);
     data.append('maxParticipantsSize', member);
-    data.append('backGroundFile', challengeImageInput.current.files[0]);
-    data.append('certSuccessFile', correctImageInput.current.files[0]);
-    data.append('certFailFile', wrongImageInput.current.files[0]);
+    data.append('backGroundFile', challengeImgInput.current.files[0] || null);
+
+    data.append('certSuccessFile', correctImgInputRef.current.files[0] || null);
+    data.append('certFailFile', wrongImgInput.current.files[0] || null);
 
     Swal.fire({
       title: '챌린지를 \n 생성하시겠습니까?',
@@ -199,9 +185,11 @@ const normal = props => {
     }).then(result => {
       if (result.isConfirmed) {
         httpForm
-          .post(CHALLENGES_URL, data)
-          .then(() => {
-            Swal.fire({
+          .post(CHALLENGES_URL, data, {
+            headers: { Authorization: user.accessToken },
+          })
+          .then(async () => {
+            await Swal.fire({
               position: 'center',
               icon: 'success',
               title: '성공!',
@@ -237,7 +225,7 @@ const normal = props => {
           <p className="text-right">{challenge.title.length}/30</p>
         </div>
         <div>
-          <InputLabel content="챌린지 이미지" />
+          <InputLabel content="챌린지 이미지" asterisk />
           <div className="w-full h-40 relative">
             <Image
               src={imgFile}
@@ -248,7 +236,7 @@ const normal = props => {
           </div>
           <input
             style={{ display: 'none' }}
-            ref={challengeImageInput}
+            ref={challengeImgInput}
             type="file"
             className={style.ImgInput}
             id="logoImg"
@@ -331,7 +319,7 @@ const normal = props => {
           )}
         </div>
         <div className="mt-8">
-          <InputLabel content="챌린지 소개" asterisk={false} />
+          <InputLabel content="챌린지 소개" asterisk />
           <ContentInput
             placeholder="예) 3대 500 가능할때까지 무한 반복한다. 인증은 헬스장 거울앞에서 한다."
             maxLength="30"
@@ -339,47 +327,53 @@ const normal = props => {
             onChange={handleChange}
           />
         </div>
+
         <div className="flex mt-6">
           <div className="w-1/2 mr-2">
-            <InputLabel content="올바른 인증 사진" asterisk />
+            <InputLabel content="인증 예시" />
+          </div>
+        </div>
+        <div className="flex ">
+          <div className="w-1/2 mr-2">
+            <InputLabel content="올바른 인증" smallTextSize asterisk />
             <div className="w-full h-40 relative ">
               <Image
-                src={correctImage}
-                alt="correctImage"
+                src={correctImg}
+                alt="correctImg"
                 onClick={onClickCorrectImage}
                 fill
               />
             </div>
             <input
               style={{ display: 'none' }}
-              ref={correctImageInput}
+              ref={correctImgInputRef}
               type="file"
               className={style.ImgInput}
               id="logoImg"
               accept="image/*"
               name="file"
-              onChange={onChangeCorrectImage}
+              onChange={onChangeCorrectImg}
             />
           </div>
           <div className="w-1/2 ml-2">
-            <InputLabel content="틀린 인증 사진" asterisk />
+            <InputLabel content="올바르지 않은 인증" smallTextSize asterisk />
             <div className="w-full h-40 relative">
               <Image
-                src={wrongImage}
-                alt="wrongImage"
-                onClick={onClickWrongImage}
+                src={wrongImg}
+                alt="wrongImg"
+                onClick={onClickWrongImg}
                 fill
               />
             </div>
             <input
               style={{ display: 'none' }}
-              ref={wrongImageInput}
+              ref={wrongImgInput}
               type="file"
               className={style.ImgInput}
               id="logoImg"
               accept="image/*"
               name="file"
-              onChange={onChangeWrongImage}
+              onChange={onChangeWrongImg}
             />
           </div>
         </div>

@@ -12,6 +12,7 @@ module.exports = {
   ],
   plugins: ['prettier'],
   // eslint-plugin-prettier를 적용시켜줍니다
+
   rules: {
     'import/order': [
       'error',
@@ -78,7 +79,6 @@ module.exports = {
     'import/no-unresolved': 'off',
     'import/extensions': 'off',
     radix: 'off',
-
     'import/no-extraneous-dependencies': [
       1,
       {
