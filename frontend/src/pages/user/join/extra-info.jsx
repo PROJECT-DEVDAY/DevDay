@@ -11,10 +11,9 @@ import style from './extra-info.module.scss';
 import { Button } from '../../../components/Button';
 import { ReturnArrow } from '../../../components/ReturnArrow';
 
+import Container from '@/components/Container';
 import { persistor } from '@/pages/_app';
 import http from '@/pages/api/http';
-import Container from '@/components/Container';
-
 import {
   saveExtraInfos,
   reset,
