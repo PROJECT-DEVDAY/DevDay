@@ -3,8 +3,11 @@ import { AiOutlineSetting } from 'react-icons/ai';
 import { BsQuestionSquare } from 'react-icons/bs';
 import { HiOutlineBell } from 'react-icons/hi';
 
+import http from '../api/http';
+
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Container from '@/components/Container';
 import Footer from '@/components/Footer';
@@ -15,6 +18,12 @@ import { UserAvatar } from '@/components/UserAvatar';
 
 const index = () => {
   const router = useRouter();
+  const userInfo = useSelector(state => state.user);
+
+  // const mypageInfo = http.get(MYPAGE_URL, {
+  //   Authorization: userInfo.accessToken,
+  // });
+
   const goToProfile = () => {
     router.push('/mypage/profile');
   };
