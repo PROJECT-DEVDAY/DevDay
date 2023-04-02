@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 import style from './check.module.scss';
 import { BtnFooter } from '../../components/BtnFooter';
 import { ReturnArrow } from '../../components/ReturnArrow';
+
 import PrivateRouter from '@/components/PrivateRouter/PrivateRouter';
 
 const check = props => {
