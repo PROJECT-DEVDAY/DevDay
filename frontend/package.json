@@ -34,7 +34,8 @@
     "redux": "^4.2.1",
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.4.2",
-    "sweetalert2": "^11.7.3"
+    "sweetalert2": "^11.7.3",
+    "web3": "^1.9.0"
   },
   "devDependencies": {
     "@babel/core": "^7.21.3",
