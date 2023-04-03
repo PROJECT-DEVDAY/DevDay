@@ -12,14 +12,10 @@ import style from './index.module.scss';
 import http from '../../api/http';
 
 import { Button } from '@/components/Button';
-<<<<<<< HEAD
 import { CHALLENGE_DETAIL_URL, CHALLENGE_JOIN_URL } from '@/constants';
 
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-=======
-import { CHALLENGE_DETAIL_URL } from '@/constants';
->>>>>>> f6002b4b65bfba8e91a3bf81d76834b09f760502
 
 const challengeintro = props => {
   const router = useRouter();
