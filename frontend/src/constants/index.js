@@ -25,9 +25,16 @@ export const CHALLENGES_LIST_URL = param =>
 export const CHALLENGES_SEARCH_URL = `${CHALLENGE_SERVICE}/challenges`;
 export const CHALLENGE_DETAIL_URL = `${CHALLENGE_SERVICE}/challenges`;
 export const CHALLENGE_JOIN_URL = `${CHALLENGE_SERVICE}/auth/challenges/join`;
+export const CHALLENGE_PHOTO_RECORD_URL = `${CHALLENGE_SERVICE}/photo-record`;
+
 // 결제
 const PAY_SERVICE = 'pay-service';
 
 export const MY_DEPOSIT_PRIZE = param => `${PAY_SERVICE}/users/${param}`;
 export const PAYMENT_CHALLENGE_SUCCESS = param =>
   `${PAY_SERVICE}/${param}/success`;
+
+export const PUBLIC_TOSS_CLIENT_KEY = 'test_ck_N5OWRapdA8dWR0eyPm6ro1zEqZKL';
+export const LOCALE = 'ko-KR';
+
+export const DEVDAY_ATTENDEE_TICKET = 'DevDay 참가비';

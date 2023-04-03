@@ -9,6 +9,8 @@ import Swal from 'sweetalert2';
 import { Button } from '@/components/Button';
 import Container from '@/components/Container';
 
+import { CHALLENGE_PHOTO_RECORD_URL } from '@/components';
+
 const SubmitPicture = () => {
   const router = useRouter();
   const challengeInfo = {
@@ -66,15 +68,11 @@ const SubmitPicture = () => {
     formData.append('challengeRoomId', challengeInfo.id);
     // 전송
     try {
-      const result = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_HOST}/challenge-service/photo-record`,
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
+      const result = await axios.post(CHALLENGE_PHOTO_RECORD_URL, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
         },
-      );
+      });
       Swal.fire({
         position: 'center',
         icon: 'success',
