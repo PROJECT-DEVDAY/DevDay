@@ -173,6 +173,7 @@ const normal = props => {
 
     data.append('certSuccessFile', correctImgInputRef.current.files[0] || null);
     data.append('certFailFile', wrongImgInput.current.files[0] || null);
+    data.append('nickname', user.userInfo.nickname);
 
     Swal.fire({
       title: '챌린지를 \n 생성하시겠습니까?',

@@ -4,9 +4,10 @@ import { useSelector } from 'react-redux';
 
 import classNames from 'classnames';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 import Swal from 'sweetalert2';
 
-import style from './commit.module.scss';
+import style from './algo.module.scss';
 import { httpForm } from '../api/http';
 
 import { BtnFooter } from '@/components/BtnFooter';
@@ -18,6 +19,7 @@ import { ReturnArrow } from '@/components/ReturnArrow';
 import { CHALLENGES_URL } from '@/constants';
 
 const commit = props => {
+  const router = useRouter();
   const [member, setMember] = useState(1);
   const [commitCount, setCommitCount] = useState(1);
 
@@ -67,17 +69,6 @@ const commit = props => {
       setIsSelect(true);
       setImgFile(target.result);
     };
-
-    if (!challengeImgInput.current.files[0]) {
-      Swal.fire({
-        position: 'center',
-        icon: 'warning',
-        title: '사진을 선택해주세요',
-        showConfirmButton: false,
-        timer: 1000,
-      });
-      return;
-    }
     reader.readAsDataURL(challengeImgInput.current.files[0]);
   };
 
@@ -104,6 +95,7 @@ const commit = props => {
     data.append('maxParticipantsSize', member);
     data.append('commitCount', commitCount);
     data.append('backGroundFile', challengeImgInput.current.files[0] || null);
+    data.append('nickname', user.userInfo.nickname);
 
     Swal.fire({
       title: '챌린지를 \n 생성하시겠습니까?',
@@ -119,7 +111,7 @@ const commit = props => {
           .post(CHALLENGES_URL, data, {
             headers: { Authorization: user.accessToken },
           })
-          .then(() => {
+          .then(res => {
             Swal.fire({
               position: 'center',
               icon: 'success',
@@ -127,6 +119,7 @@ const commit = props => {
               showConfirmButton: false,
               timer: 1500,
             });
+            router.push(`/participation/${res.data.id}`);
           })
           .catch(error => {
             Swal.fire({
