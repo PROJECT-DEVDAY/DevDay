@@ -23,7 +23,8 @@ const initialState = {
   userInfo: {},
   accessToken: '',
   refreshToken: '',
-},
+};
+
 export const userSlice = createSlice({
   name: 'user',
   initialState,
