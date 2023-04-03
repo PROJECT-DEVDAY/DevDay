@@ -1,8 +1,10 @@
 package com.example.userservice.controller;
 
 import com.example.userservice.dto.BaseResponseDto;
+import com.example.userservice.dto.request.challenge.CommitRequestDto;
 import com.example.userservice.dto.request.challenge.ProblemRequestDto;
 import com.example.userservice.dto.response.challenge.BaekjoonListResponseDto;
+import com.example.userservice.dto.response.challenge.CommitResponseDto;
 import com.example.userservice.dto.response.challenge.DateProblemResponseDto;
 import com.example.userservice.service.ChallengeService;
 import lombok.RequiredArgsConstructor;
@@ -56,5 +58,20 @@ public class ChallengeController {
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new BaseResponseDto<>(200, "success", challengeService.getDateBaekjoonList(userId, startDate, endDate)));
+    }
+
+    @GetMapping("/user/commit/{userId}/{commitDate}")
+    public ResponseEntity<BaseResponseDto<CommitResponseDto>> getCommitRecord(@PathVariable("userId") Long userId,
+                                                                              @PathVariable("commitDate") String commitDate) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new BaseResponseDto<>(200, "success", challengeService.getCommitRecord(userId, commitDate)));
+    }
+
+    @PostMapping("/user/commit/{userId}")
+    public ResponseEntity<BaseResponseDto<?>> updateCommitCount(@PathVariable Long userId,
+                                                                @RequestBody CommitRequestDto requestDto) {
+
+        challengeService.updateCommitCount(userId, requestDto);
+        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseDto<>(200, "success"));
     }
 }
