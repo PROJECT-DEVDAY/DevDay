@@ -57,11 +57,11 @@ const index = () => {
 
   const goToReward = () => {
     router.push('/mypage/reward');
-  }
+  };
 
   const goToCreateCheck = () => {
     router.push('/create/check');
-  }
+  };
 
   return (
     <Container>
@@ -148,9 +148,7 @@ const index = () => {
           </div>
         </div>
       </Container.Body>
-      <Container.MainFooter>
-        <Footer />
-      </Container.MainFooter>
+      <Container.MainFooterWithNavigation />
     </Container>
   );
 };

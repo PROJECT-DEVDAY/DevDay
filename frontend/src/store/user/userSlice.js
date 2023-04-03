@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { PURGE } from 'redux-persist';
 
 import http from '../../pages/api/http';
 
@@ -18,14 +19,15 @@ export const loginAsync = createAsyncThunk(
     ];
   },
 );
+const initialState = {
+  userInfo: {},
+  accessToken: '',
+  refreshToken: '',
+};
 
 export const userSlice = createSlice({
   name: 'user',
-  initialState: {
-    userInfo: {},
-    accessToken: '',
-    refreshToken: '',
-  },
+  initialState,
   reducers: {
     reset(state) {
       Object.assign(state, {
@@ -52,7 +54,8 @@ export const userSlice = createSlice({
       })
       .addCase(loginAsync.rejected, state => {
         return { ...state, token: null, status: 'Fail' };
-      });
+      })
+      .addCase(PURGE, () => initialState);
   },
 });
 export const { reset } = userSlice.actions;

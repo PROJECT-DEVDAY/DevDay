@@ -8,6 +8,8 @@ import { BtnFooter } from '../../components/BtnFooter';
 import { ReturnArrow } from '../../components/ReturnArrow';
 import { SelectOption } from '../../components/SelectOption';
 
+import Container from '@/components/Container';
+
 const check = props => {
   const [checking, setChecking] = useState([false, false]);
   const changeCheck = index => {
@@ -57,14 +59,14 @@ const check = props => {
     },
   ];
   return (
-    <div>
-      <div className={classNames(`style.div-header`, `sticky top-0`)}>
-        <ReturnArrow />
-      </div>
-      <div className="div-body p-6 pb-32 mt-16">
+    <Container>
+      <Container.SubPageHeader />
+      <Container.MainBody className="mt-16">
         <div>
-          <div className="text-lg font-medium">어떤 챌린지를 만드실건가요?</div>
-          <div className={classNames('mt-4 mb-4')}>
+          <div className="text-lg ml-2 font-medium">
+            어떤 챌린지를 만드실건가요?
+          </div>
+          <div className={classNames('mt-4 ml-3')}>
             이 후 수정 할 수 없으니 <br /> 신중하게 골라주세요!
           </div>
           {notPreferArr.map(item => {
@@ -85,22 +87,25 @@ const check = props => {
             );
           })}
         </div>
-      </div>
-      <div
-        className={classNames(
-          style.btn,
-          `text-center absolute w-full bottom-0 pb-4 m-0`,
-        )}
-      >
-        <BtnFooter
-          content=""
-          label="다음으로"
-          disable={checking[0] || checking[1]}
-          goToUrl="/create/category"
-          warningMessage="챌린지방의 유형을 한개 골라주세용"
-        />
-      </div>
-    </div>
+      </Container.MainBody>
+
+      <Container.Footer>
+        <div
+          className={classNames(
+            style.btn,
+            `text-center absolute w-full bottom-0 pb-4 m-0`,
+          )}
+        >
+          <BtnFooter
+            content=""
+            label="다음으로"
+            disable={checking[0] || checking[1]}
+            goToUrl="/create/category"
+            warningMessage="챌린지 유형을 한개 골라주세요"
+          />
+        </div>
+      </Container.Footer>
+    </Container>
   );
 };
 

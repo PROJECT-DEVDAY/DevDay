@@ -9,6 +9,8 @@ import { BtnFooter } from '../../components/BtnFooter';
 import { ReturnArrow } from '../../components/ReturnArrow';
 import { SelectOption } from '../../components/SelectOption';
 
+import Container from '@/components/Container';
+
 const check = props => {
   const user = useSelector(state => state.user);
   const [checking, setChecking] = useState([false, false, false]);
@@ -67,54 +69,53 @@ const check = props => {
     },
   ];
   return (
-    <div>
-      <div className={classNames(`style.div-header`, `sticky top-0`)}>
-        <ReturnArrow />
-      </div>
-      <div className="div-body p-6 pb-32 mt-16">
-        <div>
-          <div className="text-lg font-medium">
-            어떤 카테고리 챌린지를 도전해 <br /> 보실건가요?
-          </div>
-          <div className={classNames('mt-4 mb-4')}>
-            이 후 수정 할 수 없으니 <br /> 신중하게 골라주세요!
-          </div>
-          {notPreferArr.map(item => {
-            const { id, title, content, iconUrl } = item;
-            return (
-              <button
-                className={classNames('w-full text-left', style.btn)}
-                type="button"
-                onClick={() => changeCheck(id)}
-                key={id}
-              >
-                <SelectOption
-                  check={checking[id]}
-                  title={title}
-                  content={content}
-                  iconUrl={iconUrl}
-                />
-              </button>
-            );
-          })}
-          <div className="text-center mt-4 font-medium">카테고리 선택</div>
+    <Container>
+      <Container.SubPageHeader />
+      <Container.MainBody className="mt-16">
+        <div className="text-lg ml-2 font-medium">
+          어떤 카테고리 챌린지를 도전해 <br /> 보실건가요?
         </div>
-      </div>
-      <div
-        className={classNames(
-          style.btn,
-          `text-center absolute w-full bottom-0 pb-4 m-0`,
-        )}
-      >
-        <BtnFooter
-          content=""
-          label="다음으로"
-          disable={checking[0] || checking[1] || checking[2]}
-          goToUrl={goUrl}
-          warningMessage="어떤 카테고리의 챌린지를 만드실건가요?"
-        />
-      </div>
-    </div>
+        <div className={classNames('mt-4 ml-3')}>
+          이 후 수정 할 수 없으니 <br /> 신중하게 골라주세요!
+        </div>
+        {notPreferArr.map(item => {
+          const { id, title, content, iconUrl } = item;
+          return (
+            <button
+              className={classNames('w-full text-left', style.btn)}
+              type="button"
+              onClick={() => changeCheck(id)}
+              key={id}
+            >
+              <SelectOption
+                check={checking[id]}
+                title={title}
+                content={content}
+                iconUrl={iconUrl}
+              />
+            </button>
+          );
+        })}
+        <div className="text-center mt-4 font-medium">카테고리 선택</div>
+      </Container.MainBody>
+
+      <Container.Footer>
+        <div
+          className={classNames(
+            style.btn,
+            `text-center absolute w-full bottom-0 pb-4 m-0`,
+          )}
+        >
+          <BtnFooter
+            content=""
+            label="다음으로"
+            disable={checking[0] || checking[1] || checking[2]}
+            goToUrl={goUrl}
+            warningMessage="어떤 카테고리의 챌린지를 만드실건가요?"
+          />
+        </div>
+      </Container.Footer>
+    </Container>
   );
 };
 

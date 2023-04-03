@@ -17,16 +17,16 @@ const MainFooterWithNavigation = ({ className }) => {
     >
       <Link href="/" className="flex flex-col w-16 text-center">
         <FiHome size={32} className="shrink-0 ml-auto mr-auto" />
-        <span className={cx(`font-bold text-xs`)}>홈</span>
+        <span className={cx(`font-medium text-xs`)}>홈</span>
       </Link>
       <Link href="/auth" className="flex flex-col w-16 text-center relative">
         <div className={cx('absolute', style.BackgroundCircle)} />
-        <FiCamera size={36} className="shrink-0 ml-auto mr-auto" />
-        <span className={cx(`font-bold text-sm`)}>인증</span>
+        <FiCamera size={38} className="shrink-0 ml-auto mr-auto" />
+        <span className={cx(`font-medium text-sm`)}>인증</span>
       </Link>
       <Link href="/mypage" className="flex flex-col w-16 text-center">
         <FiUser size={32} className="shrink-0 ml-auto mr-auto" />
-        <span className={cx(`font-bold text-xs`)}>마이페이지</span>
+        <span className={cx(`font-medium text-xs`)}>마이페이지</span>
       </Link>
     </MainFooter>
   );
