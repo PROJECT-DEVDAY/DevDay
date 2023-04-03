@@ -9,4 +9,6 @@ import java.util.Optional;
 public interface CommitRecordRepository extends JpaRepository<CommitRecord, CommitId> {
 
     Optional<CommitRecord> findByCommitDateAndUserId(String commitDate, Long userId);
+
+    void deleteAllByUserId(Long userId);
 }
