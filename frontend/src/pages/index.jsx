@@ -6,6 +6,7 @@ import {
 } from 'react-icons/ai';
 
 import classNames from 'classnames';
+import Image from 'next/image';
 import Link from 'next/link';
 
 import http from './api/http';
@@ -17,39 +18,102 @@ import { HeaderButtons } from '@/components/HeaderButtons';
 import { CHALLENGES_SEARCH_URL } from '@/constants';
 import { getStartWithEndDate } from '@/utils';
 
+import _debounce from 'lodash/debounce';
+import loadingImage from '@/image/loading.gif';
+
 const NAV = {
   전체: 'ALL',
   기본: 'FREE',
   commit: 'COMMIT',
   알고리즘: 'ALGO',
 };
-const INITIAL_NAV_KEY = '전체';
 const NAV_LIST = Object.keys(NAV);
+const INITIAL_NAV_KEY = '전체';
+const INITIAL_PARAMS = {
+  search: '',
+  category: 'ALL',
+  offset: '',
+  size: 20,
+};
 
-const main = ({ initialList, ...props }) => {
-  const [challengeList, setChallengeList] = useState(initialList);
-  const [lastChallengeId, setLastChallengeId] = useState('');
-  const [type, setType] = useState(INITIAL_NAV_KEY);
-  const searchRef = useRef();
-  const [searchMode, setSearchMode] = useState(false);
-
-  const search = async params => {
+const fetch = async params => {
+  try {
     const { data } = await http.get(CHALLENGES_SEARCH_URL, {
       params: {
-        search: '',
-        category: NAV[type],
-        size: 20,
-        offset: lastChallengeId,
+        ...INITIAL_PARAMS,
         ...params,
       },
     });
+    return data;
+  } catch (e) {
+    console.error('데이터를 fetch하는 과정에서 문제가 생겼어요.', e);
+    return [];
+  }
+};
 
-    setChallengeList(data);
+const main = ({ initialList, ...props }) => {
+  const [searchMode, setSearchMode] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const searchParams = useRef(INITIAL_PARAMS);
+  const searchRef = useRef();
+  const observerRef = useRef();
+  const loadingRef = useRef();
+  const [challengeList, setChallengeList] = useState(initialList);
+  const lastChallengeId = useRef();
+  const [type, setType] = useState(INITIAL_NAV_KEY);
+
+  const observerCallback = (entries, io) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        pagenating();
+      }
+    });
+  };
+
+  const selectType = value => {
+    setType(value);
+    updateSearchParams({
+      category: NAV[value],
+      offset: '',
+    });
+  };
+
+  const pagenating = _debounce(() => {
+    updateSearchParams(
+      {
+        offset: lastChallengeId.current,
+      },
+      true,
+    );
+  }, 500);
+
+  const search = async (params, added = false) => {
+    const data = await fetch(params);
+    if (data && data.length > 0) {
+      if (added) {
+        setChallengeList(prev => [...prev, ...data]);
+      } else {
+        setChallengeList(data);
+      }
+    } else {
+      setLoading(false);
+    }
+  };
+
+  const updateSearchParams = (params, added = false) => {
+    searchParams.current = {
+      ...searchParams.current,
+      ...params,
+    };
+    search(searchParams.current, added);
   };
 
   const searchOnKeyPress = e => {
     if (e.key === 'Enter') {
-      search({ search: searchRef.current.value, offset: '' });
+      updateSearchParams({
+        search: searchRef.current.value,
+        offset: '',
+      });
     }
   };
   const toggleSearchMode = () => {
@@ -58,19 +122,30 @@ const main = ({ initialList, ...props }) => {
 
   const initialSearchQuery = () => {
     searchRef.current.value = '';
-    search({ search: '', offset: '' });
-  };
-
-  const selectNavigation = value => {
-    setType(value);
-    search({ category: NAV[value], offset: '' });
+    updateSearchParams({
+      search: '',
+      offset: '',
+    });
   };
 
   useEffect(() => {
     if (challengeList && challengeList.length > 0) {
-      setLastChallengeId(challengeList[challengeList.length - 1].id);
+      lastChallengeId.current = challengeList[challengeList.length - 1].id;
+      setLoading(true);
     }
   }, [challengeList]);
+
+  /**
+   * loadingRef가 있으면 observer 설정
+   */
+  useEffect(() => {
+    observerRef.current = new IntersectionObserver(observerCallback, {
+      threshold: 0.5,
+    });
+    if (loadingRef?.current) {
+      observerRef?.current.observe(loadingRef?.current);
+    }
+  });
 
   return (
     <Container>
@@ -117,12 +192,12 @@ const main = ({ initialList, ...props }) => {
           <HeaderButtons
             items={NAV_LIST}
             select={type}
-            setSelect={selectNavigation}
+            setSelect={selectType}
           />
         </div>
         <div className="grid gap-0 grid-cols-1 mob:grid-cols-2 mob:gap-4">
           {challengeList &&
-            challengeList.map(item => {
+            challengeList.map((item, i) => {
               const {
                 id,
                 backGroundUrl,
@@ -134,9 +209,9 @@ const main = ({ initialList, ...props }) => {
               } = item;
 
               const period = getStartWithEndDate(startDate, endDate);
-
               return (
                 <ChallengeItem
+                  className="bg-black"
                   key={id}
                   id={id}
                   imgUrl={backGroundUrl}
@@ -148,6 +223,16 @@ const main = ({ initialList, ...props }) => {
               );
             })}
         </div>
+        {loading && (
+          <Image
+            src={loadingImage}
+            width="60"
+            height="60"
+            className="mr-auto ml-auto mt-8"
+            ref={loadingRef}
+            alt="loading icon"
+          />
+        )}
       </Container.MainBody>
       <Container.MainFooterWithNavigation />
     </Container>
@@ -158,12 +243,7 @@ export const getServerSideProps = async () => {
   let initialList = [];
   try {
     const { data } = await http.get(CHALLENGES_SEARCH_URL, {
-      params: {
-        search: '',
-        category: 'ALL',
-        offset: null,
-        size: 20,
-      },
+      params: INITIAL_PARAMS,
     });
     initialList = [...initialList, ...data];
   } catch (e) {
@@ -178,40 +258,3 @@ export const getServerSideProps = async () => {
 };
 
 export default main;
-
-// [
-//   {
-//     id: 2,
-//     title: '딩제목제목제모게좀ㄱ족멕족',
-//     hostId: 1,
-//     category: 'ALGO',
-//     startDate: '2023-03-31',
-//     endDate: '2023-04-30',
-//     backGroundUrl:
-//       'https://devday-bucket.s3.ap-northeast-2.amazonaws.com/default_image/921ad56f-d98b-4f0c-9ef5-f9a528059bc1-Algo_Default_Url.png',
-//     curParticipantsSize: 100,
-//   },
-//   {
-//     id: 3,
-//     title: '박태환 이눔!',
-//     hostId: 1,
-//     category: "'COMMIT",
-//     startDate: '2023-03-31',
-
-//     endDate: '2023-04-30',
-//     backGroundUrl:
-//       'https://devday-bucket.s3.ap-northeast-2.amazonaws.com/default_image/921ad56f-d98b-4f0c-9ef5-f9a528059bc1-Algo_Default_Url.png',
-//     curParticipantsSize: 1,
-//   },
-//   {
-//     id: 1,
-//     title: '박태환 얼른와랏!',
-//     hostId: 1,
-//     category: "'COMMIT",
-//     startDate: '2023-03-31',
-//     endDate: '2023-04-30',
-//     backGroundUrl:
-//       'https://devday-bucket.s3.ap-northeast-2.amazonaws.com/default_image/921ad56f-d98b-4f0c-9ef5-f9a528059bc1-Algo_Default_Url.png',
-//     curParticipantsSize: 1,
-//   },
-// ],

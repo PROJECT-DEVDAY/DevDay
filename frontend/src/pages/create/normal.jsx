@@ -22,6 +22,14 @@ const normal = props => {
 
   const user = useSelector(state => state.user);
 
+  const today = new Date();
+
+  const year = today.getFullYear();
+  const month = `0${today.getMonth() + 1}`.slice(-2);
+  const day = `0${today.getDate()}`.slice(-2);
+
+  const dateString = `${year}-${month}-${day}`;
+
   const [challenge, setChallenge] = useState({
     category: 'FREE',
     title: '',
@@ -173,6 +181,7 @@ const normal = props => {
 
     data.append('certSuccessFile', correctImgInputRef.current.files[0] || null);
     data.append('certFailFile', wrongImgInput.current.files[0] || null);
+    data.append('nickname', user.userInfo.nickname);
 
     Swal.fire({
       title: '챌린지를 \n 생성하시겠습니까?',
@@ -209,20 +218,27 @@ const normal = props => {
   };
 
   return (
-    <div>
-      <div className={classNames(`style.div-header`, `sticky top-0`)}>
-        <ReturnArrow title="챌린지 만들기" />
-      </div>
-      <div className="div-body p-6 mt-4">
+    <Container>
+      <Container.SubPageHeader title="챌린지 만들기" />
+      <Container.MainBody className="mt-4">
         <div>
           <InputLabel content="챌린지 제목" asterisk />
           <ContentInput
             placeholder="예) 매일 헬스하기 3주 도전"
             maxLength="30"
             name="title"
+            minlength="10"
             onChange={handleChange}
           />
-          <p className="text-right">{challenge.title.length}/30</p>
+          {challenge.title.length < 10 && (
+            <div className="flex justify-between">
+              <p className="font-medium text-red-500">10자 이상 입력하세요</p>
+              <p className="text-right">{challenge.title.length}/30</p>
+            </div>
+          )}
+          {challenge.title.length >= 10 && (
+            <p className="text-right">{challenge.title.length}/30</p>
+          )}
         </div>
         <div>
           <InputLabel content="챌린지 이미지" asterisk />
@@ -303,7 +319,7 @@ const normal = props => {
               type="date"
               name="startDate"
               onChange={handleChange}
-              max={challenge.endDate}
+              min={dateString}
             />
           </label>
           {challenge.startDate && (
@@ -321,11 +337,16 @@ const normal = props => {
         <div className="mt-8">
           <InputLabel content="챌린지 소개" asterisk />
           <ContentInput
-            placeholder="예) 3대 500 가능할때까지 무한 반복한다. 인증은 헬스장 거울앞에서 한다."
-            maxLength="30"
+            placeholder="예) 인증은 헬스장 거울앞에서 한다."
             name="introduce"
             onChange={handleChange}
+            minlength="10"
           />
+          {challenge.introduce.length < 10 && (
+            <div className="flex justify-between">
+              <p className="font-medium text-red-500">10자 이상 입력하세요</p>
+            </div>
+          )}
         </div>
 
         <div className="flex mt-6">
@@ -377,10 +398,8 @@ const normal = props => {
             />
           </div>
         </div>
-      </div>
-      <div
-        className={classNames(`text-center sticky w-full bottom-0 pb-4 m-0`)}
-      >
+      </Container.MainBody>
+      <Container.MainFooter>
         <BtnFooter
           content=""
           label="다음"
@@ -388,8 +407,8 @@ const normal = props => {
           onClick={onClickCreateChallenge}
           warningMessage="Commit 챌린지는 GitHub ID가 필요해요."
         />
-      </div>
-    </div>
+      </Container.MainFooter>
+    </Container>
   );
 };
 export default normal;
