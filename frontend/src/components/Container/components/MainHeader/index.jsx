@@ -1,3 +1,5 @@
+import { memo } from 'react';
+
 import cx from 'classnames';
 import Image from 'next/image';
 
@@ -21,4 +23,4 @@ const MainHeader = ({ className, children }) => {
     </Header>
   );
 };
-export default MainHeader;
+export default memo(MainHeader);

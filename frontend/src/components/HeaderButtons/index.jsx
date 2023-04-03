@@ -5,12 +5,9 @@ import PropTypes from 'prop-types';
 
 import style from './index.module.scss';
 
-export const HeaderButtons = ({ items, select }) => {
-  const [selectedItem, setSelectedItem] = useState(items[0]);
-
+export const HeaderButtons = ({ items, select, setSelect }) => {
   const handleItemChange = event => {
-    setSelectedItem(event.target.value);
-    select(event.target.value);
+    setSelect(event.target.value);
   };
 
   return (
@@ -24,7 +21,7 @@ export const HeaderButtons = ({ items, select }) => {
         <label
           key={index}
           className={classNames(
-            selectedItem === item && style.selected,
+            select === item && style.selected,
             `inline-block rounded-2xl px-5 py-2 font-medium text-sm bg-white`,
           )}
         >
@@ -32,7 +29,7 @@ export const HeaderButtons = ({ items, select }) => {
             type="radio"
             name="items"
             value={item}
-            checked={selectedItem === item}
+            checked={select === item}
             onChange={handleItemChange}
           />
           {item}
