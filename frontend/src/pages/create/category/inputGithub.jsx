@@ -9,10 +9,10 @@ import style from './inputGithub.module.scss';
 import http from '../../api/http';
 
 import { BtnFooter } from '@/components/BtnFooter';
+import Container from '@/components/Container';
 import { InputBox } from '@/components/InputBox';
 import { ReturnArrow } from '@/components/ReturnArrow';
 import { GITHUBBAEKJOON_URL } from '@/constants';
-import Container from '@/components/Container';
 
 const inputGithub = props => {
   const [text, setText] = useState('');
