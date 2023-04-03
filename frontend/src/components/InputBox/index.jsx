@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 
 import style from './index.module.scss';
 
-export const InputBox = ({ className, placeholder, ...props }) => {
+export const InputBox = ({ className, placeholder, name, onChange, defaultValue, ...props }) => {
   return (
     <div
       className={classNames(
@@ -20,6 +20,9 @@ export const InputBox = ({ className, placeholder, ...props }) => {
         className={classNames(`rounded-none w-full pl2`, style.inputbox)}
         type="text"
         placeholder={placeholder}
+        name={name}
+        onChange={onChange}
+        defaultValue={defaultValue}
       />
     </div>
   );
