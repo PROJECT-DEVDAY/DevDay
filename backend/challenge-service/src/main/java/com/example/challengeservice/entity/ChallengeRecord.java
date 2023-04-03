@@ -75,6 +75,18 @@ public class ChallengeRecord {
                 .build();
     }
 
+    // 커밋 생성자
+    public static ChallengeRecord fromCommit(String date, int commitCount, UserChallenge userChallenge){
+        return ChallengeRecord.builder()
+                .createAt(date)
+                .userChallenge(userChallenge)
+                .commitCount(commitCount)
+                .success(true)
+                .hostReport(false)
+                .reportCount(0)
+                .build();
+    }
+
     public void doHostReport(){
         this.hostReport = true;
     }
@@ -84,5 +96,9 @@ public class ChallengeRecord {
     }
     public void plusReportCount(){
         this.reportCount++;
+    }
+    public void setAlgorithmCount(int algorithmCount){this.algorithmCount=algorithmCount;}
+    public void setCommitCount(int commitCount){
+        this.commitCount=commitCount;
     }
 }

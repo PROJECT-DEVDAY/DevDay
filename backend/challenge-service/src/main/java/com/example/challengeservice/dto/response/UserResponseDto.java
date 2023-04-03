@@ -22,4 +22,6 @@ public class UserResponseDto {
     private String github;
 
     private String baekjoon;
+
+    private String profileImageUrl;
 }
