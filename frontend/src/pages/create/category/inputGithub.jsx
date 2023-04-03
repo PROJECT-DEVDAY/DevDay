@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 
 import classNames from 'classnames';
 import Image from 'next/image';
 import Swal from 'sweetalert2';
 
 import style from './inputGithub.module.scss';
+import http from '../../api/http';
 
 import { BtnFooter } from '@/components/BtnFooter';
 import { InputBox } from '@/components/InputBox';
 import { ReturnArrow } from '@/components/ReturnArrow';
-import { useSelector } from 'react-redux';
-import http from '../../api/http';
 import { GITHUBBAEKJOON_URL } from '@/constants';
 
 const inputGithub = props => {
