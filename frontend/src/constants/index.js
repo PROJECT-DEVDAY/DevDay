@@ -22,6 +22,7 @@ export const MY_CHALLENGES_URL = param =>
   `${CHALLENGE_SERVICE}/auth/challenges/my-challenge?status=${param}`;
 export const CHALLENGES_LIST_URL = param =>
   `${CHALLENGE_SERVICE}/challenges/list?category=${param}`;
+export const CHALLENGE_DETAIL_URL = `${CHALLENGE_SERVICE}/challenges`;
 
 // 결제
 const PAY_SERVICE = 'pay-service';

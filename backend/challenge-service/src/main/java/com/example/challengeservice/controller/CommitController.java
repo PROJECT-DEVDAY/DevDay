@@ -1,15 +1,15 @@
 package com.example.challengeservice.controller;
 
 import com.example.challengeservice.common.response.ResponseService;
+import com.example.challengeservice.common.result.Result;
 import com.example.challengeservice.common.result.SingleResult;
 import com.example.challengeservice.dto.response.CommitCountResponseDto;
 import com.example.challengeservice.service.ChallengeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/challenges")
@@ -31,5 +31,18 @@ public class CommitController {
     public SingleResult<CommitCountResponseDto> getGithubList(@PathVariable("githubId") String githubId){
         return responseService.getSingleResult(challengeService.getGithubCommit(githubId));
     }
+
+    /**
+     * 신대득
+     * 유저의 커밋 정보 갱신
+     */
+    @PostMapping("/github/update/users") //post로 변경
+    public Result updateUserBaekjoon(HttpServletRequest request){
+        Long userId=Long.parseLong(request.getHeader("userId"));
+        challengeService.updateUserCommit(userId);
+        return responseService.getSuccessResult();
+    }
+
+
 
 }
