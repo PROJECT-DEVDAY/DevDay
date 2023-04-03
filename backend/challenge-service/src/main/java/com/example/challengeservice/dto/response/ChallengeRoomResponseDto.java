@@ -71,7 +71,7 @@ public class ChallengeRoomResponseDto {
     private String hostNickname;
 
     /** 방장이 만든 방 개수 **/
-    private int hostCount;
+    private Long hostCount;
 
     /** 방장의 프로필 사진 **/
     private String hostProfileImage;

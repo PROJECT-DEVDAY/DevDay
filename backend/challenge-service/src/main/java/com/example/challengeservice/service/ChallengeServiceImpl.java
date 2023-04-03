@@ -154,7 +154,7 @@ public class ChallengeServiceImpl implements ChallengeService{
         ChallengeRoomResponseDto challengeRoomResponseDto=mapper.map(challengeRoom, ChallengeRoomResponseDto.class);
         UserResponseDto userResponseDto = userServiceClient.getUserInfo(challengeRoom.getHostId()).getData();
         challengeRoomResponseDto.setHostNickname(userResponseDto.getNickname());
-        challengeRoomResponseDto.setHostCount(challengeRoomRepository.countAllByHostId(userResponseDto.getUserId()));
+        challengeRoomResponseDto.setHostCount(challengeRoomRepository.countByHostId(userResponseDto.getUserId()));
         challengeRoomResponseDto.setHostProfileImage(userResponseDto.getProfileImageUrl());
         return challengeRoomResponseDto;
     }
