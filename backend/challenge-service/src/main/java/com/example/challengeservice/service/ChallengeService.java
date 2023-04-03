@@ -1,5 +1,6 @@
 package com.example.challengeservice.service;
 
+import com.example.challengeservice.dto.request.ChallengeJoinRequestDto;
 import com.example.challengeservice.dto.request.ChallengeRecordRequestDto;
 import com.example.challengeservice.dto.request.ChallengeRoomRequestDto;
 import com.example.challengeservice.dto.request.ReportRecordRequestDto;
@@ -12,13 +13,13 @@ import java.util.Map;
 
 public interface ChallengeService {
     /** 챌린지 생성 **/
-    Long createChallenge(ChallengeRoomRequestDto challengeRoomRequestDto) throws IOException;
+    ChallengeCreateResponseDto createChallenge(ChallengeRoomRequestDto challengeRoomRequestDto) throws IOException;
     /** 챌린지 조회 **/
     ChallengeRoomResponseDto readChallenge(Long challengeId);
     /** 챌린지 번호들로 챌린지 정보들 조회 **/
     Map<Long, ChallengeInfoResponseDto> challengeInfoList(List<Long> challengeIdList);
     /** 챌린지 참여 **/
-    String joinChallenge(Long challengeId, Long userId);
+    String joinChallenge(ChallengeJoinRequestDto joinRequestDto);
     /** 해당 유저의 챌린지 리스트 조회 **/
     UserChallengeInfoResponseDto myChallengeList(Long userId);
     List<SimpleChallengeResponseDto> getListSimpleChallenge (String type , String search , int size , Long offset);
