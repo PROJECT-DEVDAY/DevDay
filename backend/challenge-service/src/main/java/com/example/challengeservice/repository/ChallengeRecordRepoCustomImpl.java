@@ -74,16 +74,9 @@ public class ChallengeRecordRepoCustomImpl implements ChallengeRecordRepoCustom 
     }
 
     @Override
-    public Optional<AlgoRecordResponseDto> findByCreateAtAndUserChallenge(String createAt, UserChallenge userChallenge){
-        JPAQuery<AlgoRecordResponseDto> query = jpaQueryFactory.select(Projections.constructor(
-                AlgoRecordResponseDto.class,
-                challengeRecord.id.as("challengeRecordId"),
-                challengeRecord.userChallenge.id,
-                challengeRecord.createAt,
-                challengeRecord.algorithmCount,
-                challengeRecord.success
-                ))
-                .from(challengeRecord)
+    public Optional<ChallengeRecord> findByCreateAtAndUserChallenge(String createAt, UserChallenge userChallenge){
+        JPAQuery<ChallengeRecord> query = jpaQueryFactory
+                .selectFrom(challengeRecord)
                 .where(challengeRecord.userChallenge.id.eq(userChallenge.getId())
                         .and(challengeRecord.createAt.eq(createAt)));
         return Optional.ofNullable(query.fetchOne());

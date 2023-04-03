@@ -12,6 +12,7 @@ export const NICKNAME_URL = `${USER_SERVICE}/nickname`;
 export const MYPAGE_URL = `${USER_SERVICE}/auth`;
 export const PROFILE_URL = `${USER_SERVICE}/auth/user/detail`;
 export const GITHUBBAEKJOON_URL = `${USER_SERVICE}/auth/user/githubandbaekjoon`;
+export const PASSWORD_URL = `${USER_SERVICE}/auth/user/password`;
 
 // 챌린지
 const CHALLENGE_SERVICE = 'challenge-service';
@@ -25,5 +26,7 @@ export const CHALLENGE_DETAIL_URL = `${CHALLENGE_SERVICE}/challenges`;
 export const CHALLENGE_JOIN_URL = `${CHALLENGE_SERVICE}/auth/challenges/join`;
 // 결제
 const PAY_SERVICE = 'pay-service';
+
+export const MY_DEPOSIT_PRIZE = param => `${PAY_SERVICE}/users/${param}`;
 export const PAYMENT_CHALLENGE_SUCCESS = param =>
   `${PAY_SERVICE}/${param}/success`;

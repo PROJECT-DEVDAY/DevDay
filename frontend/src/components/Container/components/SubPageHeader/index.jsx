@@ -21,7 +21,7 @@ const SubPageHeader = ({ sticky = true, className, title, goNext = null }) => {
     <Header
       className={cx(
         sticky && 'sticky top-0 touch-none',
-        'bg-white flex items-center justify-between bg-white',
+        'bg-white flex items-center justify-between bg-white z-30',
         className,
       )}
     >

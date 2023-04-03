@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.EntityManager;
 import java.io.IOException;
 
 @Service
@@ -40,6 +41,8 @@ public class AuthServiceImpl implements AuthService {
     private final CommonService commonService;
 
     private final SolvedacRepository solvedacRepository;
+
+    private final EntityManager em;
 
     @Override
     @Transactional
@@ -125,6 +128,7 @@ public class AuthServiceImpl implements AuthService {
         user.updateEmail(requestDto.getGithub(), requestDto.getBaekjoon());
 
         solvedacRepository.deleteAllByUserId(user.getId());
+        em.flush();
         if (!user.getBaekjoon().isBlank()) commonService.saveProblemList(user);
 
         return GithubBaekjoonResponseDto.from(user.getGithub(), user.getBaekjoon());

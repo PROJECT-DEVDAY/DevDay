@@ -27,7 +27,7 @@ public interface UserChallengeRepository extends JpaRepository<UserChallenge,Lon
      * @param userId
      * @return
      */
-    @Query("select uc from UserChallenge uc where uc.userId=:userId and uc.challengeRoom.endDate >=:getDate")
+    @Query("select uc from UserChallenge uc where uc.userId=:userId and uc.challengeRoom.endDate >=:getDate and uc.challengeRoom.startDate <=:getDate")
     List<UserChallenge> findUserChallengingByUserId(@Param("userId") Long userId, @Param("getDate") String getDate);
 
     /**

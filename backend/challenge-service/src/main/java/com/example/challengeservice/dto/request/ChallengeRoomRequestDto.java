@@ -25,10 +25,13 @@ public class ChallengeRoomRequestDto {
     /** 방장 ID **/
     private Long hostId;
 
+    /** 닉네임 **/
+    @NotBlank(message = "닉네임을 반드시 입력해 주세요")
+    private String nickname;
+
     /** 참가비용 **/
     @Min( value = 1000, message = "참가 비용은 1,000원 이상부터 가능합니다.")
     private int entryFee;
-
 
     /** 최대 참가 인원 수 **/
     @Min( value = 1, message = "최소 1명 이상의 참가 인원이 필요합니다.")
