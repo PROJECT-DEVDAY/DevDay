@@ -127,7 +127,6 @@ public class AuthServiceImpl implements AuthService {
         solvedacRepository.deleteAllByUserId(user.getId());
         if (!user.getBaekjoon().isBlank()) commonService.saveProblemList(user);
 
-        System.out.println("111111111");
         return GithubBaekjoonResponseDto.from(user.getGithub(), user.getBaekjoon());
     }
 
