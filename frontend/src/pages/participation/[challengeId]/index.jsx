@@ -199,7 +199,15 @@ const challengeintro = props => {
       {(data.category === 'ALGO' || data.category === 'COMMIT') && (
         <div className={classNames('p-6')}>
           <p className="font-medium text-xl">이렇게 인증 해주세요</p>
-          <p>1. Solved.Ac에서 문제를 풀고 제출해주세요</p>
+          {data.category === 'ALGO' && (
+            <p>1. Solved.Ac에서 문제를 풀고 제출해주세요</p>
+          )}
+          {data.category === 'COMMIT' && (
+            <p>1. GitHub에 공부한 내용을 Commit 해주세요</p>
+          )}
+          {data.category === 'FREE' && (
+            <p>1. 예시사진에 맞는 인증사진을 제출해주세요</p>
+          )}
           <p>2. 사이트에서 제출이 적용되었는지 확인해주세요</p>
           <p>3. 끝</p>
         </div>
