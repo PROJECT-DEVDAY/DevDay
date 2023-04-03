@@ -40,11 +40,7 @@ const index = () => {
           title="Github, Solved.ac 계정 설정"
           onClick={goToChangeChallengeInfo}
         />
-<<<<<<< HEAD
-        <SelectArrow title="로그아웃" color onClick="" />
-=======
         <SelectArrow title="로그아웃" color onClick={logout} />
->>>>>>> e8baa8cf67226d9e9a039e40e73e97baae225852
         <SelectArrow title="회원탈퇴" color onClick={goToDeleteAccount} />
       </Container.Body>
     </Container>
