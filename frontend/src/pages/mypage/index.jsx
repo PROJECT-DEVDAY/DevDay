@@ -148,9 +148,7 @@ const index = () => {
           </div>
         </div>
       </Container.Body>
-      <Container.MainFooter>
-        <Footer />
-      </Container.MainFooter>
+      <Container.MainFooterWithNavigation />
     </Container>
   );
 };
