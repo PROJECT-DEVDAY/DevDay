@@ -2,10 +2,7 @@ package com.example.challengeservice.service;
 
 import com.example.challengeservice.client.UserServiceClient;
 import com.example.challengeservice.common.result.SingleResult;
-import com.example.challengeservice.dto.request.ChallengeRecordRequestDto;
-import com.example.challengeservice.dto.request.ChallengeRoomRequestDto;
-import com.example.challengeservice.dto.request.ProblemRequestDto;
-import com.example.challengeservice.dto.request.ReportRecordRequestDto;
+import com.example.challengeservice.dto.request.*;
 import com.example.challengeservice.dto.response.*;
 import com.example.challengeservice.entity.ChallengeRecord;
 import com.example.challengeservice.entity.ChallengeRoom;
@@ -154,8 +151,12 @@ public class ChallengeServiceImpl implements ChallengeService{
 
         ModelMapper mapper=new ModelMapper();
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-
-        return mapper.map(challengeRoom, ChallengeRoomResponseDto.class);
+        ChallengeRoomResponseDto challengeRoomResponseDto=mapper.map(challengeRoom, ChallengeRoomResponseDto.class);
+        UserResponseDto userResponseDto = userServiceClient.getUserInfo(challengeRoom.getHostId()).getData();
+        challengeRoomResponseDto.setHostNickname(userResponseDto.getNickname());
+        challengeRoomResponseDto.setHostCount(challengeRoomRepository.countAllByHostId(userResponseDto.getUserId()));
+        challengeRoomResponseDto.setHostProfileImage(userResponseDto.getProfileImageUrl());
+        return challengeRoomResponseDto;
     }
 
     public Map<Long, ChallengeInfoResponseDto> challengeInfoList(List<Long> challengeIdList){
@@ -254,7 +255,7 @@ public class ChallengeServiceImpl implements ChallengeService{
         } catch (Exception e){
             e.printStackTrace();
         }
-        return CommitCountResponseDto.from(commitCount);
+        return CommitCountResponseDto.from(githubId, commitCount);
     }
 
     /**
@@ -308,11 +309,29 @@ public class ChallengeServiceImpl implements ChallengeService{
                 diffSolvedList.add(s);
             }
         }
-
         if(diffSolvedList.size()==0){
             throw new ApiException(ExceptionEnum.ALGO_ALREADY_UPDATE);
         }
         userServiceClient.createProblem(userId, ProblemRequestDto.from(diffSolvedList));
+    }
+
+    /** 유저의 커밋리스트 업데이트
+     * Todo : 예외처리 추가
+     * **/
+    public void updateUserCommit(Long userId) {
+        SingleResult<UserResponseDto> userResponseDtoTemp = userServiceClient.getUserInfo(userId);
+        log.info("userResponseDto is : {}", userResponseDtoTemp);
+        UserResponseDto userResponseDto = userResponseDtoTemp.getData();
+
+        String today = commonService.getDate();
+        // 오늘 날짜의 유저의 커밋 수 조회
+        CommitCountResponseDto commitCountResponseDto=getGithubCommit(userResponseDto.getGithub());
+        log.info("commitCountResponseDto is : {}", commitCountResponseDto);
+
+//        if(commitCountResponseDto.getCommitCount()==0){
+//            return;
+//        }
+        userServiceClient.updateCommitCount(userResponseDto.getUserId(), new CommitRequestDto(today, commitCountResponseDto.getCommitCount()));
     }
 
     /**
@@ -342,13 +361,22 @@ public class ChallengeServiceImpl implements ChallengeService{
         String today=commonService.getDate();
 
         // 현재 진행중인 알고리즘 챌린지 리스트 조회
-        List<UserChallenge> userChallengeList = userChallengeRepository.findAllByDateAndCategory(today, "ALGO");
+        List<UserChallenge> userAlgoChallengeList = userChallengeRepository.findAllByDateAndCategory(today, "ALGO");
 
-        log.info("유저 챌린지 리스트는 : "+userChallengeList);
+        log.info("유저의 알고 챌린지 리스트는 : "+userAlgoChallengeList);
         // Algo 기록 저장
-        for(UserChallenge userChallenge:userChallengeList){
+        for(UserChallenge userChallenge:userAlgoChallengeList){
             createAlgoRecord(ChallengeRecordRequestDto.from(userChallenge.getUserId(), userChallenge.getChallengeRoom().getId()));
         }
+        
+        // 현재 진행중인 커밋 챌린지 리스트 조회
+        List<UserChallenge> userCommitChallengeList = userChallengeRepository.findAllByDateAndCategory(today, "COMMIT");
+        log.info("유저의 커밋 챌린지 리스트는 : "+userCommitChallengeList);
+        // Commit 기록 저장
+        for(UserChallenge userChallenge:userCommitChallengeList){
+            createCommitRecord(ChallengeRecordRequestDto.from(userChallenge.getUserId(), userChallenge.getChallengeRoom().getId()));
+        }
+
     }
 
     /**
@@ -371,12 +399,13 @@ public class ChallengeServiceImpl implements ChallengeService{
      * @param requestDto
      */
     @Override
+    @Transactional
     public void createAlgoRecord(ChallengeRecordRequestDto requestDto) {
         log.info("챌린지id " + requestDto.getChallengeRoomId() + "유저아이디id" + requestDto.getUserId());
         ChallengeRoomResponseDto challengeRoom = readChallenge(requestDto.getChallengeRoomId());
         UserResponseDto user = userServiceClient.getUserInfo(requestDto.getUserId()).getData();
 
-        //오늘 날짜
+        // 오늘 날짜
         String date = commonService.getDate();
 
         // user의 solved ac에서 오늘 푼 문제들만 조회하기!
@@ -394,14 +423,65 @@ public class ChallengeServiceImpl implements ChallengeService{
         log.info("[userChallenge id값]" + userChallenge.getId());
 
         // 기존에 이 날짜에 인증기록이 있는지 검사
-        Optional<AlgoRecordResponseDto> checkRecordList = challengeRecordRepository.findByCreateAtAndUserChallenge(date, userChallenge);
-        if(checkRecordList.isPresent()){
-            throw new ApiException(ExceptionEnum.EXIST_CHALLENGE_RECORD);
+        Optional<ChallengeRecord> algoRecordResponseDto = challengeRecordRepository.findByCreateAtAndUserChallenge(date, userChallenge);
+        if(algoRecordResponseDto.isPresent()){
+            if(algoRecordResponseDto.get().getAlgorithmCount()!=todayProblemList.size()){
+                algoRecordResponseDto.get().setAlgorithmCount(todayProblemList.size());
+                challengeRecordRepository.save(algoRecordResponseDto.get());
+            }
+//            throw new ApiException(ExceptionEnum.EXIST_CHALLENGE_RECORD);
+        }else{
+            log.info("checkRecordList is : " + algoRecordResponseDto);
+            ChallengeRecord challengeRecord = ChallengeRecord.fromAlgo(date, todayProblemList.size(), userChallenge);
+            challengeRecordRepository.save(challengeRecord);
         }
-        log.info("checkRecordList is : "+checkRecordList);
+    }
 
-        ChallengeRecord challengeRecord = ChallengeRecord.fromAlgo(date, todayProblemList.size() , userChallenge);
-        challengeRecordRepository.save(challengeRecord);
+    /**
+     * 신대득
+     * 커밋 인증 기록을 저장하는 메서드
+     * @param requestDto
+     */
+
+    @Override
+    @Transactional
+    public void createCommitRecord(ChallengeRecordRequestDto requestDto) {
+        log.info("createCommitRecord 실행");
+        log.info("챌린지id " + requestDto.getChallengeRoomId() + "유저아이디id" + requestDto.getUserId());
+        ChallengeRoomResponseDto challengeRoom = readChallenge(requestDto.getChallengeRoomId());
+        UserResponseDto user = userServiceClient.getUserInfo(requestDto.getUserId()).getData();
+
+        // 오늘 날짜
+        String date = commonService.getDate();
+
+        // user의 해당 날짜의 커밋 수 조회하기!
+        SingleResult<CommitResponseDto> commitResponseDto = userServiceClient.getCommitRecord(user.getUserId(), date);
+
+        log.info("해당 날짜 조회된 커밋 정보는 :"+commitResponseDto.getData());
+        // challengeRoom에서 최소 커밋 개수 가져오기 미달이면 Exception 발생
+        if(commitResponseDto.getData().getCommitCount()<challengeRoom.getCommitCount()){
+            return;
+//            throw new ApiException(ExceptionEnum.CONFIRM_FAILURE_ALGO_EXCEPTION);
+        }
+
+        // UserChallenge 조회
+        UserChallenge userChallenge = userChallengeRepository.findByChallengeRoomIdAndUserId(requestDto.getChallengeRoomId(), requestDto.getUserId()).orElseThrow(() -> new ApiException(ExceptionEnum.USER_CHALLENGE_NOT_EXIST_EXCEPTION));
+        log.info("[userChallenge id값]" + userChallenge.getId());
+
+        // 기존에 이 날짜에 인증기록이 있는지 검사
+        Optional<ChallengeRecord> commitRecordResponseDto = challengeRecordRepository.findByCreateAtAndUserChallenge(date, userChallenge);
+        if(commitRecordResponseDto.isPresent()){
+            // 개수가 다르다면 업데이트
+            if(commitRecordResponseDto.get().getCommitCount()!=commitResponseDto.getData().getCommitCount()){
+                commitRecordResponseDto.get().setCommitCount(commitResponseDto.getData().getCommitCount());
+                challengeRecordRepository.save(commitRecordResponseDto.get());
+            }
+            throw new ApiException(ExceptionEnum.EXIST_CHALLENGE_RECORD);
+        }else{
+            ChallengeRecord challengeRecord = ChallengeRecord.fromCommit(date, commitResponseDto.getData().getCommitCount(), userChallenge);
+            log.info("새로운 commit challengeRecord is : " + challengeRecord);
+            challengeRecordRepository.save(challengeRecord);
+        }
     }
 
     /** 하루 정산

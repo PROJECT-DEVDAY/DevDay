@@ -67,4 +67,13 @@ public class ChallengeRoomResponseDto {
     /** 첼린지 이미지 **/
     private String backGroundUrl;
 
+    /** 방장 닉네임 **/
+    private String hostNickname;
+
+    /** 방장이 만든 방 개수 **/
+    private int hostCount;
+
+    /** 방장의 프로필 사진 **/
+    private String hostProfileImage;
+
 }
