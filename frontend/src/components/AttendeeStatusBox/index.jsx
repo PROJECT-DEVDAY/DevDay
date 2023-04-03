@@ -3,7 +3,7 @@ import { AiOutlineCheck } from 'react-icons/ai';
 
 import cx from 'classnames';
 
-const AttendeeStatusBox = ({ className, date, name, check }) => {
+const AttendeeStatusBox = ({ className, date, name, check, count = 0 }) => {
   return (
     <div
       className={cx(
@@ -15,11 +15,19 @@ const AttendeeStatusBox = ({ className, date, name, check }) => {
         <div className="text-left">
           <p className="font-medium">
             <span className="font-bold text-2xl mr-2">{name}</span>
-            챌린저님
+            <span className="relative">
+              챌린저님
+              {count > 0 && (
+                <span className="float-right">
+                  <span className="font-bold ml-auto text-red-600">4</span>건
+                </span>
+              )}
+            </span>
           </p>
+
           <p>
-            <span className="mr-2">{date}</span>
-            인증
+            {date && <span className="mr-2">{date}</span>}
+            {check ? '인증' : '미인증'}
           </p>
         </div>
       </div>
