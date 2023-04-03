@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { FiHome, FiCamera, FiUser } from 'react-icons/fi';
 
 import cx from 'classnames';
@@ -31,4 +32,4 @@ const MainFooterWithNavigation = ({ className }) => {
   );
 };
 
-export default MainFooterWithNavigation;
+export default memo(MainFooterWithNavigation);
