@@ -35,7 +35,7 @@ const index = () => {
         setMyPageInfo(res.data.data);
       })
       .catch(e => {});
-  });
+  }, []);
 
   const goToProfile = () => {
     router.push('/mypage/profile');
@@ -44,6 +44,10 @@ const index = () => {
   const goToSettings = () => {
     router.push('/mypage/settings');
   };
+
+  const goToMyChallenge = () => {
+    router.push('/mypage/challenge')
+  }
 
   return (
     <Container>
@@ -93,7 +97,7 @@ const index = () => {
           </div>
         </div>
         <div>
-          <p className="px-4">챌린지 현황</p>
+          <p className="px-4" onClick={goToMyChallenge}>챌린지 현황</p>
           <hr className="w-full" />
           <div className="flex justify-between my-5 mx-12">
             <div>

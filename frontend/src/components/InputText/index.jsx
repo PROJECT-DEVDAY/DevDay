@@ -59,6 +59,18 @@ export const InputText = ({
         {icon}
       </button>
     );
+  } else if (inputType === 'delete-user') {
+    inputValue = (
+      <input
+        type={type}
+        name={name}
+        value={value}
+        placeholder={content}
+        className={classNames(style.Content, `w-full h-6 text-center font-medium`)}
+        onChange={onChange}
+        {...props}
+      />
+    );
   } else {
     inputValue = (
       <input

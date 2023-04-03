@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import http from '../../api/http';
 
-import { NICKNAME_URL } from '@/constants';
+import { PASSWORD_URL } from '@/constants';
 
 import Container from '@/components/Container';
 import PrivateRouter from '@/components/PrivateRouter/PrivateRouter';
@@ -12,44 +12,25 @@ import { InputLabel } from '@/components/InputLabel';
 import { InputText } from '@/components/InputText';
 import { Button } from '@/components/Button';
 
-const nickname = () => {
+const password = () => {
   const router = useRouter();
-  const [nickNameValidCheck, setNickNameValidCheck] = useState(false);
-  const [nickNameDuplicatedChk, setNickNameDuplicatedChk] = useState(false);
-
-  // nickname check logic
-  const onClickDuplicateCheck = async () => {
-    try {
-      await http.post(NICKNAME_URL, { nickn: watch('nickname') });
-
-      setNickNameDuplicatedChk(true);
-      setNickNameValidCheck(prev => !prev);
-    } catch (error) {
-      setNickNameDuplicatedChk(false);
-    }
-  };
 
   return (
     <Container>
       <Container.Header className="mb-10">
-        <ReturnArrow title="닉네임 변경" />
+        <ReturnArrow title="비밀번호 수정" />
       </Container.Header>
       <Container.Body className="m-6">
         <div className="mt-8 mb-4">
-          <InputLabel content={'새 닉네임'} />
+          <InputLabel content={'현재 비밀번호'} />
         </div>
-        <InputText
-          content={'홍길동'}
-          inputType={'iconText'}
-          icon={'중복확인'}
-          onClick={onClickDuplicateCheck}
-        />
+        <InputText content={'12자리 이상, 대문자, 소문자, 특수문자 포함'} />
         <div className="mt-8 mb-4">
-          <InputLabel content={'이메일'} />
+          <InputLabel content={'새 비밀번호'} />
         </div>
-        <InputText content={'welcome@devday.com'} />
+        <InputText content={'12자리 이상, 대문자, 소문자, 특수문자 포함'} />
         <div className="mt-8 mb-4">
-          <InputLabel content={'비밀번호'} />
+          <InputLabel content={'비밀번호 확인'} />
         </div>
         <InputText content={'12자리 이상, 대문자, 소문자, 특수문자 포함'} />
       </Container.Body>
@@ -60,4 +41,4 @@ const nickname = () => {
   );
 };
 
-export default PrivateRouter(nickname);
+export default PrivateRouter(password);
