@@ -41,10 +41,12 @@ export const HeaderButtons = ({ items, select, setSelect }) => {
 
 HeaderButtons.propTypes = {
   items: PropTypes.arrayOf(PropTypes.string),
-  select: PropTypes.func,
+  select: PropTypes.string,
+  setSelect: PropTypes.func,
 };
 
 HeaderButtons.defaultProps = {
-  select: () => {},
+  select: '전체',
   items: ['전체', '기본', '알고리즘', 'commit'],
+  setSelect: () => {},
 };

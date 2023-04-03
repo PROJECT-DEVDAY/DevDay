@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, forwardRef } from 'react';
 
 import classNames from 'classnames';
 import Image from 'next/image';
@@ -9,62 +9,68 @@ import PropTypes from 'prop-types';
 
 import style from './index.module.scss';
 
-export const ChallengeItem = ({
-  className,
-  id,
-  imgUrl,
-  participants,
-  leader,
-  title,
-  period,
-  onClick,
-  ...props
-}) => {
-  const router = useRouter();
+export const ChallengeItem = forwardRef(
+  (
+    {
+      className,
+      id,
+      imgUrl,
+      participants,
+      leader,
+      title,
+      period,
+      onClick,
+      ...props
+    },
+    ref,
+  ) => {
+    const router = useRouter();
 
-  return (
-    <Link
-      href={`participation/${id}`}
-      className={style.ChallengeItem}
-      role="button"
-      tabIndex={0}
-    >
-      <div
-        className={classNames(style.ImageContainer, `relative object-cover`)}
+    return (
+      <Link
+        ref={ref}
+        href={`participation/${id}`}
+        className={style.ChallengeItem}
+        role="button"
+        tabIndex={0}
       >
-        <img
-          className={classNames(style.Image, `rounded-lg`)}
-          src={imgUrl || require('../../image/default-user.png')}
-          alt="temp"
-        />
         <div
-          className={classNames(
-            style.Participants,
-            `absolute rounded-md p-1 font-bold text-xs`,
-          )}
+          className={classNames(style.ImageContainer, `relative object-cover`)}
         >
-          {participants}명
+          <img
+            className={classNames(style.Image, `rounded-lg`)}
+            src={imgUrl || require('../../image/default-user.png')}
+            alt="temp"
+          />
+          <div
+            className={classNames(
+              style.Participants,
+              `absolute rounded-md p-1 font-bold text-xs`,
+            )}
+          >
+            {participants}명
+          </div>
         </div>
-      </div>
-      <div className={classNames(`flex flex-col ml-1 pt-1`)}>
-        <div className={classNames(style.Leader, `font-medium text-xs`)}>
-          {leader}
+        <div className={classNames(`flex flex-col ml-1 pt-1`)}>
+          <div className={classNames(style.Leader, `font-medium text-xs`)}>
+            {leader}
+          </div>
+          <div
+            className={classNames(
+              style.Title,
+              `font-bold text-base overflow-hidden text-ellipsis whitespace-nowrap`,
+            )}
+          >
+            {title}
+          </div>
+          <div className={classNames(style.Period, `font-medium text-xs`)}>
+            {period}
+          </div>
         </div>
-        <div
-          className={classNames(
-            style.Title,
-            `font-bold text-base overflow-hidden text-ellipsis whitespace-nowrap`,
-          )}
-        >
-          {title}
-        </div>
-        <div className={classNames(style.Period, `font-medium text-xs`)}>
-          {period}
-        </div>
-      </div>
-    </Link>
-  );
-};
+      </Link>
+    );
+  },
+);
 
 ChallengeItem.propTypes = {
   imageUrl: PropTypes.string,
