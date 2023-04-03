@@ -12,7 +12,6 @@ import { Button } from '../../../components/Button';
 
 import Container from '@/components/Container';
 import { persistor } from '@/pages/_app';
-
 import { reset, saveExtraInfosAsync } from '@/store/signup/signupSlice';
 
 const signup = props => {

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useRouter } from 'next/router';
+import Swal from 'sweetalert2';
 
 import http from '../api/http';
 
@@ -10,11 +11,8 @@ import { ReturnArrow } from '@/components/ReturnArrow';
 import { SelectArrow } from '@/components/SelectArrow';
 import { UserAvatar } from '@/components/UserAvatar';
 import { PROFILE_URL } from '@/constants';
-
-import { reset } from '@/store/user/userSlice';
-
 import { persistor } from '@/pages/_app';
-import Swal from 'sweetalert2';
+import { reset } from '@/store/user/userSlice';
 
 const profile = () => {
   const router = useRouter();
