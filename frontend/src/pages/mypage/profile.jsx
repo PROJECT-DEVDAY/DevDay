@@ -28,11 +28,13 @@ const profile = () => {
       .then(res => {
         setProfileInfo(res.data.data);
       })
-      .catch(e => {});
-  });
+      .catch(e => {
+        router.push('/user/login');
+      });
+  }, []);
 
   const privateInfo = () => {
-    router.push('');
+    router.push('/mypage/settings');
   };
 
   const challengeCertification = () => {

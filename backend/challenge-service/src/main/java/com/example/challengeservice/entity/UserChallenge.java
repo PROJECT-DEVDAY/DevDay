@@ -14,8 +14,6 @@ import javax.persistence.*;
 @Getter
 @Setter
 public class UserChallenge {
-
-    /** 성공인증 URL **/
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="USER_CHALLENGE_ID", nullable = false)
@@ -27,14 +25,18 @@ public class UserChallenge {
 
     @Column(nullable = false)
     private Long userId;
+
     @Column(nullable = false)
-//    @ColumnDefault("0")
+    private String nickname;
+
+    @Column(nullable = false)
     private Long diffPrice;
 
-    public static UserChallenge from(ChallengeRoom challengeRoom, Long userId) {
+    public static UserChallenge from(ChallengeRoom challengeRoom, Long userId ,String nickname) {
         return UserChallenge.builder()
                 .challengeRoom(challengeRoom)
                 .diffPrice(Long.parseLong("0"))
+                .nickname(nickname)
                 .userId(userId)
                 .build();
     }
