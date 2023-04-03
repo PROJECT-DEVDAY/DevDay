@@ -96,6 +96,7 @@ const algo = props => {
     data.append('maxParticipantsSize', member);
     data.append('algorithmCount', algoithmCount);
     data.append('backGroundFile', challengeImgInput.current.files[0] || null);
+    data.append('nickname', user.userInfo.nickname);
 
     Swal.fire({
       title: '챌린지를 \n 생성하시겠습니까?',
