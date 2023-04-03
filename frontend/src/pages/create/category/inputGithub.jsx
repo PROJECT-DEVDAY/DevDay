@@ -12,6 +12,7 @@ import { BtnFooter } from '@/components/BtnFooter';
 import { InputBox } from '@/components/InputBox';
 import { ReturnArrow } from '@/components/ReturnArrow';
 import { GITHUBBAEKJOON_URL } from '@/constants';
+import Container from '@/components/Container';
 
 const inputGithub = props => {
   const [text, setText] = useState('');
@@ -48,12 +49,11 @@ const inputGithub = props => {
       });
   };
   return (
-    <div>
-      <div className={classNames(`style.div-header`, `sticky top-0`)}>
-        <ReturnArrow title="추가 정보 입력" />
-      </div>
-      <div className="div-body p-6 pb-32">
-        <div className="font-medium text-xl mt-12 p-4">
+    <Container>
+      <Container.SubPageHeader title="추가 정보 입력" />
+
+      <Container.MainBody className="mt-16">
+        <div className="text-lg ml-2 font-medium">
           Commit 챌린지를 위해서는 <br /> Github 아이디를 입력하셔야 <br />
           합니다.
         </div>
@@ -61,37 +61,39 @@ const inputGithub = props => {
         <Image
           src={require('@/image/github.png')}
           alt="github"
-          className="w-1/2 mt-8"
+          className="w-1/2 ml-2 mt-6"
         />
         <InputBox
           placeholder="GitHub 아이디"
           onChange={setTextValue}
           value={text}
         />
-        <div className="mt-4 ">
+        <div className="mt-4 ml-2 text-sm">
           Commit 챌린지를 이용하기 위해서 필요합니다
           <br />
           해당 정보가 입력되지 않는다면 해당 서비스 이용이
           <br />
           제합됩니다.
         </div>
-      </div>
-      <div
-        className={classNames(
-          style.btn,
-          `text-center absolute w-full bottom-0 pb-4 m-0`,
-        )}
-      >
-        <BtnFooter
-          content=""
-          label="다음"
-          disable={!!text}
-          goToUrl="/create/commit"
-          onClick={githubInput}
-          warningMessage="Commit 챌린지는 GitHub ID가 필요해요."
-        />
-      </div>
-    </div>
+      </Container.MainBody>
+      <Container.Footer>
+        <div
+          className={classNames(
+            style.btn,
+            `text-center absolute w-full bottom-0 pb-4 m-0`,
+          )}
+        >
+          <BtnFooter
+            content=""
+            label="다음"
+            disable={!!text}
+            goToUrl="/create/commit"
+            onClick={githubInput}
+            warningMessage="Commit 챌린지는 GitHub ID가 필요해요."
+          />
+        </div>
+      </Container.Footer>
+    </Container>
   );
 };
 
