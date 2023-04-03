@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 
 import classNames from 'classnames';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 import Swal from 'sweetalert2';
 
 import style from './algo.module.scss';
@@ -18,6 +19,7 @@ import { ReturnArrow } from '@/components/ReturnArrow';
 import { CHALLENGES_URL } from '@/constants';
 
 const algo = props => {
+  const router = useRouter();
   const [member, setMember] = useState(1);
   const [algoithmCount, setAlgoithmCount] = useState(1);
 
@@ -31,7 +33,7 @@ const algo = props => {
     introduce: '',
     startDate: '',
     endDate: '',
-    backGroudFile: '',
+    backGroundFile: '',
   });
 
   const handleChange = e => {
@@ -49,39 +51,33 @@ const algo = props => {
     }
   };
 
-  const challengeImageInput = useRef(null);
+  const challengeImgInput = useRef(null);
 
-  const [imgFile, setImgeFile] = useState(
-    require('../../image/backgroundImage.jpg'),
-  );
+  const [imgFile, setImgFile] = useState(require('../../image/add-image.png'));
   const [isSelect, setIsSelect] = useState(false);
 
-  const onClickImageInput = event => {
+  const onClickImgInput = event => {
     event.preventDefault();
-    challengeImageInput.current.click();
+    challengeImgInput.current.click();
   };
 
-  const onChangeImage = e => {
+  const onChangeImg = e => {
     const reader = new FileReader();
+
     reader.onload = ({ target }) => {
-      challengeImageInput.current.src = target.result;
+      challengeImgInput.current.src = target.result;
       setIsSelect(true);
+      setImgFile(target.result);
     };
 
-    if (e.target.files[0]) {
-      setImgeFile(e.target.files[0]);
-    } else {
-      setImgeFile(require('../../image/default-user.png'));
+    if (!challengeImgInput.current.files[0]) {
       return;
     }
+    reader.readAsDataURL(challengeImgInput.current.files[0]);
+  };
 
-    reader.onload = ({ target }) => {
-      challengeImageInput.current.src = target.result;
-      setIsSelect(true);
-      setImgeFile(target.result);
-    };
-
-    if (!challengeImageInput.current.files[0]) {
+  const onClickCreateChallenge = () => {
+    if (!isSelect) {
       Swal.fire({
         position: 'center',
         icon: 'warning',
@@ -91,10 +87,6 @@ const algo = props => {
       });
       return;
     }
-    reader.readAsDataURL(challengeImageInput.current.files[0]);
-  };
-
-  const onClickCreateChallenge = () => {
     const data = new FormData();
     data.append('title', challenge.title);
     data.append('hostId', user.userInfo.userId);
@@ -105,7 +97,8 @@ const algo = props => {
     data.append('endDate', challenge.endDate);
     data.append('maxParticipantsSize', member);
     data.append('algorithmCount', algoithmCount);
-    data.append('backGroundFile', challengeImageInput.current.files[0]);
+    data.append('backGroundFile', challengeImgInput.current.files[0] || null);
+    data.append('nickname', user.userInfo.nickname);
 
     Swal.fire({
       title: '챌린지를 \n 생성하시겠습니까?',
@@ -118,8 +111,10 @@ const algo = props => {
     }).then(result => {
       if (result.isConfirmed) {
         httpForm
-          .post(CHALLENGES_URL, data)
-          .then(() => {
+          .post(CHALLENGES_URL, data, {
+            headers: { Authorization: user.accessToken },
+          })
+          .then(res => {
             Swal.fire({
               position: 'center',
               icon: 'success',
@@ -127,6 +122,7 @@ const algo = props => {
               showConfirmButton: false,
               timer: 1500,
             });
+            router.push(`/participation/${res.data.id}`);
           })
           .catch(error => {
             Swal.fire({
@@ -156,24 +152,24 @@ const algo = props => {
           <p className="text-right">{challenge.title.length}/30</p>
         </div>
         <div>
-          <InputLabel content="챌린지 이미지" />
+          <InputLabel content="챌린지 이미지" asterisk />
           <div className="w-full h-40 relative">
             <Image
               src={imgFile}
               alt="프로필 이미지"
-              onClick={onClickImageInput}
+              onClick={onClickImgInput}
               fill
             />
           </div>
           <input
             style={{ display: 'none' }}
-            ref={challengeImageInput}
+            ref={challengeImgInput}
             type="file"
             className={style.ImgInput}
             id="logoImg"
             accept="image/*"
             name="file"
-            onChange={onChangeImage}
+            onChange={onChangeImg}
           />
         </div>
         <div className="mt-6">
@@ -290,7 +286,7 @@ const algo = props => {
           )}
         </div>
         <div className="mt-8">
-          <InputLabel content="챌린지 소개" asterisk={false} />
+          <InputLabel content="챌린지 소개" />
           <ContentInput
             placeholder="예) 1일 1알고리즘 실천해서 코테 뿌셔봅시다"
             maxLength="30"

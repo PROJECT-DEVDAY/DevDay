@@ -14,6 +14,6 @@ public interface ChallengeRecordRepoCustom {
 
     List<PhotoRecordResponseDto> getSelfPhotoRecord(UserChallenge userChallenge,String viewType);
     List<PhotoRecordResponseDto> getTeamPhotoRecord(Long challengeRoomId,String viewType);
-    Optional<AlgoRecordResponseDto> findByCreateAtAndUserChallenge(String createAt, UserChallenge userChallenge);
+    Optional<ChallengeRecord> findByCreateAtAndUserChallenge(String createAt, UserChallenge userChallenge);
     Optional<ChallengeRecordResponseDto> findByUserChallengeIdAndCreateAt(Long userChallengeId, String createAt);
 }

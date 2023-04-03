@@ -26,7 +26,15 @@ export const userSlice = createSlice({
     accessToken: '',
     refreshToken: '',
   },
-  reducers: {},
+  reducers: {
+    reset(state) {
+      Object.assign(state, {
+        userInfo: {},
+        accessToken: '',
+        refreshToken: '',
+      });
+    },
+  },
   extraReducers: builder => {
     builder
       .addCase(loginAsync.pending, state => {
@@ -47,4 +55,5 @@ export const userSlice = createSlice({
       });
   },
 });
+export const { reset } = userSlice.actions;
 export default userSlice.reducer;

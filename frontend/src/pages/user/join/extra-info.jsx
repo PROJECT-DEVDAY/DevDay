@@ -11,6 +11,7 @@ import style from './extra-info.module.scss';
 import { Button } from '../../../components/Button';
 import { ReturnArrow } from '../../../components/ReturnArrow';
 
+import Container from '@/components/Container';
 import { persistor } from '@/pages/_app';
 import http from '@/pages/api/http';
 import {
@@ -58,17 +59,17 @@ const signup = props => {
       }),
     )
       .unwrap()
-      .then(data => {
-        Swal.fire({
+      .then(async () => {
+        await Swal.fire({
           position: 'center',
           icon: 'success',
           title: '회원가입 성공!',
           showConfirmButton: false,
           timer: 1500,
         });
+        signsInfoReset();
+        router.push('/user/login');
       })
-      .then(signsInfoReset)
-      .then(router.push('/user/login'))
       .catch(error => {
         Swal.fire({
           icon: 'error',
@@ -95,11 +96,9 @@ const signup = props => {
   };
 
   return (
-    <div className={style.signup}>
-      <div className="style.div-header sticky top-0">
-        <ReturnArrow title="회원가입" />
-      </div>
-      <div className="div-body p-6 pb-32">
+    <Container>
+      <Container.SubPageHeader title="회원가입" />
+      <Container.MainBody className="mt-8">
         <div className="mb-16">
           <Image
             src={require('@/image/solved_ac.png')}
@@ -120,7 +119,7 @@ const signup = props => {
               className={classNames(`rounded-none w-full pl-2`, style.inputbox)}
               name="baekjoon"
               type="text"
-              placeholder="solveAc 아이디"
+              placeholder="solved.ac 아이디"
               onChange={onChangeId}
             />
           </div>
@@ -147,7 +146,7 @@ const signup = props => {
               name="github"
               className={classNames(`rounded-none w-full pl-2`, style.inputbox)}
               type="text"
-              placeholder="gitHub 아이디"
+              placeholder="github 아이디"
               onChange={onChangeId}
             />
           </div>
@@ -156,33 +155,34 @@ const signup = props => {
             <br /> 해당 정보가 입력되지 않는다면 해당 서비스 이용이 제한됩니다.
           </p>
         </div>
-      </div>
-      <div
-        className={classNames(
-          `font-sans text-center absolute w-full bottom-0 p-4`,
-        )}
-      >
-        <div className="flex">
-          <div className="w-1/2 p-2">
-            <Button
-              color="primary"
-              fill={false}
-              label="건너뛰기"
-              onClick={onClickPass}
-            />
-          </div>
-          <div className="w-1/2 p-2">
-            <Button
-              color="primary"
-              fill
-              label="가입하기"
-              onClick={onClickJoin}
-            />
+      </Container.MainBody>
+      <Container.MainFooter className="bg-white">
+        <div
+          className={classNames(
+            `font-sans text-center absolute w-full bottom-0 p-4`,
+          )}
+        >
+          <div className="flex">
+            <div className="w-1/2 pr-1">
+              <Button
+                color="primary"
+                fill={false}
+                label="건너뛰기"
+                onClick={onClickPass}
+              />
+            </div>
+            <div className="w-1/2 pl-1">
+              <Button
+                color="primary"
+                fill
+                label="가입하기"
+                onClick={onClickJoin}
+              />
+            </div>
           </div>
         </div>
-        <div className="mt-2"> 회원 가입</div>
-      </div>
-    </div>
+      </Container.MainFooter>
+    </Container>
   );
 };
 

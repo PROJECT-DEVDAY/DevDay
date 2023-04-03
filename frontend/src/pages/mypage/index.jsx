@@ -34,11 +34,25 @@ const index = () => {
       .then(res => {
         setMyPageInfo(res.data.data);
       })
-      .catch(e => {});
-  });
+      .catch(e => {
+        router.push('/user/login');
+      });
+  }, []);
 
   const goToProfile = () => {
     router.push('/mypage/profile');
+  };
+
+  const goToSettings = () => {
+    router.push('/mypage/settings');
+  };
+
+  const goToMyChallenge = () => {
+    router.push('/mypage/challenge');
+  };
+
+  const goToDeposit = () => {
+    router.push('/mypage/deposit');
   };
 
   return (
@@ -47,7 +61,7 @@ const index = () => {
         <div className="style.div-header p-4 flex justify-between items-center">
           <h1 className="font-medium text-2xl">마이페이지</h1>
           <div className="rounded-full bg-purple-300 w-10 h-10 flex justify-center items-center">
-            <AiOutlineSetting className="text-2xl" />
+            <AiOutlineSetting className="text-2xl" onClick={goToSettings} />
           </div>
         </div>
       </Container.Header>
@@ -63,7 +77,7 @@ const index = () => {
           </div>
           <SelectArrow title={myPageInfo.nickname} fill onClick={goToProfile} />
           <div className="px-6 py-8">
-            <div className="flex justify-between mb-6">
+            <div className="flex justify-between mb-6" onClick={goToDeposit}>
               <div className="flex items-center">
                 <div>
                   <Image
@@ -89,7 +103,9 @@ const index = () => {
           </div>
         </div>
         <div>
-          <p className="px-4">챌린지 현황</p>
+          <p className="px-4" onClick={goToMyChallenge}>
+            챌린지 현황
+          </p>
           <hr className="w-full" />
           <div className="flex justify-between my-5 mx-12">
             <div>
