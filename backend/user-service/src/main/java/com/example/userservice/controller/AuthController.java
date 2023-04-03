@@ -82,7 +82,7 @@ public class AuthController {
      * */
     @PatchMapping("/user/img")
     public ResponseEntity<BaseResponseDto<String>> updateProfileImg(HttpServletRequest request,
-                                                               @RequestPart MultipartFile profileImg) {
+                                                                    @RequestPart MultipartFile profileImg) {
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new BaseResponseDto<>(200, "success", authService.updateProfileImg(getUserId(request), profileImg)));
@@ -107,7 +107,7 @@ public class AuthController {
      * */
     @PatchMapping("/user/nickname")
     public ResponseEntity<BaseResponseDto<String>> updateNickname(HttpServletRequest request,
-                                                             @RequestBody NicknameRequestDto requestDto) {
+                                                                  @RequestBody NicknameRequestDto requestDto) {
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new BaseResponseDto<>(200, "success", authService.updateNickname(getUserId(request), requestDto)));
@@ -121,7 +121,7 @@ public class AuthController {
     @PatchMapping("/user/githubandbaekjoon")
     public ResponseEntity<BaseResponseDto<GithubBaekjoonResponseDto>> updateGithubAndBaekjoon(HttpServletRequest request,
                                                                                               @RequestBody GithubBaekjoonRequestDto requestDto) {
-
+        System.out.println("1111111111");
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new BaseResponseDto<>(200, "success", authService.updateGithubAndBaekjoon(getUserId(request), requestDto)));
     }
