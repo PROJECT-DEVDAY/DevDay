@@ -29,7 +29,7 @@ const profile = () => {
         setProfileInfo(res.data.data);
       })
       .catch(e => {});
-  });
+  }, []);
 
   const privateInfo = () => {
     router.push('');
