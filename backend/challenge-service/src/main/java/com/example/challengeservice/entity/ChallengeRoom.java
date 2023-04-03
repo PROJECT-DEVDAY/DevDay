@@ -27,6 +27,10 @@ public class ChallengeRoom {
     @Column(nullable = false)
     private Long hostId;
 
+    /** 방장 닉네임 **/
+    @Column(nullable = false)
+    private String hostNickname;
+
     /** 참가비용 **/
     @Column(nullable = false)
     private int entryFee;
@@ -84,6 +88,7 @@ public class ChallengeRoom {
          return ChallengeRoom.builder()
                  .title(dto.getTitle())
                  .hostId(dto.getHostId())
+                 .hostNickname(dto.getNickname())
                  .entryFee(dto.getEntryFee())
                  .maxParticipantsSize(dto.getMaxParticipantsSize())
                  .introduce(dto.getIntroduce())
