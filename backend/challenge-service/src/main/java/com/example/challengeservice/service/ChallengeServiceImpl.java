@@ -127,7 +127,7 @@ public class ChallengeServiceImpl implements ChallengeService{
         }
 
         //챌린지 방이 잘 생성 되었다면 방을 만든 방장은 방에 참가해야한다.
-        joinChallenge(new ChallengeJoinRequestDto(challengeRoomRequestDto.getHostId(),challengeId,challengeRoomRequestDto.getNickname()));
+        //joinChallenge(new ChallengeJoinRequestDto(challengeRoomRequestDto.getHostId(),challengeId,challengeRoomRequestDto.getNickname()));
 
         return ChallengeCreateResponseDto.from(challengeId,"챌린지 방 생성 완료");
     }
