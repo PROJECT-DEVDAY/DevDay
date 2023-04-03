@@ -35,7 +35,7 @@ const index = () => {
         setMyPageInfo(res.data.data);
       })
       .catch(e => {
-        router.push('/user/login')
+        router.push('/user/login');
       });
   }, []);
 
@@ -48,11 +48,19 @@ const index = () => {
   };
 
   const goToMyChallenge = () => {
-    router.push('/mypage/challenge')
-  }
+    router.push('/mypage/challenge');
+  };
 
   const goToDeposit = () => {
-    router.push('/mypage/deposit')
+    router.push('/mypage/deposit');
+  };
+
+  const goToReward = () => {
+    router.push('/mypage/reward');
+  }
+
+  const goToCreateCheck = () => {
+    router.push('/create/check');
   }
 
   return (
@@ -90,7 +98,7 @@ const index = () => {
               </div>
               <p>{myPageInfo.prize}원</p>
             </div>
-            <div className="flex justify-between mb-4">
+            <div className="flex justify-between mb-4" onClick={goToReward}>
               <div className="flex items-center">
                 <Image
                   src={require('../../image/reward.png')}
@@ -103,7 +111,9 @@ const index = () => {
           </div>
         </div>
         <div>
-          <p className="px-4" onClick={goToMyChallenge}>챌린지 현황</p>
+          <p className="px-4" onClick={goToMyChallenge}>
+            챌린지 현황
+          </p>
           <hr className="w-full" />
           <div className="flex justify-between my-5 mx-12">
             <div>
@@ -126,7 +136,9 @@ const index = () => {
             <div className="absolute top-4 left-4">
               <HiOutlineBell className="text-xl" />
             </div>
-            <SelectOption content="챌린지 개설하기" fill />
+            <div onClick={goToCreateCheck}>
+              <SelectOption content="챌린지 개설하기" fill />
+            </div>
           </div>
           <div className="relative">
             <div className="absolute top-4 left-4">
