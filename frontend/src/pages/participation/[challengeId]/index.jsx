@@ -12,6 +12,7 @@ import style from './index.module.scss';
 import http from '../../api/http';
 
 import { Button } from '@/components/Button';
+import Container from '@/components/Container';
 import { CHALLENGE_DETAIL_URL, CHALLENGE_JOIN_URL } from '@/constants';
 
 import 'slick-carousel/slick/slick.css';
@@ -81,7 +82,8 @@ const challengeintro = props => {
   };
 
   return (
-    <div>
+    <Container>
+      <Container.SubPageHeader />
       <Image
         src={data.backGroundUrl}
         alt="logo"
@@ -92,7 +94,7 @@ const challengeintro = props => {
       />
       <div className={classNames('p-6', style.boxStyle)}>
         <p className="font-medium text-l">{data.hostNickname}</p>
-        <p className="font-medium text-4xl">{data.title}</p>
+        <p className="font-medium text-4xl break-keep ">{data.title}</p>
         <div className={classNames(style.fee, 'font-medium text-l')}>
           <p className="font-medium text-l">현재 인원 수</p>
           <p>{data.userCount}명</p>
@@ -205,9 +207,6 @@ const challengeintro = props => {
           {data.category === 'COMMIT' && (
             <p>1. GitHub에 공부한 내용을 Commit 해주세요</p>
           )}
-          {data.category === 'FREE' && (
-            <p>1. 예시사진에 맞는 인증사진을 제출해주세요</p>
-          )}
           <p>2. 사이트에서 제출이 적용되었는지 확인해주세요</p>
           <p>3. 끝</p>
         </div>
@@ -216,7 +215,7 @@ const challengeintro = props => {
         <div className={classNames('p-6')}>
           <p className="font-medium text-xl">이렇게 인증 해주세요</p>
           <div className="grid-cols-2 grid gap-2">
-            <div className="text-center">
+            <div className="relative border-solid border-2 border-slate-200">
               <Image
                 src={data.successUrl}
                 loader={({ src }) => `${src}`}
@@ -225,9 +224,11 @@ const challengeintro = props => {
                 alt="user"
                 className="w-full"
               />
-              <p className="font-medium text-xl">좋은 예시</p>
+              <p className="font-medium text-xl absolute bottom-0 bg-white w-full text-center">
+                좋은 예시
+              </p>
             </div>
-            <div className="text-center">
+            <div className="relative border-solid border-2 border-slate-200 ">
               <Image
                 src={data.failUrl}
                 loader={({ src }) => `${src}`}
@@ -236,7 +237,9 @@ const challengeintro = props => {
                 alt="user"
                 className="w-full"
               />
-              <p className="font-medium text-xl ">나쁜 예시</p>
+              <p className="font-medium text-xl absolute bottom-0 bg-white w-full text-center">
+                나쁜 예시
+              </p>
             </div>
           </div>
         </div>
@@ -254,21 +257,18 @@ const challengeintro = props => {
           환불이 불가능합니다.
         </p>
       </div>
-      <div
-        className={classNames(
-          style.footer,
-          `text-center sticky w-full bottom-0 m-0 flex`,
-        )}
-      >
-        <div className="text-left">
-          <p>03.20(월) ~ 04.02(일)</p>
-          <p>매일 2주 동안</p>
+      <Container.MainFooter>
+        <div className="flex justify-between p-4">
+          <div className="text-left">
+            <p>03.20(월) ~ 04.02(일)</p>
+            <p>매일 2주 동안</p>
+          </div>
+          <div className="w-1/2">
+            <Button label="참여하기" onClick={clickJoin} />
+          </div>
         </div>
-        <div className="w-1/2">
-          <Button label="참여하기" onClick={clickJoin} />
-        </div>
-      </div>
-    </div>
+      </Container.MainFooter>
+    </Container>
   );
 };
 
