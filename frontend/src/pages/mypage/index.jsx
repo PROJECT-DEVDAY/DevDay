@@ -57,11 +57,11 @@ const index = () => {
 
   const goToReward = () => {
     router.push('/mypage/reward');
-  }
+  };
 
   const goToCreateCheck = () => {
     router.push('/create/check');
-  }
+  };
 
   return (
     <Container>

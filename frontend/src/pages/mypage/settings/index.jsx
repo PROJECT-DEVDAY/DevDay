@@ -1,17 +1,15 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
 
 import { useRouter } from 'next/router';
-import { useDispatch } from 'react-redux';
+import Swal from 'sweetalert2';
 
 import Container from '@/components/Container';
 import PrivateRouter from '@/components/PrivateRouter/PrivateRouter';
 import { ReturnArrow } from '@/components/ReturnArrow';
 import { SelectArrow } from '@/components/SelectArrow';
-
-import { reset } from '@/store/user/userSlice';
-
 import { persistor } from '@/pages/_app';
-import Swal from 'sweetalert2';
+import { reset } from '@/store/user/userSlice';
 
 const index = () => {
   const router = useRouter();
@@ -45,7 +43,6 @@ const index = () => {
           dispatch(reset());
           await persistor.purge();
         } catch (e) {
-          console.log(e);
           Swal.fire({
             icon: 'error',
             title: '실패!',
