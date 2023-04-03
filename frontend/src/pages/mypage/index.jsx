@@ -41,13 +41,17 @@ const index = () => {
     router.push('/mypage/profile');
   };
 
+  const goToSettings = () => {
+    router.push('/mypage/settings');
+  };
+
   return (
     <Container>
       <Container.Header>
         <div className="style.div-header p-4 flex justify-between items-center">
           <h1 className="font-medium text-2xl">마이페이지</h1>
           <div className="rounded-full bg-purple-300 w-10 h-10 flex justify-center items-center">
-            <AiOutlineSetting className="text-2xl" />
+            <AiOutlineSetting className="text-2xl" onClick={goToSettings} />
           </div>
         </div>
       </Container.Header>
