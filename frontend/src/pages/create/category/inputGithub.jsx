@@ -1,18 +1,51 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import classNames from 'classnames';
 import Image from 'next/image';
+import Swal from 'sweetalert2';
 
 import style from './inputGithub.module.scss';
 
 import { BtnFooter } from '@/components/BtnFooter';
 import { InputBox } from '@/components/InputBox';
 import { ReturnArrow } from '@/components/ReturnArrow';
+import { useSelector } from 'react-redux';
+import http from '../../api/http';
+import { GITHUBBAEKJOON_URL } from '@/constants';
 
 const inputGithub = props => {
   const [text, setText] = useState('');
   const setTextValue = e => {
     setText(e.target.value);
+  };
+
+  const user = useSelector(state => state.user);
+  // const [userInfomation, SetUserInfomation] = useState(user.userInfo);
+  const githubInput = async () => {
+    await http
+      .patch(
+        GITHUBBAEKJOON_URL,
+        { github: text, baekjoon: user.userInfo.baekjoon },
+        {
+          headers: { Authorization: user.userInfo.accessToken },
+        },
+      )
+      .then(() => {
+        Swal.fire({
+          position: 'center',
+          icon: 'success',
+          title: '성공!',
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      })
+      .catch(error => {
+        Swal.fire({
+          icon: 'error',
+          title: '다시 한번 확인해주세요!',
+          text: error.message,
+        });
+      });
   };
   return (
     <div>
@@ -54,6 +87,7 @@ const inputGithub = props => {
           label="다음"
           disable={!!text}
           goToUrl="/create/commit"
+          onClick={githubInput}
           warningMessage="Commit 챌린지는 GitHub ID가 필요해요."
         />
       </div>
