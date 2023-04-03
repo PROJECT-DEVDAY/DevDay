@@ -30,7 +30,7 @@ const check = props => {
   return (
     <div>
       <div className={classNames(`style.div-header`, `sticky top-0`)}>
-        <ReturnArrow />
+        <ReturnArrow title={''} />
       </div>
       <div className="div-body p-6 pb-32 mt-16">
         <div>

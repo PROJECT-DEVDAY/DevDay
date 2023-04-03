@@ -11,8 +11,15 @@ import { SelectArrow } from '@/components/SelectArrow';
 import { UserAvatar } from '@/components/UserAvatar';
 import { PROFILE_URL } from '@/constants';
 
+import { reset } from '@/store/user/userSlice';
+
+import { persistor } from '@/pages/_app';
+import Swal from 'sweetalert2';
+
 const profile = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
+
   const userInfo = useSelector(state => state.user);
   const [profileInfo, setProfileInfo] = useState({});
 
@@ -40,11 +47,30 @@ const profile = () => {
   const challengeCertification = () => {
     router.push('');
   };
-
-  const logout = () => {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
-    router.push('/user/login');
+  const onClickLogout = async () => {
+    Swal.fire({
+      title: '로그아웃 하실 건가요?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: '네',
+      cancelButtonText: '아니요',
+    }).then(async result => {
+      if (result.isConfirmed) {
+        try {
+          dispatch(reset());
+          await persistor.purge();
+        } catch (e) {
+          console.log(e);
+          Swal.fire({
+            icon: 'error',
+            title: '실패!',
+            text: '로그인에 실패했어요',
+          });
+        }
+      }
+    });
   };
 
   return (
@@ -71,7 +97,7 @@ const profile = () => {
           title="챌린지 인증서 목록"
           onClick={challengeCertification}
         />
-        <SelectArrow title="로그아웃" color onClick={logout} />
+        <SelectArrow title="로그아웃" color onClick={onClickLogout} />
       </div>
     </div>
   );
