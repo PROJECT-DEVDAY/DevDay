@@ -1,9 +1,9 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { PURGE } from 'redux-persist';
 
 import http from '../../pages/api/http';
 
 import { LOGIN_URL } from '@/constants';
-import { PURGE } from 'redux-persist';
 
 export const loginAsync = createAsyncThunk(
   'user/loginAsync',
@@ -19,17 +19,16 @@ export const loginAsync = createAsyncThunk(
     ];
   },
 );
-
+const initialState = {
+  userInfo: {},
+  accessToken: '',
+  refreshToken: '',
+},
 export const userSlice = createSlice({
   name: 'user',
-  initialState: {
-    userInfo: {},
-    accessToken: '',
-    refreshToken: '',
-  },
+  initialState,
   reducers: {
     reset(state) {
-      console.log('redux : logout');
       Object.assign(state, {
         userInfo: {},
         accessToken: '',
