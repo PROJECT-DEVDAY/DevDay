@@ -30,7 +30,7 @@ const Footer = ({ className, children }) => {
     <div
       ref={footerRef}
       id="devday-footer"
-      className={cx('fixed bottom-0 m-0 w-full', className)}
+      className={cx('fixed bottom-0 m-0 w-full bg-white', className)}
     >
       {children}
     </div>

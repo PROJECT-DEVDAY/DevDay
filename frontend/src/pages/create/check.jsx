@@ -7,6 +7,7 @@ import style from './check.module.scss';
 import { BtnFooter } from '../../components/BtnFooter';
 import { ReturnArrow } from '../../components/ReturnArrow';
 
+import Container from '@/components/Container';
 import PrivateRouter from '@/components/PrivateRouter/PrivateRouter';
 
 const check = props => {
@@ -28,12 +29,10 @@ const check = props => {
   };
 
   return (
-    <div>
-      <div className={classNames(`style.div-header`, `sticky top-0`)}>
-        <ReturnArrow />
-      </div>
-      <div className="div-body p-6 pb-32 mt-16">
-        <div>
+    <Container>
+      <Container.SubPageHeader />
+      <Container.MainBody>
+        <div className="mt-8">
           <div className="text-lg font-medium">
             챌린지를 여는 이 순간부터,
             <br />
@@ -74,8 +73,8 @@ const check = props => {
             type="checkbox"
           />
         </div>
-      </div>
-      <div className={classNames(`text-center absolute w-full bottom-0 m-0`)}>
+      </Container.MainBody>
+      <Container.MainFooter className="text-center">
         <BtnFooter
           content=""
           label="네! 약속할게요"
@@ -83,8 +82,8 @@ const check = props => {
           goToUrl="/create/type"
           warningMessage="약속을 지키지 않으실건가요ㅠㅠ"
         />
-      </div>
-    </div>
+      </Container.MainFooter>
+    </Container>
   );
 };
 

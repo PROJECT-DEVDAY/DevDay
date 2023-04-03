@@ -25,6 +25,14 @@ const commit = props => {
 
   const user = useSelector(state => state.user);
 
+  const today = new Date();
+
+  const year = today.getFullYear();
+  const month = `0${today.getMonth() + 1}`.slice(-2);
+  const day = `0${today.getDate()}`.slice(-2);
+
+  const dateString = `${year}-${month}-${day}`;
+
   const [challenge, setChallenge] = useState({
     category: 'COMMIT',
     title: '',
@@ -133,20 +141,27 @@ const commit = props => {
   };
 
   return (
-    <div>
-      <div className={classNames(`style.div-header`, `sticky top-0`)}>
-        <ReturnArrow title="챌린지 만들기" />
-      </div>
-      <div className="div-body p-6 mt-4">
+    <Container>
+      <Container.SubPageHeader title="챌린지 만들기" />
+      <Container.MainBody className="mt-4">
         <div>
           <InputLabel content="챌린지 제목" asterisk />
           <ContentInput
             placeholder="예) 매일 매일 커밋하기 챌린지"
             maxLength="30"
             name="title"
+            minlength="10"
             onChange={handleChange}
           />
-          <p className="text-right">{challenge.title.length}/30</p>
+          {challenge.title.length < 10 && (
+            <div className="flex justify-between">
+              <p className="font-medium text-red-500">10자 이상 입력하세요</p>
+              <p className="text-right">{challenge.title.length}/30</p>
+            </div>
+          )}
+          {challenge.title.length >= 10 && (
+            <p className="text-right">{challenge.title.length}/30</p>
+          )}
         </div>
         <div>
           <InputLabel content="챌린지 이미지" asterisk />
@@ -267,7 +282,7 @@ const commit = props => {
               type="date"
               name="startDate"
               onChange={handleChange}
-              max={challenge.endDate}
+              min={dateString}
             />
           </label>
           {challenge.startDate && (
@@ -286,15 +301,18 @@ const commit = props => {
           <InputLabel content="챌린지 소개" />
           <ContentInput
             placeholder="예) 매일 매일 커밋해서 잔디밭 꽉꽉 채웁시다!!"
-            maxLength="30"
             name="introduce"
             onChange={handleChange}
+            minlength="10"
           />
+          {challenge.introduce.length < 10 && (
+            <div className="flex justify-between">
+              <p className="font-medium text-red-500">10자 이상 입력하세요</p>
+            </div>
+          )}
         </div>
-      </div>
-      <div
-        className={classNames(`text-center sticky w-full bottom-0 pb-4 m-0`)}
-      >
+      </Container.MainBody>
+      <Container.MainFooter className="text-center">
         <BtnFooter
           content=""
           label="다음"
@@ -302,8 +320,8 @@ const commit = props => {
           onClick={onClickCreateChallenge}
           warningMessage="Commit 챌린지는 GitHub ID가 필요해요."
         />
-      </div>
-    </div>
+      </Container.MainFooter>
+    </Container>
   );
 };
 
