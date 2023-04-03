@@ -54,6 +54,8 @@ public interface ChallengeService {
     ChallengeRoom getChallengeRoomEntity(Long challengeRoomId);
 
     List<MyChallengeResponseDto> getMyChallengeList (Long userId , String status);
-    public void oneDayCulc(ChallengeRoom challengeRoom);
-    public void culcDailyPayment();
+    void oneDayCulc(ChallengeRoom challengeRoom);
+    void culcDailyPayment();
+    void updateUserCommit(Long userId);
+    void createCommitRecord(ChallengeRecordRequestDto requestDto);
 }

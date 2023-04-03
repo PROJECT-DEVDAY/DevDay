@@ -16,4 +16,6 @@ public interface ChallengeRoomRepository extends JpaRepository<ChallengeRoom, Lo
 
     @Query("select cr from ChallengeRoom cr where cr.startDate<=:getDate and cr.endDate >=:getDate")
     List<ChallengeRoom> findChallengingRoomByDate(@Param("getDate") String getDate);
+
+    Long countByHostId(Long hostId);
 }
