@@ -30,7 +30,7 @@ public class CorsConfiguration {
                 ServerHttpResponse response = ctx.getResponse();
                 HttpHeaders headers = response.getHeaders();
 
-                if (origin.startsWith("http://localhost:3000") || origin.startsWith("http://j8c209.p.ssafy.io:3000")) {
+                if (origin.startsWith("http://localhost:3000") || origin.startsWith("http://j8c209.p.ssafy.io")) {
                     headers.add("Access-Control-Allow-Origin", origin);
                 }
 
