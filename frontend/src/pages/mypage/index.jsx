@@ -55,6 +55,14 @@ const index = () => {
     router.push('/mypage/deposit');
   };
 
+  const goToReward = () => {
+    router.push('/mypage/reward');
+  }
+
+  const goToCreateCheck = () => {
+    router.push('/create/check');
+  }
+
   return (
     <Container>
       <Container.Header>
@@ -90,7 +98,7 @@ const index = () => {
               </div>
               <p>{myPageInfo.prize}원</p>
             </div>
-            <div className="flex justify-between mb-4">
+            <div className="flex justify-between mb-4" onClick={goToReward}>
               <div className="flex items-center">
                 <Image
                   src={require('../../image/reward.png')}
@@ -128,7 +136,9 @@ const index = () => {
             <div className="absolute top-4 left-4">
               <HiOutlineBell className="text-xl" />
             </div>
-            <SelectOption content="챌린지 개설하기" fill />
+            <div onClick={goToCreateCheck}>
+              <SelectOption content="챌린지 개설하기" fill />
+            </div>
           </div>
           <div className="relative">
             <div className="absolute top-4 left-4">
