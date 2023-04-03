@@ -25,6 +25,13 @@ const algo = props => {
 
   const user = useSelector(state => state.user);
 
+  const today = new Date();
+
+  const year = today.getFullYear();
+  const month = `0${today.getMonth() + 1}`.slice(-2);
+  const day = `0${today.getDate()}`.slice(-2);
+
+  const dateString = `${year}-${month}-${day}`;
   const [challenge, setChallenge] = useState({
     category: 'ALGO',
     title: '',
@@ -270,7 +277,7 @@ const algo = props => {
               type="date"
               name="startDate"
               onChange={handleChange}
-              max={challenge.endDate}
+              min={dateString}
             />
           </label>
           {challenge.startDate && (
