@@ -18,7 +18,7 @@ import Container from '@/components/Container';
 const challenge = () => {
   const router = useRouter();
   const userInfo = useSelector(state => state.user);
-  const [myChallengeInfo, setMyChallengeInfo] = useState({});
+  const [myChallengeInfo, setMyChallengeInfo] = useState([]);
 
   const headers = {
     Authorization: userInfo.accessToken,
@@ -31,9 +31,11 @@ const challenge = () => {
       })
       .then(res => {
         setMyChallengeInfo(res.data.data);
-        console.log(res.data.data)
+        console.log(res.data.data);
       })
-      .catch(e => {});
+      .catch(e => {
+        router.push('/user/login');
+      });
   }, []);
 
   const goToChallengeDetail = id => {
@@ -58,7 +60,7 @@ const challenge = () => {
         <div className={classNames('w-1/2 text-center', style.boundary)}>
           <p className="text-sm">챌린지</p>
           {/* <p className="font-medium">3개</p> */}
-          <p className='font-medium'>{myChallengeInfo.length}개</p>
+          <p className="font-medium">{myChallengeInfo.length}개</p>
         </div>
         <div className="w-1/2 text-center">
           <p className="text-sm">참여율</p>
@@ -67,7 +69,7 @@ const challenge = () => {
         </div>
       </div>
 
-      {/* {myChallengeInfo.map(myChallengeInfoItem => {
+      {myChallengeInfo.map(myChallengeInfoItem => {
         return (
           <ChallengingItem
             picture={myChallengeInfoItem.backGroundUrl}
@@ -76,7 +78,7 @@ const challenge = () => {
             date={`${myChallengeInfoItem.startDate} ${myChallengeInfoItem.endDate}`}
           />
         );
-      })} */}
+      })}
       <Container.Footer className="sticky w-full bottom-0 m-0">
         <Footer />
       </Container.Footer>

@@ -34,7 +34,9 @@ const index = () => {
       .then(res => {
         setMyPageInfo(res.data.data);
       })
-      .catch(e => {});
+      .catch(e => {
+        router.push('/user/login')
+      });
   }, []);
 
   const goToProfile = () => {
@@ -47,6 +49,10 @@ const index = () => {
 
   const goToMyChallenge = () => {
     router.push('/mypage/challenge')
+  }
+
+  const goToDeposit = () => {
+    router.push('/mypage/deposit')
   }
 
   return (
@@ -71,7 +77,7 @@ const index = () => {
           </div>
           <SelectArrow title={myPageInfo.nickname} fill onClick={goToProfile} />
           <div className="px-6 py-8">
-            <div className="flex justify-between mb-6">
+            <div className="flex justify-between mb-6" onClick={goToDeposit}>
               <div className="flex items-center">
                 <div>
                   <Image
