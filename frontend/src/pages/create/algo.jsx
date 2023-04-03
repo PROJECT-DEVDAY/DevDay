@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 
 import classNames from 'classnames';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 import Swal from 'sweetalert2';
 
 import style from './algo.module.scss';
@@ -18,6 +19,7 @@ import { ReturnArrow } from '@/components/ReturnArrow';
 import { CHALLENGES_URL } from '@/constants';
 
 const algo = props => {
+  const router = useRouter();
   const [member, setMember] = useState(1);
   const [algoithmCount, setAlgoithmCount] = useState(1);
 
@@ -112,7 +114,7 @@ const algo = props => {
           .post(CHALLENGES_URL, data, {
             headers: { Authorization: user.accessToken },
           })
-          .then(() => {
+          .then(res => {
             Swal.fire({
               position: 'center',
               icon: 'success',
@@ -120,6 +122,7 @@ const algo = props => {
               showConfirmButton: false,
               timer: 1500,
             });
+            router.push(`/participation/${res.data.id}`);
           })
           .catch(error => {
             Swal.fire({
