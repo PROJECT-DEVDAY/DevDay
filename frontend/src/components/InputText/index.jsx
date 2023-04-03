@@ -59,7 +59,7 @@ export const InputText = ({
         {icon}
       </button>
     );
-  } else if (inputType === 'delete-user') {
+  } else if (inputType === 'center') {
     inputValue = (
       <input
         type={type}
