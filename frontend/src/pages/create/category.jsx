@@ -9,6 +9,8 @@ import { BtnFooter } from '../../components/BtnFooter';
 import { ReturnArrow } from '../../components/ReturnArrow';
 import { SelectOption } from '../../components/SelectOption';
 
+import Container from '@/components/Container';
+
 const check = props => {
   const user = useSelector(state => state.user);
   const [checking, setChecking] = useState([false, false, false]);
@@ -67,11 +69,9 @@ const check = props => {
     },
   ];
   return (
-    <div>
-      <div className={classNames(`style.div-header`, `sticky top-0`)}>
-        <ReturnArrow />
-      </div>
-      <div className="div-body p-6 pb-32 mt-16">
+    <Container>
+      <Container.SubPageHeader />
+      <Container.MainBody className="mt-16">
         <div>
           <div className="text-lg font-medium">
             어떤 카테고리 챌린지를 도전해 <br /> 보실건가요?
@@ -99,13 +99,8 @@ const check = props => {
           })}
           <div className="text-center mt-4 font-medium">카테고리 선택</div>
         </div>
-      </div>
-      <div
-        className={classNames(
-          style.btn,
-          `text-center absolute w-full bottom-0 pb-4 m-0`,
-        )}
-      >
+      </Container.MainBody>
+      <Container.MainFooter className="text-center">
         <BtnFooter
           content=""
           label="다음으로"
@@ -113,8 +108,8 @@ const check = props => {
           goToUrl={goUrl}
           warningMessage="어떤 카테고리의 챌린지를 만드실건가요?"
         />
-      </div>
-    </div>
+      </Container.MainFooter>
+    </Container>
   );
 };
 
