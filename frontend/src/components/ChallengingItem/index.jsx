@@ -17,7 +17,7 @@ export const ChallengingItem = ({
       onClick={onClick}
     >
       <div className="w-1/4 me-4">
-        <Image
+        <img
           src={picture}
           className="aspect-auto w-20 rounded"
           width={0}

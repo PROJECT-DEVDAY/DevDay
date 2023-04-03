@@ -26,5 +26,7 @@ export const CHALLENGE_DETAIL_URL = `${CHALLENGE_SERVICE}/challenges`;
 
 // 결제
 const PAY_SERVICE = 'pay-service';
+
+export const MY_DEPOSIT_PRIZE = param => `${PAY_SERVICE}/users/${param}`;
 export const PAYMENT_CHALLENGE_SUCCESS = param =>
   `${PAY_SERVICE}/${param}/success`;

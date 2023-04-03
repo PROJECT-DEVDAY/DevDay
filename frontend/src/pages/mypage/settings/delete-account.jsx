@@ -28,7 +28,7 @@ const deleteAccount = () => {
             탈퇴시 <span className="text-red-600">"탈퇴하겠습니다"</span> 라고
             기입해주세요
           </p>
-          <InputText content={'탈퇴하겠습니다'} inputType={"delete-user"}/>
+          <InputText content={'탈퇴하겠습니다'} inputType={"center"}/>
         </div>
       </Container.Body>
       <Container.Footer className={'p-4'}>
