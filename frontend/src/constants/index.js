@@ -12,6 +12,7 @@ export const NICKNAME_URL = `${USER_SERVICE}/nickname`;
 export const MYPAGE_URL = `${USER_SERVICE}/auth`;
 export const PROFILE_URL = `${USER_SERVICE}/auth/user/detail`;
 export const GITHUBBAEKJOON_URL = `${USER_SERVICE}/auth/user/githubandbaekjoon`;
+export const PASSWORD_URL = `${USER_SERVICE}/auth/user/password`;
 
 // 챌린지
 const CHALLENGE_SERVICE = 'challenge-service';
