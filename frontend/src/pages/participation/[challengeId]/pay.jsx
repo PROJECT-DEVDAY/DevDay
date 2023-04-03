@@ -112,7 +112,7 @@ export const getServerSideProps = async context => {
   let challengeInfo = null;
 
   try {
-    const { data } = http.get(`${CHALLENGE_DETAIL_URL}/${challengeId}`);
+    const { data } = await http.get(`${CHALLENGE_DETAIL_URL}/${challengeId}`);
     if (data) challengeInfo = data;
   } catch (e) {
     // console.error('챌린지 정보를 가져올 수 없습니다.', e);
@@ -125,4 +125,4 @@ export const getServerSideProps = async context => {
   };
 };
 
-export default PrivateRouter(pay);
+export default pay;
