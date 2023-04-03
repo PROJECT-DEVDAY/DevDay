@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 
 import { useRouter } from 'next/router';
+
 import http from '../../api/http';
 
+import { Button } from '@/components/Button';
 import Container from '@/components/Container';
+import { InputText } from '@/components/InputText';
 import PrivateRouter from '@/components/PrivateRouter/PrivateRouter';
 import { ReturnArrow } from '@/components/ReturnArrow';
-import { InputText } from '@/components/InputText';
-
-import { Button } from '@/components/Button';
 
 const deleteAccount = () => {
   const router = useRouter();
@@ -28,11 +28,11 @@ const deleteAccount = () => {
             탈퇴시 <span className="text-red-600">"탈퇴하겠습니다"</span> 라고
             기입해주세요
           </p>
-          <InputText content={'탈퇴하겠습니다'} inputType={"center"}/>
+          <InputText content="탈퇴하겠습니다" inputType="center" />
         </div>
       </Container.Body>
-      <Container.Footer className={'p-4'}>
-        <Button label={'확인'} />
+      <Container.Footer className="p-4">
+        <Button label="확인" />
       </Container.Footer>
     </Container>
   );

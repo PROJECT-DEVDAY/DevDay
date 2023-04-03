@@ -66,7 +66,10 @@ export const InputText = ({
         name={name}
         value={value}
         placeholder={content}
-        className={classNames(style.Content, `w-full h-6 text-center font-medium`)}
+        className={classNames(
+          style.Content,
+          `w-full h-6 text-center font-medium`,
+        )}
         onChange={onChange}
         {...props}
       />

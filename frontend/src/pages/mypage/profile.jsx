@@ -29,7 +29,7 @@ const profile = () => {
         setProfileInfo(res.data.data);
       })
       .catch(e => {
-        router.push('/user/login')
+        router.push('/user/login');
       });
   }, []);
 

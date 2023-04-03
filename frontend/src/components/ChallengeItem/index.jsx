@@ -20,8 +20,6 @@ export const ChallengeItem = ({
   onClick,
   ...props
 }) => {
-  const [imgURL, setImgeFile] = useState({ imgUrl });
-
   const router = useRouter();
 
   return (
@@ -31,10 +29,12 @@ export const ChallengeItem = ({
       role="button"
       tabIndex={0}
     >
-      <div className={classNames(style.ImageContainer, `relative`)}>
-        <Image
+      <div
+        className={classNames(style.ImageContainer, `relative object-cover`)}
+      >
+        <img
           className={classNames(style.Image, `rounded-lg`)}
-          src={imgURL || require('../../image/default-user.png')}
+          src={imgUrl || require('../../image/default-user.png')}
           alt="temp"
         />
         <div
@@ -50,7 +50,12 @@ export const ChallengeItem = ({
         <div className={classNames(style.Leader, `font-medium text-xs`)}>
           {leader}
         </div>
-        <div className={classNames(style.Title, `font-bold text-base`)}>
+        <div
+          className={classNames(
+            style.Title,
+            `font-bold text-base overflow-hidden text-ellipsis whitespace-nowrap`,
+          )}
+        >
           {title}
         </div>
         <div className={classNames(style.Period, `font-medium text-xs`)}>
@@ -62,10 +67,10 @@ export const ChallengeItem = ({
 };
 
 ChallengeItem.propTypes = {
-  imageUrl: PropTypes.string.isRequired,
+  imageUrl: PropTypes.string,
   participants: PropTypes.number.isRequired,
   leader: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   period: PropTypes.string.isRequired,
-  onClick: PropTypes.func.isRequired,
+  onClick: PropTypes.func,
 };

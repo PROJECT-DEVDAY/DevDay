@@ -9,7 +9,10 @@ import style from './index.module.scss';
 export const InputBox = ({ className, placeholder, ...props }) => {
   return (
     <div
-      className={classNames(`flex p-2 h-14 mt-6 w-full rounded-xl items-center`, style.box)}
+      className={classNames(
+        `flex p-2 h-14 mt-6 w-full rounded-xl items-center`,
+        style.box,
+      )}
       {...props}
     >
       <CiMail className={classNames(`text-2xl`, style.icon)} />

@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 
 import { useRouter } from 'next/router';
-import http from '../../api/http';
 
-import { NICKNAME_URL } from '@/constants';
+import http from '../../api/http';
 
 import { Button } from '@/components/Button';
 import Container from '@/components/Container';
@@ -11,6 +10,7 @@ import { InputLabel } from '@/components/InputLabel';
 import { InputText } from '@/components/InputText';
 import PrivateRouter from '@/components/PrivateRouter/PrivateRouter';
 import { ReturnArrow } from '@/components/ReturnArrow';
+import { NICKNAME_URL } from '@/constants';
 
 const nickname = () => {
   const router = useRouter();
@@ -39,9 +39,9 @@ const nickname = () => {
           <InputLabel content="새 닉네임" />
         </div>
         <InputText
-          content={'홍길동'}
-          inputType={'iconText'}
-          icon={'중복확인'}
+          content="홍길동"
+          inputType="iconText"
+          icon="중복확인"
           onClick={onClickDuplicateCheck}
         />
         <div className="mt-8 mb-4">
@@ -53,8 +53,8 @@ const nickname = () => {
         </div>
         <InputText content="12자리 이상, 대문자, 소문자, 특수문자 포함" />
       </Container.Body>
-      <Container.Footer className={'p-4'}>
-        <Button label={'확인'} />
+      <Container.Footer className="p-4">
+        <Button label="확인" />
       </Container.Footer>
     </Container>
   );

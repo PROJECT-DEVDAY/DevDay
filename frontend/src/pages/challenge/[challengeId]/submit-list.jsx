@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
-import _ from 'lodash';
 import RGL, { WidthProvider } from 'react-grid-layout';
+
+import _ from 'lodash';
 
 import Container from '@/components/Container';
 

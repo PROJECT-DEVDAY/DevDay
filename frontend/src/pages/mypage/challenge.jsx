@@ -8,12 +8,12 @@ import style from './challenge.module.scss';
 import http from '../api/http';
 
 import { ChallengingItem } from '@/components/ChallengingItem';
+import Container from '@/components/Container';
 import Footer from '@/components/Footer';
 import { HeaderButtons } from '@/components/HeaderButtons';
 import PrivateRouter from '@/components/PrivateRouter/PrivateRouter';
 import { ReturnArrow } from '@/components/ReturnArrow';
 import { MY_CHALLENGES_URL } from '@/constants';
-import Container from '@/components/Container';
 
 const challenge = () => {
   const router = useRouter();
