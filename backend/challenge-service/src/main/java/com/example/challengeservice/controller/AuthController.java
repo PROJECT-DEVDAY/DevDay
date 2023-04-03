@@ -30,7 +30,7 @@ import java.io.IOException;
 public class AuthController {
     private final ResponseService responseService;
     private final ChallengeService challengeService;
-    private static final String USER_ID = "userID";
+    private static final String USER_ID = "userId";
 
     /**
      * author  : 홍금비
