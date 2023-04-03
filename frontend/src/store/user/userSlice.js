@@ -3,6 +3,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import http from '../../pages/api/http';
 
 import { LOGIN_URL } from '@/constants';
+import { PURGE } from 'redux-persist';
 
 export const loginAsync = createAsyncThunk(
   'user/loginAsync',
@@ -28,6 +29,7 @@ export const userSlice = createSlice({
   },
   reducers: {
     reset(state) {
+      console.log('redux : logout');
       Object.assign(state, {
         userInfo: {},
         accessToken: '',
@@ -52,7 +54,8 @@ export const userSlice = createSlice({
       })
       .addCase(loginAsync.rejected, state => {
         return { ...state, token: null, status: 'Fail' };
-      });
+      })
+      .addCase(PURGE, () => initialState);
   },
 });
 export const { reset } = userSlice.actions;
