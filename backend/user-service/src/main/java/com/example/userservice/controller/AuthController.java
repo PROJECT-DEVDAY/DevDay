@@ -121,7 +121,6 @@ public class AuthController {
     @PatchMapping("/user/githubandbaekjoon")
     public ResponseEntity<BaseResponseDto<GithubBaekjoonResponseDto>> updateGithubAndBaekjoon(HttpServletRequest request,
                                                                                               @RequestBody GithubBaekjoonRequestDto requestDto) {
-        System.out.println("1111111111");
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new BaseResponseDto<>(200, "success", authService.updateGithubAndBaekjoon(getUserId(request), requestDto)));
     }
