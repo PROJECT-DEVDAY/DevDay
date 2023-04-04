@@ -11,8 +11,9 @@ import java.util.Optional;
 
 @Repository
 public interface UserChallengeRepository extends JpaRepository<UserChallenge,Long> {
-    Optional<UserChallenge> findByChallengeRoomIdAndUserId(Long challengeId, Long userId);
+    Optional<UserChallenge> findByChallengeRoomIdAndUserId(Long challengeRoomId, Long userId);
 
+    List<UserChallenge> findAllByChallengeRoomId(Long challengeRoomId);
     Optional<UserChallenge> findById(Long id);
 
     /** 해당 날짜에 그 카테고리로 만들어진 UserChallenge 리스트 가져오기 **/
