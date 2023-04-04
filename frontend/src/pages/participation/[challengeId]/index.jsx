@@ -66,12 +66,13 @@ const challengeintro = props => {
         router.push(`/participation/${challengeId}/pay`);
       })
       .catch(err => {
+        console.log(err);
         if (err.response.data.code === 'J001') {
           router.push(`/challenge/${challengeId}`);
         } else {
           Swal.fire({
             position: 'center',
-            icon: 'danger',
+            icon: 'warning',
             title: '실패!',
             text: err.response.data.message,
             showConfirmButton: false,
@@ -94,7 +95,7 @@ const challengeintro = props => {
       />
       <div className={classNames('p-6', style.boxStyle)}>
         <p className="font-medium text-l">{data.hostNickname}</p>
-        <p className="font-medium text-4xl break-keep ">{data.title}</p>
+        <p className="font-medium text-4xl ">{data.title}</p>
         <div className={classNames(style.fee, 'font-medium text-l')}>
           <p className="font-medium text-l">현재 인원 수</p>
           <p>{data.userCount}명</p>
@@ -249,7 +250,7 @@ const challengeintro = props => {
         <p>1. 00시 00분 ~ 23시 59분 사이에 인증하셔야 합니다.</p>
         <p>2. 어플에서 제출이 적용되었는지 확인해주세요</p>
       </div>
-      <div className={classNames('p-6')}>
+      <div className={classNames('p-6 mb-16')}>
         <p className="font-medium text-xl">주의사항</p>
         <p>챌린지 시작 후 취소 불가</p>
         <p>

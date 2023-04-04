@@ -9,7 +9,7 @@ import Swal from 'sweetalert2';
 import { Button } from '@/components/Button';
 import Container from '@/components/Container';
 
-import { CHALLENGE_PHOTO_RECORD_URL } from '@/components';
+import { CHALLENGE_PHOTO_RECORD_URL } from '@/constants';
 
 const SubmitPicture = () => {
   const router = useRouter();
