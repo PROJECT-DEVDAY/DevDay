@@ -13,6 +13,6 @@ public interface SolvedacRepository extends JpaRepository<Solvedac, ProblemId>, 
     List<Solvedac> findAllByUserId(Long userId);
 
     @Modifying(flushAutomatically = true)
-    @Query("delete from User u where u.id = :userId")
+    @Query("delete from Solvedac s where s.user.id = :userId")
     void deleteAllByUserId(@Param("userId") Long userId);
 }
