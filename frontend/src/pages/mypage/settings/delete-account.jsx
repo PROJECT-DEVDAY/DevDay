@@ -24,6 +24,7 @@ const deleteAccount = () => {
   const [inputs, setInputs] = useState({
     deleteCheck: '',
   });
+
   const { deleteCheck } = inputs;
 
   const onChangeId = e => {
@@ -49,7 +50,10 @@ const deleteAccount = () => {
     http
       .delete(DELETEUSER_URL, { headers })
       .then(res => {
+<<<<<<< HEAD
         console.log(deleteCheck);
+=======
+>>>>>>> 8834be2b34d729208cfe61729ebc41a6b60f05d5
         router.push('/user/login');
       })
       .catch(err => {

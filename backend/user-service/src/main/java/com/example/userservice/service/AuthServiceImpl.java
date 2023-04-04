@@ -57,11 +57,9 @@ public class AuthServiceImpl implements AuthService {
 
         // 푼 백준 문제 삭제
         solvedacRepository.deleteAllByUserId(user.getId());
-        em.flush();
 
         // 커밋 기록 삭제
         commitRecordRepository.deleteAllByUserId(user.getId());
-        em.flush();
 
         // 회원 탈퇴
         userRepository.delete(user);
@@ -95,7 +93,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     private void deleteS3Img(User user) {
-        if (!user.getProfileImgKey().isBlank()) amazonS3Service.delete(user.getProfileImgKey());
+        if (user.getProfileImgKey() != null && !user.getProfileImgKey().isBlank()) amazonS3Service.delete(user.getProfileImgKey());
     }
 
     private String saveS3Img(MultipartFile profileImg) {
@@ -124,6 +122,11 @@ public class AuthServiceImpl implements AuthService {
     public void updatePassword(Long userId, PasswordRequestDto requestDto) {
         User user = getUser(userId);
 
+        // 현재 사용중인 비밀번호로는 수정 불가
+        if (passwordEncoder.matches(requestDto.getNewPassword(), user.getPassword())) {
+            throw new ApiException(ExceptionEnum.PASSWORD_MATCHED_EXCEPTION);
+        }
+
         if (!passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {
             throw new ApiException(ExceptionEnum.PASSWORD_NOT_MATCHED_EXCEPTION);
         }
@@ -140,7 +143,7 @@ public class AuthServiceImpl implements AuthService {
 
         solvedacRepository.deleteAllByUserId(user.getId());
         em.flush();
-        if (!user.getBaekjoon().isBlank()) commonService.saveProblemList(user);
+        if (user.getBaekjoon() != null && !user.getBaekjoon().isBlank()) commonService.saveProblemList(user);
 
         return GithubBaekjoonResponseDto.from(user.getGithub(), user.getBaekjoon());
     }

@@ -204,6 +204,22 @@ public class ChallengeServiceImpl implements ChallengeService{
         return "참가 성공";
     }
 
+    public  String  checkJoinChallenge(ChallengeJoinRequestDto joinRequestDto) {
+        //해당 challengeRoom Entity 조회 -> 조회하지 않는 챌린지면 참가 할 수 없음
+        ChallengeRoom challengeRoom = getChallengeRoomEntity(joinRequestDto.getChallengeRoomId());
+
+        //해당 userId가 챌린지방에 참여했는지 확인
+        boolean isJoinUser  = userChallengeRepository.existsByChallengeRoomIdAndUserId(joinRequestDto.getChallengeRoomId(), joinRequestDto.getUserId());
+        if(isJoinUser){
+            throw new ApiException(ExceptionEnum.ALREADY_JOIN_CHALLENGEROOM);
+        }
+        // 예외 처리 :참여 인원이 전부 찬 경우는 해당 챌린지에 참여할 수 없음
+        if (challengeRoom.getCurParticipantsSize() == challengeRoom.getMaxParticipantsSize() ) {
+            throw  new ApiException(ExceptionEnum.UNABLE_TO_JOIN_CHALLENGEROOM);
+        }
+        return "True";
+    }
+
     @Override
     public UserChallengeInfoResponseDto myChallengeList(Long userId) {
         // 현재
@@ -344,6 +360,31 @@ public class ChallengeServiceImpl implements ChallengeService{
         return SolvedListResponseDto.from(userInfo.getUserId(), problemList, problemList.size(), selectDate);
     }
 
+    /**
+     * 해당 유저의 최근 5일 (오늘 ~ 4일전)
+     * 푼 문제 리스트를 반환하는 메서드
+     */
+    @Override
+    public SolvedMapResponseDto getRecentUserBaekjoon(Long userId) {
+        log.info("서비스 호출");
+        String today= commonService.getDate();
+        String pastDay=commonService.getPastDay(5, commonService.getDate());
+
+        List<DateProblemResponseDto> dateBaekjoonList =userServiceClient.getDateBaekjoonList(userId,pastDay,today).getData();
+        Map<String, List<String>> myMap=new HashMap<>();
+        for(int i=0;i<=5;i++){
+            myMap.putIfAbsent(commonService.getPastDay(i,commonService.getDate()), new ArrayList<>());
+        }
+        for(DateProblemResponseDto dateProblemResponseDto: dateBaekjoonList){
+            String curDate=dateProblemResponseDto.getSuccessDate();
+            List<String> problemList= myMap.get(curDate);
+            problemList.add(dateProblemResponseDto.getProblemId());
+            log.info("problemList is{}", problemList);
+        }
+        SolvedMapResponseDto solvedMapResponseDto= new SolvedMapResponseDto(myMap);
+        return solvedMapResponseDto;
+    }
+
     /** 신대득
      * 인증 정보 저장 (알고리즘)
      * 매일 오후 11시 50분에 메서드를 실행시킬 스케줄러
@@ -382,7 +423,7 @@ public class ChallengeServiceImpl implements ChallengeService{
     @Scheduled(cron = "0 59 23 * * ?") // 매일 오후 11시 59분
     public void culcDailyPayment(){
         log.info("culcDailyPayment 시작");
-        List<ChallengeRoom> challengingRoomList = challengeRoomRepository.findChallengingRoomByDate(commonService.getPastDay(0));
+        List<ChallengeRoom> challengingRoomList = challengeRoomRepository.findChallengingRoomByDate(commonService.getPastDay(0,commonService.getDate()));
         for(ChallengeRoom challengeRoom: challengingRoomList){
             oneDayCulc(challengeRoom);
         }
@@ -555,7 +596,7 @@ public class ChallengeServiceImpl implements ChallengeService{
         challengeRecordRepository.save(challengeRecord);
     }
 
-    /** 사진 인증 개인 조회ㅏ  **/
+    /** 사진 인증 개인 조회  **/
     @Override
     public List<PhotoRecordResponseDto> getSelfPhotoRecord(Long challengeRoomId, Long userId, String viewType) {
 
@@ -591,28 +632,44 @@ public class ChallengeServiceImpl implements ChallengeService{
         }
         return selfRecord;
     }
+
+    /**
+     * author :홍금비
+     * explain : 팀원 인증 기록 조회
+     * @param challengeRoomId 챌린지방 ID
+     * @param viewType PREVIEW - 미리보기 | ALL - 전체보기
+     *
+     */
     @Override
-    public List<PhotoRecordResponseDto> getTeamPhotoRecord(Long challengeRoomId, String viewType) {
-        return challengeRecordRepository.getTeamPhotoRecord(challengeRoomId, viewType );
+    public List<PhotoRecordResponseDto> getTeamPhotoRecord(Long challengeRoomId, String viewType, int days, String offDate) {
+
+        if(offDate.equals("")) offDate =commonService.getDate();
+        else offDate = commonService.getPastDay(1,offDate);
+        String endDate = commonService.getPastDay(days,offDate);
+        return challengeRecordRepository.getTeamPhotoRecord(challengeRoomId, viewType, days, offDate ,endDate );
 
     }
 
-    /** 사진 인증 상세 조회 (로그인이 반드시 되어있어야함) **/
+    /** @author : 홍금비
+     *  @explain: 사진인증 기록을 상세 조회한다.
+     *  @param userId :유저 ID
+     *  @param challengeRecordId : 챌린지 기록 ID
+     *
+     *  @retouch : (before) 회원 닉네임을 불러오기 위해 user-service로 Api를 호출하는 로직
+     *             (after) 챌린지방을 입장할때 회원닉네임을 저장해서 해당 정보로 닉네임을 가져오는 것으로 변경
+     *
+     *  **/
     public PhotoRecordDetailResponseDto getPhotoRecordDetail(Long userId,Long challengeRecordId){
 
-        ChallengeRecord challengeRecord = challengeRecordRepository.findById(challengeRecordId).orElseThrow(()->new ApiException(ExceptionEnum.USER_CHALLENGE_NOT_EXIST_EXCEPTION));
+        //[예외처리]: 조회하려는 인증기록이 존재하는지 확인한다.
+        ChallengeRecord challengeRecord = challengeRecordRepository.findById(challengeRecordId).orElseThrow(()->new ApiException(ExceptionEnum.NOT_EXIST_CHALLENGE_RECORD));
 
-        //1. 인증 기록의 사용자 닉네임을 user-service로 사용자 정보를 요청한다.
-        Long writeUserId =challengeRecord.getUserChallenge().getUserId();
-        log.info("[인증 기록 작성자] : "+ writeUserId);
+        String writerNickname =challengeRecord.getUserChallenge().getNickname();
 
-        UserResponseDto userResponseDto = userServiceClient.getUserInfo(writeUserId).getData();
-        log.info("[인증 기록 작성자 닉네임] : " + userResponseDto.getNickname());
-
-        // 2. 인증 기록을 조회하는 사용자의 신고 기록을 리턴해야한다. 존재하면 true를 그렇지 않으면 false를 리턴한다.
+        //인증 기록을 조회하는 사용자의 신고 기록을 리턴해야한다. 존재하면 true를 그렇지 않으면 false를 리턴한다.
         boolean reportStatus = reportRecordRepository.existsByUserIdAndChallengeRecordId(userId, challengeRecordId);
 
-        return new PhotoRecordDetailResponseDto(challengeRecord,userResponseDto.getNickname(),reportStatus);
+        return new PhotoRecordDetailResponseDto(challengeRecord,writerNickname,reportStatus);
     }
 
 

@@ -63,14 +63,21 @@ const index = () => {
         <ReturnArrow title="설정" />
       </Container.Header>
       <Container.Body className="m-6">
-        <SelectArrow title="닉네임 변경" onClick={goToChangeNickName} />
-        <SelectArrow title="비밀번호 변경" onClick={goToChangePassword} />
-        <SelectArrow
-          title="Github, Solved.ac 계정 설정"
-          onClick={goToChangeChallengeInfo}
-        />
-        <SelectArrow title="로그아웃" color onClick={onClickLogout} />
-        <SelectArrow title="회원탈퇴" color onClick={goToDeleteAccount} />
+        <div onClick={goToChangeNickName}>
+          <SelectArrow title="닉네임 변경" />
+        </div>
+        <div onClick={goToChangePassword}>
+          <SelectArrow title="비밀번호 변경" />
+        </div>
+        <div onClick={goToChangeChallengeInfo}>
+          <SelectArrow title="Github, Solved.ac 계정 설정" />
+        </div>
+        <div onClick={onClickLogout}>
+          <SelectArrow title="로그아웃" color />
+        </div>
+        <div onClick={goToDeleteAccount}>
+          <SelectArrow title="회원탈퇴" color />
+        </div>
       </Container.Body>
     </Container>
   );

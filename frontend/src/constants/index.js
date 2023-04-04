@@ -27,11 +27,15 @@ export const CHALLENGES_SEARCH_URL = `${CHALLENGE_SERVICE}/challenges`;
 export const CHALLENGE_DETAIL_URL = `${CHALLENGE_SERVICE}/challenges`;
 export const CHALLENGE_JOIN_URL = `${CHALLENGE_SERVICE}/auth/challenges/join`;
 export const CHALLENGE_PHOTO_RECORD_URL = `${CHALLENGE_SERVICE}/photo-record`;
+export const CHALLENGE_ALGO_URL = `${CHALLENGE_SERVICE}/challenges/baekjoon/users`;
+export const CHALLENGE_AUTH_ALGO_URL = `${CHALLENGE_SERVICE}/auth/challenges/baekjoon/users`;
 
 // 결제
 const PAY_SERVICE = 'pay-service';
 
 export const MY_DEPOSIT_PRIZE = param => `${PAY_SERVICE}/users/${param}`;
+export const DEPOSIT_WITHDRAW_URL = `${PAY_SERVICE}/users/deposit`;
+export const PRIZE_WITHDRAW_URL = `${PAY_SERVICE}/users/prize`;
 export const PAYMENT_CHALLENGE_SUCCESS = param =>
   `${PAY_SERVICE}/${param}/success`;
 

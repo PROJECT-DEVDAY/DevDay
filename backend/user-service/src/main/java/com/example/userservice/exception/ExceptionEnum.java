@@ -18,6 +18,7 @@ public enum ExceptionEnum {
     PASSWORD_NOT_MATCHED_EXCEPTION(HttpStatus.FORBIDDEN, "M0004", "비밀번호가 일치하지 않습니다."),
     CODE_NOT_MATCHED_EXCEPTION(HttpStatus.FORBIDDEN, "M0005", "인증 코드가 일치하지 않습니다."),
     MEMBER_INFO_NOT_MATCHED_EXCEPTION(HttpStatus.NOT_FOUND, "M0006", "일치하는 유저가 없습니다."),
+    PASSWORD_MATCHED_EXCEPTION(HttpStatus.FORBIDDEN, "M0007", "현재 사용중인 비밀번호로는 수정할 수 없습니다."),
     EMAIL_AUTH_NOT_FOUNT_EXCEPTION(HttpStatus.NOT_FOUND, "E0001", "이메일 인증 요청이 존재하지 않습니다."),
     EMAIL_ACCEPT_TIMEOUT_EXCEPTION(HttpStatus.NOT_FOUND, "E0002", "이메일 인증 요청 시간이 만료되었습니다."),
     EMAIL_NOT_ACCEPT_EXCEPTION(HttpStatus.FORBIDDEN, "E0003", "이메일이 인증되지 않았습니다."),
