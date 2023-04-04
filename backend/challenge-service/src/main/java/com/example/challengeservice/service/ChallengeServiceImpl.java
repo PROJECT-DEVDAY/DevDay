@@ -146,6 +146,7 @@ public class ChallengeServiceImpl implements ChallengeService{
         ModelMapper mapper=new ModelMapper();
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         ChallengeRoomResponseDto challengeRoomResponseDto=mapper.map(challengeRoom, ChallengeRoomResponseDto.class);
+        // Todo: 방장이 없어진 경우 처리해야함
         UserResponseDto userResponseDto = userServiceClient.getUserInfo(challengeRoom.getHostId()).getData();
         challengeRoomResponseDto.setHostNickname(userResponseDto.getNickname());
         challengeRoomResponseDto.setHostCount(challengeRoomRepository.countByHostId(userResponseDto.getUserId()));
@@ -298,6 +299,20 @@ public class ChallengeServiceImpl implements ChallengeService{
         return SolvedListResponseDto.from(solvedList, count);
     }
 
+    public void updateChallengeRoom(Long challengeRoomId){
+        log.info("updateChallengeRoom 실행");
+        ChallengeRoom challengeRoom = getChallengeRoomEntity(challengeRoomId);
+        List<UserChallenge> userChallengeList = userChallengeRepository.findAllByChallengeRoomId(challengeRoom.getId());
+        for(UserChallenge uc :userChallengeList){
+            if(challengeRoom.getCategory().equals("ALGO")){
+                log.info("updateUserBaekjoon 실행");
+                updateUserBaekjoon(uc.getUserId());
+                log.info("createAlgoRecord 실행");
+                createAlgoRecord(ChallengeRecordRequestDto.from(uc.getUserId(),challengeRoomId));
+            }
+        }
+    }
+
     /** 유저의 백준리스트 업데이트
      * Todo : 예외처리 추가
      * **/
@@ -310,7 +325,8 @@ public class ChallengeServiceImpl implements ChallengeService{
         log.info("baekjoonListResponseDto is : {}", baekjoonListResponseDto);
         String baekjoonId = baekjoonListResponseDto.getData().getBaekjoonId();
         if(baekjoonId==null){
-            throw new ApiException(ExceptionEnum.ALGO_NOT_EXIST_ID);
+            return;
+//            throw new ApiException(ExceptionEnum.ALGO_NOT_EXIST_ID);
         }
         List<String> diffSolvedList=new ArrayList<>();
         Map<String, String> problemList = baekjoonListResponseDto.getData().getProblemList();
@@ -321,7 +337,8 @@ public class ChallengeServiceImpl implements ChallengeService{
             }
         }
         if(diffSolvedList.size()==0){
-            throw new ApiException(ExceptionEnum.ALGO_ALREADY_UPDATE);
+            return;
+//            throw new ApiException(ExceptionEnum.ALGO_ALREADY_UPDATE);
         }
         userServiceClient.createProblem(userId, ProblemRequestDto.from(diffSolvedList));
     }
@@ -368,12 +385,12 @@ public class ChallengeServiceImpl implements ChallengeService{
     public SolvedMapResponseDto getRecentUserBaekjoon(Long userId) {
         log.info("서비스 호출");
         String today= commonService.getDate();
-        String pastDay=commonService.getPastDay(5);
+        String pastDay=commonService.getPastDay(5, commonService.getDate());
 
         List<DateProblemResponseDto> dateBaekjoonList =userServiceClient.getDateBaekjoonList(userId,pastDay,today).getData();
         Map<String, List<String>> myMap=new HashMap<>();
         for(int i=0;i<=5;i++){
-            myMap.putIfAbsent(commonService.getPastDay(i), new ArrayList<>());
+            myMap.putIfAbsent(commonService.getPastDay(i,commonService.getDate()), new ArrayList<>());
         }
         for(DateProblemResponseDto dateProblemResponseDto: dateBaekjoonList){
             String curDate=dateProblemResponseDto.getSuccessDate();
@@ -438,7 +455,10 @@ public class ChallengeServiceImpl implements ChallengeService{
     @Transactional
     public void createAlgoRecord(ChallengeRecordRequestDto requestDto) {
         log.info("챌린지id " + requestDto.getChallengeRoomId() + "유저아이디id" + requestDto.getUserId());
-        ChallengeRoomResponseDto challengeRoom = readChallenge(requestDto.getChallengeRoomId());
+        // Todo : 방장이 없어진 경우 처리해야함
+//        ChallengeRoomResponseDto challengeRoom = readChallenge(requestDto.getChallengeRoomId());
+        ChallengeRoom challengeRoom = getChallengeRoomEntity(requestDto.getChallengeRoomId());
+
         UserResponseDto user = userServiceClient.getUserInfo(requestDto.getUserId()).getData();
 
         // 오늘 날짜
@@ -527,7 +547,7 @@ public class ChallengeServiceImpl implements ChallengeService{
     @Transactional
     public void oneDayCulc(ChallengeRoom challengeRoom) {
         Integer period = commonService.diffDay(challengeRoom.getStartDate(), challengeRoom.getEndDate()).intValue();
-        int oneDayFee = (int)Math.ceil((double) challengeRoom.getEntryFee() / period); // 하루 가격
+        int oneDayFee = (int)Math.ceil((double) challengeRoom.getEntryFee() / (period+1)); // 하루 가격
 
         String toDay = commonService.getDate(); // 오늘 날짜 조회
 
@@ -542,10 +562,10 @@ public class ChallengeServiceImpl implements ChallengeService{
              */
             Optional<ChallengeRecordResponseDto> challengeRecord = challengeRecordRepository.findByUserChallengeIdAndCreateAt(userChallenge.getId(), toDay);
             log.info("challenge Record is : {}",challengeRecord);
-            if(challengeRecord.isPresent()){ // 기록이 없다면 => 무조건 실패
+            if(!challengeRecord.isPresent()){ // 기록이 없다면 => 무조건 실패
                 failList.add(userChallenge);
             }else{ // 기록이 있다면 (사진 인증인 경우 검사)
-                if (!challengeRecord.get().isSuccess()) { // 인증이 인정되지 않았다면
+                if (!(challengeRecord.get().isSuccess())) { // 인증이 인정되지 않았다면
                     failList.add(userChallenge);
                 } else{
                     successList.add(userChallenge);
@@ -752,5 +772,55 @@ public class ChallengeServiceImpl implements ChallengeService{
     public List<MyChallengeResponseDto> getMyChallengeList(Long userId , String status) {
 
         return challengeRoomRepository.findMyChallengeList(userId,status,commonService.getDate());
+    }
+
+    /**
+     * 신대득
+     * 알고리즘
+     * 나의 인증현황
+     * 진행률, 예치금 + 상금, 성공 / 실패 횟수
+     */
+    @Override
+    public AlgoProgressResponseDto getProgressUserBaekjoon(Long userId, Long challengeId){
+        log.info("getProgressUserBaekjoon 실행");
+        ChallengeRoomResponseDto challengeRoom=readChallenge(challengeId);
+
+        UserChallenge userChallenge = userChallengeRepository.findByChallengeRoomIdAndUserId(challengeRoom.getId(), userId)
+                .orElseThrow(()-> new ApiException(ExceptionEnum.USER_CHALLENGE_LIST_NOT_EXIST));
+        // 진행률 계산
+        Long challengeLength = commonService.diffDay(challengeRoom.getStartDate(), challengeRoom.getEndDate())+1;
+        List<ChallengeRecord> challengeRecordList = challengeRecordRepository.findAllByUserChallengeIdAndStartDateAndEndDateAlgo(userChallenge.getId(), challengeRoom.getStartDate(), challengeRoom.getEndDate(), true, challengeRoom.getAlgorithmCount());
+        Long successCount=(long)challengeRecordList.size();
+        Long failCount = challengeLength - successCount;
+        String progressRate= String.format("%.2f", (double)(successCount*100)/challengeLength);
+        // 예치금 + 상금
+        Long curPrice=userChallenge.getDiffPrice()+challengeRoom.getEntryFee();
+        return new AlgoProgressResponseDto(progressRate, curPrice, successCount, failCount);
+    }
+
+
+    /**
+     * 신대득
+     * 현재 챌린지 방의
+     * 탑 랭크 리스트 조회
+     * @param challengeId
+     * @return
+     */
+    @Override
+    public List<AlgoRankResponseDto> getAlgoTopRank(Long challengeId){
+        ChallengeRoom challengeRoom=getChallengeRoomEntity(challengeId);
+        List<UserChallenge> allByChallengeRoomId = userChallengeRepository.findAllByChallengeRoomId(challengeRoom.getId());
+        List<AlgoRankResponseDto> algoRankResponseDtoList=new ArrayList<>();
+        Long period=commonService.diffDay(challengeRoom.getStartDate(), challengeRoom.getEndDate())+1;
+        for(UserChallenge uc:allByChallengeRoomId){
+            // 현재 uc 중 챌린지 기간 동안의 레코드 조회
+            List<ChallengeRecord> challengeRecordList = challengeRecordRepository.findAllByUserChallengeIdAndStartDateAndEndDateAlgo(uc.getId(), challengeRoom.getStartDate(), challengeRoom.getEndDate(), true, challengeRoom.getAlgorithmCount());
+            algoRankResponseDtoList.add(new AlgoRankResponseDto(0L, uc.getUserId(), uc.getNickname(), (long)challengeRecordList.size(), period-(long)challengeRecordList.size()));
+        }
+        Collections.sort(algoRankResponseDtoList);
+        for(int i=0;i<algoRankResponseDtoList.size();i++){
+            algoRankResponseDtoList.get(i).setRank((long)i+1);
+        }
+        return algoRankResponseDtoList;
     }
 }

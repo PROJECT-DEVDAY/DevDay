@@ -33,7 +33,6 @@ const SubmitList = ({ items = 40, ...props }) => {
         setTimeout(() => {
           // 새로운 리스트 가져오기 호출
           // io.observe 넣기
-          console.log('아이템 넣기');
         }, 1500);
       }
     });

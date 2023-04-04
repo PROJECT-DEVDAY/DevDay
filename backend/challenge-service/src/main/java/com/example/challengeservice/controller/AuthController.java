@@ -8,9 +8,7 @@ import com.example.challengeservice.dto.request.ChallengeJoinRequestDto;
 import com.example.challengeservice.dto.request.ChallengeRecordRequestDto;
 import com.example.challengeservice.dto.request.ChallengeRoomRequestDto;
 import com.example.challengeservice.dto.request.ReportRecordRequestDto;
-import com.example.challengeservice.dto.response.ChallengeCreateResponseDto;
-import com.example.challengeservice.dto.response.MyChallengeResponseDto;
-import com.example.challengeservice.dto.response.PhotoRecordDetailResponseDto;
+import com.example.challengeservice.dto.response.*;
 import com.example.challengeservice.exception.ApiException;
 import com.example.challengeservice.exception.ExceptionEnum;
 import com.example.challengeservice.service.ChallengeService;
@@ -113,17 +111,6 @@ public class AuthController {
         return responseService.getSuccessResult();
     }
 
-    /**
-     * 신대득
-     * 유저가 푼 문제 리스트 갱신
-     */
-    @GetMapping("/baekjoon/update/users")
-    public Result updateUserBaekjoon(HttpServletRequest request){
-        Long userId=Long.parseLong(request.getHeader(USER_ID));
-        challengeService.updateUserBaekjoon(userId);
-        return responseService.getSuccessResult();
-    }
-
 
     /** 사진 인증 저장 **/
     @PostMapping("photo-record")
@@ -150,6 +137,18 @@ public class AuthController {
         log.info("컨트롤러 호출");
         Long userId = Long.parseLong(request.getHeader(USER_ID));
         return responseService.getSingleResult(challengeService.getRecentUserBaekjoon(userId));
+    }
+
+    /**
+     * 신대득
+     * 알고리즘
+     * 나의 인증현황
+     * 진행률, 예치금 + 상금, 성공 / 실패 횟수
+     */
+    @GetMapping("/baekjoon/users/progress/{challengeId}")
+    public AlgoProgressResponseDto getProgressUserBaekjoon(HttpServletRequest request, @PathVariable String challengeId){
+        Long userId = Long.parseLong(request.getHeader(USER_ID));
+        return challengeService.getProgressUserBaekjoon(userId, Long.parseLong(challengeId));
     }
 
 

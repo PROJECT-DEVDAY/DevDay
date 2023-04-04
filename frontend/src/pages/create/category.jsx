@@ -10,8 +10,9 @@ import { ReturnArrow } from '../../components/ReturnArrow';
 import { SelectOption } from '../../components/SelectOption';
 
 import Container from '@/components/Container';
+import PrivateRouter from '@/components/PrivateRouter/PrivateRouter';
 
-const check = props => {
+const category = props => {
   const user = useSelector(state => state.user);
   const [checking, setChecking] = useState([false, false, false]);
   const [goUrl, setGoUrl] = useState('');
@@ -119,4 +120,4 @@ const check = props => {
   );
 };
 
-export default check;
+export default PrivateRouter(category);
