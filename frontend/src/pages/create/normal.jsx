@@ -14,9 +14,9 @@ import Container from '@/components/Container';
 import { ContentInput } from '@/components/ContentInput';
 import { InputLabel } from '@/components/InputLabel';
 import { InputText } from '@/components/InputText';
+import PrivateRouter from '@/components/PrivateRouter/PrivateRouter';
 import { ReturnArrow } from '@/components/ReturnArrow';
 import { CHALLENGES_URL } from '@/constants';
-import PrivateRouter from '@/components/PrivateRouter/PrivateRouter';
 
 const normal = props => {
   const [member, setMember] = useState(1);

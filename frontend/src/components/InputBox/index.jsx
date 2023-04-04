@@ -6,7 +6,14 @@ import PropTypes from 'prop-types';
 
 import style from './index.module.scss';
 
-export const InputBox = ({ className, placeholder, name, onChange, defaultValue, ...props }) => {
+export const InputBox = ({
+  className,
+  placeholder,
+  name,
+  onChange,
+  defaultValue,
+  ...props
+}) => {
   return (
     <div
       className={classNames(

@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import Swal from 'sweetalert2';
 
 import http from '../../api/http';
 
@@ -11,7 +12,6 @@ import Container from '@/components/Container';
 import { InputBox } from '@/components/InputBox';
 import PrivateRouter from '@/components/PrivateRouter/PrivateRouter';
 import { ReturnArrow } from '@/components/ReturnArrow';
-
 import { GITHUBBAEKJOON_URL } from '@/constants';
 import { addExtraId } from '@/store/user/userSlice';
 
@@ -43,8 +43,8 @@ const challengeInfo = () => {
       .patch(
         GITHUBBAEKJOON_URL,
         {
-          github: github,
-          baekjoon: baekjoon,
+          github,
+          baekjoon,
         },
         {
           headers,
@@ -55,6 +55,23 @@ const challengeInfo = () => {
         router.push('/mypage');
       })
       .catch(err => {});
+  };
+
+  const onClickChangeChallengeInfo = () => {
+    Swal.fire({
+      title: '변경하시겠어요?',
+      text: '나중에 다시 수정할 수 있습니다!',
+      icon: 'info',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: '네',
+      cancelButtonText: '아니요',
+    }).then(result => {
+      if (result.isConfirmed) {
+        changeChallengeInfo();
+      }
+    });
   };
 
   return (
@@ -99,7 +116,7 @@ const challengeInfo = () => {
         </div>
       </Container.Body>
       <Container.Footer className="p-4">
-        <Button label="확인" onClick={changeChallengeInfo} />
+        <Button label="확인" onClick={onClickChangeChallengeInfo} />
       </Container.Footer>
     </Container>
   );

@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import classNames from 'classnames';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 import Swal from 'sweetalert2';
 
 import style from './inputSolvedAc.module.scss';
@@ -11,10 +12,9 @@ import http from '../../api/http';
 import { BtnFooter } from '@/components/BtnFooter';
 import Container from '@/components/Container';
 import { InputBox } from '@/components/InputBox';
+import PrivateRouter from '@/components/PrivateRouter/PrivateRouter';
 import { GITHUBBAEKJOON_URL } from '@/constants';
 import { addExtraId } from '@/store/user/userSlice';
-import PrivateRouter from '@/components/PrivateRouter/PrivateRouter';
-import { useRouter } from 'next/router';
 
 const inputSolvedAc = props => {
   const [solvedAcId, setSolvedAcId] = useState('');
