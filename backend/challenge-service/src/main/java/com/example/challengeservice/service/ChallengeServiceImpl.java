@@ -360,6 +360,30 @@ public class ChallengeServiceImpl implements ChallengeService{
         return SolvedListResponseDto.from(userInfo.getUserId(), problemList, problemList.size(), selectDate);
     }
 
+    /**
+     * 해당 유저의 최근 5일 (오늘 ~ 4일전)
+     * 푼 문제 리스트를 반환하는 메서드
+     */
+    @Override
+    public SolvedMapResponseDto getRecentUserBaekjoon(Long userId) {
+        log.info("서비스 호출");
+        String today= commonService.getDate();
+        String pastDay=commonService.getPastDay(5);
+
+        List<DateProblemResponseDto> dateBaekjoonList =userServiceClient.getDateBaekjoonList(userId,pastDay,today).getData();
+        Map<String, List<String>> myMap=new HashMap<>();
+        for(DateProblemResponseDto dateProblemResponseDto: dateBaekjoonList){
+            String curDate=dateProblemResponseDto.getSuccessDate();
+
+            myMap.putIfAbsent(curDate, new ArrayList<>());
+            List<String> problemList= myMap.get(curDate);
+            problemList.add(dateProblemResponseDto.getProblemId());
+            log.info("problemList is{}", problemList);
+        }
+        SolvedMapResponseDto solvedMapResponseDto= new SolvedMapResponseDto(myMap);
+        return solvedMapResponseDto;
+    }
+
     /** 신대득
      * 인증 정보 저장 (알고리즘)
      * 매일 오후 11시 50분에 메서드를 실행시킬 스케줄러
