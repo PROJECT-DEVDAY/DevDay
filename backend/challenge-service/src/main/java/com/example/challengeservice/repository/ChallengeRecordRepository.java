@@ -2,9 +2,11 @@ package com.example.challengeservice.repository;
 
 import com.example.challengeservice.entity.ChallengeRecord;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -14,8 +16,12 @@ public interface ChallengeRecordRepository extends JpaRepository<ChallengeRecord
 
    Optional<ChallengeRecord> findById( Long challengeRecordId);
 
-    boolean existsById( Long challengeRecordId);
+   boolean existsById( Long challengeRecordId);
 
+//   List<ChallengeRecord> findAllByUserChallengeId(Long userChallengeId);
+
+   @Query("select cr from ChallengeRecord cr where cr.userChallenge.id=:userChallengeId and cr.createAt between :startDate and :endDate")
+   List<ChallengeRecord> findAllByUserChallengeIdAndStartDateAndEndDate(Long userChallengeId, String startDate, String endDate);
 
 
 }

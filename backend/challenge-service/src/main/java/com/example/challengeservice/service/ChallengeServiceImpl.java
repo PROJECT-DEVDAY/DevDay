@@ -527,7 +527,7 @@ public class ChallengeServiceImpl implements ChallengeService{
     @Transactional
     public void oneDayCulc(ChallengeRoom challengeRoom) {
         Integer period = commonService.diffDay(challengeRoom.getStartDate(), challengeRoom.getEndDate()).intValue();
-        int oneDayFee = (int)Math.ceil((double) challengeRoom.getEntryFee() / period); // 하루 가격
+        int oneDayFee = (int)Math.ceil((double) challengeRoom.getEntryFee() / (period+1)); // 하루 가격
 
         String toDay = commonService.getDate(); // 오늘 날짜 조회
 
@@ -542,10 +542,10 @@ public class ChallengeServiceImpl implements ChallengeService{
              */
             Optional<ChallengeRecordResponseDto> challengeRecord = challengeRecordRepository.findByUserChallengeIdAndCreateAt(userChallenge.getId(), toDay);
             log.info("challenge Record is : {}",challengeRecord);
-            if(challengeRecord.isPresent()){ // 기록이 없다면 => 무조건 실패
+            if(!challengeRecord.isPresent()){ // 기록이 없다면 => 무조건 실패
                 failList.add(userChallenge);
             }else{ // 기록이 있다면 (사진 인증인 경우 검사)
-                if (!challengeRecord.get().isSuccess()) { // 인증이 인정되지 않았다면
+                if (!(challengeRecord.get().isSuccess())) { // 인증이 인정되지 않았다면
                     failList.add(userChallenge);
                 } else{
                     successList.add(userChallenge);
@@ -752,5 +752,34 @@ public class ChallengeServiceImpl implements ChallengeService{
     public List<MyChallengeResponseDto> getMyChallengeList(Long userId , String status) {
 
         return challengeRoomRepository.findMyChallengeList(userId,status,commonService.getDate());
+    }
+
+    /**
+     * 신대득
+     * 알고리즘
+     * 나의 인증현황
+     * 진행률, 예치금 + 상금, 성공 / 실패 횟수
+     */
+    @Override
+    public AlgoProgressResponseDto getProgressUserBaekjoon(Long userId, Long challengeId){
+        log.info("getProgressUserBaekjoon 실행");
+        ChallengeRoomResponseDto challengeRoom=readChallenge(challengeId);
+
+        UserChallenge userChallenge = userChallengeRepository.findByChallengeRoomIdAndUserId(challengeRoom.getId(), userId)
+                .orElseThrow(()-> new ApiException(ExceptionEnum.USER_CHALLENGE_LIST_NOT_EXIST));
+        // 진행률 계산
+        Long challengeLength = commonService.diffDay(challengeRoom.getStartDate(), challengeRoom.getEndDate())+1;
+        List<ChallengeRecord> challengeRecordList = challengeRecordRepository.findAllByUserChallengeIdAndStartDateAndEndDate(userChallenge.getId(), challengeRoom.getStartDate(), challengeRoom.getEndDate());
+        Long successCount=0L;
+        for(ChallengeRecord cr : challengeRecordList){
+            if(cr.getAlgorithmCount()>=challengeRoom.getAlgorithmCount()){ // 성공 기준 이상이라면
+                successCount++;
+            }
+        }
+        Long failCount = challengeLength - successCount;
+        String progressRate= String.format("%.2f", (double)successCount/challengeLength);
+        // 예치금 + 상금
+        Long curPrice=userChallenge.getDiffPrice()+challengeRoom.getEntryFee();
+        return new AlgoProgressResponseDto(progressRate, curPrice, successCount, failCount);
     }
 }

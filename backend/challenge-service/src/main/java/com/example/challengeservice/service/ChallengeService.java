@@ -62,4 +62,6 @@ public interface ChallengeService {
     void culcDailyPayment();
     void updateUserCommit(Long userId);
     void createCommitRecord(ChallengeRecordRequestDto requestDto);
+    /** 나의 현재 진행상황 보기 **/
+    AlgoProgressResponseDto getProgressUserBaekjoon(Long userId, Long challengeId);
 }
