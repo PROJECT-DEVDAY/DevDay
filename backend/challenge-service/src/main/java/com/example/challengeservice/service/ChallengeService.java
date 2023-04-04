@@ -20,6 +20,8 @@ public interface ChallengeService {
     Map<Long, ChallengeInfoResponseDto> challengeInfoList(List<Long> challengeIdList);
     /** 챌린지 참여 **/
     String joinChallenge(ChallengeJoinRequestDto joinRequestDto);
+    /** 챌린지 참여 체크 **/
+    String checkJoinChallenge(ChallengeJoinRequestDto joinRequestDto);
     /** 해당 유저의 챌린지 리스트 조회 **/
     UserChallengeInfoResponseDto myChallengeList(Long userId);
     List<SimpleChallengeResponseDto> getListSimpleChallenge (String type , String search , int size , Long offset);
