@@ -60,6 +60,7 @@ public class AuthServiceImpl implements AuthService {
 
         // 커밋 기록 삭제
         commitRecordRepository.deleteAllByUserId(user.getId());
+        em.flush();
 
         // 회원 탈퇴
         userRepository.delete(user);
