@@ -36,6 +36,8 @@ const PAY_SERVICE = 'pay-service';
 export const MY_DEPOSIT_PRIZE = param => `${PAY_SERVICE}/users/${param}`;
 export const DEPOSIT_WITHDRAW_URL = `${PAY_SERVICE}/users/deposit`;
 export const PRIZE_WITHDRAW_URL = `${PAY_SERVICE}/users/prize`;
+export const GET_MY_DEPOSIT_URL = param =>
+  `${PAY_SERVICE}/users/deposit?type=${param}`;
 export const PAYMENT_CHALLENGE_SUCCESS = param =>
   `${PAY_SERVICE}/${param}/success`;
 
