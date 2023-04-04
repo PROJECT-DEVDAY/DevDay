@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.Period;
@@ -25,15 +27,23 @@ public class CommonServiceImpl implements CommonService {
     }
 
     @Override
-    public String getPastDay(int n) {
-        Date date = new Date();
+    public String getPastDay(int n ,String dateString) {
+
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar cal = null;
+        try {
+            Date date = formatter.parse(dateString);
 
-        Calendar cal = new GregorianCalendar(Locale.KOREA);
-        cal.setTime(date);
-        cal.add(Calendar.DATE,-n);
+             cal = new GregorianCalendar(Locale.KOREA);
+            cal.setTime(date);
+            cal.add(Calendar.DATE,-n);
+            // 예외가 발생하지 않았을 경우의 처리 코드
+        } catch (ParseException e) {
+            // ParseException이 발생한 경우의 처리 코드
+            e.printStackTrace(); // 예외 정보를 출력하는 코드
+        }
 
-        System.out.println("cal is : "+cal.getTime());
+        log.info("cal is : "+cal.getTime());
 
         //return formatter.format(date);
         return formatter.format(cal.getTime());

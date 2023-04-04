@@ -423,7 +423,7 @@ public class ChallengeServiceImpl implements ChallengeService{
     @Scheduled(cron = "0 59 23 * * ?") // 매일 오후 11시 59분
     public void culcDailyPayment(){
         log.info("culcDailyPayment 시작");
-        List<ChallengeRoom> challengingRoomList = challengeRoomRepository.findChallengingRoomByDate(commonService.getPastDay(0));
+        List<ChallengeRoom> challengingRoomList = challengeRoomRepository.findChallengingRoomByDate(commonService.getPastDay(0,commonService.getDate()));
         for(ChallengeRoom challengeRoom: challengingRoomList){
             oneDayCulc(challengeRoom);
         }
@@ -596,7 +596,7 @@ public class ChallengeServiceImpl implements ChallengeService{
         challengeRecordRepository.save(challengeRecord);
     }
 
-    /** 사진 인증 개인 조회ㅏ  **/
+    /** 사진 인증 개인 조회  **/
     @Override
     public List<PhotoRecordResponseDto> getSelfPhotoRecord(Long challengeRoomId, Long userId, String viewType) {
 
@@ -632,9 +632,21 @@ public class ChallengeServiceImpl implements ChallengeService{
         }
         return selfRecord;
     }
+
+    /**
+     * author :홍금비
+     * explain : 팀원 인증 기록 조회
+     * @param challengeRoomId 챌린지방 ID
+     * @param viewType PREVIEW - 미리보기 | ALL - 전체보기
+     *
+     */
     @Override
-    public List<PhotoRecordResponseDto> getTeamPhotoRecord(Long challengeRoomId, String viewType) {
-        return challengeRecordRepository.getTeamPhotoRecord(challengeRoomId, viewType );
+    public List<PhotoRecordResponseDto> getTeamPhotoRecord(Long challengeRoomId, String viewType, int days, String offDate) {
+
+        if(offDate.equals("")) offDate =commonService.getDate();
+        else offDate = commonService.getPastDay(1,offDate);
+        String endDate = commonService.getPastDay(days,offDate);
+        return challengeRecordRepository.getTeamPhotoRecord(challengeRoomId, viewType, days, offDate ,endDate );
 
     }
 
@@ -643,7 +655,7 @@ public class ChallengeServiceImpl implements ChallengeService{
      *  @param userId :유저 ID
      *  @param challengeRecordId : 챌린지 기록 ID
      *
-     *  @retouch : (before) 회원 닉네임을 불러오기 위해 user-service로 api를 호출하는 로직
+     *  @retouch : (before) 회원 닉네임을 불러오기 위해 user-service로 Api를 호출하는 로직
      *             (after) 챌린지방을 입장할때 회원닉네임을 저장해서 해당 정보로 닉네임을 가져오는 것으로 변경
      *
      *  **/

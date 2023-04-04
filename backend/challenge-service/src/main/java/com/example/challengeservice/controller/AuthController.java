@@ -8,8 +8,13 @@ import com.example.challengeservice.dto.request.ChallengeJoinRequestDto;
 import com.example.challengeservice.dto.request.ChallengeRecordRequestDto;
 import com.example.challengeservice.dto.request.ChallengeRoomRequestDto;
 import com.example.challengeservice.dto.request.ReportRecordRequestDto;
-import com.example.challengeservice.dto.response.*;
+import com.example.challengeservice.dto.response.ChallengeCreateResponseDto;
+import com.example.challengeservice.dto.response.MyChallengeResponseDto;
+import com.example.challengeservice.dto.response.PhotoRecordDetailResponseDto;
+import com.example.challengeservice.exception.ApiException;
+import com.example.challengeservice.exception.ExceptionEnum;
 import com.example.challengeservice.service.ChallengeService;
+import com.example.challengeservice.validator.DateValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -129,8 +134,10 @@ public class AuthController {
 
     /** 팀원의 인증 기록 불러오기 테스트 코드 (로그인이 되어있어야함) **/
     @GetMapping("{challengeId}/record")
-    public ListResult<?> getTeamChallengeRecord(@PathVariable("challengeId")Long challengeRoomId ,@RequestParam("view") String viewType){
-        return responseService.getListResult(challengeService.getTeamPhotoRecord(challengeRoomId,viewType));
+    public ListResult<?> getTeamChallengeRecord(@PathVariable("challengeId")Long challengeRoomId ,@RequestParam("view") String viewType ,@RequestParam("days") int days ,@RequestParam(value = "offDate", required = false) String offDate){
+        log.info("형식?"+!DateValidator.validateDateFormat(offDate));
+        if(!DateValidator.validateDateFormat(offDate)) throw new ApiException(ExceptionEnum.API_PARAMETER_EXCEPTION);
+        return responseService.getListResult(challengeService.getTeamPhotoRecord(challengeRoomId,viewType,days,offDate));
     }
 
     /**

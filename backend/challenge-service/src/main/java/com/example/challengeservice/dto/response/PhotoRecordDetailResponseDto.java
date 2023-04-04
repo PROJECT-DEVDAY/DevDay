@@ -22,13 +22,17 @@ public class PhotoRecordDetailResponseDto extends PhotoRecordResponseDto{
 
     private boolean reportStatus;
 
+    /** 성공 여부 **/
+    private boolean success;
+
 
     public PhotoRecordDetailResponseDto(ChallengeRecord cr , String nickname , boolean reportStatus ) {
-        super(cr.getId(), cr.getCreateAt(), cr.getPhotoUrl(), cr.isSuccess());
+        super(cr.getId(), cr.getCreateAt(), cr.getPhotoUrl());
         this.nickname = nickname;
         this.reportCount = cr.getReportCount();
         this.hostReport = cr.isHostReport();
         this.reportStatus = reportStatus;
+        this.success = cr.isSuccess();
     }
 
 

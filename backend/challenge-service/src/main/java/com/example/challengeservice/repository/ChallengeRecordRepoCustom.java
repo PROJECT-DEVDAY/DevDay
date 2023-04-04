@@ -13,7 +13,7 @@ import java.util.Optional;
 public interface ChallengeRecordRepoCustom {
 
     List<PhotoRecordResponseDto> getSelfPhotoRecord(UserChallenge userChallenge,String viewType);
-    List<PhotoRecordResponseDto> getTeamPhotoRecord(Long challengeRoomId,String viewType);
+    List<PhotoRecordResponseDto> getTeamPhotoRecord(Long challengeRoomId,String viewType ,int days,String offDate ,String endDate);
     Optional<ChallengeRecord> findByCreateAtAndUserChallenge(String createAt, UserChallenge userChallenge);
     Optional<ChallengeRecordResponseDto> findByUserChallengeIdAndCreateAt(Long userChallengeId, String createAt);
 }
