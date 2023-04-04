@@ -92,7 +92,7 @@ public class UserController {
      * */
     @PostMapping("/nickname")
     public ResponseEntity<BaseResponseDto<?>> nicknameCheck(@RequestBody NicknameCheckRequestDto requestDto) {
-        userService.nicknameCheck(requestDto.getNickname());
+        userService.nicknameCheck(requestDto.getNewNickname());
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseDto<>(200, "success"));
     }
 
