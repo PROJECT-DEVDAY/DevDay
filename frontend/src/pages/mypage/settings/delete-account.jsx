@@ -5,13 +5,13 @@ import { useRouter } from 'next/router';
 import Swal from 'sweetalert2';
 
 import http from '../../api/http';
-import { DELETEUSER_URL } from '@/constants';
 
 import { Button } from '@/components/Button';
 import Container from '@/components/Container';
 import { InputText } from '@/components/InputText';
 import PrivateRouter from '@/components/PrivateRouter/PrivateRouter';
 import { ReturnArrow } from '@/components/ReturnArrow';
+import { DELETEUSER_URL } from '@/constants';
 
 const deleteAccount = () => {
   const router = useRouter();
@@ -24,6 +24,7 @@ const deleteAccount = () => {
   const [inputs, setInputs] = useState({
     deleteCheck: '',
   });
+
   const { deleteCheck } = inputs;
 
   const onChangeId = e => {
@@ -39,24 +40,23 @@ const deleteAccount = () => {
       Swal.fire({
         position: 'center',
         icon: 'error',
-        title: "탈퇴 문구가 일치하지 않습니다.",
+        title: '탈퇴 문구가 일치하지 않습니다.',
         showConfirmButton: false,
         timer: 1200,
       });
-      return
+      return;
     }
 
     http
       .delete(DELETEUSER_URL, { headers })
       .then(res => {
-        console.log(deleteCheck)
         router.push('/user/login');
       })
       .catch(err => {
         Swal.fire({
           position: 'center',
           icon: 'error',
-          title: "로그인되지 않았습니다.",
+          title: '로그인되지 않았습니다.',
           showConfirmButton: false,
           timer: 1200,
         });

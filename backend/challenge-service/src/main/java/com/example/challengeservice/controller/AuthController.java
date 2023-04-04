@@ -62,6 +62,13 @@ public class AuthController {
         return responseService.getSingleResult(challengeService.joinChallenge(joinRequestDto));
     }
 
+    @GetMapping("/join")
+    public Result checkJoinChallenge(@RequestBody ChallengeJoinRequestDto joinRequestDto, HttpServletRequest request){
+        joinRequestDto.setUserId(Long.parseLong(request.getHeader(USER_ID)));
+        challengeService.checkJoinChallenge(joinRequestDto);
+        return responseService.getSuccessResult();
+    }
+
 
     /**
      * author : 홍금비
@@ -131,6 +138,18 @@ public class AuthController {
         log.info("형식?"+!DateValidator.validateDateFormat(offDate));
         if(!DateValidator.validateDateFormat(offDate)) throw new ApiException(ExceptionEnum.API_PARAMETER_EXCEPTION);
         return responseService.getListResult(challengeService.getTeamPhotoRecord(challengeRoomId,viewType,days,offDate));
+    }
+
+    /**
+     * 신대득
+     * 선택한 유저
+     * 오늘 ~ 4일전 푼 문제를 조회하는 API
+     */
+    @GetMapping("/baekjoon/users/recent")
+    public SingleResult<SolvedMapResponseDto> getRecentUserBaekjoon(HttpServletRequest request){
+        log.info("컨트롤러 호출");
+        Long userId = Long.parseLong(request.getHeader(USER_ID));
+        return responseService.getSingleResult(challengeService.getRecentUserBaekjoon(userId));
     }
 
 

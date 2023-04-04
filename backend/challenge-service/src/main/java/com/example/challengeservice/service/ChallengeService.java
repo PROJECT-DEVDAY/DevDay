@@ -20,6 +20,8 @@ public interface ChallengeService {
     Map<Long, ChallengeInfoResponseDto> challengeInfoList(List<Long> challengeIdList);
     /** 챌린지 참여 **/
     String joinChallenge(ChallengeJoinRequestDto joinRequestDto);
+    /** 챌린지 참여 체크 **/
+    String checkJoinChallenge(ChallengeJoinRequestDto joinRequestDto);
     /** 해당 유저의 챌린지 리스트 조회 **/
     UserChallengeInfoResponseDto myChallengeList(Long userId);
     List<SimpleChallengeResponseDto> getListSimpleChallenge (String type , String search , int size , Long offset);
@@ -31,6 +33,7 @@ public interface ChallengeService {
     void updateUserBaekjoon(Long userId);
     /** 해당 유저가 해당 날짜에 푼 알고리즘 리스트 조회 **/
     SolvedListResponseDto checkDateUserBaekjoon(Long userId, String selectDate);
+    SolvedMapResponseDto getRecentUserBaekjoon(Long userId);
 
     /** 스케줄러 저장 메서드 **/
     void createDailyRecord();

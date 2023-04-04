@@ -204,6 +204,22 @@ public class ChallengeServiceImpl implements ChallengeService{
         return "참가 성공";
     }
 
+    public  String  checkJoinChallenge(ChallengeJoinRequestDto joinRequestDto) {
+        //해당 challengeRoom Entity 조회 -> 조회하지 않는 챌린지면 참가 할 수 없음
+        ChallengeRoom challengeRoom = getChallengeRoomEntity(joinRequestDto.getChallengeRoomId());
+
+        //해당 userId가 챌린지방에 참여했는지 확인
+        boolean isJoinUser  = userChallengeRepository.existsByChallengeRoomIdAndUserId(joinRequestDto.getChallengeRoomId(), joinRequestDto.getUserId());
+        if(isJoinUser){
+            throw new ApiException(ExceptionEnum.ALREADY_JOIN_CHALLENGEROOM);
+        }
+        // 예외 처리 :참여 인원이 전부 찬 경우는 해당 챌린지에 참여할 수 없음
+        if (challengeRoom.getCurParticipantsSize() == challengeRoom.getMaxParticipantsSize() ) {
+            throw  new ApiException(ExceptionEnum.UNABLE_TO_JOIN_CHALLENGEROOM);
+        }
+        return "True";
+    }
+
     @Override
     public UserChallengeInfoResponseDto myChallengeList(Long userId) {
         // 현재
@@ -342,6 +358,31 @@ public class ChallengeServiceImpl implements ChallengeService{
             problemList.add(problem.getProblemId());
         }
         return SolvedListResponseDto.from(userInfo.getUserId(), problemList, problemList.size(), selectDate);
+    }
+
+    /**
+     * 해당 유저의 최근 5일 (오늘 ~ 4일전)
+     * 푼 문제 리스트를 반환하는 메서드
+     */
+    @Override
+    public SolvedMapResponseDto getRecentUserBaekjoon(Long userId) {
+        log.info("서비스 호출");
+        String today= commonService.getDate();
+        String pastDay=commonService.getPastDay(5);
+
+        List<DateProblemResponseDto> dateBaekjoonList =userServiceClient.getDateBaekjoonList(userId,pastDay,today).getData();
+        Map<String, List<String>> myMap=new HashMap<>();
+        for(int i=0;i<=5;i++){
+            myMap.putIfAbsent(commonService.getPastDay(i), new ArrayList<>());
+        }
+        for(DateProblemResponseDto dateProblemResponseDto: dateBaekjoonList){
+            String curDate=dateProblemResponseDto.getSuccessDate();
+            List<String> problemList= myMap.get(curDate);
+            problemList.add(dateProblemResponseDto.getProblemId());
+            log.info("problemList is{}", problemList);
+        }
+        SolvedMapResponseDto solvedMapResponseDto= new SolvedMapResponseDto(myMap);
+        return solvedMapResponseDto;
     }
 
     /** 신대득
