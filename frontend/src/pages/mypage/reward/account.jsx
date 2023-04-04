@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useRouter } from 'next/router';
 
 import classNames from 'classnames';
+import { useRouter } from 'next/router';
+
 import http from '../../api/http';
 
 import { Button } from '@/components/Button';
@@ -42,9 +43,9 @@ const account = () => {
       PRIZE_WITHDRAW_URL,
       {
         account: {
-          bankCode: bankCode,
-          number: number,
-          depositor: depositor,
+          bankCode,
+          number,
+          depositor,
         },
         money: router.query.money,
       },

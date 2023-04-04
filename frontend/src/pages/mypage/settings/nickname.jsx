@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 
-import http from '../../api/http';
 import classNames from 'classnames';
+import { useRouter } from 'next/router';
 
 import style from './nickname.module.scss';
+import http from '../../api/http';
+
 import { Button } from '@/components/Button';
 import Container from '@/components/Container';
 import { InputLabel } from '@/components/InputLabel';
@@ -27,12 +28,15 @@ const nickname = () => {
 
   // nickname check logic
   const onClickDuplicateCheck = () => {
-    http.post(NICKNAME_URL, { nickname: watch('nickname') }).then((res) => {
-      setNickNameDuplicatedChk(true);
-      setNickNameValidCheck(prev => !prev);
-    }).catch(err => {
-      setNickNameDuplicatedChk(false);
-    })
+    http
+      .post(NICKNAME_URL, { nickname: watch('nickname') })
+      .then(res => {
+        setNickNameDuplicatedChk(true);
+        setNickNameValidCheck(prev => !prev);
+      })
+      .catch(err => {
+        setNickNameDuplicatedChk(false);
+      });
   };
 
   return (

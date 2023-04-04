@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
-import { useRouter } from 'next/router';
 import { BiShow, BiHide } from 'react-icons/bi';
+import { useDispatch, useSelector } from 'react-redux';
 
-import http from '../../api/http';
+import classNames from 'classnames';
+import { useRouter } from 'next/router';
 import Swal from 'sweetalert2';
+
+import style from './password.module.scss';
+import http from '../../api/http';
 
 import { Button } from '@/components/Button';
 import Container from '@/components/Container';
@@ -14,10 +17,6 @@ import { InputText } from '@/components/InputText';
 import PrivateRouter from '@/components/PrivateRouter/PrivateRouter';
 import { ReturnArrow } from '@/components/ReturnArrow';
 import { PASSWORD_URL } from '@/constants';
-
-import classNames from 'classnames';
-import style from './password.module.scss';
-
 import { persistor } from '@/pages/_app';
 import { reset } from '@/store/user/userSlice';
 

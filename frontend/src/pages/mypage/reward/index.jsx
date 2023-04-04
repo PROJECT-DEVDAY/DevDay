@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useRouter } from 'next/router';
+import Swal from 'sweetalert2';
 
 import http from '../../api/http';
 
@@ -51,7 +52,7 @@ const index = () => {
   };
 
   const next = () => {
-    if (money > myDeposit.prize) {
+    if (money > myReward.prize) {
       Swal.fire({
         position: 'center',
         icon: 'error',
@@ -65,7 +66,7 @@ const index = () => {
     router.push({
       pathname: '/mypage/reward/account',
       query: {
-        money: money,
+        money,
         myReward: myReward.prize,
       },
     });
@@ -89,7 +90,9 @@ const index = () => {
             onChange={onChangeMoney}
           />
         </div>
-        <p className="mb-4 text-sm text-right text-red-500">상금은 최소 5,000원부터 출금 가능해요!</p>
+        <p className="mb-4 text-sm text-right text-red-500">
+          상금은 최소 5,000원부터 출금 가능해요!
+        </p>
         <Button label="다음" onClick={next} />
         <div className="mt-10">
           <SelectArrow title="상금 사용 현황" className="text-sm" />
