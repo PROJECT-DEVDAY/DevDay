@@ -8,14 +8,11 @@ import com.example.challengeservice.dto.request.ChallengeJoinRequestDto;
 import com.example.challengeservice.dto.request.ChallengeRecordRequestDto;
 import com.example.challengeservice.dto.request.ChallengeRoomRequestDto;
 import com.example.challengeservice.dto.request.ReportRecordRequestDto;
-import com.example.challengeservice.dto.response.ChallengeCreateResponseDto;
-import com.example.challengeservice.dto.response.MyChallengeResponseDto;
-import com.example.challengeservice.dto.response.PhotoRecordDetailResponseDto;
+import com.example.challengeservice.dto.response.*;
 import com.example.challengeservice.exception.ApiException;
 import com.example.challengeservice.exception.ExceptionEnum;
 import com.example.challengeservice.service.ChallengeService;
 import com.example.challengeservice.validator.DateValidator;
-import com.example.challengeservice.dto.response.SolvedMapResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -151,6 +148,18 @@ public class AuthController {
         log.info("컨트롤러 호출");
         Long userId = Long.parseLong(request.getHeader(USER_ID));
         return responseService.getSingleResult(challengeService.getRecentUserBaekjoon(userId));
+    }
+
+    /**
+     * 신대득
+     * 알고리즘
+     * 나의 인증현황
+     * 진행률, 예치금 + 상금, 성공 / 실패 횟수
+     */
+    @GetMapping("/baekjoon/users/progress/{challengeId}")
+    public AlgoProgressResponseDto getProgressUserBaekjoon(HttpServletRequest request, @PathVariable String challengeId){
+        Long userId = Long.parseLong(request.getHeader(USER_ID));
+        return challengeService.getProgressUserBaekjoon(userId, Long.parseLong(challengeId));
     }
 
 
