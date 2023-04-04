@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
 import { Bar } from 'react-chartjs-2';
 import { FiCamera } from 'react-icons/fi';
 import { MdDateRange } from 'react-icons/md';
+import { useSelector } from 'react-redux';
+
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -19,13 +20,13 @@ import { useRouter } from 'next/router';
 
 import style from './challenge.module.scss';
 
-import Container from '@/components/Container';
+import { Button } from '@/components/Button';
 import { ChallengeList } from '@/components/ChallengeList';
+import Container from '@/components/Container';
 import Footer from '@/components/Footer';
 import { SelectArrow } from '@/components/SelectArrow';
-import http from '@/pages/api/http';
 import { CHALLENGE_DETAIL_URL, CHALLENGE_AUTH_ALGO_URL } from '@/constants';
-import { Button } from '@/components/Button';
+import http from '@/pages/api/http';
 
 ChartJS.register(
   CategoryScale,

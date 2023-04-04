@@ -1,11 +1,13 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
-import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
 
 import _ from 'lodash';
+import { useRouter } from 'next/router';
+
 import style from './challenge.module.scss';
-import Container from '@/components/Container';
 import http from '../../api/http';
+
+import Container from '@/components/Container';
 import { CHALLENGE_DETAIL_URL, CHALLENGE_ALGO_URL } from '@/constants';
 
 const mySubmitList = ({ ...props }) => {
@@ -28,14 +30,12 @@ const mySubmitList = ({ ...props }) => {
       userID: user.userInfo.userId,
       selectDate: e.target.value,
     };
-    console.log(submit);
     http
       .get(
         `${CHALLENGE_ALGO_URL}/date?userId=${user.userInfo.userId}&selectDate=${e.target.value}`,
       )
       .then(res => {
         setSolvedList(res.data.data.solvedList);
-        console.log(res.data.data.solvedList);
       });
   };
 
