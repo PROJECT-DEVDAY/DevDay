@@ -17,6 +17,7 @@ import { InputLabel } from '@/components/InputLabel';
 import { InputText } from '@/components/InputText';
 import { ReturnArrow } from '@/components/ReturnArrow';
 import { CHALLENGES_URL } from '@/constants';
+import PrivateRouter from '@/components/PrivateRouter/PrivateRouter';
 
 const algo = props => {
   const router = useRouter();
@@ -326,5 +327,4 @@ const algo = props => {
     </Container>
   );
 };
-
-export default algo;
+export default PrivateRouter(algo);

@@ -13,7 +13,7 @@ export const MYPAGE_URL = `${USER_SERVICE}/auth`;
 export const PROFILE_URL = `${USER_SERVICE}/auth/user/detail`;
 export const GITHUBBAEKJOON_URL = `${USER_SERVICE}/auth/user/githubandbaekjoon`;
 export const PASSWORD_URL = `${USER_SERVICE}/auth/user/password`;
-export const DELETEUSER_URL = `${USER_SERVICE}/auth/user`
+export const DELETEUSER_URL = `${USER_SERVICE}/auth/user`;
 
 // 챌린지
 const CHALLENGE_SERVICE = 'challenge-service';

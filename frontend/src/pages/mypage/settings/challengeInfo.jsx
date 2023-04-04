@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Image from 'next/image';
 import { useRouter } from 'next/router';
@@ -13,9 +13,11 @@ import PrivateRouter from '@/components/PrivateRouter/PrivateRouter';
 import { ReturnArrow } from '@/components/ReturnArrow';
 
 import { GITHUBBAEKJOON_URL } from '@/constants';
+import { addExtraId } from '@/store/user/userSlice';
 
 const challengeInfo = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
   const userInfo = useSelector(state => state.user);
 
   const headers = {
@@ -23,8 +25,8 @@ const challengeInfo = () => {
   };
 
   const [inputs, setInputs] = useState({
-    baekjoon: '',
-    github: '',
+    baekjoon: userInfo.userInfo.baekjoon,
+    github: userInfo.userInfo.github,
   });
   const { baekjoon, github } = inputs;
 
@@ -41,14 +43,15 @@ const challengeInfo = () => {
       .patch(
         GITHUBBAEKJOON_URL,
         {
+          github: github,
           baekjoon: baekjoon,
-          github: github
         },
         {
           headers,
         },
       )
-      .then(res => {
+      .then(async () => {
+        await dispatch(addExtraId([github, baekjoon]));
         router.push('/mypage');
       })
       .catch(err => {});

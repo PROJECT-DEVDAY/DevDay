@@ -17,6 +17,7 @@ import { InputLabel } from '@/components/InputLabel';
 import { InputText } from '@/components/InputText';
 import { ReturnArrow } from '@/components/ReturnArrow';
 import { CHALLENGES_URL } from '@/constants';
+import PrivateRouter from '@/components/PrivateRouter/PrivateRouter';
 
 const commit = props => {
   const router = useRouter();
@@ -325,4 +326,4 @@ const commit = props => {
   );
 };
 
-export default commit;
+export default PrivateRouter(commit);

@@ -16,6 +16,7 @@ import { InputLabel } from '@/components/InputLabel';
 import { InputText } from '@/components/InputText';
 import { ReturnArrow } from '@/components/ReturnArrow';
 import { CHALLENGES_URL } from '@/constants';
+import PrivateRouter from '@/components/PrivateRouter/PrivateRouter';
 
 const normal = props => {
   const [member, setMember] = useState(1);
@@ -411,4 +412,5 @@ const normal = props => {
     </Container>
   );
 };
-export default normal;
+
+export default PrivateRouter(normal);
