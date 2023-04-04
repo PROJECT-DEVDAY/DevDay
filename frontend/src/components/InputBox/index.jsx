@@ -12,6 +12,7 @@ export const InputBox = ({
   name,
   onChange,
   defaultValue,
+  isIcon,
   ...props
 }) => {
   return (
@@ -22,7 +23,7 @@ export const InputBox = ({
       )}
       {...props}
     >
-      <CiMail className={classNames(`text-2xl`, style.icon)} />
+      {isIcon && <CiMail className={classNames(`text-2xl`, style.icon)} />}
       <input
         className={classNames(`rounded-none w-full pl2`, style.inputbox)}
         type="text"
@@ -41,4 +42,5 @@ InputBox.propTypes = {
 
 InputBox.defaultProps = {
   placeholder: null,
+  isIcon: true,
 };

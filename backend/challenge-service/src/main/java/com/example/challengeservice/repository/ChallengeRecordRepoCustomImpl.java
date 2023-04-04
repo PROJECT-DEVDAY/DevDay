@@ -1,6 +1,5 @@
 package com.example.challengeservice.repository;
 
-import com.example.challengeservice.dto.response.AlgoRecordResponseDto;
 import com.example.challengeservice.dto.response.ChallengeRecordResponseDto;
 import com.example.challengeservice.dto.response.PhotoRecordResponseDto;
 import com.example.challengeservice.entity.*;
@@ -28,19 +27,15 @@ public class ChallengeRecordRepoCustomImpl implements ChallengeRecordRepoCustom 
     private final JPAQueryFactory jpaQueryFactory;
     @Override
     public List<PhotoRecordResponseDto> getSelfPhotoRecord(UserChallenge userChallenge, String viewType) {
-        //QChallengeRecord qChallengeRecord = challengeRecord;
-        QUserChallenge qUserChallenge = QUserChallenge.userChallenge;
 
         JPAQuery<PhotoRecordResponseDto> query = jpaQueryFactory.select( Projections.constructor(
                         PhotoRecordResponseDto.class,
                         challengeRecord.id,
-
-                challengeRecord.createAt,
-                challengeRecord.photoUrl,
-                challengeRecord.success
+                        challengeRecord.createAt,
+                        challengeRecord.photoUrl,
+                        challengeRecord.success
                 ))
                 .from(challengeRecord)
-                //.join(qChallengeRecord.userChallenge, qUserChallenge)
                 .where(challengeRecord.userChallenge.id.eq(userChallenge.getId()))
                 .orderBy(challengeRecord.createAt.desc());
 
@@ -51,25 +46,23 @@ public class ChallengeRecordRepoCustomImpl implements ChallengeRecordRepoCustom 
     }
 
     @Override
-    public List<PhotoRecordResponseDto> getTeamPhotoRecord(Long challengeRoomId, String viewType) {
+    public List<PhotoRecordResponseDto> getTeamPhotoRecord(Long challengeRoomId, String viewType ,int days ,String offDate ,String endDate) {
 
         JPAQuery<PhotoRecordResponseDto> query = jpaQueryFactory.select( Projections.constructor(
                         PhotoRecordResponseDto.class,
                         challengeRecord.id,
-                  //      userChallenge.userId,
-                      // challengeRecord.userChallenge.id,
                         challengeRecord.createAt,
-                        challengeRecord.photoUrl,
-                        challengeRecord.success
+                        challengeRecord.photoUrl
                 ))
                 .from(challengeRecord)
-              //  .join(challengeRecord.userChallenge, userChallenge)
-                .where(challengeRecord.userChallenge.challengeRoom.id.eq(challengeRoomId), isPreview(viewType));
+                .where(challengeRecord.userChallenge.challengeRoom.id.eq(challengeRoomId));
 
-       if(viewType.equals("ALL")){
-         query = query.orderBy(challengeRecord.createAt.desc());
+        if(viewType.equals("PREVIEW")) {
+            query = query.where(challengeRecord.createAt.eq(commonService.getDate()));
+        } else if(viewType.equals("ALL")) {
+            query = query.orderBy(challengeRecord.createAt.desc());
+            query = query.where(challengeRecord.createAt.gt(endDate),challengeRecord.createAt.loe(offDate));
         }
-
         return query.fetch();
     }
 
@@ -82,13 +75,6 @@ public class ChallengeRecordRepoCustomImpl implements ChallengeRecordRepoCustom 
         return Optional.ofNullable(query.fetchOne());
     }
 
-    private BooleanExpression isPreview(String viewType) {
-
-        if(viewType.equals("PREVIEW")) {
-            return challengeRecord.createAt.eq(commonService.getDate());
-        }
-        return null;
-    }
 
     @Override
     public Optional<ChallengeRecordResponseDto> findByUserChallengeIdAndCreateAt(Long userChallengeId, String createAt) {

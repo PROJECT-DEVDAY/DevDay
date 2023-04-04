@@ -11,7 +11,10 @@ import com.example.challengeservice.dto.request.ReportRecordRequestDto;
 import com.example.challengeservice.dto.response.ChallengeCreateResponseDto;
 import com.example.challengeservice.dto.response.MyChallengeResponseDto;
 import com.example.challengeservice.dto.response.PhotoRecordDetailResponseDto;
+import com.example.challengeservice.exception.ApiException;
+import com.example.challengeservice.exception.ExceptionEnum;
 import com.example.challengeservice.service.ChallengeService;
+import com.example.challengeservice.validator.DateValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -57,6 +60,13 @@ public class AuthController {
         joinRequestDto.setUserId(Long.parseLong(request.getHeader(USER_ID)));
       //log.info("pay-service로 부터 받은 데이터 => challengeId: {}, userId: {}", challengeRoomId, userId);
         return responseService.getSingleResult(challengeService.joinChallenge(joinRequestDto));
+    }
+
+    @GetMapping("/join")
+    public Result checkJoinChallenge(@RequestBody ChallengeJoinRequestDto joinRequestDto, HttpServletRequest request){
+        joinRequestDto.setUserId(Long.parseLong(request.getHeader(USER_ID)));
+        challengeService.checkJoinChallenge(joinRequestDto);
+        return responseService.getSuccessResult();
     }
 
 
@@ -124,8 +134,22 @@ public class AuthController {
 
     /** 팀원의 인증 기록 불러오기 테스트 코드 (로그인이 되어있어야함) **/
     @GetMapping("{challengeId}/record")
-    public ListResult<?> getTeamChallengeRecord(@PathVariable("challengeId")Long challengeRoomId ,@RequestParam("view") String viewType){
-        return responseService.getListResult(challengeService.getTeamPhotoRecord(challengeRoomId,viewType));
+    public ListResult<?> getTeamChallengeRecord(@PathVariable("challengeId")Long challengeRoomId ,@RequestParam("view") String viewType ,@RequestParam("days") int days ,@RequestParam(value = "offDate", required = false) String offDate){
+        log.info("형식?"+!DateValidator.validateDateFormat(offDate));
+        if(!DateValidator.validateDateFormat(offDate)) throw new ApiException(ExceptionEnum.API_PARAMETER_EXCEPTION);
+        return responseService.getListResult(challengeService.getTeamPhotoRecord(challengeRoomId,viewType,days,offDate));
+    }
+
+    /**
+     * 신대득
+     * 선택한 유저
+     * 오늘 ~ 4일전 푼 문제를 조회하는 API
+     */
+    @GetMapping("/baekjoon/users/recent")
+    public SingleResult<SolvedMapResponseDto> getRecentUserBaekjoon(HttpServletRequest request){
+        log.info("컨트롤러 호출");
+        Long userId = Long.parseLong(request.getHeader(USER_ID));
+        return responseService.getSingleResult(challengeService.getRecentUserBaekjoon(userId));
     }
 
 

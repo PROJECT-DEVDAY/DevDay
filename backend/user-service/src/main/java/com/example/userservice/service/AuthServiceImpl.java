@@ -13,6 +13,7 @@ import com.example.userservice.dto.response.user.ProfileResponseDto;
 import com.example.userservice.entity.User;
 import com.example.userservice.exception.ApiException;
 import com.example.userservice.exception.ExceptionEnum;
+import com.example.userservice.repository.CommitRecordRepository;
 import com.example.userservice.repository.SolvedacRepository;
 import com.example.userservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -42,6 +43,8 @@ public class AuthServiceImpl implements AuthService {
 
     private final SolvedacRepository solvedacRepository;
 
+    private final CommitRecordRepository commitRecordRepository;
+
     private final EntityManager em;
 
     @Override
@@ -51,6 +54,12 @@ public class AuthServiceImpl implements AuthService {
 
         // S3 서버에서 프로필 이미지 삭제
         deleteS3Img(user);
+
+        // 푼 백준 문제 삭제
+        solvedacRepository.deleteAllByUserId(user.getId());
+
+        // 커밋 기록 삭제
+        commitRecordRepository.deleteAllByUserId(user.getId());
 
         // 회원 탈퇴
         userRepository.delete(user);
@@ -84,7 +93,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     private void deleteS3Img(User user) {
-        if (!user.getProfileImgKey().isBlank()) amazonS3Service.delete(user.getProfileImgKey());
+        if (user.getProfileImgKey() != null && !user.getProfileImgKey().isBlank()) amazonS3Service.delete(user.getProfileImgKey());
     }
 
     private String saveS3Img(MultipartFile profileImg) {
@@ -113,6 +122,11 @@ public class AuthServiceImpl implements AuthService {
     public void updatePassword(Long userId, PasswordRequestDto requestDto) {
         User user = getUser(userId);
 
+        // 현재 사용중인 비밀번호로는 수정 불가
+        if (passwordEncoder.matches(requestDto.getNewPassword(), user.getPassword())) {
+            throw new ApiException(ExceptionEnum.PASSWORD_MATCHED_EXCEPTION);
+        }
+
         if (!passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {
             throw new ApiException(ExceptionEnum.PASSWORD_NOT_MATCHED_EXCEPTION);
         }
@@ -129,7 +143,7 @@ public class AuthServiceImpl implements AuthService {
 
         solvedacRepository.deleteAllByUserId(user.getId());
         em.flush();
-        if (!user.getBaekjoon().isBlank()) commonService.saveProblemList(user);
+        if (user.getBaekjoon() != null && !user.getBaekjoon().isBlank()) commonService.saveProblemList(user);
 
         return GithubBaekjoonResponseDto.from(user.getGithub(), user.getBaekjoon());
     }
