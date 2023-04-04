@@ -142,7 +142,6 @@ public class AuthServiceImpl implements AuthService {
         user.updateEmail(requestDto.getGithub(), requestDto.getBaekjoon());
 
         solvedacRepository.deleteAllByUserId(user.getId());
-        em.flush();
         if (user.getBaekjoon() != null && !user.getBaekjoon().isBlank()) commonService.saveProblemList(user);
 
         return GithubBaekjoonResponseDto.from(user.getGithub(), user.getBaekjoon());
