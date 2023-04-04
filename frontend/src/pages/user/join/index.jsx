@@ -16,6 +16,8 @@ import Container from '@/components/Container';
 import { InputLabel } from '@/components/InputLabel';
 import { CONFIRM_EMAIL_URL, EMAIL_URL, NICKNAME_URL } from '@/constants';
 import { saveSignUpInfos } from '@/store/signup/signupSlice';
+import { useRef } from 'react';
+import password from '@/pages/mypage/settings/password';
 
 const signup = props => {
   const [emailValidCheck, setEmailValidCheck] = useState(false);
@@ -27,20 +29,13 @@ const signup = props => {
 
   const [nickNameValidCheck, setNickNameValidCheck] = useState(false);
   const [nickNameDuplicatedChk, setNickNameDuplicatedChk] = useState(false);
+
   const [showPassword, setShowPassword] = useState(false);
+  const [showPasswordCheck, setShowPasswordCheck] = useState(false);
 
   const router = useRouter();
   const dispatch = useDispatch();
   const signUpInfos = useSelector(state => state.signUp);
-
-  const validate = values => {
-    const errors = {};
-
-    if (values.password !== values.passwordCheck) {
-      errors.passwordCheck = '비밀번호가 일치하지 않습니다.';
-    }
-    return errors;
-  };
 
   const [remainingTime, setRemainingTime] = useState(4 * 60 + 59);
   const Timer = () => {
@@ -72,13 +67,17 @@ const signup = props => {
     setShowPassword(prev => !prev);
   };
 
+  const toggleShowPasswordCheck = () => {
+    setShowPasswordCheck(prev => !prev);
+  };
+
   const {
     handleSubmit,
     register,
     formState: { errors },
     watch,
     reset,
-  } = useForm({ validate, mode: 'onBlur' });
+  } = useForm({ mode: 'onBlur' });
 
   useEffect(() => {
     if (signUpInfos) {
@@ -87,12 +86,25 @@ const signup = props => {
     }
   }, [signUpInfos, reset]);
 
+  const passowrd = useRef({});
+  password.current = watch('password', '');
+
+  const validatePasswordCheck = value => {
+    if (value === password.current) {
+      return true;
+    } else {
+      return '동일한 비밀번호를 입력해주세요';
+    }
+  };
+
   // email check logic
   const onChangeAuthToken = event => {
     setEmailAuthtoken(event.target.value);
   };
 
   const onClickEmailValidation = async () => {
+    setEmailAuthenticated(false);
+
     try {
       setRemainingTime(4 * 60 + 59);
 
@@ -128,17 +140,17 @@ const signup = props => {
         authToken: emailAuthToken,
       });
 
-      setEmailAuthenticated(true);
       setRemainingTime(0);
+      setEmailAuthenticated(true);
+      setEmailValidCheck(false);
 
       Swal.fire({
         icon: 'success',
         title: '인증 성공',
         text: '인증에 성공했습니다!',
       });
-
-      setEmailValidCheck(false);
     } catch (error) {
+      setEmailValidCheck(false);
       setEmailAuthenticated(false);
 
       let errorMessage;
@@ -171,6 +183,10 @@ const signup = props => {
       setNickNameDuplicatedChk(false);
     }
   };
+  const retryNickname = () => {
+    setNickNameDuplicatedChk(false);
+    setNickNameValidCheck(false);
+  };
 
   const onSubmit = data => {
     const inputData = { ...data, emailAuthId };
@@ -198,27 +214,31 @@ const signup = props => {
                   pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                 })}
               />
-              <button
-                type="button"
-                className={style.RightBtn}
-                onClick={onClickEmailValidation}
-              >
-                인증하기
-              </button>
+              {errors?.email?.type !== 'pattern' &&
+                errors?.email?.type !== 'required' &&
+                !emailValidCheck && (
+                  <button
+                    type="button"
+                    className={style.RightBtn}
+                    onClick={onClickEmailValidation}
+                  >
+                    인증하기
+                  </button>
+                )}
             </div>
-            {errors && errors.email && errors.email.type === 'required' && (
+            {errors?.email?.type === 'required' && (
               <span className={classNames(`font-medium`, style.Error)}>
                 이메일을 입력해주세요!
               </span>
             )}
-            {errors && errors.email && errors.email.type === 'pattern' && (
+            {errors?.email?.type === 'pattern' && (
               <span className={classNames(`font-medium`, style.Error)}>
                 유효하지 않는 이메일 입니다.
               </span>
             )}
 
-            {!(errors && errors.email && errors.email.type === 'required') &&
-              !(errors && errors.email && errors.email.type === 'pattern') &&
+            {!(errors?.email?.type === 'required') &&
+              !(errors?.email?.type === 'pattern') &&
               emailValidCheck && (
                 <div
                   className={classNames(
@@ -245,7 +265,7 @@ const signup = props => {
                 </div>
               )}
 
-            <div className={classNames(`mt-5`)}>
+            <div className={classNames(`mt-7`)}>
               <InputLabel content="비밀번호" />
               <div
                 className={classNames(style.InputText, 'flex w-full my-2 pb-1')}
@@ -255,58 +275,64 @@ const signup = props => {
                   placeholder="8자리 이상의 대문자, 소문자, 특수문자 "
                   className={classNames(style.Content, `w-full h-6`)}
                   {...register('password', {
-                    required: true,
-                    pattern:
-                      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,}/,
+                    required: '비밀번호를 입력하세요',
+                    minLength: {
+                      value: 8,
+                      message: '최소 8자리 이상 입력하세요',
+                    },
+                    pattern: {
+                      value:
+                        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,}$/,
+                      message:
+                        '대문자, 소문자, 숫자, 특수문자가 하나 이상 포함되어야 합니다',
+                    },
                   })}
                 />
                 <button type="button" onClick={toggleShowPassword}>
                   {showPassword ? <BiShow /> : <BiHide />}
                 </button>
               </div>
-              {errors &&
-                errors.password &&
-                errors.password.type === 'required' && (
-                  <span className={classNames(`font-medium`, style.Error)}>
-                    비밀번호를 입력해주세요!
-                  </span>
-                )}
-              {errors &&
-                errors.password &&
-                errors.password.type === 'pattern' && (
-                  <span className={classNames(`font-medium`, style.Error)}>
-                    조건에 맞지 않는 비밀번호 입니다.
-                  </span>
-                )}
+              {errors.password && (
+                <span className={classNames(style.Error, 'font-medium')}>
+                  {errors.password.message}
+                </span>
+              )}
             </div>
-            <div className={classNames(`mt-3`)}>
+            <div className={classNames(`mt-5`)}>
               <InputLabel content="비밀번호 확인" />
               <div
                 className={classNames(style.InputText, 'flex w-full my-2 pb-1')}
               >
                 <input
-                  type={showPassword ? 'text' : 'password'}
+                  type={showPasswordCheck ? 'text' : 'password'}
                   placeholder="다시 한번 입력해주세요"
                   className={classNames(style.Content, `w-full h-6`)}
                   {...register('passwordCheck', {
-                    required: true,
-                    pattern:
-                      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,}/,
+                    required: '비밀번호를 입력하세요',
+                    minLength: {
+                      value: 8,
+                      message: '최소 8자리 이상 입력하세요',
+                    },
+                    pattern: {
+                      value:
+                        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,}$/,
+                      message:
+                        '최소 8자리, 대/소문자/숫자/특수문자가 각각 하나 이상 포함되어야 합니다',
+                    },
+                    validate: validatePasswordCheck,
                   })}
                 />
-                <button type="button" onClick={toggleShowPassword}>
-                  {showPassword ? <BiShow /> : <BiHide />}
+                <button type="button" onClick={toggleShowPasswordCheck}>
+                  {showPasswordCheck ? <BiShow /> : <BiHide />}
                 </button>
               </div>
-              <div className={(`font-medium`, style.Error)}>
-                {errors && errors.passwordCheck && (
-                  <span className={classNames(`font-medium`, style.Error)}>
-                    동일한 비밀번호를 입력해주세요!
-                  </span>
-                )}
-              </div>
+              {errors.passwordCheck && (
+                <span className={classNames(style.Error, 'font-medium')}>
+                  {errors.passwordCheck.message}
+                </span>
+              )}
             </div>
-            <div className={classNames(`mt-5`)}>
+            <div className={classNames(`mt-7`)}>
               <InputLabel content="이름" />
               <div
                 className={classNames(style.InputText, 'flex w-full my-2 pb-1')}
@@ -335,92 +361,64 @@ const signup = props => {
               </div>
             </div>
 
-            <div className={classNames(`mt-3`)}>
+            <div className={`mt-5`}>
               <InputLabel content="닉네임" />
               <div
                 className={classNames(style.InputText, 'flex w-full my-2 pb-1')}
               >
                 <input
-                  className={classNames(style.Content, `w-full h-6`)}
                   type="text"
-                  readOnly={nickNameValidCheck}
+                  className={classNames(style.Content, `w-full h-6`)}
                   placeholder="닉네임을 입력해주세요"
+                  readOnly={nickNameValidCheck}
                   {...register('nickname', {
                     required: true,
                     pattern: /^(?=.*[a-z0-9가-힣])[a-z0-9가-힣]{2,16}$/,
                   })}
                 />
-                <button
-                  type="button"
-                  className={style.RightBtn}
-                  onClick={onClickDuplicateCheck}
-                >
-                  중복확인
-                </button>
+                {errors?.nickname?.type !== 'pattern' &&
+                  errors?.nickname?.type !== 'required' &&
+                  !nickNameValidCheck && (
+                    <button
+                      type="button"
+                      className={classNames(style.RightBtn, 'font-medium')}
+                      onClick={onClickDuplicateCheck}
+                    >
+                      중복확인
+                    </button>
+                  )}
               </div>
 
               <div className={(`font-medium`, style.Error)}>
-                {errors &&
-                  errors.nickname &&
-                  errors.nickname.type === 'required' && (
-                    <span className={classNames(`font-medium`, style.Error)}>
-                      닉네임 입력해주세요!
-                    </span>
-                  )}
-                {errors &&
-                  errors.nickname &&
-                  errors.nickname.type === 'pattern' && (
-                    <span className={classNames(`font-medium`, style.Error)}>
-                      조건에 맞지 않는 닉네임 입니다.
-                    </span>
-                  )}
+                {errors?.nickname?.type === 'required' && (
+                  <span className={classNames(`font-medium`, style.Error)}>
+                    닉네임 입력해주세요!
+                  </span>
+                )}
+                {errors?.nickname?.type === 'pattern' && (
+                  <span className={classNames(`font-medium`, style.Error)}>
+                    조건에 맞지 않는 닉네임 입니다.
+                  </span>
+                )}
               </div>
-              {!(
-                errors &&
-                errors.nickname &&
-                errors.nickname.type === 'required'
-              ) &&
-                !(
-                  errors &&
-                  errors.nickname &&
-                  errors.nickname.type === 'pattern'
-                ) &&
-                nickNameValidCheck &&
-                (nickNameDuplicatedChk ? (
-                  <div
-                    className={classNames(
-                      `flex justify-between p-2 rounded-lg`,
-                      style.nickNamePass,
-                    )}
-                  >
-                    <p> 사용가능한 닉네임입니다 </p>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setNickNameValidCheck(prev => !prev);
-                      }}
-                    >
-                      다시 입력하기
-                    </button>
-                  </div>
-                ) : (
-                  <div
-                    className={classNames(
-                      `flex justify-between p-2 rounded-lg`,
-                      style.nickNameFail,
-                    )}
-                  >
-                    <p> 중복된 닉네임입니다 </p>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setNickNameValidCheck(prev => !prev);
-                      }}
-                    >
-                      다시 입력하기
-                    </button>
-                  </div>
-                ))}
+              {nickNameValidCheck && (
+                <div
+                  className={classNames(
+                    nickNameDuplicatedChk ? style.pass : style.nonPass,
+                    style.nickNameCheck,
+                    `p-2 flex items-center relative justify-between`,
+                  )}
+                >
+                  {nickNameDuplicatedChk ? (
+                    <label className="pass">사용가능한 닉네임입니다!</label>
+                  ) : (
+                    <label className="non-pass">중복된 닉네임입니다!</label>
+                  )}
+                  <button class="font-medium" onClick={retryNickname}>
+                    재입력
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </form>
