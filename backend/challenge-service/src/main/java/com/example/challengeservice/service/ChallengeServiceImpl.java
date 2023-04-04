@@ -368,12 +368,12 @@ public class ChallengeServiceImpl implements ChallengeService{
     public SolvedMapResponseDto getRecentUserBaekjoon(Long userId) {
         log.info("서비스 호출");
         String today= commonService.getDate();
-        String pastDay=commonService.getPastDay(5);
+        String pastDay=commonService.getPastDay(5, commonService.getDate());
 
         List<DateProblemResponseDto> dateBaekjoonList =userServiceClient.getDateBaekjoonList(userId,pastDay,today).getData();
         Map<String, List<String>> myMap=new HashMap<>();
         for(int i=0;i<=5;i++){
-            myMap.putIfAbsent(commonService.getPastDay(i), new ArrayList<>());
+            myMap.putIfAbsent(commonService.getPastDay(i,commonService.getDate()), new ArrayList<>());
         }
         for(DateProblemResponseDto dateProblemResponseDto: dateBaekjoonList){
             String curDate=dateProblemResponseDto.getSuccessDate();
