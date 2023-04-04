@@ -111,17 +111,6 @@ public class AuthController {
         return responseService.getSuccessResult();
     }
 
-    /**
-     * 신대득
-     * 유저가 푼 문제 리스트 갱신
-     */
-    @GetMapping("/baekjoon/update/users")
-    public Result updateUserBaekjoon(HttpServletRequest request){
-        Long userId=Long.parseLong(request.getHeader(USER_ID));
-        challengeService.updateUserBaekjoon(userId);
-        return responseService.getSuccessResult();
-    }
-
 
     /** 사진 인증 저장 **/
     @PostMapping("photo-record")

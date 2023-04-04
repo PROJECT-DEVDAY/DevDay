@@ -125,6 +125,33 @@ public class ChallengeController {
         return  s3Service.upload(multipartFile,dir);
     }
 
+    @GetMapping("baekjoon/rank/{challengeId}")
+    public ListResult<AlgoRankResponseDto> getAlgoTopRank(@PathVariable String challengeId){
+        return responseService.getListResult(challengeService.getAlgoTopRank(Long.parseLong(challengeId)));
+    }
+
+    /**
+     * 신대득
+     * 유저가 푼 문제 리스트 갱신
+     */
+    @PostMapping("/baekjoon/update/users/{userId}")
+    public Result updateUserBaekjoon(@PathVariable String userId){
+//        Long userId=Long.parseLong(request.getHeader(USER_ID));
+        challengeService.updateUserBaekjoon(Long.parseLong(userId));
+        return responseService.getSuccessResult();
+    }
+
+    /**
+     * 해당 챌린지 방
+     * 모든 유저의 푼 문제 리스트 갱신
+     */
+    @PostMapping("/baekjoon/update/room/{challengeId}")
+    public Result updateChallengeRoom(@PathVariable Long challengeId){
+        challengeService.updateChallengeRoom(challengeId);
+        return responseService.getSuccessResult();
+    }
+
+
 
 
 
