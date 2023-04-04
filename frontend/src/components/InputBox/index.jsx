@@ -6,7 +6,15 @@ import PropTypes from 'prop-types';
 
 import style from './index.module.scss';
 
-export const InputBox = ({ className, placeholder, name, onChange, defaultValue, ...props }) => {
+export const InputBox = ({
+  className,
+  placeholder,
+  name,
+  onChange,
+  defaultValue,
+  isIcon,
+  ...props
+}) => {
   return (
     <div
       className={classNames(
@@ -15,7 +23,7 @@ export const InputBox = ({ className, placeholder, name, onChange, defaultValue,
       )}
       {...props}
     >
-      <CiMail className={classNames(`text-2xl`, style.icon)} />
+      {isIcon && <CiMail className={classNames(`text-2xl`, style.icon)} />}
       <input
         className={classNames(`rounded-none w-full pl2`, style.inputbox)}
         type="text"
@@ -34,4 +42,5 @@ InputBox.propTypes = {
 
 InputBox.defaultProps = {
   placeholder: null,
+  isIcon: true,
 };

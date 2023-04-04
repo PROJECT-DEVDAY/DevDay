@@ -24,6 +24,7 @@ const deleteAccount = () => {
   const [inputs, setInputs] = useState({
     deleteCheck: '',
   });
+  
   const { deleteCheck } = inputs;
 
   const onChangeId = e => {
