@@ -5,7 +5,6 @@ import { useRouter } from 'next/router';
 import Swal from 'sweetalert2';
 
 import http from '../../api/http';
-import { DEPOSIT_WITHDRAW_URL } from '@/constants';
 
 import { BtnFooter } from '@/components/BtnFooter';
 import { Button } from '@/components/Button';
@@ -14,7 +13,7 @@ import { InputText } from '@/components/InputText';
 import PrivateRouter from '@/components/PrivateRouter/PrivateRouter';
 import { ReturnArrow } from '@/components/ReturnArrow';
 import { SelectArrow } from '@/components/SelectArrow';
-import { MY_DEPOSIT_PRIZE } from '@/constants';
+import { DEPOSIT_WITHDRAW_URL, MY_DEPOSIT_PRIZE } from '@/constants';
 
 const index = () => {
   const router = useRouter();
@@ -67,7 +66,7 @@ const index = () => {
     http
       .post(
         DEPOSIT_WITHDRAW_URL,
-        { money: money },
+        { money },
         {
           headers,
         },
