@@ -33,6 +33,7 @@ public interface ChallengeService {
     void updateUserBaekjoon(Long userId);
     /** 해당 유저가 해당 날짜에 푼 알고리즘 리스트 조회 **/
     SolvedListResponseDto checkDateUserBaekjoon(Long userId, String selectDate);
+    SolvedMapResponseDto getRecentUserBaekjoon(Long userId);
 
     /** 스케줄러 저장 메서드 **/
     void createDailyRecord();
