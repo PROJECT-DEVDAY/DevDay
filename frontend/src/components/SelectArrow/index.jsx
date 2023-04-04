@@ -23,6 +23,7 @@ export const SelectArrow = ({
         className,
         fill && style[`SelectArrow-background-fill`],
       )}
+      onClick={onClick}
     >
       <div style={{ flex: 1 }}>
         <p
@@ -35,11 +36,7 @@ export const SelectArrow = ({
         </p>
         <p className={style.ArrowContent}>{content}</p>
       </div>
-      <button
-        type="button"
-        className={classNames(style.ArrowDiv)}
-        onClick={onClick}
-      >
+      <button type="button" className={classNames(style.ArrowDiv)}>
         <SlArrowRight className={style.Arrow} width={30} />
       </button>
     </div>

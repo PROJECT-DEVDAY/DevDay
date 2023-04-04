@@ -79,6 +79,10 @@ const index = () => {
       });
   };
 
+  const goToCurrentSituation = () => {
+    router.push('/mypage/deposit/current-situation');
+  };
+
   return (
     <Container>
       <Container.Header className="mb-10">
@@ -99,7 +103,11 @@ const index = () => {
         </div>
         <Button label="출금하기" onClick={withdraw} />
         <div className="mt-10">
-          <SelectArrow title="예치금 사용 현황" className="text-sm" />
+          <SelectArrow
+            title="예치금 사용 현황"
+            className="text-sm"
+            onClick={goToCurrentSituation}
+          />
           <SelectArrow title="예치금 전체 조회" className="text-sm" />
         </div>
       </Container.Body>
