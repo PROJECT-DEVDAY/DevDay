@@ -30,3 +30,14 @@
 .Error {
   color: var(--color-warning);
 }
+
+.nickNameCheck {
+  top: -8px;
+}
+
+.pass.nickNameCheck {
+  background-color: var(--color-success);
+}
+.nonPass.nickNameCheck {
+  background-color: var(--color-fail);
+}
