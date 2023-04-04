@@ -9,8 +9,9 @@ import { ReturnArrow } from '../../components/ReturnArrow';
 import { SelectOption } from '../../components/SelectOption';
 
 import Container from '@/components/Container';
+import PrivateRouter from '@/components/PrivateRouter/PrivateRouter';
 
-const check = props => {
+const type = props => {
   const [checking, setChecking] = useState([false, false]);
   const changeCheck = index => {
     if (index === 0) {
@@ -109,4 +110,4 @@ const check = props => {
   );
 };
 
-export default check;
+export default PrivateRouter(type);

@@ -15,6 +15,7 @@ import Container from '@/components/Container';
 import { ContentInput } from '@/components/ContentInput';
 import { InputLabel } from '@/components/InputLabel';
 import { InputText } from '@/components/InputText';
+import PrivateRouter from '@/components/PrivateRouter/PrivateRouter';
 import { ReturnArrow } from '@/components/ReturnArrow';
 import { CHALLENGES_URL } from '@/constants';
 
@@ -325,4 +326,4 @@ const commit = props => {
   );
 };
 
-export default commit;
+export default PrivateRouter(commit);

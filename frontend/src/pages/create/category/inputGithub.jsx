@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import classNames from 'classnames';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 import Swal from 'sweetalert2';
 
 import style from './inputGithub.module.scss';
@@ -11,34 +12,41 @@ import http from '../../api/http';
 import { BtnFooter } from '@/components/BtnFooter';
 import Container from '@/components/Container';
 import { InputBox } from '@/components/InputBox';
-import { ReturnArrow } from '@/components/ReturnArrow';
+import PrivateRouter from '@/components/PrivateRouter/PrivateRouter';
 import { GITHUBBAEKJOON_URL } from '@/constants';
+import { addExtraId } from '@/store/user/userSlice';
 
 const inputGithub = props => {
-  const [text, setText] = useState('');
-  const setTextValue = e => {
-    setText(e.target.value);
+  const [githubId, setGithubId] = useState('');
+  const onChangeGithub = e => {
+    setGithubId(e.target.value);
   };
+  const dispatch = useDispatch();
+  const router = useRouter();
 
   const user = useSelector(state => state.user);
   // const [userInfomation, SetUserInfomation] = useState(user.userInfo);
-  const githubInput = async () => {
+  const solvedAcId = user.userInfo.baekjoon;
+
+  const onClickSaveGithubId = async () => {
     await http
       .patch(
         GITHUBBAEKJOON_URL,
-        { github: text, baekjoon: user.userInfo.baekjoon },
+        { github: githubId, baekjoon: solvedAcId },
         {
-          headers: { Authorization: user.userInfo.accessToken },
+          headers: { Authorization: user.accessToken },
         },
       )
-      .then(() => {
-        Swal.fire({
+      .then(async () => {
+        dispatch(addExtraId([githubId, solvedAcId]));
+        await Swal.fire({
           position: 'center',
           icon: 'success',
           title: '성공!',
           showConfirmButton: false,
           timer: 1500,
         });
+        router.push('/create/commit');
       })
       .catch(error => {
         Swal.fire({
@@ -65,8 +73,8 @@ const inputGithub = props => {
         />
         <InputBox
           placeholder="GitHub 아이디"
-          onChange={setTextValue}
-          value={text}
+          onChange={onChangeGithub}
+          value={githubId}
         />
         <div className="mt-4 ml-2 text-sm">
           Commit 챌린지를 이용하기 위해서 필요합니다
@@ -86,9 +94,9 @@ const inputGithub = props => {
           <BtnFooter
             content=""
             label="다음"
-            disable={!!text}
+            disable={!!githubId}
             goToUrl="/create/commit"
-            onClick={githubInput}
+            onClick={onClickSaveGithubId}
             warningMessage="Commit 챌린지는 GitHub ID가 필요해요."
           />
         </div>
@@ -97,4 +105,4 @@ const inputGithub = props => {
   );
 };
 
-export default inputGithub;
+export default PrivateRouter(inputGithub);
