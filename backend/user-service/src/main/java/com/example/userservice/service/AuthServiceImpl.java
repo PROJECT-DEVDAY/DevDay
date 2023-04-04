@@ -57,6 +57,7 @@ public class AuthServiceImpl implements AuthService {
 
         // 푼 백준 문제 삭제
         solvedacRepository.deleteAllByUserId(user.getId());
+        em.flush();
 
         // 커밋 기록 삭제
         commitRecordRepository.deleteAllByUserId(user.getId());
