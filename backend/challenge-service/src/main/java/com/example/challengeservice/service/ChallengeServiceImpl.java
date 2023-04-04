@@ -372,10 +372,11 @@ public class ChallengeServiceImpl implements ChallengeService{
 
         List<DateProblemResponseDto> dateBaekjoonList =userServiceClient.getDateBaekjoonList(userId,pastDay,today).getData();
         Map<String, List<String>> myMap=new HashMap<>();
+        for(int i=0;i<=5;i++){
+            myMap.putIfAbsent(commonService.getPastDay(i), new ArrayList<>());
+        }
         for(DateProblemResponseDto dateProblemResponseDto: dateBaekjoonList){
             String curDate=dateProblemResponseDto.getSuccessDate();
-
-            myMap.putIfAbsent(curDate, new ArrayList<>());
             List<String> problemList= myMap.get(curDate);
             problemList.add(dateProblemResponseDto.getProblemId());
             log.info("problemList is{}", problemList);
