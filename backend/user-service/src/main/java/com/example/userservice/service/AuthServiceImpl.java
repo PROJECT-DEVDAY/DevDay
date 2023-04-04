@@ -122,6 +122,11 @@ public class AuthServiceImpl implements AuthService {
     public void updatePassword(Long userId, PasswordRequestDto requestDto) {
         User user = getUser(userId);
 
+        // 현재 사용중인 비밀번호로는 수정 불가
+        if (passwordEncoder.matches(requestDto.getNewPassword(), user.getPassword())) {
+            throw new ApiException(ExceptionEnum.PASSWORD_MATCHED_EXCEPTION);
+        }
+
         if (!passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {
             throw new ApiException(ExceptionEnum.PASSWORD_NOT_MATCHED_EXCEPTION);
         }
