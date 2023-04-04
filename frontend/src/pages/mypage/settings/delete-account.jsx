@@ -49,7 +49,6 @@ const deleteAccount = () => {
     http
       .delete(DELETEUSER_URL, { headers })
       .then(res => {
-        console.log(deleteCheck)
         router.push('/user/login');
       })
       .catch(err => {
