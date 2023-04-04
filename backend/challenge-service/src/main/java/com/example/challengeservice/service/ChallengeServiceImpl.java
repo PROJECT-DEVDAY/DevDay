@@ -597,22 +597,26 @@ public class ChallengeServiceImpl implements ChallengeService{
 
     }
 
-    /** 사진 인증 상세 조회 (로그인이 반드시 되어있어야함) **/
+    /** @author : 홍금비
+     *  @explain: 사진인증 기록을 상세 조회한다.
+     *  @param userId :유저 ID
+     *  @param challengeRecordId : 챌린지 기록 ID
+     *
+     *  @retouch : (before) 회원 닉네임을 불러오기 위해 user-service로 api를 호출하는 로직
+     *             (after) 챌린지방을 입장할때 회원닉네임을 저장해서 해당 정보로 닉네임을 가져오는 것으로 변경
+     *
+     *  **/
     public PhotoRecordDetailResponseDto getPhotoRecordDetail(Long userId,Long challengeRecordId){
 
-        ChallengeRecord challengeRecord = challengeRecordRepository.findById(challengeRecordId).orElseThrow(()->new ApiException(ExceptionEnum.USER_CHALLENGE_NOT_EXIST_EXCEPTION));
+        //[예외처리]: 조회하려는 인증기록이 존재하는지 확인한다.
+        ChallengeRecord challengeRecord = challengeRecordRepository.findById(challengeRecordId).orElseThrow(()->new ApiException(ExceptionEnum.NOT_EXIST_CHALLENGE_RECORD));
 
-        //1. 인증 기록의 사용자 닉네임을 user-service로 사용자 정보를 요청한다.
-        Long writeUserId =challengeRecord.getUserChallenge().getUserId();
-        log.info("[인증 기록 작성자] : "+ writeUserId);
+        String writerNickname =challengeRecord.getUserChallenge().getNickname();
 
-        UserResponseDto userResponseDto = userServiceClient.getUserInfo(writeUserId).getData();
-        log.info("[인증 기록 작성자 닉네임] : " + userResponseDto.getNickname());
-
-        // 2. 인증 기록을 조회하는 사용자의 신고 기록을 리턴해야한다. 존재하면 true를 그렇지 않으면 false를 리턴한다.
+        //인증 기록을 조회하는 사용자의 신고 기록을 리턴해야한다. 존재하면 true를 그렇지 않으면 false를 리턴한다.
         boolean reportStatus = reportRecordRepository.existsByUserIdAndChallengeRecordId(userId, challengeRecordId);
 
-        return new PhotoRecordDetailResponseDto(challengeRecord,userResponseDto.getNickname(),reportStatus);
+        return new PhotoRecordDetailResponseDto(challengeRecord,writerNickname,reportStatus);
     }
 
 
