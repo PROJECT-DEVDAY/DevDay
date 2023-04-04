@@ -15,6 +15,7 @@ import com.example.challengeservice.exception.ApiException;
 import com.example.challengeservice.exception.ExceptionEnum;
 import com.example.challengeservice.service.ChallengeService;
 import com.example.challengeservice.validator.DateValidator;
+import com.example.challengeservice.dto.response.SolvedMapResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
