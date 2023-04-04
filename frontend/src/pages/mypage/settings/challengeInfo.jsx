@@ -11,7 +11,6 @@ import Container from '@/components/Container';
 import { InputBox } from '@/components/InputBox';
 import PrivateRouter from '@/components/PrivateRouter/PrivateRouter';
 import { ReturnArrow } from '@/components/ReturnArrow';
-
 import { GITHUBBAEKJOON_URL } from '@/constants';
 
 const challengeInfo = () => {
@@ -41,8 +40,8 @@ const challengeInfo = () => {
       .patch(
         GITHUBBAEKJOON_URL,
         {
-          baekjoon: baekjoon,
-          github: github
+          baekjoon,
+          github,
         },
         {
           headers,
