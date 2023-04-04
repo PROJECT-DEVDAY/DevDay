@@ -27,16 +27,14 @@ public class PhotoRecordResponseDto {
 
     String photoUrl;
 
-    /** 성공 여부 **/
-    private boolean success;
 
 
 
-    public PhotoRecordResponseDto(Long challengeRecordId, String createAt, String photoUrl, boolean success) {
+
+    public PhotoRecordResponseDto(Long challengeRecordId, String createAt, String photoUrl) {
         this.challengeRecordId = challengeRecordId;
-
         this.createAt = createAt;
         this.photoUrl = photoUrl;
-        this.success = success;
+
     }
 }
