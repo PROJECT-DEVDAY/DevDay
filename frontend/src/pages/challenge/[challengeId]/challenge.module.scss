@@ -25,5 +25,12 @@
 }
 .peopleBox {
   margin-top: 8px;
-  height: 300px;
+}
+.box {
+  height: 80px;
+  color: var(--color-guembi);
+  border: 2px solid var(--color-chunsik);
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
 }
