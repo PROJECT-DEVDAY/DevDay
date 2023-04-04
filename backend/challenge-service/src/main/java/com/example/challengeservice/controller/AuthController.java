@@ -8,9 +8,7 @@ import com.example.challengeservice.dto.request.ChallengeJoinRequestDto;
 import com.example.challengeservice.dto.request.ChallengeRecordRequestDto;
 import com.example.challengeservice.dto.request.ChallengeRoomRequestDto;
 import com.example.challengeservice.dto.request.ReportRecordRequestDto;
-import com.example.challengeservice.dto.response.ChallengeCreateResponseDto;
-import com.example.challengeservice.dto.response.MyChallengeResponseDto;
-import com.example.challengeservice.dto.response.PhotoRecordDetailResponseDto;
+import com.example.challengeservice.dto.response.*;
 import com.example.challengeservice.service.ChallengeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -133,6 +131,18 @@ public class AuthController {
     @GetMapping("{challengeId}/record")
     public ListResult<?> getTeamChallengeRecord(@PathVariable("challengeId")Long challengeRoomId ,@RequestParam("view") String viewType){
         return responseService.getListResult(challengeService.getTeamPhotoRecord(challengeRoomId,viewType));
+    }
+
+    /**
+     * 신대득
+     * 선택한 유저
+     * 오늘 ~ 4일전 푼 문제를 조회하는 API
+     */
+    @GetMapping("/baekjoon/users/recent")
+    public SingleResult<SolvedMapResponseDto> getRecentUserBaekjoon(HttpServletRequest request){
+        log.info("컨트롤러 호출");
+        Long userId = Long.parseLong(request.getHeader(USER_ID));
+        return responseService.getSingleResult(challengeService.getRecentUserBaekjoon(userId));
     }
 
 
