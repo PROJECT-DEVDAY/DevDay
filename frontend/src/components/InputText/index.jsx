@@ -15,6 +15,7 @@ export const InputText = ({
   value,
   onClick,
   onChange,
+  enabled,
   ...props
 }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -49,13 +50,24 @@ export const InputText = ({
         name={name}
         value={value}
         placeholder={content}
-        className={classNames(style.Content, `w-full h-6`)}
+        className={classNames(
+          style.Content,
+          `w-full h-6`,
+          `disabled && 'disabled:opacity-25',
+        disabled ? 'cursor-not-allowed' : 'cursor-pointer'`,
+        )}
         onChange={onChange}
+        enabled={enabled}
         {...props}
       />
     );
     buttonValue = (
-      <button type="button" className={style.RightBtn} onClick={onClick}>
+      <button
+        type="button"
+        className={style.RightBtn}
+        onClick={onClick}
+        enabled={enabled}
+      >
         {icon}
       </button>
     );
