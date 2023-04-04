@@ -31,7 +31,6 @@ const challenge = () => {
       })
       .then(res => {
         setMyChallengeInfo(res.data.data);
-        console.log(res.data.data);
       })
       .catch(e => {
         router.push('/user/login');

@@ -146,7 +146,7 @@ const login = props => {
               <InputText
                 name="password"
                 type="password"
-                content="12자리 이상, 대문자 소문자 특수문자"
+                content="8자리 이상, 대문자 소문자 특수문자"
                 onChange={handleChange}
               />
             </div>

@@ -24,7 +24,7 @@ export const Button = ({
         fill && style['Button-background-fill'],
         className,
         'font-medium',
-        disabled && 'disabled:opacity-25',
+        disabled && 'opacity-25',
         disabled ? 'cursor-not-allowed' : 'cursor-pointer',
       )}
       disabled={disabled}

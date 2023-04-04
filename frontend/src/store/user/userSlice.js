@@ -29,6 +29,10 @@ export const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
+    addExtraId: (state, action) => {
+      state.userInfo.github = action.payload[0];
+      state.userInfo.baekjoon = action.payload[1];
+    },
     reset(state) {
       Object.assign(state, {
         userInfo: {},
@@ -58,5 +62,6 @@ export const userSlice = createSlice({
       .addCase(PURGE, () => initialState);
   },
 });
-export const { reset } = userSlice.actions;
+export const { reset, addGithubId, addSolvedAcId, addExtraId } =
+  userSlice.actions;
 export default userSlice.reducer;

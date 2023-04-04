@@ -60,7 +60,6 @@ const profile = () => {
           dispatch(reset());
           await persistor.purge();
         } catch (e) {
-          console.log(e);
           Swal.fire({
             icon: 'error',
             title: '실패!',
