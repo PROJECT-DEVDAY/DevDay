@@ -14,6 +14,7 @@ export const SelectArrow = ({
   content,
   color,
   onClick,
+  arrow,
   ...props
 }) => {
   return (
@@ -36,9 +37,11 @@ export const SelectArrow = ({
         </p>
         <p className={style.ArrowContent}>{content}</p>
       </div>
-      <button type="button" className={classNames(style.ArrowDiv)}>
-        <SlArrowRight className={style.Arrow} width={30} />
-      </button>
+      {arrow && (
+        <button type="button" className={classNames(style.ArrowDiv)}>
+          <SlArrowRight className={style.Arrow} width={30} />
+        </button>
+      )}
     </div>
   );
 };
@@ -49,9 +52,11 @@ SelectArrow.propTypes = {
   title: PropTypes.string.isRequired,
   content: PropTypes.string.isRequired,
   onClick: PropTypes.func,
+  arrow: PropTypes.bool,
 };
 
 SelectArrow.defaultProps = {
   fill: false,
   onClick: undefined,
+  arrow: true,
 };

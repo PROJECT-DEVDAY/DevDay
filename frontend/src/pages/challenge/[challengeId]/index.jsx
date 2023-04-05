@@ -17,6 +17,7 @@ import classNames from 'classnames';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import Swal from 'sweetalert2';
 
 import style from './challenge.module.scss';
 
@@ -107,6 +108,38 @@ const challengeDetail = props => {
                   setMyAlgo(response.data.data.commitMap);
                 }
               });
+          } else if (res.data.category === 'FREE') {
+            http
+              .get(
+                `${CHALLENGE_AUTH_ALGO_URL}/baekjoon/users/progress/${challengeId}`,
+              )
+              .then(response => {
+                setMyAlgoIng(response.data);
+              });
+            http
+              .get(`${CHALLENGE_DETAIL_URL}/baekjoon/rank/${challengeId}`)
+              .then(response => {
+                setChallengeRank(response.data.data);
+                if (response.data.data.length > 6) {
+                  const resRank = response.data.data.slice(0, 6);
+                  setChallengeRank(resRank);
+                }
+              });
+            const freeData = {
+              view: 'PREVIEW',
+            };
+            http
+              .get(
+                `${CHALLENGE_AUTH_ALGO_URL}/${challengeId}/record/users/${user.userInfo.userId}?view='PREVIEW'`,
+                freeData,
+              )
+              .then(response => {
+                if (response) {
+                  // setMyAlgoKey(key);
+                  setMyAlgo(response.data);
+                  console.log(response.data);
+                }
+              });
           }
         });
     }
@@ -175,6 +208,54 @@ const challengeDetail = props => {
     setSelectedItem(targetItem);
   };
 
+  const handleClick = () => {
+    if (challenge.category === 'FREE') {
+      Swal.fire({
+        title: '이렇게 인증 해주세요',
+        html: `
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <p>성공</p>
+            <img src="${challenge.successUrl}" alt="success" width="100" height="100" class="w-full boxStyle">
+          </div>
+          <div>
+          <p>실패</p>
+            <img src="${challenge.failUrl}" alt="fail" width="100" height="100" class="w-full boxStyle">
+          </div>
+        </div>
+      `,
+        showCloseButton: true,
+        showConfirmButton: false,
+      });
+    } else if (challenge.category === 'COMMIT') {
+      Swal.fire({
+        title: '이렇게 인증 해주세요',
+        html: `
+        <div >
+          <p>1. GitHub에 공부한 내용을 Commit 해주세요</p>
+          <p>2. 사이트에서 제출이 적용되었는지 확인해주세요</p>
+          <p>3. 끝</p>
+        </div>
+      `,
+        showCloseButton: true,
+        showConfirmButton: false,
+      });
+    } else if (challenge.category === 'ALGO') {
+      Swal.fire({
+        title: '이렇게 인증 해주세요',
+        html: `
+        <div>
+          <p>1. Solved.Ac에서 문제를 풀고 제출해주세요</p>
+          <p>2. 사이트에서 제출이 적용되었는지 확인해주세요</p>
+          <p>3. 끝</p>
+        </div>
+      `,
+        showCloseButton: true,
+        showConfirmButton: false,
+      });
+    }
+  };
+
   return (
     <Container>
       <Container.SubPageHeader />
@@ -184,7 +265,7 @@ const challengeDetail = props => {
           alt="logo"
           width={100}
           height={100}
-          loader={({ src }) => `${src}`}
+          loader={({ src }) => src}
           className={classNames('w-full', style.boxStyle)}
         />
         <p className="absolute bottom-10 w-4/5 left-10 text-4xl font-bold text-white bg-black p-2 rounded-xl">
@@ -195,14 +276,19 @@ const challengeDetail = props => {
         <div className="flex">
           <MdDateRange className="m-auto" size="30" />
           <SelectArrow
+            arrow={false}
             title={title}
             content="인증가능 : 월,화,수,목,금,토,일(00:00~23:59)"
           />
         </div>
-        <div className="flex mt-4">
+        <label htmlFor="howSubmit" className="flex mt-4">
           <FiCamera className="m-auto" size="30" />
-          <SelectArrow title="인증 방법 및 인증샷 예시" />
-        </div>
+          <SelectArrow
+            id="howSubmit"
+            onClick={handleClick}
+            title="인증 방법 및 인증샷 예시"
+          />
+        </label>
       </div>
       <div className=" mb-20">
         <div
@@ -300,11 +386,13 @@ const challengeDetail = props => {
           </div>
         )}
       </div>
-      <Container.MainFooter className="p-4">
-        <Link href={`/challenge/${challengeId}/submit-picture`}>
-          <Button label="인증하기" />
-        </Link>
-      </Container.MainFooter>
+      {challenge.category === 'FREE' && (
+        <Container.MainFooter className="p-4">
+          <Link href={`/challenge/${challengeId}/submit-picture`}>
+            <Button label="인증하기" />
+          </Link>
+        </Container.MainFooter>
+      )}
     </Container>
   );
 };
