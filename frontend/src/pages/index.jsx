@@ -249,7 +249,7 @@ export const getServerSideProps = async () => {
   } catch (e) {
     // console.error('초기 리스트를 가져올 수 없습니다.', e);
   }
-
+  console.log(initialList);
   return {
     props: {
       initialList,
