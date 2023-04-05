@@ -788,13 +788,17 @@ public class ChallengeServiceImpl implements ChallengeService{
         UserChallenge userChallenge = userChallengeRepository.findByChallengeRoomIdAndUserId(challengeRoom.getId(), userId)
                 .orElseThrow(()-> new ApiException(ExceptionEnum.USER_CHALLENGE_LIST_NOT_EXIST));
         // 진행률 계산
-        Long challengeLength = commonService.diffDay(challengeRoom.getStartDate(), challengeRoom.getEndDate())+1;
+        Long challengeLength = commonService.diffDay(challengeRoom.getStartDate(), commonService.getDate());
+        if(challengeLength<0){
+            challengeLength=0L;
+        }
+        challengeLength++;
         List<ChallengeRecord> challengeRecordList = challengeRecordRepository.findAllByUserChallengeIdAndStartDateAndEndDateAlgo(userChallenge.getId(), challengeRoom.getStartDate(), challengeRoom.getEndDate(), true, challengeRoom.getAlgorithmCount());
         Long successCount=(long)challengeRecordList.size();
         Long failCount = challengeLength - successCount;
         String progressRate= String.format("%.2f", (double)(successCount*100)/challengeLength);
         // 예치금 + 상금
-        Long curPrice=userChallenge.getDiffPrice()+challengeRoom.getEntryFee();
+        Long curPrice=userChallenge.getDiffPrice();
         return new AlgoProgressResponseDto(progressRate, curPrice, successCount, failCount);
     }
 
