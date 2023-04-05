@@ -2,6 +2,7 @@ package com.example.userservice.service;
 
 import com.example.userservice.client.ChallengeServiceClient;
 import com.example.userservice.client.PayServiceClient;
+import com.example.userservice.dto.BaseResponseDto;
 import com.example.userservice.dto.request.user.GithubBaekjoonRequestDto;
 import com.example.userservice.dto.request.user.NicknameRequestDto;
 import com.example.userservice.dto.request.user.PasswordRequestDto;
@@ -45,11 +46,14 @@ public class AuthServiceImpl implements AuthService {
 
     private final CommitRecordRepository commitRecordRepository;
 
-    private final EntityManager em;
-
     @Override
     @Transactional
     public void deleteUser(Long userId) {
+        ChallengeResponseDto challengeInfo = challengeServiceClient.getChallengeInfo(userId).getData();
+
+        // 현재 진행중인 챌린지가 있다면 탈퇴 불가
+        if (challengeInfo.getChallengingCnt() > 0) throw new ApiException(ExceptionEnum.MEMBER_CANNOT_LEAVE_EXCEPTION);
+
         User user = getUser(userId);
 
         // S3 서버에서 프로필 이미지 삭제

@@ -16,8 +16,10 @@ import static com.example.userservice.entity.QSolvedac.solvedac;
 import static com.example.userservice.entity.QUser.user;
 
 @RequiredArgsConstructor
-public class CommitRecordRepositoryCustomImpl implements CommitRecordRepositoryCustom{
+public class CommitRecordRepositoryCustomImpl implements CommitRecordRepositoryCustom {
+
     private final JPAQueryFactory queryFactory;
+
     public List<CommitResponseDto> getDateCommit(Long userId, String startDate, String endDate) {
         return queryFactory
                 .select(Projections.constructor(CommitResponseDto.class,

@@ -69,7 +69,8 @@ public class ChallengeController {
 
     @GetMapping("/user/commit/date/{userId}")
     public ResponseEntity<BaseResponseDto<List<CommitResponseDto>>> getDateCommitList(@PathVariable Long userId,
-                                                                                      @RequestParam("startDate") String startDate, @RequestParam("endDate") String endDate) {
+                                                                                      @RequestParam("startDate") String startDate,
+                                                                                      @RequestParam("endDate") String endDate) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new BaseResponseDto<>(200, "success", challengeService.getDateCommitList(userId, startDate, endDate)));
     }
