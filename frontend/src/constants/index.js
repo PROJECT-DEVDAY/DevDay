@@ -33,7 +33,9 @@ export const CHALLENGE_SUBMIT_RECORD_URL = param =>
   `${CHALLENGE_SERVICE}/auth/challenges/${param}/record`;
 export const CHALLENGE_COMMIT_URL = `${CHALLENGE_SERVICE}/challenges/commit/users`;
 export const CHALLENGE_AUTH_ALGO_URL = `${CHALLENGE_SERVICE}/auth/challenges`;
-
+export const CHALLENGE_USER_RECORD_DETAIL_URL = recordId =>
+  `${CHALLENGE_SERVICE}/auth/challenges/photo-record/${recordId}/users`;
+export const CHALLENGE_USER_RECORD_REPORT_URL = `${CHALLENGE_SERVICE}/auth/challenges/report/record`;
 // 결제
 const PAY_SERVICE = 'pay-service';
 
