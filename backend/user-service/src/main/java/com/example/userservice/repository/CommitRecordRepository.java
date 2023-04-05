@@ -6,14 +6,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface CommitRecordRepository extends JpaRepository<CommitRecord, CommitId>, CommitRecordRepositoryCustom {
 
     Optional<CommitRecord> findByCommitDateAndUserId(String commitDate, Long userId);
 
-    @Modifying(flushAutomatically = true)
+    @Modifying
     @Query("delete from CommitRecord c where c.user.id = :userId")
     void deleteAllByUserId(Long userId);
 }

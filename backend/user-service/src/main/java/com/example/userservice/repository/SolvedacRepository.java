@@ -12,7 +12,7 @@ import java.util.List;
 public interface SolvedacRepository extends JpaRepository<Solvedac, ProblemId>, SolvedacRepositoryCustom {
     List<Solvedac> findAllByUserId(Long userId);
 
-    @Modifying(flushAutomatically = true)
+    @Modifying
     @Query("delete from Solvedac s where s.user.id = :userId")
     void deleteAllByUserId(@Param("userId") Long userId);
 }
