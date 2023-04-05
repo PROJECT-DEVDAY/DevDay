@@ -61,8 +61,8 @@ public class AuthController {
     }
 
     @GetMapping("/join")
-    public Result checkJoinChallenge(@RequestBody ChallengeJoinRequestDto joinRequestDto, HttpServletRequest request){
-        joinRequestDto.setUserId(Long.parseLong(request.getHeader(USER_ID)));
+    public Result checkJoinChallenge(@RequestParam String challengeRoomId, @RequestParam String nickname, HttpServletRequest request){
+        ChallengeJoinRequestDto joinRequestDto=new ChallengeJoinRequestDto(Long.parseLong(request.getHeader(USER_ID)), Long.parseLong(challengeRoomId), nickname);
         challengeService.checkJoinChallenge(joinRequestDto);
         return responseService.getSuccessResult();
     }
