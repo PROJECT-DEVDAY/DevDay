@@ -64,7 +64,7 @@ const success = ({ challengeId, paymentInfo }) => {
               <p className="mt-4">한번 가보자구</p>
             </div>
             <div className="p-16">
-              <Link href={`/participation/${challengeId}`}>
+              <Link href={`/challenge/${challengeId}`}>
                 <Button label="참여하기" />
               </Link>
             </div>
