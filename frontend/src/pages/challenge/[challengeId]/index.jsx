@@ -49,16 +49,19 @@ const challengeDetail = props => {
 
   useEffect(() => {
     if (challengeId) {
-      http.get(`${CHALLENGE_DETAIL_URL}/${challengeId}`).then(res => {
-        setChallenge(res.data);
-        {
-          challenge.category === 'ALGO' &&
+      http.post(`${CHALLENGE_DETAIL_URL}/baekjoon/update/room/${challengeId}`);
+      http
+        .get(`${CHALLENGE_DETAIL_URL}/${challengeId}`, challenge.id)
+        .then(res => {
+          setChallenge(res.data);
+          if (res.data.category === 'ALGO') {
             http
-              .get(`${CHALLENGE_AUTH_ALGO_URL}/progress/${challengeId}`)
+              .get(
+                `${CHALLENGE_AUTH_ALGO_URL}/baekjoon/users/progress/${challengeId}`,
+              )
               .then(response => {
                 setMyAlgoIng(response.data);
               });
-          challenge.category === 'ALGO' &&
             http
               .get(`${CHALLENGE_DETAIL_URL}/baekjoon/rank/${challengeId}`)
               .then(response => {
@@ -68,22 +71,24 @@ const challengeDetail = props => {
                   setChallengeRank(resRank);
                 }
               });
-          challenge.category === 'ALGO' &&
-            http.get(`${CHALLENGE_AUTH_ALGO_URL}/recent`).then(response => {
-              if (response) {
-                const key = Object.keys(response.data.data.solvedMap);
-                const value = Object.values(response.data.data.solvedMap);
-                setMyAlgoKey(key);
-                setMyAlgo(response.data.data.solvedMap);
-              }
-            });
-          challenge.category === 'COMMIT' &&
             http
-              .get(`${CHALLENGE_AUTH_ALGO_URL}/progress/${challengeId}`)
+              .get(`${CHALLENGE_AUTH_ALGO_URL}/baekjoon/users/recent`)
+              .then(response => {
+                if (response) {
+                  const key = Object.keys(response.data.data.solvedMap);
+                  const value = Object.values(response.data.data.solvedMap);
+                  setMyAlgoKey(key);
+                  setMyAlgo(response.data.data.solvedMap);
+                }
+              });
+          } else if (res.data.category === 'COMMIT') {
+            http
+              .get(
+                `${CHALLENGE_AUTH_ALGO_URL}/baekjoon/users/progress/${challengeId}`,
+              )
               .then(response => {
                 setMyAlgoIng(response.data);
               });
-          challenge.category === 'COMMIT' &&
             http
               .get(`${CHALLENGE_DETAIL_URL}/baekjoon/rank/${challengeId}`)
               .then(response => {
@@ -93,17 +98,17 @@ const challengeDetail = props => {
                   setChallengeRank(resRank);
                 }
               });
-          challenge.category === 'COMMIT' &&
-            http.get(`${CHALLENGE_AUTH_ALGO_URL}/recent`).then(response => {
-              if (response) {
-                const key = Object.keys(response.data.data.solvedMap);
-                const value = Object.values(response.data.data.solvedMap);
-                setMyAlgoKey(key);
-                setMyAlgo(response.data.data.solvedMap);
-              }
-            });
-        }
-      });
+            http
+              .get(`${CHALLENGE_AUTH_ALGO_URL}/commit/users/recent`)
+              .then(response => {
+                if (response) {
+                  const key = Object.keys(response.data.data.commitMap);
+                  setMyAlgoKey(key);
+                  setMyAlgo(response.data.data.commitMap);
+                }
+              });
+          }
+        });
     }
   }, [challengeId]);
 
@@ -148,12 +153,16 @@ const challengeDetail = props => {
       },
     ],
   };
-  const week = Math.abs(
+  const week = parseInt(
     (Date.parse(challenge.endDate) - Date.parse(challenge.startDate)) /
       (1000 * 60 * 60 * 24 * 7),
-  ).toFixed(1);
+  );
+  const day =
+    ((Date.parse(challenge.endDate) - Date.parse(challenge.startDate)) /
+      (1000 * 60 * 60 * 24)) %
+    7;
   const title = [
-    `매일 ${week}주동안`,
+    week > 0 ? `매일 ${week}주  ${day}일 동안` : `매일 ${day}일 동안`,
     <br />,
     `${challenge.startDate} ~ ${challenge.endDate}`,
   ];
@@ -258,18 +267,16 @@ const challengeDetail = props => {
               </div>
             )}
             {challenge.category === 'COMMIT' && (
-              <div className="p-6 overflow-scroll">
+              <div className="p-6 grid gap-4 grid-cols-3">
                 {myAlgoKey &&
                   myAlgoKey.map(
                     item =>
                       Date.parse(item) >= Date.parse(challenge.startDate) && (
-                        <div className="w-1/3">
-                          <ChallengeList
-                            date={item}
-                            array=""
-                            category="COMMIT"
-                          />
-                        </div>
+                        <ChallengeList
+                          date={item}
+                          array={myAlgo[item]}
+                          category="COMMIT"
+                        />
                       ),
                   )}
               </div>
