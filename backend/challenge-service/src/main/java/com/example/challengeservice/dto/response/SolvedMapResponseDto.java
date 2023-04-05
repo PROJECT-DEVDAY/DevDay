@@ -11,4 +11,18 @@ import java.util.Map;
 @Builder
 public class SolvedMapResponseDto {
     Map<String, List<String>> solvedMap;
+
+    Map<String, Integer> commitMap;
+
+    public static SolvedMapResponseDto algoFrom(Map<String, List<String>> solvedMap){
+        return SolvedMapResponseDto.builder()
+                .solvedMap(solvedMap)
+                .build();
+    }
+
+    public static SolvedMapResponseDto commitFrom(Map<String, Integer> commitMap){
+        return SolvedMapResponseDto.builder()
+                .commitMap(commitMap)
+                .build();
+    }
 }
