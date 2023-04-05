@@ -25,14 +25,10 @@ public enum ExceptionEnum {
 
     NOT_EXIST_REPORT_RECORD(HttpStatus.CONFLICT ,"F001","신고 기록이 존재합니다."),
 
-
-
     /** 인증 기록에 대한 예외 **/
     NOT_EXIST_CHALLENGE_RECORD(HttpStatus.NOT_FOUND,"CR001","해당 인증기록이 존재하지 않습니다."),
 
     EXIST_CHALLENGE_RECORD(HttpStatus.BAD_REQUEST,"CR111","이미 해당 날짜에 인증 기록이 존재합니다."),
-
-
 
     RUNTIME_EXCEPTION(HttpStatus.BAD_REQUEST, "E0001", "내부 문제로 다음번에 다시 시도해주세요."),
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "E0002", "내부 문제로 다음번에 다시 시도해주세요."),

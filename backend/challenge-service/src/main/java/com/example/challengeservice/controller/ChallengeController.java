@@ -34,8 +34,6 @@ public class ChallengeController {
     private final ChallengeService challengeService;
     private final AmazonS3Service s3Service;
 
-    private final PayServiceClient payServiceClient;
-
     private final SchedulerService schedulerService;
 
 
@@ -161,16 +159,12 @@ public class ChallengeController {
         return responseService.getSuccessResult();
     }
 
-
-
-
     @GetMapping("/pay-service")
     public void testdsd(){
 
         schedulerService.endChallengeCalculate();
 
     }
-
 
 
 }
