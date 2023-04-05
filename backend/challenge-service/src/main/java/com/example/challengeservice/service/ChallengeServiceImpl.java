@@ -416,8 +416,8 @@ public class ChallengeServiceImpl implements ChallengeService{
 
     @Override
     public SolvedMapResponseDto getRecentUserCommit(Long userId) {
-        updateUserCommit(userId); // Todo : 커밋 최신화 속도가 느리다면 빼야함!!!!
-        createDailyRecord(); // 기록 최신 저장 매번 하느라 느려질 것 같음..
+//        updateUserCommit(userId); // Todo : 커밋 최신화 속도가 느리다면 빼야함!!!!
+//        createDailyRecord(); // 기록 최신 저장 매번 하느라 느려질 것 같음..
         String today=commonService.getDate();
         String pastDay=commonService.getPastDay(5, today);
         log.info("today is {} , pastDay is {}", today, pastDay);
@@ -556,7 +556,7 @@ public class ChallengeServiceImpl implements ChallengeService{
                 commitRecordResponseDto.get().setCommitCount(commitResponseDto.getData().getCommitCount());
                 challengeRecordRepository.save(commitRecordResponseDto.get());
             }
-            throw new ApiException(ExceptionEnum.EXIST_CHALLENGE_RECORD);
+//            throw new ApiException(ExceptionEnum.EXIST_CHALLENGE_RECORD);
         }else{
             ChallengeRecord challengeRecord = ChallengeRecord.fromCommit(date, commitResponseDto.getData().getCommitCount(), userChallenge);
             challengeRecordRepository.save(challengeRecord);
