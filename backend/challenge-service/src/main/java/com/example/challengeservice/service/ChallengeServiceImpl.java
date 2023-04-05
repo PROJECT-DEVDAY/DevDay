@@ -526,9 +526,7 @@ public class ChallengeServiceImpl implements ChallengeService{
     @Override
     @Transactional
     public void createCommitRecord(ChallengeRecordRequestDto requestDto) {
-        log.info("createCommitRecord 실행");
-        log.info("챌린지id " + requestDto.getChallengeRoomId() + "유저아이디id" + requestDto.getUserId());
-        ChallengeRoomResponseDto challengeRoom = readChallenge(requestDto.getChallengeRoomId());
+        ChallengeRoom challengeRoom = getChallengeRoomEntity(requestDto.getChallengeRoomId());
         UserResponseDto user = userServiceClient.getUserInfo(requestDto.getUserId()).getData();
 
         // 오늘 날짜
@@ -536,8 +534,6 @@ public class ChallengeServiceImpl implements ChallengeService{
 
         // user의 해당 날짜의 커밋 수 조회하기!
         SingleResult<CommitResponseDto> commitResponseDto = userServiceClient.getCommitRecord(user.getUserId(), date);
-
-        log.info("해당 날짜 조회된 커밋 정보는 :"+commitResponseDto.getData());
         // challengeRoom에서 최소 커밋 개수 가져오기 미달이면 Exception 발생
         if(commitResponseDto.getData().getCommitCount()<challengeRoom.getCommitCount()){
             return;
@@ -545,7 +541,8 @@ public class ChallengeServiceImpl implements ChallengeService{
         }
 
         // UserChallenge 조회
-        UserChallenge userChallenge = userChallengeRepository.findByChallengeRoomIdAndUserId(requestDto.getChallengeRoomId(), requestDto.getUserId()).orElseThrow(() -> new ApiException(ExceptionEnum.USER_CHALLENGE_NOT_EXIST_EXCEPTION));
+        UserChallenge userChallenge = userChallengeRepository.findByChallengeRoomIdAndUserId(requestDto.getChallengeRoomId(), requestDto.getUserId())
+                .orElseThrow(() -> new ApiException(ExceptionEnum.USER_CHALLENGE_NOT_EXIST_EXCEPTION));
         log.info("[userChallenge id값]" + userChallenge.getId());
 
         // 기존에 이 날짜에 인증기록이 있는지 검사
@@ -813,8 +810,8 @@ public class ChallengeServiceImpl implements ChallengeService{
             challengeLength=-1L;
         }
         challengeLength++;
-        List<ChallengeRecord> challengeRecordList = challengeRecordRepository.findAllByUserChallengeIdAndStartDateAndEndDateAlgo(userChallenge.getId(), challengeRoom.getStartDate(), challengeRoom.getEndDate(), true, challengeRoom.getAlgorithmCount());
         Long successCount=0L;
+        List<ChallengeRecord> challengeRecordList = challengeRecordRepository.findAllByUserChallengeIdAndStartDateAndEndDate(userChallenge.getId(), challengeRoom.getStartDate(), challengeRoom.getEndDate(), true);
         for(ChallengeRecord cr:challengeRecordList){
             switch(challengeRoom.getCategory()){
                 case "ALGO":
@@ -822,11 +819,11 @@ public class ChallengeServiceImpl implements ChallengeService{
                         successCount++;
                     break;
                 case "COMMIT":
-                    if(cr.isSuccess())
+                    if(cr.getCommitCount()>=challengeRoom.getCommitCount())
                         successCount++;
                     break;
                 case "FREE":
-                    if(cr.getCommitCount()>=challengeRoom.getCommitCount())
+                    if(cr.isSuccess())
                         successCount++;
                     break;
             }
