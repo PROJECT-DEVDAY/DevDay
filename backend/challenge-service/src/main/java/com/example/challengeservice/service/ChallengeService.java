@@ -44,24 +44,12 @@ public interface ChallengeService {
     /** 알고리즘 인증 기록 생성하기 **/
     void createAlgoRecord(ChallengeRecordRequestDto requestDto) throws IOException;
 
-    /** 사진 인증 기록 생성하기 **/
-    void createPhotoRecord (Long userId ,ChallengeRecordRequestDto requestDto) throws IOException;
 
-    /** 개인 사진 인증 기록 가져오기 **/
-
-    List<PhotoRecordResponseDto> getSelfPhotoRecord(Long challengeId ,Long userId, String viewType );
-    // List<?> getSelfRecord(Long challengeId ,Long userId, String viewType, String category);
-
-    List<PhotoRecordResponseDto> getTeamPhotoRecord(Long userId ,Long challengeRoomId , String date);
-
-    PhotoRecordDetailResponseDto getPhotoRecordDetail(Long userId ,Long challengeRecordId);
-
-    void reportRecord(ReportRecordRequestDto reportRecordRequestDto);
 
     /** 챌린지방 Entity 가져오기*/
     ChallengeRoom getChallengeRoomEntity(Long challengeRoomId);
 
-    List<MyChallengeResponseDto> getMyChallengeList (Long userId , String status);
+    List<MyChallengeResponseDto> getMyChallengeList (Long userId , String status , Long offset , String search , int size);
     void oneDayCulc(ChallengeRoom challengeRoom);
     void culcDailyPayment();
     void updateUserCommit(Long userId);
