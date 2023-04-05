@@ -88,11 +88,7 @@ const login = props => {
     event.preventDefault();
 
     try {
-      const [userInfo] = await dispatch(loginAsync(user))
-        .unwrap()
-        .catch(e => {
-          throw e;
-        });
+      const [userInfo] = await dispatch(loginAsync(user)).unwrap();
 
       if (userInfo) {
         Swal.fire({
