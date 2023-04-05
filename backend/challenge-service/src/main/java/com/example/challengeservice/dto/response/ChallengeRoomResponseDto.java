@@ -2,6 +2,8 @@ package com.example.challengeservice.dto.response;
 
 import lombok.*;
 
+import javax.persistence.Column;
+
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -9,7 +11,6 @@ import lombok.*;
 @Builder
 @Setter
 public class ChallengeRoomResponseDto {
-
     private Long id;
 
 
@@ -61,8 +62,10 @@ public class ChallengeRoomResponseDto {
     /** 최소 알고리즘 문제 수 **/
     private int algorithmCount;
 
-    /** 현재 참여자의 수 **/
-    private int participantsSize;
+    /** 현재 참여자 수 **/
+    private int curParticipantsSize;
+    /** 최대 참여자 수 **/
+    private int maxParticipantsSize;
 
     /** 첼린지 이미지 **/
     private String backGroundUrl;
