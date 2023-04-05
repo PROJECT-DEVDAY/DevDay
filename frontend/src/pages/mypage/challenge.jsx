@@ -5,8 +5,8 @@ import classNames from 'classnames';
 import { useRouter } from 'next/router';
 
 import style from './challenge.module.scss';
-import http from '@/api/http';
 
+import http from '@/api/http';
 import { ChallengingItem } from '@/components/ChallengingItem';
 import Container from '@/components/Container';
 import Footer from '@/components/Footer';

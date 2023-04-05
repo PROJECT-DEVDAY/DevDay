@@ -54,14 +54,12 @@ const challengeintro = props => {
   const user = useSelector(state => state.user);
 
   const clickJoin = () => {
-    const datas = {
-      challengeRoomId: challengeId,
-      nickname: user.userInfo.nickname,
-    };
-
     http
-      .post(CHALLENGE_JOIN_URL, datas, {
-        headers: { Authorization: user.accessToken },
+      .get(CHALLENGE_JOIN_URL, {
+        params: {
+          challengeRoomId: challengeId,
+          nickname: user.userInfo.nickname,
+        },
       })
       .then(res => {
         router.push(`/participation/${challengeId}/pay`);
