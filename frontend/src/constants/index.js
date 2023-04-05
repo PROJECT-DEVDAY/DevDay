@@ -30,6 +30,8 @@ export const CHALLENGE_JOIN_URL = `${CHALLENGE_SERVICE}/auth/challenges/join`;
 export const CHALLENGE_PHOTO_RECORD_URL = `${CHALLENGE_SERVICE}/auth/challenges/photo-record`;
 export const CHALLENGE_ALGO_URL = `${CHALLENGE_SERVICE}/challenges/baekjoon/users`;
 export const CHALLENGE_AUTH_ALGO_URL = `${CHALLENGE_SERVICE}/auth/challenges/baekjoon/users`;
+export const CHALLENGE_SUBMIT_RECORD_URL = param =>
+  `${CHALLENGE_SERVICE}/auth/challenges/${param}/record`;
 
 // 결제
 const PAY_SERVICE = 'pay-service';

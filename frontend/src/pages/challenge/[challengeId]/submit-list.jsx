@@ -6,7 +6,7 @@ import propTypes from 'prop-types';
 
 import http from '@/api/http';
 import Container from '@/components/Container';
-import { CHALLENGE_DETAIL_URL } from '@/constants';
+import { CHALLENGE_DETAIL_URL, CHALLENGE_SUBMIT_RECORD_URL } from '@/constants';
 import { getDatesStartToLast } from '@/utils';
 
 const ReactGridLayout = WidthProvider(RGL);
@@ -19,16 +19,17 @@ const layoutProps = {
   isResizable: false,
 };
 
-const SubmitList = ({ items = 40, challengeInfo, today, range, ...props }) => {
+const SubmitList = ({ challengeInfo, today, range, ...props }) => {
   const [curDate, setDate] = useState(today);
   const [layout, setLayout] = useState([]);
+  const [item, setItem] = useState([]);
 
   const changeDate = e => {
     setDate(e.target.value);
   };
 
-  const generateLayout = () => {
-    return _.map(new Array(items), (item, i) => {
+  const generateLayout = items => {
+    return _.map(new Array(items.length), (item, i) => {
       const y = _.result(props, 'y') || Math.ceil(Math.random() * 4) + 1;
       return {
         x: i % 3,
@@ -40,7 +41,7 @@ const SubmitList = ({ items = 40, challengeInfo, today, range, ...props }) => {
     });
   };
 
-  const generateDOM = () => {
+  const generateDOM = items => {
     return _.map(_.range(items), i => {
       return (
         <div key={i} className="border-2 border-black">
@@ -51,8 +52,25 @@ const SubmitList = ({ items = 40, challengeInfo, today, range, ...props }) => {
   };
 
   useEffect(() => {
-    setLayout(generateLayout());
-  }, []);
+    if (item.length > 0) setLayout(generateLayout(item));
+  }, [item]);
+
+  useEffect(() => {
+    if (curDate && challengeInfo) {
+      http
+        .get(CHALLENGE_SUBMIT_RECORD_URL(challengeInfo.id), {
+          params: {
+            date: curDate,
+          },
+        })
+        .then(({ data }) => {
+          setItem(data.data);
+        })
+        .catch(e => {
+          console.error(e);
+        });
+    }
+  }, [curDate, challengeInfo]);
 
   return (
     <Container>
@@ -66,19 +84,25 @@ const SubmitList = ({ items = 40, challengeInfo, today, range, ...props }) => {
           id="date-picker"
           onChange={changeDate}
           defaultValue={curDate}
+          className="my-4"
         >
-          {range.map(item => {
+          {range.map(r => {
             return (
-              <option key={item} value={item}>
-                {item}
+              <option key={r} value={r}>
+                {r}
               </option>
             );
           })}
         </select>
 
         <div>
+          {item.length === 0 && (
+            <div>
+              <p className="font-bold">업로드 된 인증샷이 없습니다.</p>
+            </div>
+          )}
           <ReactGridLayout layout={layout} {...layoutProps}>
-            {generateDOM()}
+            {generateDOM(item)}
           </ReactGridLayout>
         </div>
         {/*
