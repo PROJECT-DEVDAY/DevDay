@@ -146,9 +146,9 @@ public class AuthController {
      * 오늘 ~ 5일전 푼 커밋 조회하는 API
      */
     @GetMapping("/commit/users/recent")
-    public ListResult<CommitResponseDto> getRecentUserCommit(HttpServletRequest request){
+    public SingleResult<SolvedMapResponseDto> getRecentUserCommit(HttpServletRequest request){
         Long userId = Long.parseLong(request.getHeader(USER_ID));
-        return responseService.getListResult(challengeService.getRecentUserCommit(userId));
+        return responseService.getSingleResult(challengeService.getRecentUserCommit(userId));
     }
 
     /**

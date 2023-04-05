@@ -37,7 +37,7 @@ public interface ChallengeService {
     SolvedListResponseDto checkDateUserBaekjoon(Long userId, String selectDate);
     CommitResponseDto checkDateUserCommit(Long userId, String selectDate);
     SolvedMapResponseDto getRecentUserBaekjoon(Long userId);
-    List<CommitResponseDto> getRecentUserCommit(Long userId);
+    SolvedMapResponseDto getRecentUserCommit(Long userId);
 
     /** 스케줄러 저장 메서드 **/
     void createDailyRecord();
@@ -69,5 +69,5 @@ public interface ChallengeService {
     /** 나의 현재 진행상황 보기 **/
     ProgressResponseDto getProgressUserBaekjoon(Long userId, Long challengeId);
 
-    List<AlgoRankResponseDto> getAlgoTopRank(Long challengeId);
+    List<RankResponseDto> getTopRank(Long challengeId);
 }
