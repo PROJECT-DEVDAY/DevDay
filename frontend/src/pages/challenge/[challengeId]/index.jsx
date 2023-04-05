@@ -130,14 +130,12 @@ const challengeDetail = props => {
             };
             http
               .get(
-                `${CHALLENGE_AUTH_ALGO_URL}/${challengeId}/record/users/${user.userInfo.userId}?view='PREVIEW'`,
-                freeData,
+                `${CHALLENGE_AUTH_ALGO_URL}/${challengeId}/record/users?view='PREVIEW'`,
               )
               .then(response => {
                 if (response) {
                   // setMyAlgoKey(key);
-                  setMyAlgo(response.data);
-                  console.log(response.data);
+                  setMyAlgo(response.data.data);
                 }
               });
           }
@@ -365,6 +363,23 @@ const challengeDetail = props => {
                         />
                       ),
                   )}
+              </div>
+            )}
+            {challenge.category === 'FREE' && (
+              <div className="p-6 grid gap-4 grid-cols-3">
+                {myAlgo &&
+                  myAlgo.map(item => (
+                    <div>
+                      <Image
+                        src={item.photoUrl}
+                        alt="free"
+                        width={100}
+                        height={100}
+                        loader={({ src }) => src}
+                        className={classNames('w-full', style.boxStyle)}
+                      />
+                    </div>
+                  ))}
               </div>
             )}
             <div className="p-4">
