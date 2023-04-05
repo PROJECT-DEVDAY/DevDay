@@ -2,6 +2,7 @@ package com.example.payservice.client;
 
 import com.example.payservice.dto.InternalResponse;
 import com.example.payservice.dto.challenge.ChallengeInfo;
+import com.example.payservice.dto.challenge.ChallengeJoinRequestDto;
 import com.example.payservice.dto.challenge.SimpleChallengeInfo;
 import com.example.payservice.dto.request.SimpleChallengeInfosRequest;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -18,6 +19,6 @@ public interface ChallengeServiceClient {
     InternalResponse<Map<Long, SimpleChallengeInfo>> getSimpleChallengeInfos(
             @RequestBody SimpleChallengeInfosRequest request
     );
-    @PostMapping("/challenges/{challengeId}/users")
-    void sendApproveUserJoinChallenge(@RequestHeader("userId") Long userId, @PathVariable Long challengeId);
+    @PostMapping("/auth/challenges/join")
+    void sendApproveUserJoinChallenge(@RequestHeader("userId") Long userId, @RequestBody ChallengeJoinRequestDto requestDto);
 }

@@ -10,7 +10,7 @@ import com.example.payservice.dto.nhbank.RequestTransfer;
 import com.example.payservice.dto.response.ChallengeJoinResponse;
 import com.example.payservice.dto.tosspayments.CancelRequest;
 import com.example.payservice.dto.tosspayments.Payment;
-import com.example.payservice.dto.tosspayments.SuccessRequest;
+import com.example.payservice.dto.tosspayments.PaymentInfo;
 import com.example.payservice.entity.DepositTransactionEntity;
 import com.example.payservice.entity.DepositTransactionHistoryEntity;
 import com.example.payservice.entity.PayUserEntity;
@@ -124,10 +124,10 @@ public class PaymentService {
     }
     /**
      * 사용자로부터 결제정보를 받아 토스에 확인 메시지를 전달합니다.
-     * @param request
+     * @param paymentInfo
      * @return
      */
-    public Payment confirm(SuccessRequest request) {
+    public Payment confirm(PaymentInfo paymentInfo) {
         WebClient client = WebClient.builder()
                 .baseUrl(env.getProperty("payment.toss.baseUrl"))
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
@@ -135,7 +135,7 @@ public class PaymentService {
                 .build();
 
         return client.post().uri(env.getProperty("payment.toss.path.confirm"))
-                .bodyValue(request)
+                .bodyValue(paymentInfo)
                 .retrieve()
                 .onStatus(HttpStatus::isError, response ->
                         response.bodyToMono(String.class) // error body as String or other class
