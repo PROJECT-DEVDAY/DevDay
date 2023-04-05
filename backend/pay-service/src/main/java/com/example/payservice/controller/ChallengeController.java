@@ -42,4 +42,12 @@ public class ChallengeController {
 		depositService.settleChallenge(challengeId, request.getResultList());
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
+
+	@PostMapping("/settle")
+	public ResponseEntity<ResponseEntity.BodyBuilder> settleChallenge(
+		@RequestBody ChallengeSettleRequest request
+	) {
+		depositService.settleChallengeV2(request.getResultList());
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+	}
 }
