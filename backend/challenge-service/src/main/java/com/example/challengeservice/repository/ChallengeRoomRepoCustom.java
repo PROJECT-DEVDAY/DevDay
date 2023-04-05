@@ -12,7 +12,7 @@ public interface ChallengeRoomRepoCustom {
 
     List<ChallengeRoom> getSimpleChallengeList(SearchParam searchParam);
 
-    List<MyChallengeResponseDto> findMyChallengeList(Long userId , String status, String curDate);
+    List<MyChallengeResponseDto> findMyChallengeList(Long userId , String status, String curDate ,Long offset ,String search, int size);
 
     List<ChallengeSettleInfo> findClosedChallengeUser(String date);
 }

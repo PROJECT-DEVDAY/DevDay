@@ -12,6 +12,7 @@ import com.example.challengeservice.dto.response.*;
 import com.example.challengeservice.exception.ApiException;
 import com.example.challengeservice.exception.ExceptionEnum;
 import com.example.challengeservice.service.ChallengeService;
+import com.example.challengeservice.service.photo.PhotoChallengeService;
 import com.example.challengeservice.validator.DateValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +33,7 @@ public class AuthController {
     private final ResponseService responseService;
     private final ChallengeService challengeService;
     private static final String USER_ID = "userId";
+    private final PhotoChallengeService photoChallengeService;
 
     /**
      * author  : 홍금비
@@ -75,23 +77,23 @@ public class AuthController {
      * @param status : PROCEED | DONE | NOT_OPEN
      */
     @GetMapping("/my-challenge")
-    public ListResult<MyChallengeResponseDto> getMyChallengeList(HttpServletRequest request, @NotBlank @RequestParam ("status") String status){
+    public ListResult<MyChallengeResponseDto> getMyChallengeList(HttpServletRequest request, @RequestParam (value = "offset", required = false) Long offset , @RequestParam (value = "search" ,required = false) String search , @RequestParam ("size") int size, @NotBlank @RequestParam ("status") String status ){
         Long userId= Long.parseLong(request.getHeader(USER_ID));
-        return responseService.getListResult(challengeService.getMyChallengeList(userId,status));
+        return responseService.getListResult(challengeService.getMyChallengeList(userId,status,offset,search,size));
     }
 
     /** 사진 인증 상세 조회 (Auth) 로그인이 반드시 필요함) api 변경필요합니다. **/
     @GetMapping("photo-record/{recordId}/users")
     public SingleResult<PhotoRecordDetailResponseDto> getPhotoRecordDetail(@PathVariable("recordId") Long recordId , HttpServletRequest request){
         Long userId=Long.parseLong(request.getHeader(USER_ID));
-        return responseService.getSingleResult(challengeService.getPhotoRecordDetail(userId ,recordId));
+        return responseService.getSingleResult(photoChallengeService.getPhotoRecordDetail(userId ,recordId));
     }
 
     /** 나의 인증 기록 불러오기 **/
     @GetMapping("{challengeId}/record/users")
     public ListResult<?> getSelfChallengeRecord(@PathVariable("challengeId") Long challengeRoomId,@RequestParam("view") String viewType, HttpServletRequest request){
         Long userId=Long.parseLong(request.getHeader(USER_ID));
-        return responseService.getListResult(challengeService.getSelfPhotoRecord(challengeRoomId,userId,viewType));
+        return responseService.getListResult(photoChallengeService.getSelfPhotoRecord(challengeRoomId,userId,viewType));
     }
     // 위에거
     // 이걸로 바꿀 예정
@@ -106,8 +108,10 @@ public class AuthController {
     /** 사진 기록 신고하기(반드시 로그인이 되어있어야함) **/
     @PostMapping ("report/record")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public Result reportRecord (@RequestBody ReportRecordRequestDto reportRequestDto){
-        challengeService.reportRecord(reportRequestDto);
+    public Result reportRecord ( HttpServletRequest request,  @RequestBody ReportRecordRequestDto reportRequestDto){
+
+        Long userId=Long.parseLong(request.getHeader(USER_ID));
+        photoChallengeService.reportRecord(userId ,reportRequestDto);
         return responseService.getSuccessResult();
     }
 
@@ -116,7 +120,7 @@ public class AuthController {
     @PostMapping("photo-record")
     public ResponseEntity<String> createChallengeRecord(HttpServletRequest request ,@ModelAttribute ChallengeRecordRequestDto requestDto) throws IOException{
         Long userId = Long.parseLong(request.getHeader(USER_ID));
-        challengeService.createPhotoRecord(userId,requestDto);
+        photoChallengeService.createPhotoRecord(userId,requestDto);
         return ResponseEntity.status(HttpStatus.OK).body("인증기록 저장완료");
     }
 
@@ -126,7 +130,7 @@ public class AuthController {
 
         Long userId = Long.parseLong(request.getHeader(USER_ID));
         if(!DateValidator.validateDateFormat(date)) throw new ApiException(ExceptionEnum.API_PARAMETER_EXCEPTION);
-        return responseService.getListResult(challengeService.getTeamPhotoRecord(userId ,challengeRoomId,date));
+        return responseService.getListResult(photoChallengeService.getTeamPhotoRecord(userId ,challengeRoomId,date));
     }
 
     /**
