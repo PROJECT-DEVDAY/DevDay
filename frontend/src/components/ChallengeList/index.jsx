@@ -9,7 +9,7 @@ export const ChallengeList = ({ date, array, category, ...props }) => {
   return (
     <div className={classNames(style.algoDate, 'font-medium')}>
       <p>{date}</p>
-      {array.length > 0 && (
+      {array.length > 0 && category === 'ALGO' && (
         <div className={style.algoNumber}>
           {array.map(item => (
             <p>{item}</p>
@@ -23,8 +23,15 @@ export const ChallengeList = ({ date, array, category, ...props }) => {
           </p>
         </div>
       )}
-      {array.length === 0 && category === 'COMMIT' && (
-        <div className={style.algoZero} />
+      {category === 'COMMIT' && array > 0 && (
+        <div className={style.CommitNumber}>
+          <p>{array}회</p>
+        </div>
+      )}
+      {category === 'COMMIT' && array === 0 && category === 'COMMIT' && (
+        <div className={style.commitZero}>
+          <p>실패</p>
+        </div>
       )}
     </div>
   );

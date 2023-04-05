@@ -283,7 +283,7 @@ const commit = props => {
               type="date"
               name="startDate"
               onChange={handleChange}
-              min={dateString}
+              // min={dateString}
             />
           </label>
           {challenge.startDate && (
