@@ -92,6 +92,17 @@ public class ChallengeController {
         return responseService.getSingleResult(challengeService.checkDateUserBaekjoon(userId, selectDate));
     }
 
+    /**
+     * 유저의 커밋 정보 조회
+     * @param userId
+     * @param selectDate
+     * @return
+     */
+    @GetMapping("/commit/users/date")
+    public SingleResult<CommitResponseDto> checkDateUserCommit(@RequestParam Long userId, @RequestParam String selectDate){
+        return responseService.getSingleResult(challengeService.checkDateUserCommit(userId, selectDate));
+    }
+
     /** 신대득
      * 현재 user가 참가중인 챌린지 개수 반환
      */
