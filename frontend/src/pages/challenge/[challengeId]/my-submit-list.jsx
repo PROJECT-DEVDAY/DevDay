@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 
 import _ from 'lodash';
+import Image from 'next/image';
 import { useRouter } from 'next/router';
 
 import style from './challenge.module.scss';
@@ -12,6 +13,7 @@ import {
   CHALLENGE_DETAIL_URL,
   CHALLENGE_ALGO_URL,
   CHALLENGE_COMMIT_URL,
+  CHALLENGE_AUTH_ALGO_URL,
 } from '@/constants';
 import { getDatesStartToLast } from '@/utils';
 
@@ -23,20 +25,15 @@ const mySubmitList = ({ ...props }) => {
   const { challengeId } = router.query;
   const [solvedList, setSolvedList] = useState([]);
   const [getDate, setGetDate] = useState('');
+  const [getRange, setGetRange] = useState('');
   useEffect(() => {
     if (challengeId) {
       http.get(`${CHALLENGE_DETAIL_URL}/${challengeId}`).then(res => {
         setChallenge(res.data);
+        const range = getDatesStartToLast(res.data.startDate, res.data.endDate);
+        setGetRange(range);
         console.log(challengeInfo);
         if (res.data.category === 'COMMIT') {
-          const startDate =
-            Date.parse(res.data.startDate) / (1000 * 60 * 60 * 24);
-          const endDate = Date.parse(res.data.endDate) / (1000 * 60 * 60 * 24);
-          setGetDate(endDate - startDate);
-          const range = getDatesStartToLast(
-            res.data.startDate,
-            res.data.endDate,
-          );
           range.map(item => {
             http
               .get(
@@ -54,6 +51,17 @@ const mySubmitList = ({ ...props }) => {
                   return [...solvedList, [item.slice(2, 10), 0]];
                 });
               });
+          });
+        } else if (res.data.category === 'FREE') {
+          range.map(item => {
+            http
+              .get(
+                `${CHALLENGE_AUTH_ALGO_URL}/${challengeId}/record/users?view='ALL'`,
+              )
+              .then(res => {
+                setSolvedList(res.data.data);
+              })
+              .catch(err => {});
           });
         }
       });
@@ -79,7 +87,20 @@ const mySubmitList = ({ ...props }) => {
         </h5>
         {challengeInfo.category === 'ALGO' && (
           <div>
-            <input type="date" className="font-bold" onChange={handleChange} />
+            <select
+              name="date"
+              id="date-picker"
+              onChange={handleChange}
+              className="my-4"
+            >
+              {getRange.map(r => {
+                return (
+                  <option key={r} value={r}>
+                    {r}
+                  </option>
+                );
+              })}
+            </select>
             <div className="grid grid-cols-3 gap-3 mt-4 p-4">
               {solvedList &&
                 solvedList.map(item => (
@@ -100,6 +121,26 @@ const mySubmitList = ({ ...props }) => {
                     <p className="m-auto text-xl text-medium text-black">
                       {item[1]}
                     </p>
+                  </div>
+                ))}
+            </div>
+          </div>
+        )}
+        {challengeInfo.category === 'FREE' && (
+          <div>
+            <div className="grid grid-cols-3 gap-3 mt-4 p-4">
+              {solvedList &&
+                solvedList.map(item => (
+                  <div className={style.freeBox}>
+                    <p>{item.createAt.slice(2, 10)}</p>
+                    <Image
+                      src={item.photoUrl}
+                      alt="free"
+                      width={100}
+                      height={100}
+                      loader={({ src }) => src}
+                      className="w-full style.boxStyle"
+                    />
                   </div>
                 ))}
             </div>
