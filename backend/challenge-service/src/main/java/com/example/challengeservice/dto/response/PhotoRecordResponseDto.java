@@ -5,6 +5,7 @@ import com.querydsl.core.annotations.QueryProjection;
 import lombok.*;
 
 import javax.persistence.Column;
+import java.util.Map;
 
 
 @Getter
@@ -16,8 +17,6 @@ public class PhotoRecordResponseDto {
     /** 아이디 값 **/
     Long challengeRecordId;
 
-    /** 유저 아이디 **/
-    Long userChallengeId;
 
     /** 인증 날짜 **/
 
@@ -26,7 +25,6 @@ public class PhotoRecordResponseDto {
     /** 인증 사진 **/
 
     String photoUrl;
-
 
 
     public PhotoRecordResponseDto(Long challengeRecordId, String createAt, String photoUrl) {

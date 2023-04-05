@@ -8,7 +8,6 @@ import lombok.Setter;
 @Setter
 public class ReportRecordRequestDto {
 
-    private Long userId;
 
     private Long challengeRecordId;
 

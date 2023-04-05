@@ -32,7 +32,7 @@ public class ChallengeRoomRepoCustomImpl  implements ChallengeRoomRepoCustom {
         return jpaQueryFactory
                 .selectFrom(challengeRoom)
                 .where(hasSearch(searchParam.getSearch()),
-                        hasOffset(searchParam.getOffset())
+                        hasOffsetLt(searchParam.getOffset())
                         , isCategoryAll(searchParam.getCategory())
                         , challengeRoom.startDate.gt(searchParam.getNowDate())
                 )
@@ -43,7 +43,7 @@ public class ChallengeRoomRepoCustomImpl  implements ChallengeRoomRepoCustom {
     }
 
     @Override
-    public List<MyChallengeResponseDto> findMyChallengeList(Long userId, String status ,String curDate) {
+    public List<MyChallengeResponseDto> findMyChallengeList(Long userId, String status ,String curDate , Long offset , String search , int size) {
 
         JPAQuery<MyChallengeResponseDto> query = jpaQueryFactory.select(Projections.constructor(
                         MyChallengeResponseDto.class,
@@ -55,7 +55,8 @@ public class ChallengeRoomRepoCustomImpl  implements ChallengeRoomRepoCustom {
                         challengeRoom.backGroundUrl
                 )).from(userChallenge)
                 .join(userChallenge.challengeRoom, challengeRoom)
-                .where(userChallenge.userId.eq(userId));
+                .where(userChallenge.userId.eq(userId) , hasSearch(search) , hasOffsetGt(offset))
+                .limit(size);
 
         switch (status) {
             case "PROCEED":
@@ -97,11 +98,20 @@ public class ChallengeRoomRepoCustomImpl  implements ChallengeRoomRepoCustom {
     }
 
     //offset (마지막으로 검색된 challengeId)
-    private BooleanExpression hasOffset(Long offset) {
+    private BooleanExpression hasOffsetLt(Long offset) {
         if (offset == null) {
             return null;
         }
         return challengeRoom.id.lt(offset);
+    }
+
+
+    //offset (마지막으로 검색된 challengeId)
+    private BooleanExpression hasOffsetGt(Long offset) {
+        if (offset == null) {
+            return null;
+        }
+        return challengeRoom.id.gt(offset);
     }
 
     // category 값의 유무 및 값에 따라 where 조건 실행
