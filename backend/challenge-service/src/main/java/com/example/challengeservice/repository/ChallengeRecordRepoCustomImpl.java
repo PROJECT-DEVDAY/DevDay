@@ -26,8 +26,8 @@ public class ChallengeRecordRepoCustomImpl implements ChallengeRecordRepoCustom 
                         PhotoRecordResponseDto.class,
                         challengeRecord.id,
                         challengeRecord.createAt,
-                        challengeRecord.photoUrl,
-                        challengeRecord.success
+                        challengeRecord.photoUrl
+
                 ))
                 .from(challengeRecord)
                 .where(challengeRecord.userChallenge.id.eq(userChallenge.getId()))
