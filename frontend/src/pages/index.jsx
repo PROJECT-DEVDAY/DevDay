@@ -202,9 +202,9 @@ const main = ({ initialList, ...props }) => {
                 id,
                 backGroundUrl,
                 curParticipantsSize,
-                nickname,
                 title,
                 startDate,
+                hostNickname,
                 endDate,
               } = item;
 
@@ -216,7 +216,7 @@ const main = ({ initialList, ...props }) => {
                   id={id}
                   imgUrl={backGroundUrl}
                   participants={curParticipantsSize}
-                  leader={nickname}
+                  leader={hostNickname}
                   title={title}
                   period={period}
                 />

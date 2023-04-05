@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import RGL, { WidthProvider } from 'react-grid-layout';
 
-import _ from 'lodash';
+import Image from 'next/image';
+import { useRouter } from 'next/router';
 import propTypes from 'prop-types';
 
 import http from '@/api/http';
@@ -9,51 +10,14 @@ import Container from '@/components/Container';
 import { CHALLENGE_DETAIL_URL, CHALLENGE_SUBMIT_RECORD_URL } from '@/constants';
 import { getDatesStartToLast } from '@/utils';
 
-const ReactGridLayout = WidthProvider(RGL);
-
-const layoutProps = {
-  className: 'layout',
-  cols: 3,
-  // rowHeight: 80,
-  isDraggable: false,
-  isResizable: false,
-};
-
-const SubmitList = ({ challengeInfo, today, range, ...props }) => {
+const SubmitList = ({ challengeInfo, today, range }) => {
   const [curDate, setDate] = useState(today);
-  const [layout, setLayout] = useState([]);
   const [item, setItem] = useState([]);
+  const router = useRouter();
 
   const changeDate = e => {
     setDate(e.target.value);
   };
-
-  const generateLayout = items => {
-    return _.map(new Array(items.length), (item, i) => {
-      const y = _.result(props, 'y') || Math.ceil(Math.random() * 4) + 1;
-      return {
-        x: i % 3,
-        y: i % 3,
-        w: 1,
-        h: 1,
-        i: i.toString(),
-      };
-    });
-  };
-
-  const generateDOM = items => {
-    return _.map(_.range(items), i => {
-      return (
-        <div key={i} className="border-2 border-black">
-          <span className="text">{i}</span>
-        </div>
-      );
-    });
-  };
-
-  useEffect(() => {
-    if (item.length > 0) setLayout(generateLayout(item));
-  }, [item]);
 
   useEffect(() => {
     if (curDate && challengeInfo) {
@@ -72,6 +36,7 @@ const SubmitList = ({ challengeInfo, today, range, ...props }) => {
     }
   }, [curDate, challengeInfo]);
 
+  const isEmpty = item.length === 0;
   return (
     <Container>
       <Container.SubPageHeader title={challengeInfo.title} />
@@ -86,29 +51,40 @@ const SubmitList = ({ challengeInfo, today, range, ...props }) => {
           defaultValue={curDate}
           className="my-4"
         >
-          {range.map(r => {
-            return (
-              <option key={r} value={r}>
-                {r}
-              </option>
-            );
-          })}
+          {range.map(r => (
+            <option key={r} value={r}>
+              {r}
+            </option>
+          ))}
         </select>
 
         <div>
-          {item.length === 0 && (
+          {isEmpty && (
             <div>
               <p className="font-bold">업로드 된 인증샷이 없습니다.</p>
             </div>
           )}
-          <ReactGridLayout layout={layout} {...layoutProps}>
-            {generateDOM(item)}
-          </ReactGridLayout>
+          <div className="grid grid-cols-3 gap-2">
+            {item.map((d, i) => {
+              const goToRecord = id => {
+                router.push({
+                  pathname: `/challenge/${challengeInfo.id}/submit-list/${id}`,
+                  query: {
+                    title: `${challengeInfo.title}`,
+                  },
+                });
+              };
+              return (
+                <div
+                  onClick={() => goToRecord(d.challengeRecordId)}
+                  className="relative w-full h-24 border-2"
+                >
+                  <Image fill src={d.photoUrl} alt="user-submit-record" />
+                </div>
+              );
+            })}
+          </div>
         </div>
-        {/*
-        <div className="px-4">
-          <AttendeeStatusBoxList list={LIST} />
-        </div> */}
       </Container.MainBody>
       <Container.MainFooterWithNavigation />
     </Container>
@@ -169,3 +145,24 @@ export const getServerSideProps = async context => {
 };
 
 export default SubmitList;
+
+// [
+//   {
+//     challengeRecordId: 7,
+//     createAt: '2023-04-03',
+//     photoUrl:
+//       'https://devday-bucket.s3.ap-northeast-2.amazonaws.com/default_image/1c2f8604-3db8-4cd5-a485-4e9cd4eec55e-Free_Default_Url.png',
+//   },
+//   {
+//     challengeRecordId: 8,
+//     createAt: '2023-04-03',
+//     photoUrl:
+//       'https://devday-bucket.s3.ap-northeast-2.amazonaws.com/default_image/1c2f8604-3db8-4cd5-a485-4e9cd4eec55e-Free_Default_Url.png',
+//   },
+//   {
+//     challengeRecordId: 9,
+//     createAt: '2023-04-03',
+//     photoUrl:
+//       'https://devday-bucket.s3.ap-northeast-2.amazonaws.com/default_image/1c2f8604-3db8-4cd5-a485-4e9cd4eec55e-Free_Default_Url.png',
+//   },
+// ]

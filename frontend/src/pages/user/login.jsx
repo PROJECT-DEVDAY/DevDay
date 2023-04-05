@@ -87,28 +87,28 @@ const login = props => {
   const onSubmitLogin = async event => {
     event.preventDefault();
 
-    dispatch(loginAsync(user))
-      .unwrap()
-      .then(
-        await Swal.fire({
+    try {
+      const [userInfo] = await dispatch(loginAsync(user)).unwrap();
+
+      if (userInfo) {
+        Swal.fire({
           position: 'center',
           icon: 'success',
           title: '로그인 성공',
           showConfirmButton: false,
           timer: 1200,
-        }),
-
-        router.push('/'),
-      )
-      .catch(error => {
-        Swal.fire({
-          position: 'center',
-          icon: 'error',
-          title: error.message,
-          showConfirmButton: false,
-          timer: 1200,
         });
+      }
+      router.push('/');
+    } catch (e) {
+      Swal.fire({
+        position: 'center',
+        icon: 'error',
+        title: e.message,
+        showConfirmButton: false,
+        timer: 1200,
       });
+    }
   };
 
   const onSubmitLoginEnter = event => {

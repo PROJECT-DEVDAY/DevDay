@@ -63,10 +63,7 @@ const pay = ({ challengeInfo }) => {
             <p>적극적 참여를 유도하기 위해 참가비를 냅니다.</p>
             <div className={classNames('w-full', style.redline)}>
               <span className="text-3xl">
-                {new Intl.NumberFormat(LOCALE, {
-                  maximumSignificantDigits: 3,
-                }).format(entryFee)}
-                원
+                {new Intl.NumberFormat(LOCALE).format(entryFee)}원
               </span>
               <span>(고정)</span>
             </div>
@@ -81,12 +78,7 @@ const pay = ({ challengeInfo }) => {
           <p className="text-3xl">참가비 결제</p>
           <div className={style.spacebet}>
             <p>결제 금액</p>
-            <p>
-              {new Intl.NumberFormat(LOCALE, {
-                maximumSignificantDigits: 3,
-              }).format(entryFee)}
-              원
-            </p>
+            <p>{new Intl.NumberFormat(LOCALE).format(entryFee)}원</p>
           </div>
         </div>
       </Container.MainBody>

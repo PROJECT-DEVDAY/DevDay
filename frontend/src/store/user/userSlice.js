@@ -6,25 +6,23 @@ import { LOGIN_URL } from '@/constants';
 
 export const loginAsync = createAsyncThunk(
   'user/loginAsync',
-  async ({ email, password }) => {
-    const response = await http.post(LOGIN_URL, {
-      email,
-      password,
-    });
+  async ({ email, password }, { rejectWithValue }) => {
+    try {
+      const { data } = await http.post(LOGIN_URL, {
+        email,
+        password,
+      });
 
-    localStorage.setItem(
-      'accessToken',
-      `Bearer ${response.data.data.accessToken}`,
-    );
-    localStorage.setItem(
-      'refreshToken',
-      `Bearer ${response.data.data.refreshToken}`,
-    );
-    return [
-      { userInfo: response.data.data.userInfo },
-      { accessToken: `Bearer ${response.data.data.accessToken}` },
-      { refreshToken: `Bearer ${response.data.data.refreshToken}` },
-    ];
+      localStorage.setItem('accessToken', `Bearer ${data.data.accessToken}`);
+      localStorage.setItem('refreshToken', `Bearer ${data.data.refreshToken}`);
+      return [
+        { userInfo: data.data.userInfo },
+        { accessToken: `Bearer ${data.data.accessToken}` },
+        { refreshToken: `Bearer ${data.data.refreshToken}` },
+      ];
+    } catch (e) {
+      return rejectWithValue(e.response.data);
+    }
   },
 );
 const initialState = {

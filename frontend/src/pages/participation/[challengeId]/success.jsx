@@ -9,7 +9,7 @@ import { useRouter } from 'next/router';
 import http from '@/api/http';
 import { Button } from '@/components/Button';
 import Container from '@/components/Container';
-import { PAYMENT_CHALLENGE_SUCCESS } from '@/constants';
+import { PAYMENT_CHALLENGE_SUCCESS, CHALLENGE_JOIN_URL } from '@/constants';
 
 const success = ({ challengeId, paymentInfo }) => {
   const [loading, setLoading] = useState(true);
@@ -33,6 +33,11 @@ const success = ({ challengeId, paymentInfo }) => {
     }
     // approve가 false 일 때, 처리할 것
     setLoading(false);
+    const datas = {
+      challengeRoomId: challengeId,
+      nickname,
+    };
+    http.post(CHALLENGE_JOIN_URL, datas);
   };
 
   useEffect(() => {

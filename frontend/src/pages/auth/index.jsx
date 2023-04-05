@@ -54,7 +54,7 @@ const fetch = async params => {
   }
 };
 
-const main = ({ initialList, ...props }) => {
+const auth = ({ initialList, ...props }) => {
   const [searchMode, setSearchMode] = useState(false);
   const [loading, setLoading] = useState(false);
   const searchParams = useRef(INITIAL_PARAMS);
@@ -259,4 +259,4 @@ export const getServerSideProps = async () => {
   };
 };
 
-export default main;
+export default auth;

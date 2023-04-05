@@ -13,7 +13,7 @@ import style from './index.module.scss';
 import http from '@/api/http';
 import { Button } from '@/components/Button';
 import Container from '@/components/Container';
-import { CHALLENGE_DETAIL_URL, CHALLENGE_JOIN_URL } from '@/constants';
+import { CHALLENGE_DETAIL_URL, CHALLENGE_JOIN_URL, LOCALE } from '@/constants';
 import { getStartWithEndDate, getWeekDiff } from '@/utils';
 
 import 'slick-carousel/slick/slick.css';
@@ -58,10 +58,12 @@ const challengeintro = props => {
       challengeRoomId: challengeId,
       nickname: user.userInfo.nickname,
     };
-
     http
-      .post(CHALLENGE_JOIN_URL, datas, {
-        headers: { Authorization: user.accessToken },
+      .get(CHALLENGE_JOIN_URL, {
+        params: {
+          challengeRoomId: challengeId,
+          nickname: user.userInfo.nickname,
+        },
       })
       .then(res => {
         router.push(`/participation/${challengeId}/pay`);
@@ -97,13 +99,15 @@ const challengeintro = props => {
       <div className={classNames('p-6', style.boxStyle)}>
         <p className="font-medium text-l">{data.hostNickname}</p>
         <p className="font-medium text-4xl ">{data.title}</p>
-        <div className={classNames(style.fee, 'font-medium text-l')}>
+        <div className={classNames(style.fee, 'font-medium text-l mt-4')}>
           <p className="font-medium text-l">현재 인원 수</p>
-          <p>{data.userCount}명</p>
+          <p>
+            {data.curParticipantsSize} / {data.maxParticipantsSize}명
+          </p>
         </div>
-        <div className={classNames(style.fee, 'font-medium text-l')}>
+        <div className={classNames(style.fee, 'font-medium text-l mt-2')}>
           <p>참가비</p>
-          <p>{data.entryFee}원</p>
+          <p> {new Intl.NumberFormat(LOCALE).format(data.entryFee)}원</p>
         </div>
       </div>
       <div className={classNames('p-6', style.boxStyle)}>
