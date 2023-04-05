@@ -16,7 +16,7 @@ import {
 const Page = () => {
   const router = useRouter();
   const user = useSelector(state => state.user);
-  const { challengeId, challengeRecordId } = router.query;
+  const { challengeId, challengeRecordId, title } = router.query;
   const [record, setRecord] = useState(null);
 
   const fetchRecord = async id => {
@@ -61,7 +61,7 @@ const Page = () => {
 
   return (
     <Container>
-      <Container.SubPageHeader title="" />
+      <Container.SubPageHeader title={title} />
       <Container.MainBody className="px-0 bg-white text-center">
         <h5 className="font-bold text-center text-2xl pb-4 border-b-2">
           참여자 인증 전체보기

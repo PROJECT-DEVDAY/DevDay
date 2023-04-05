@@ -67,7 +67,12 @@ const SubmitList = ({ challengeInfo, today, range }) => {
           <div className="grid grid-cols-3 gap-2">
             {item.map((d, i) => {
               const goToRecord = id => {
-                router.push(`/challenge/${challengeInfo.id}/submit-list/${id}`);
+                router.push({
+                  pathname: `/challenge/${challengeInfo.id}/submit-list/${id}`,
+                  query: {
+                    title: `${challengeInfo.title}`,
+                  },
+                });
               };
               return (
                 <div
