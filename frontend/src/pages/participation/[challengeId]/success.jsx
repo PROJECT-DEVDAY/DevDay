@@ -37,12 +37,7 @@ const success = ({ challengeId, paymentInfo }) => {
       challengeRoomId: challengeId,
       nickname,
     };
-    http.post(CHALLENGE_JOIN_URL, {
-      params: {
-        challengeRoomId: challengeId,
-        nickname,
-      },
-    });
+    http.post(CHALLENGE_JOIN_URL, datas);
   };
 
   useEffect(() => {

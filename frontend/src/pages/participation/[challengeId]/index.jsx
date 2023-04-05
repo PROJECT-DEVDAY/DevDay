@@ -54,6 +54,10 @@ const challengeintro = props => {
   const user = useSelector(state => state.user);
 
   const clickJoin = () => {
+    const datas = {
+      challengeRoomId: challengeId,
+      nickname: user.userInfo.nickname,
+    };
     http
       .get(CHALLENGE_JOIN_URL, {
         params: {
