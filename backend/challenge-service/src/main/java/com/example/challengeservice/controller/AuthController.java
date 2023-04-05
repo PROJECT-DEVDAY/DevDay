@@ -130,13 +130,23 @@ public class AuthController {
     /**
      * 신대득
      * 선택한 유저
-     * 오늘 ~ 4일전 푼 문제를 조회하는 API
+     * 오늘 ~ 5일전 푼 문제를 조회하는 API
      */
     @GetMapping("/baekjoon/users/recent")
     public SingleResult<SolvedMapResponseDto> getRecentUserBaekjoon(HttpServletRequest request){
-        log.info("컨트롤러 호출");
         Long userId = Long.parseLong(request.getHeader(USER_ID));
         return responseService.getSingleResult(challengeService.getRecentUserBaekjoon(userId));
+    }
+
+    /**
+     * 신대득
+     * 선택한 유저
+     * 오늘 ~ 5일전 푼 커밋 조회하는 API
+     */
+    @GetMapping("/commit/users/recent")
+    public ListResult<CommitResponseDto> getRecentUserCommit(HttpServletRequest request){
+        Long userId = Long.parseLong(request.getHeader(USER_ID));
+        return responseService.getListResult(challengeService.getRecentUserCommit(userId));
     }
 
     /**
@@ -146,7 +156,7 @@ public class AuthController {
      * 진행률, 예치금 + 상금, 성공 / 실패 횟수
      */
     @GetMapping("/baekjoon/users/progress/{challengeId}")
-    public AlgoProgressResponseDto getProgressUserBaekjoon(HttpServletRequest request, @PathVariable String challengeId){
+    public ProgressResponseDto getProgressUserBaekjoon(HttpServletRequest request, @PathVariable String challengeId){
         Long userId = Long.parseLong(request.getHeader(USER_ID));
         return challengeService.getProgressUserBaekjoon(userId, Long.parseLong(challengeId));
     }

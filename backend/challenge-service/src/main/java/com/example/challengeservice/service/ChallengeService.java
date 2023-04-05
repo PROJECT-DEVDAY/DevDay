@@ -35,7 +35,9 @@ public interface ChallengeService {
     void updateChallengeRoom(Long challengeRoomId);
     /** 해당 유저가 해당 날짜에 푼 알고리즘 리스트 조회 **/
     SolvedListResponseDto checkDateUserBaekjoon(Long userId, String selectDate);
+    CommitResponseDto checkDateUserCommit(Long userId, String selectDate);
     SolvedMapResponseDto getRecentUserBaekjoon(Long userId);
+    List<CommitResponseDto> getRecentUserCommit(Long userId);
 
     /** 스케줄러 저장 메서드 **/
     void createDailyRecord();
@@ -65,7 +67,7 @@ public interface ChallengeService {
     void updateUserCommit(Long userId);
     void createCommitRecord(ChallengeRecordRequestDto requestDto);
     /** 나의 현재 진행상황 보기 **/
-    AlgoProgressResponseDto getProgressUserBaekjoon(Long userId, Long challengeId);
+    ProgressResponseDto getProgressUserBaekjoon(Long userId, Long challengeId);
 
     List<AlgoRankResponseDto> getAlgoTopRank(Long challengeId);
 }

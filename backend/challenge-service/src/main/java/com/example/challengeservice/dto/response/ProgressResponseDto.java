@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class AlgoProgressResponseDto {
+public class ProgressResponseDto {
     private String progressRate;
     private Long curPrice;
     private Long successCount;
