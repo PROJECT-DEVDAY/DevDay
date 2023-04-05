@@ -20,6 +20,7 @@ export const ChallengeItem = forwardRef(
       title,
       period,
       onClick,
+      status,
       ...props
     },
     ref,
@@ -29,7 +30,7 @@ export const ChallengeItem = forwardRef(
     return (
       <Link
         ref={ref}
-        href={`participation/${id}`}
+        href={status ? `participation/${id}` : `challenge/${id}`}
         className={style.ChallengeItem}
         role="button"
         tabIndex={0}
@@ -79,4 +80,8 @@ ChallengeItem.propTypes = {
   title: PropTypes.string.isRequired,
   period: PropTypes.string.isRequired,
   onClick: PropTypes.func,
+  status: PropTypes.status,
+};
+ChallengeItem.defaultProps = {
+  status: false,
 };

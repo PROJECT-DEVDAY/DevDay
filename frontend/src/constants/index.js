@@ -20,8 +20,7 @@ export const TOKEN_REFRESH_URL = `${USER_SERVICE}/refresh`;
 const CHALLENGE_SERVICE = 'challenge-service';
 
 export const CHALLENGES_URL = `${CHALLENGE_SERVICE}/auth/challenges`;
-export const MY_CHALLENGES_URL = param =>
-  `${CHALLENGE_SERVICE}/auth/challenges/my-challenge?status=${param}`;
+export const MY_CHALLENGES_URL = `${CHALLENGE_SERVICE}/auth/challenges/my-challenge`;
 export const CHALLENGES_LIST_URL = param =>
   `${CHALLENGE_SERVICE}/challenges/list?category=${param}`;
 export const CHALLENGES_SEARCH_URL = `${CHALLENGE_SERVICE}/challenges`;
