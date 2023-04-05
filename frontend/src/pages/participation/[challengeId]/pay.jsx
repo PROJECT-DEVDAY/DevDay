@@ -11,15 +11,13 @@ import http from '../../api/http';
 import { Button } from '@/components/Button';
 import Container from '@/components/Container';
 import PrivateRouter from '@/components/PrivateRouter/PrivateRouter';
-
-import { getStartWithEndDate, getWeekDiff } from '@/utils';
-
 import {
   CHALLENGE_DETAIL_URL,
   PUBLIC_TOSS_CLIENT_KEY,
   LOCALE,
   DEVDAY_ATTENDEE_TICKET,
 } from '@/constants';
+import { getStartWithEndDate, getWeekDiff } from '@/utils';
 
 const pay = ({ challengeInfo }) => {
   const { id, startDate, endDate, entryFee, participantsSize, title } =
@@ -136,4 +134,4 @@ export const getServerSideProps = async context => {
   };
 };
 
-export default pay;
+export default PrivateRouter(pay);
