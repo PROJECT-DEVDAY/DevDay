@@ -114,17 +114,19 @@ public class AuthController {
 
     /** 사진 인증 저장 **/
     @PostMapping("photo-record")
-    public ResponseEntity<String> createChallengeRecord(@ModelAttribute ChallengeRecordRequestDto requestDto) throws IOException{
-        challengeService.createPhotoRecord(requestDto);
+    public ResponseEntity<String> createChallengeRecord(HttpServletRequest request ,@ModelAttribute ChallengeRecordRequestDto requestDto) throws IOException{
+        Long userId = Long.parseLong(request.getHeader(USER_ID));
+        challengeService.createPhotoRecord(userId,requestDto);
         return ResponseEntity.status(HttpStatus.OK).body("인증기록 저장완료");
     }
 
     /** 팀원의 인증 기록 불러오기 테스트 코드 (로그인이 되어있어야함) **/
     @GetMapping("{challengeId}/record")
-    public ListResult<?> getTeamChallengeRecord(@PathVariable("challengeId")Long challengeRoomId ,@RequestParam("view") String viewType ,@RequestParam("days") int days ,@RequestParam(value = "offDate", required = false) String offDate){
-        log.info("형식?"+!DateValidator.validateDateFormat(offDate));
+    public ListResult<?> getTeamChallengeRecord(HttpServletRequest request, @PathVariable("challengeId")Long challengeRoomId ,@RequestParam("view") String viewType ,@RequestParam("days") int days ,@RequestParam(value = "offDate", required = false) String offDate){
+        Long userId = Long.parseLong(request.getHeader(USER_ID));
+
         if(!DateValidator.validateDateFormat(offDate)) throw new ApiException(ExceptionEnum.API_PARAMETER_EXCEPTION);
-        return responseService.getListResult(challengeService.getTeamPhotoRecord(challengeRoomId,viewType,days,offDate));
+        return responseService.getListResult(challengeService.getTeamPhotoRecord(userId ,challengeRoomId,viewType,days,offDate));
     }
 
     /**
