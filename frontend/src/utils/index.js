@@ -44,3 +44,16 @@ export const getWeekDiff = (d1, d2) => {
     day: day % 7,
   };
 };
+
+export const getDatesStartToLast = (startDate, lastDate) => {
+  const regex = /^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/;
+  if (!(regex.test(startDate) && regex.test(lastDate)))
+    return 'Not Date Format';
+  const result = [];
+  const curDate = new Date(startDate);
+  while (curDate <= new Date(lastDate)) {
+    result.push(curDate.toISOString().split('T')[0]);
+    curDate.setDate(curDate.getDate() + 1);
+  }
+  return result;
+};
