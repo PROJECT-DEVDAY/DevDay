@@ -170,8 +170,8 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional
     public TokenResponseDto refresh(HttpServletRequest request) {
-        String accessToken = jwtUtil.resolveToken(request, "Authorization");
-        String refreshToken = jwtUtil.resolveToken(request, "RefreshToken");
+        String accessToken = jwtUtil.resolveToken(request, "authorization");
+        String refreshToken = jwtUtil.resolveToken(request, "refreshtoken");
 
         Long userId = tokenValidation(accessToken, refreshToken);
 
