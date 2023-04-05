@@ -411,8 +411,7 @@ public class ChallengeServiceImpl implements ChallengeService{
             List<String> problemList= myMap.get(curDate);
             problemList.add(dateProblemResponseDto.getProblemId());
         }
-        SolvedMapResponseDto solvedMapResponseDto= new SolvedMapResponseDto(myMap);
-        return solvedMapResponseDto;
+        return new SolvedMapResponseDto(myMap);
     }
 
     @Override
@@ -619,22 +618,19 @@ public class ChallengeServiceImpl implements ChallengeService{
 
     /**인증 정보 저장 (사진)**/
     @Override
-    public void createPhotoRecord(ChallengeRecordRequestDto requestDto) throws IOException {
-
-        log.info("챌린지id "+ requestDto.getChallengeRoomId()+"유저아이디id"+requestDto.getUserId());
+    public void createPhotoRecord(Long userId , ChallengeRecordRequestDto requestDto) throws IOException {
 
         //인증 사진이 없는경우 예외처리
         if(requestDto.getPhotoCertFile()==null) throw new ApiException(ExceptionEnum.CHALLENGE_BAD_REQUEST);
-
-        //인증 사진이 정상적으로 온 경우 사진을 s3에 업로드한다.
-        String photoUrl = amazonS3Service.upload(requestDto.getPhotoCertFile(),"CertificationPhoto");
 
         //오늘 날짜
         String date = commonService.getDate();
 
         // UserChallenge 조회
-        UserChallenge userChallenge = userChallengeRepository.findByChallengeRoomIdAndUserId(requestDto.getChallengeRoomId(), requestDto.getUserId()).orElseThrow(()-> new ApiException(ExceptionEnum.USER_CHALLENGE_NOT_EXIST_EXCEPTION) );
-        log.info("[userChallenge id값]"+ userChallenge.getId());
+        UserChallenge userChallenge = userChallengeRepository.findByChallengeRoomIdAndUserId(requestDto.getChallengeRoomId(), userId).orElseThrow(()-> new ApiException(ExceptionEnum.USER_CHALLENGE_NOT_EXIST_EXCEPTION) );
+
+        //인증 사진이 정상적으로 온 경우 사진을 s3에 업로드한다.
+        String photoUrl = amazonS3Service.upload(requestDto.getPhotoCertFile(),"CertificationPhoto");
         ChallengeRecord challengeRecord = ChallengeRecord.from(requestDto,date,photoUrl,userChallenge);
 
         challengeRecordRepository.save(challengeRecord);
@@ -669,7 +665,7 @@ public class ChallengeServiceImpl implements ChallengeService{
                 break;
             case "FREE":
                 //userChallenge 값을 찾아야함
-                selfRecord=getSelfPhotoRecord(challengeRoomId,userId,viewType);
+                selfRecord = getSelfPhotoRecord(challengeRoomId,userId,viewType);
                 break;
             default:
                 break;
@@ -685,8 +681,9 @@ public class ChallengeServiceImpl implements ChallengeService{
      *
      */
     @Override
-    public List<PhotoRecordResponseDto> getTeamPhotoRecord(Long challengeRoomId, String viewType, int days, String offDate) {
+    public List<PhotoRecordResponseDto> getTeamPhotoRecord(Long userId ,Long challengeRoomId, String viewType, int days, String offDate) {
 
+        if(!userChallengeRepository.existsByChallengeRoomIdAndUserId(challengeRoomId , userId)) throw new ApiException(ExceptionEnum.USER_CHALLENGE_NOT_EXIST_EXCEPTION);
         if(offDate.equals("")) offDate =commonService.getDate();
         else offDate = commonService.getPastDay(1,offDate);
         String endDate = commonService.getPastDay(days,offDate);
@@ -698,7 +695,6 @@ public class ChallengeServiceImpl implements ChallengeService{
      *  @explain: 사진인증 기록을 상세 조회한다.
      *  @param userId :유저 ID
      *  @param challengeRecordId : 챌린지 기록 ID
-     *
      *  @retouch : (before) 회원 닉네임을 불러오기 위해 user-service로 Api를 호출하는 로직
      *             (after) 챌린지방을 입장할때 회원닉네임을 저장해서 해당 정보로 닉네임을 가져오는 것으로 변경
      *

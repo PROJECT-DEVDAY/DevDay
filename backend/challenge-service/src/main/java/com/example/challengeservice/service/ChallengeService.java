@@ -45,14 +45,14 @@ public interface ChallengeService {
     void createAlgoRecord(ChallengeRecordRequestDto requestDto) throws IOException;
 
     /** 사진 인증 기록 생성하기 **/
-    void createPhotoRecord (ChallengeRecordRequestDto requestDto) throws IOException;
+    void createPhotoRecord (Long userId ,ChallengeRecordRequestDto requestDto) throws IOException;
 
     /** 개인 사진 인증 기록 가져오기 **/
 
     List<PhotoRecordResponseDto> getSelfPhotoRecord(Long challengeId ,Long userId, String viewType );
     // List<?> getSelfRecord(Long challengeId ,Long userId, String viewType, String category);
 
-    List<PhotoRecordResponseDto> getTeamPhotoRecord(Long challengeRoomId , String viewType, int days, String offDate);
+    List<PhotoRecordResponseDto> getTeamPhotoRecord(Long userId ,Long challengeRoomId , String viewType, int days, String offDate);
 
     PhotoRecordDetailResponseDto getPhotoRecordDetail(Long userId ,Long challengeRecordId);
 
