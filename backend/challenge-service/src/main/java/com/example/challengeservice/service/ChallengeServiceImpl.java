@@ -679,17 +679,14 @@ public class ChallengeServiceImpl implements ChallengeService{
      * author :홍금비
      * explain : 팀원 인증 기록 조회
      * @param challengeRoomId 챌린지방 ID
-     * @param viewType PREVIEW - 미리보기 | ALL - 전체보기
+     *
      *
      */
     @Override
-    public List<PhotoRecordResponseDto> getTeamPhotoRecord(Long userId ,Long challengeRoomId, String viewType, int days, String offDate) {
+    public List<PhotoRecordResponseDto> getTeamPhotoRecord(Long userId ,Long challengeRoomId, String date) {
 
         if(!userChallengeRepository.existsByChallengeRoomIdAndUserId(challengeRoomId , userId)) throw new ApiException(ExceptionEnum.USER_CHALLENGE_NOT_EXIST_EXCEPTION);
-        if(offDate.equals("")) offDate =commonService.getDate();
-        else offDate = commonService.getPastDay(1,offDate);
-        String endDate = commonService.getPastDay(days,offDate);
-        return challengeRecordRepository.getTeamPhotoRecord(challengeRoomId, viewType, days, offDate ,endDate );
+        return challengeRecordRepository.getTeamPhotoRecord(challengeRoomId ,date);
 
     }
 
