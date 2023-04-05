@@ -20,6 +20,9 @@ public interface ChallengeRecordRepository extends JpaRepository<ChallengeRecord
 
 //   List<ChallengeRecord> findAllByUserChallengeId(Long userChallengeId);
 
+   @Query("select cr from ChallengeRecord cr where cr.userChallenge.id=:userChallengeId and cr.createAt between :startDate and :endDate and cr.success=:success")
+   List<ChallengeRecord> findAllByUserChallengeIdAndStartDateAndEndDate(Long userChallengeId, String startDate, String endDate, boolean success);
+
    @Query("select cr from ChallengeRecord cr where cr.userChallenge.id=:userChallengeId and cr.createAt between :startDate and :endDate and cr.success=:success and cr.algorithmCount >=:algorithmCount")
    List<ChallengeRecord> findAllByUserChallengeIdAndStartDateAndEndDateAlgo(Long userChallengeId, String startDate, String endDate, boolean success, int algorithmCount);
 
