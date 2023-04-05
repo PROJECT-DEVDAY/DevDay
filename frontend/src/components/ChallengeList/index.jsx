@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 import style from './index.module.scss';
 
-export const ChallengeList = ({ date, array, ...props }) => {
+export const ChallengeList = ({ date, array, category, ...props }) => {
   return (
     <div className={classNames(style.algoDate, 'font-medium')}>
       <p>{date}</p>
@@ -16,12 +16,15 @@ export const ChallengeList = ({ date, array, ...props }) => {
           ))}
         </div>
       )}
-      {array.length === 0 && (
+      {array.length === 0 && category === 'ALGO' && (
         <div className={style.algoZero}>
           <p>
             푼 문제가 <br /> 없습니다.
           </p>
         </div>
+      )}
+      {array.length === 0 && category === 'COMMIT' && (
+        <div className={style.algoZero} />
       )}
     </div>
   );
