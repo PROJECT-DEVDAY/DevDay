@@ -81,14 +81,14 @@ public class AuthController {
     }
 
     /** 사진 인증 상세 조회 (Auth) 로그인이 반드시 필요함) api 변경필요합니다. **/
-    @GetMapping("photo-record/{recordId}/users/")
+    @GetMapping("photo-record/{recordId}/users")
     public SingleResult<PhotoRecordDetailResponseDto> getPhotoRecordDetail(@PathVariable("recordId") Long recordId , HttpServletRequest request){
         Long userId=Long.parseLong(request.getHeader(USER_ID));
         return responseService.getSingleResult(challengeService.getPhotoRecordDetail(userId ,recordId));
     }
 
     /** 나의 인증 기록 불러오기 **/
-    @GetMapping("{challengeId}/record/users/")
+    @GetMapping("{challengeId}/record/users")
     public ListResult<?> getSelfChallengeRecord(@PathVariable("challengeId") Long challengeRoomId,@RequestParam("view") String viewType, HttpServletRequest request){
         Long userId=Long.parseLong(request.getHeader(USER_ID));
         return responseService.getListResult(challengeService.getSelfPhotoRecord(challengeRoomId,userId,viewType));

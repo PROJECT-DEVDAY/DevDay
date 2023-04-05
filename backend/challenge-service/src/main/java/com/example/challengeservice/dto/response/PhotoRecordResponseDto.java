@@ -29,8 +29,6 @@ public class PhotoRecordResponseDto {
 
 
 
-
-
     public PhotoRecordResponseDto(Long challengeRecordId, String createAt, String photoUrl) {
         this.challengeRecordId = challengeRecordId;
         this.createAt = createAt;
