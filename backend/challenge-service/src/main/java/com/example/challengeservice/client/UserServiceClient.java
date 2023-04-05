@@ -32,4 +32,7 @@ public interface UserServiceClient {
     @PostMapping("/user/commit/{userId}")
     SingleResult<?> updateCommitCount(@PathVariable Long userId,
                                                                 @RequestBody CommitRequestDto requestDto);
+    @GetMapping("/user/commit/date/{userId}")
+    ListResult<CommitResponseDto> getDateCommitList(@PathVariable Long userId,
+                                                    @RequestParam("startDate") String startDate,@RequestParam("endDate") String endDate);
 }

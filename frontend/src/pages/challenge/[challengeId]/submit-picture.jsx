@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-import axios from 'axios';
+import http from '@/api/http';
 import classNames from 'classnames';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import Swal from 'sweetalert2';
 
-import { CHALLENGE_PHOTO_RECORD_URL } from '@/utils';
+import { CHALLENGE_PHOTO_RECORD_URL } from '@/constants';
 import { Button } from '@/components/Button';
 import Container from '@/components/Container';
 
@@ -67,7 +67,7 @@ const SubmitPicture = () => {
     formData.append('challengeRoomId', challengeInfo.id);
     // 전송
     try {
-      const result = await axios.post(CHALLENGE_PHOTO_RECORD_URL, formData, {
+      const result = await http.post(CHALLENGE_PHOTO_RECORD_URL, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

@@ -15,7 +15,7 @@ import reactor.core.publisher.Mono;
 
 @Configuration
 public class CorsConfiguration {
-    private static final String ALLOWED_HEADERS = "authorization, Content-Type, Content-Length, Authorization, credential, X-XSRF-TOKEN";
+    private static final String ALLOWED_HEADERS = "authorization, Content-Type, Content-Length, Authorization, credential, X-XSRF-TOKEN, refreshtoken, RefreshToken";
     private static final String ALLOWED_METHODS = "GET, PUT, POST, DELETE, OPTIONS, PATCH";
     private static final String EXPOSE_HEADERS = "*, Authorization";
     private static final String MAX_AGE = "7200"; //2 hours (2 * 60 * 60)

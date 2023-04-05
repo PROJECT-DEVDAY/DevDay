@@ -9,11 +9,12 @@ import { useRouter } from 'next/router';
 import Swal from 'sweetalert2';
 
 import style from './index.module.scss';
-import http from '@/api/http';
 
+import http from '@/api/http';
 import { Button } from '@/components/Button';
 import Container from '@/components/Container';
 import { CHALLENGE_DETAIL_URL, CHALLENGE_JOIN_URL } from '@/constants';
+import { getStartWithEndDate, getWeekDiff } from '@/utils';
 
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -81,6 +82,7 @@ const challengeintro = props => {
       });
   };
 
+  const { week, day } = getWeekDiff(data.startDate, data.endDate);
   return (
     <Container>
       <Container.SubPageHeader />
@@ -260,8 +262,11 @@ const challengeintro = props => {
       <Container.MainFooter>
         <div className="flex justify-between p-4">
           <div className="text-left">
-            <p>03.20(월) ~ 04.02(일)</p>
-            <p>매일 2주 동안</p>
+            <p>{getStartWithEndDate(data.startDate, data.endDate)}</p>
+            <p>
+              매일 {week > 0 && `${week}주 `}
+              {day > 0 && `${day}일 `}동안
+            </p>
           </div>
           <div className="w-1/2">
             <Button label="참여하기" onClick={clickJoin} />

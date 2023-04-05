@@ -35,7 +35,9 @@ public interface ChallengeService {
     void updateChallengeRoom(Long challengeRoomId);
     /** 해당 유저가 해당 날짜에 푼 알고리즘 리스트 조회 **/
     SolvedListResponseDto checkDateUserBaekjoon(Long userId, String selectDate);
+    CommitResponseDto checkDateUserCommit(Long userId, String selectDate);
     SolvedMapResponseDto getRecentUserBaekjoon(Long userId);
+    SolvedMapResponseDto getRecentUserCommit(Long userId);
 
     /** 스케줄러 저장 메서드 **/
     void createDailyRecord();
@@ -43,14 +45,14 @@ public interface ChallengeService {
     void createAlgoRecord(ChallengeRecordRequestDto requestDto) throws IOException;
 
     /** 사진 인증 기록 생성하기 **/
-    void createPhotoRecord (ChallengeRecordRequestDto requestDto) throws IOException;
+    void createPhotoRecord (Long userId ,ChallengeRecordRequestDto requestDto) throws IOException;
 
     /** 개인 사진 인증 기록 가져오기 **/
 
     List<PhotoRecordResponseDto> getSelfPhotoRecord(Long challengeId ,Long userId, String viewType );
     // List<?> getSelfRecord(Long challengeId ,Long userId, String viewType, String category);
 
-    List<PhotoRecordResponseDto> getTeamPhotoRecord(Long challengeRoomId , String viewType, int days, String offDate);
+    List<PhotoRecordResponseDto> getTeamPhotoRecord(Long userId ,Long challengeRoomId , String date);
 
     PhotoRecordDetailResponseDto getPhotoRecordDetail(Long userId ,Long challengeRecordId);
 
@@ -65,7 +67,7 @@ public interface ChallengeService {
     void updateUserCommit(Long userId);
     void createCommitRecord(ChallengeRecordRequestDto requestDto);
     /** 나의 현재 진행상황 보기 **/
-    AlgoProgressResponseDto getProgressUserBaekjoon(Long userId, Long challengeId);
+    ProgressResponseDto getProgressUserBaekjoon(Long userId, Long challengeId);
 
-    List<AlgoRankResponseDto> getAlgoTopRank(Long challengeId);
+    List<RankResponseDto> getTopRank(Long challengeId);
 }

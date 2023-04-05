@@ -114,29 +114,41 @@ public class AuthController {
 
     /** 사진 인증 저장 **/
     @PostMapping("photo-record")
-    public ResponseEntity<String> createChallengeRecord(@ModelAttribute ChallengeRecordRequestDto requestDto) throws IOException{
-        challengeService.createPhotoRecord(requestDto);
+    public ResponseEntity<String> createChallengeRecord(HttpServletRequest request ,@ModelAttribute ChallengeRecordRequestDto requestDto) throws IOException{
+        Long userId = Long.parseLong(request.getHeader(USER_ID));
+        challengeService.createPhotoRecord(userId,requestDto);
         return ResponseEntity.status(HttpStatus.OK).body("인증기록 저장완료");
     }
 
-    /** 팀원의 인증 기록 불러오기 테스트 코드 (로그인이 되어있어야함) **/
+    /** 팀원의 인증 기록 불러오기 **/
     @GetMapping("{challengeId}/record")
-    public ListResult<?> getTeamChallengeRecord(@PathVariable("challengeId")Long challengeRoomId ,@RequestParam("view") String viewType ,@RequestParam("days") int days ,@RequestParam(value = "offDate", required = false) String offDate){
-        log.info("형식?"+!DateValidator.validateDateFormat(offDate));
-        if(!DateValidator.validateDateFormat(offDate)) throw new ApiException(ExceptionEnum.API_PARAMETER_EXCEPTION);
-        return responseService.getListResult(challengeService.getTeamPhotoRecord(challengeRoomId,viewType,days,offDate));
+    public ListResult<?> getTeamChallengeRecord(HttpServletRequest request, @PathVariable("challengeId")Long challengeRoomId ,@RequestParam(value = "date") String date){
+
+        Long userId = Long.parseLong(request.getHeader(USER_ID));
+        if(!DateValidator.validateDateFormat(date)) throw new ApiException(ExceptionEnum.API_PARAMETER_EXCEPTION);
+        return responseService.getListResult(challengeService.getTeamPhotoRecord(userId ,challengeRoomId,date));
     }
 
     /**
      * 신대득
      * 선택한 유저
-     * 오늘 ~ 4일전 푼 문제를 조회하는 API
+     * 오늘 ~ 5일전 푼 문제를 조회하는 API
      */
     @GetMapping("/baekjoon/users/recent")
     public SingleResult<SolvedMapResponseDto> getRecentUserBaekjoon(HttpServletRequest request){
-        log.info("컨트롤러 호출");
         Long userId = Long.parseLong(request.getHeader(USER_ID));
         return responseService.getSingleResult(challengeService.getRecentUserBaekjoon(userId));
+    }
+
+    /**
+     * 신대득
+     * 선택한 유저
+     * 오늘 ~ 5일전 푼 커밋 조회하는 API
+     */
+    @GetMapping("/commit/users/recent")
+    public SingleResult<SolvedMapResponseDto> getRecentUserCommit(HttpServletRequest request){
+        Long userId = Long.parseLong(request.getHeader(USER_ID));
+        return responseService.getSingleResult(challengeService.getRecentUserCommit(userId));
     }
 
     /**
@@ -146,7 +158,7 @@ public class AuthController {
      * 진행률, 예치금 + 상금, 성공 / 실패 횟수
      */
     @GetMapping("/baekjoon/users/progress/{challengeId}")
-    public AlgoProgressResponseDto getProgressUserBaekjoon(HttpServletRequest request, @PathVariable String challengeId){
+    public ProgressResponseDto getProgressUserBaekjoon(HttpServletRequest request, @PathVariable String challengeId){
         Long userId = Long.parseLong(request.getHeader(USER_ID));
         return challengeService.getProgressUserBaekjoon(userId, Long.parseLong(challengeId));
     }

@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class AlgoRankResponseDto implements Comparable<AlgoRankResponseDto> {
+public class RankResponseDto implements Comparable<RankResponseDto> {
     private Long rank;
     private Long userId;
     private String userNickname;
@@ -16,7 +16,7 @@ public class AlgoRankResponseDto implements Comparable<AlgoRankResponseDto> {
     private Long failCount;
 
     @Override
-    public int compareTo(@NotNull AlgoRankResponseDto o) {
+    public int compareTo(@NotNull RankResponseDto o) {
         return o.successCount.intValue()-this.successCount.intValue(); //내림차순
     }
     public void setRank(Long rank){

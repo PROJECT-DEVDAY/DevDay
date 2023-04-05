@@ -1,20 +1,18 @@
 package com.example.challengeservice.controller;
 
+import com.example.challengeservice.client.PayServiceClient;
+import com.example.challengeservice.client.dto.ChallengeSettlementRequest;
 import com.example.challengeservice.common.response.ResponseService;
 import com.example.challengeservice.common.result.ListResult;
 import com.example.challengeservice.common.result.Result;
 import com.example.challengeservice.common.result.SingleResult;
-import com.example.challengeservice.dto.request.ChallengeRecordRequestDto;
-import com.example.challengeservice.dto.request.ChallengeRoomRequestDto;
-import com.example.challengeservice.dto.request.ReportRecordRequestDto;
-import com.example.challengeservice.dto.response.ChallengeCreateResponseDto;
 import com.example.challengeservice.dto.response.ChallengeRoomResponseDto;
 import com.example.challengeservice.dto.response.SimpleChallengeResponseDto;
 import com.example.challengeservice.dto.response.*;
 import com.example.challengeservice.dto.response.SolvedListResponseDto;
 import com.example.challengeservice.infra.amazons3.service.AmazonS3Service;
 import com.example.challengeservice.service.ChallengeService;
-import com.example.challengeservice.service.ChallengeServiceImpl;
+import com.example.challengeservice.service.SchedulerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -22,10 +20,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -37,6 +33,10 @@ public class ChallengeController {
     private final ResponseService responseService;
     private final ChallengeService challengeService;
     private final AmazonS3Service s3Service;
+
+    private final PayServiceClient payServiceClient;
+
+    private final SchedulerService schedulerService;
 
 
     /**
@@ -55,7 +55,7 @@ public class ChallengeController {
      * 챌린지 조회 **/
     @GetMapping("/{challengeId}")
     public ResponseEntity<ChallengeRoomResponseDto> readChallenge(@PathVariable("challengeId") String challengeId){
-        log.info("챌린지 조회 실행");
+
         return ResponseEntity.status(HttpStatus.OK).body(challengeService.readChallenge(Long.parseLong(challengeId)));
     }
 
@@ -92,6 +92,17 @@ public class ChallengeController {
         return responseService.getSingleResult(challengeService.checkDateUserBaekjoon(userId, selectDate));
     }
 
+    /**
+     * 유저의 커밋 정보 조회
+     * @param userId
+     * @param selectDate
+     * @return
+     */
+    @GetMapping("/commit/users/date")
+    public SingleResult<CommitResponseDto> checkDateUserCommit(@RequestParam Long userId, @RequestParam String selectDate){
+        return responseService.getSingleResult(challengeService.checkDateUserCommit(userId, selectDate));
+    }
+
     /** 신대득
      * 현재 user가 참가중인 챌린지 개수 반환
      */
@@ -126,8 +137,8 @@ public class ChallengeController {
     }
 
     @GetMapping("baekjoon/rank/{challengeId}")
-    public ListResult<AlgoRankResponseDto> getAlgoTopRank(@PathVariable String challengeId){
-        return responseService.getListResult(challengeService.getAlgoTopRank(Long.parseLong(challengeId)));
+    public ListResult<RankResponseDto> getTopRank(@PathVariable String challengeId){
+        return responseService.getListResult(challengeService.getTopRank(Long.parseLong(challengeId)));
     }
 
     /**
@@ -136,7 +147,6 @@ public class ChallengeController {
      */
     @PostMapping("/baekjoon/update/users/{userId}")
     public Result updateUserBaekjoon(@PathVariable String userId){
-//        Long userId=Long.parseLong(request.getHeader(USER_ID));
         challengeService.updateUserBaekjoon(Long.parseLong(userId));
         return responseService.getSuccessResult();
     }
@@ -152,6 +162,14 @@ public class ChallengeController {
     }
 
 
+
+
+    @GetMapping("/pay-service")
+    public void testdsd(){
+
+        schedulerService.endChallengeCalculate();
+
+    }
 
 
 

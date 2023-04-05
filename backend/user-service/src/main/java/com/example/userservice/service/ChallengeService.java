@@ -19,4 +19,5 @@ public interface ChallengeService {
     void updateCommitCount(Long userId, CommitRequestDto requestDto);
 
     CommitResponseDto getCommitRecord(Long userId, String commitDate);
+    List<CommitResponseDto> getDateCommitList(Long userId, String startDate, String endDate);
 }

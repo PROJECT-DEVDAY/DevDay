@@ -97,6 +97,12 @@ public class ChallengeServiceImpl implements ChallengeService{
         return CommitResponseDto.from(commitRecord);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<CommitResponseDto> getDateCommitList(Long userId, String startDate, String endDate) {
+        return commitRecordRepository.getDateCommit(userId, startDate, endDate);
+    }
+
     private User getUser(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new ApiException(ExceptionEnum.MEMBER_NOT_EXIST_EXCEPTION));
