@@ -8,7 +8,7 @@ import { useRouter } from 'next/router';
 import Swal from 'sweetalert2';
 
 import style from './password.module.scss';
-import http from '../../api/http';
+import http from '@/api/http';
 
 import { Button } from '@/components/Button';
 import Container from '@/components/Container';
@@ -24,10 +24,6 @@ const password = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const userInfo = useSelector(state => state.user);
-
-  const headers = {
-    Authorization: userInfo.accessToken,
-  };
 
   const [showNowPassword, setShowNowPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
@@ -101,14 +97,10 @@ const password = () => {
     }
 
     http
-      .patch(
-        PASSWORD_URL,
-        {
-          password: watch('password'),
-          newPassword: watch('newPassword'),
-        },
-        { headers },
-      )
+      .patch(PASSWORD_URL, {
+        password: watch('password'),
+        newPassword: watch('newPassword'),
+      })
       .then(() => {
         dispatch(reset());
         persistor.purge();

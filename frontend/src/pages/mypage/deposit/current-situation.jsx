@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import Swal from 'sweetalert2';
 
-import http from '../../api/http';
+import http from '@/api/http';
 
 import Container from '@/components/Container';
 import PrivateRouter from '@/components/PrivateRouter/PrivateRouter';
@@ -18,15 +18,9 @@ const currentSituation = () => {
   const userInfo = useSelector(state => state.user);
   const [myDepositInfo, setMyDepositInfo] = useState({});
 
-  const headers = {
-    Authorization: userInfo.accessToken,
-  };
-
   useEffect(() => {
     http
-      .get(GET_MY_DEPOSIT_URL, {
-        headers,
-      })
+      .get(GET_MY_DEPOSIT_URL)
       .then(res => {
         setMyDepositInfo(res.data.data);
       })

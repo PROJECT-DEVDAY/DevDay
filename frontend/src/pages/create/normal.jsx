@@ -7,8 +7,8 @@ import Image from 'next/image';
 import Swal from 'sweetalert2';
 
 import style from './normal.module.scss';
-import { httpForm } from '../api/http';
 
+import { httpForm } from '@/api/http';
 import { BtnFooter } from '@/components/BtnFooter';
 import Container from '@/components/Container';
 import { ContentInput } from '@/components/ContentInput';
@@ -195,9 +195,7 @@ const normal = props => {
     }).then(result => {
       if (result.isConfirmed) {
         httpForm
-          .post(CHALLENGES_URL, data, {
-            headers: { Authorization: user.accessToken },
-          })
+          .post(CHALLENGES_URL, data)
           .then(async () => {
             await Swal.fire({
               position: 'center',

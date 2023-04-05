@@ -5,8 +5,8 @@ import _ from 'lodash';
 import { useRouter } from 'next/router';
 
 import style from './challenge.module.scss';
-import http from '../../api/http';
 
+import http from '@/api/http';
 import Container from '@/components/Container';
 import { CHALLENGE_DETAIL_URL, CHALLENGE_ALGO_URL } from '@/constants';
 

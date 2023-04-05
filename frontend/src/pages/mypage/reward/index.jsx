@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import Swal from 'sweetalert2';
 
-import http from '../../api/http';
+import http from '@/api/http';
 
 import { BtnFooter } from '@/components/BtnFooter';
 import { Button } from '@/components/Button';

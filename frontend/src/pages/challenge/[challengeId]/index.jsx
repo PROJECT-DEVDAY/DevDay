@@ -20,13 +20,13 @@ import { useRouter } from 'next/router';
 
 import style from './challenge.module.scss';
 
+import http from '@/api/http';
 import { Button } from '@/components/Button';
 import { ChallengeList } from '@/components/ChallengeList';
 import Container from '@/components/Container';
 import Footer from '@/components/Footer';
 import { SelectArrow } from '@/components/SelectArrow';
 import { CHALLENGE_DETAIL_URL, CHALLENGE_AUTH_ALGO_URL } from '@/constants';
-import http from '@/pages/api/http';
 
 ChartJS.register(
   CategoryScale,
@@ -54,9 +54,7 @@ const challengeDetail = props => {
         {
           challenge.category === 'ALGO' &&
             http
-              .get(`${CHALLENGE_AUTH_ALGO_URL}/progress/${challengeId}`, {
-                headers: { Authorization: user.accessToken },
-              })
+              .get(`${CHALLENGE_AUTH_ALGO_URL}/progress/${challengeId}`)
               .then(response => {
                 setMyAlgoIng(response.data);
               });
@@ -71,23 +69,17 @@ const challengeDetail = props => {
                 }
               });
           challenge.category === 'ALGO' &&
-            http
-              .get(`${CHALLENGE_AUTH_ALGO_URL}/recent`, {
-                headers: { Authorization: user.accessToken },
-              })
-              .then(response => {
-                if (response) {
-                  const key = Object.keys(response.data.data.solvedMap);
-                  const value = Object.values(response.data.data.solvedMap);
-                  setMyAlgoKey(key);
-                  setMyAlgo(response.data.data.solvedMap);
-                }
-              });
+            http.get(`${CHALLENGE_AUTH_ALGO_URL}/recent`).then(response => {
+              if (response) {
+                const key = Object.keys(response.data.data.solvedMap);
+                const value = Object.values(response.data.data.solvedMap);
+                setMyAlgoKey(key);
+                setMyAlgo(response.data.data.solvedMap);
+              }
+            });
           challenge.category === 'COMMIT' &&
             http
-              .get(`${CHALLENGE_AUTH_ALGO_URL}/progress/${challengeId}`, {
-                headers: { Authorization: user.accessToken },
-              })
+              .get(`${CHALLENGE_AUTH_ALGO_URL}/progress/${challengeId}`)
               .then(response => {
                 setMyAlgoIng(response.data);
               });
@@ -102,18 +94,14 @@ const challengeDetail = props => {
                 }
               });
           challenge.category === 'COMMIT' &&
-            http
-              .get(`${CHALLENGE_AUTH_ALGO_URL}/recent`, {
-                headers: { Authorization: user.accessToken },
-              })
-              .then(response => {
-                if (response) {
-                  const key = Object.keys(response.data.data.solvedMap);
-                  const value = Object.values(response.data.data.solvedMap);
-                  setMyAlgoKey(key);
-                  setMyAlgo(response.data.data.solvedMap);
-                }
-              });
+            http.get(`${CHALLENGE_AUTH_ALGO_URL}/recent`).then(response => {
+              if (response) {
+                const key = Object.keys(response.data.data.solvedMap);
+                const value = Object.values(response.data.data.solvedMap);
+                setMyAlgoKey(key);
+                setMyAlgo(response.data.data.solvedMap);
+              }
+            });
         }
       });
     }
