@@ -5,7 +5,6 @@ import { useRouter } from 'next/router';
 import Swal from 'sweetalert2';
 
 import http from '@/api/http';
-
 import PrivateRouter from '@/components/PrivateRouter/PrivateRouter';
 import { ReturnArrow } from '@/components/ReturnArrow';
 import { SelectArrow } from '@/components/SelectArrow';

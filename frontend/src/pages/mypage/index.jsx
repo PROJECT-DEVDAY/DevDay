@@ -8,7 +8,6 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 
 import http from '@/api/http';
-
 import Container from '@/components/Container';
 import Footer from '@/components/Footer';
 import PrivateRouter from '@/components/PrivateRouter/PrivateRouter';
