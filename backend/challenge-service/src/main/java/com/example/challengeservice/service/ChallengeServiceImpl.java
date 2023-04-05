@@ -790,12 +790,15 @@ public class ChallengeServiceImpl implements ChallengeService{
         // 진행률 계산
         Long challengeLength = commonService.diffDay(challengeRoom.getStartDate(), commonService.getDate());
         if(challengeLength<0){
-            challengeLength=0L;
+            challengeLength=-1L;
         }
         challengeLength++;
         List<ChallengeRecord> challengeRecordList = challengeRecordRepository.findAllByUserChallengeIdAndStartDateAndEndDateAlgo(userChallenge.getId(), challengeRoom.getStartDate(), challengeRoom.getEndDate(), true, challengeRoom.getAlgorithmCount());
         Long successCount=(long)challengeRecordList.size();
         Long failCount = challengeLength - successCount;
+        if(challengeLength==0){
+            challengeLength++;
+        }
         String progressRate= String.format("%.2f", (double)(successCount*100)/challengeLength);
         // 예치금 + 상금
         Long curPrice=userChallenge.getDiffPrice();
