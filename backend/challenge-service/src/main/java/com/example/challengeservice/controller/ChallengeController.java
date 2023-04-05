@@ -137,8 +137,8 @@ public class ChallengeController {
     }
 
     @GetMapping("baekjoon/rank/{challengeId}")
-    public ListResult<AlgoRankResponseDto> getAlgoTopRank(@PathVariable String challengeId){
-        return responseService.getListResult(challengeService.getAlgoTopRank(Long.parseLong(challengeId)));
+    public ListResult<RankResponseDto> getTopRank(@PathVariable String challengeId){
+        return responseService.getListResult(challengeService.getTopRank(Long.parseLong(challengeId)));
     }
 
     /**

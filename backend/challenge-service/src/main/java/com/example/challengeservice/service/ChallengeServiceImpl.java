@@ -411,21 +411,22 @@ public class ChallengeServiceImpl implements ChallengeService{
             List<String> problemList= myMap.get(curDate);
             problemList.add(dateProblemResponseDto.getProblemId());
         }
-        return new SolvedMapResponseDto(myMap);
+        return SolvedMapResponseDto.algoFrom(myMap);
     }
 
     @Override
-    public List<CommitResponseDto> getRecentUserCommit(Long userId) {
+    public SolvedMapResponseDto getRecentUserCommit(Long userId) {
         updateUserCommit(userId); // Todo : 커밋 최신화 속도가 느리다면 빼야함!!!!
         String today=commonService.getDate();
         String pastDay=commonService.getPastDay(5, today);
         log.info("today is {} , pastDay is {}", today, pastDay);
         List<CommitResponseDto> dateCommitList = userServiceClient.getDateCommitList(userId, pastDay, today).getData();
-        log.info("dateCommitList Size is {}", dateCommitList.size());
-        for(CommitResponseDto commit:dateCommitList){
-            log.info("받아온 커밋 정보는 날짜: {}  횟수 : {}", commit.getCommitDate(), commit.getCommitCount());
+
+        Map<String, Integer> myMap=new HashMap<>();
+        for(CommitResponseDto commitResponseDto: dateCommitList){
+            myMap.put(commitResponseDto.getCommitDate(), commitResponseDto.getCommitCount());
         }
-        return dateCommitList;
+        return SolvedMapResponseDto.commitFrom(myMap);
     }
 
     /** 신대득
@@ -695,6 +696,7 @@ public class ChallengeServiceImpl implements ChallengeService{
      *  @explain: 사진인증 기록을 상세 조회한다.
      *  @param userId :유저 ID
      *  @param challengeRecordId : 챌린지 기록 ID
+     *
      *  @retouch : (before) 회원 닉네임을 불러오기 위해 user-service로 Api를 호출하는 로직
      *             (after) 챌린지방을 입장할때 회원닉네임을 저장해서 해당 정보로 닉네임을 가져오는 것으로 변경
      *
@@ -851,20 +853,28 @@ public class ChallengeServiceImpl implements ChallengeService{
      * @return
      */
     @Override
-    public List<AlgoRankResponseDto> getAlgoTopRank(Long challengeId){
-        ChallengeRoom challengeRoom=getChallengeRoomEntity(challengeId);
-        List<UserChallenge> allByChallengeRoomId = userChallengeRepository.findAllByChallengeRoomId(challengeRoom.getId());
-        List<AlgoRankResponseDto> algoRankResponseDtoList=new ArrayList<>();
-        Long period=commonService.diffDay(challengeRoom.getStartDate(), challengeRoom.getEndDate())+1;
-        for(UserChallenge uc:allByChallengeRoomId){
+    public List<RankResponseDto> getTopRank(Long challengeId) {
+        ChallengeRoom challengeRoom = getChallengeRoomEntity(challengeId);
+        List<UserChallenge> userChallengesByChallengeRoomId = userChallengeRepository.findAllByChallengeRoomId(challengeRoom.getId());
+        List<RankResponseDto> rankResponseDtoList = new ArrayList<>();
+        Long period = commonService.diffDay(challengeRoom.getStartDate(), challengeRoom.getEndDate()) + 1;
+        for (UserChallenge uc : userChallengesByChallengeRoomId) {
             // 현재 uc 중 챌린지 기간 동안의 레코드 조회
-            List<ChallengeRecord> challengeRecordList = challengeRecordRepository.findAllByUserChallengeIdAndStartDateAndEndDateAlgo(uc.getId(), challengeRoom.getStartDate(), challengeRoom.getEndDate(), true, challengeRoom.getAlgorithmCount());
-            algoRankResponseDtoList.add(new AlgoRankResponseDto(0L, uc.getUserId(), uc.getNickname(), (long)challengeRecordList.size(), period-(long)challengeRecordList.size()));
+            switch (challengeRoom.getCategory()) {
+                case "ALGO":
+                    List<ChallengeRecord> challengeAlgoRecordList = challengeRecordRepository.findAllByUserChallengeIdAndStartDateAndEndDateAlgo(uc.getId(), challengeRoom.getStartDate(), challengeRoom.getEndDate(), true, challengeRoom.getAlgorithmCount());
+                    rankResponseDtoList.add(new RankResponseDto(0L, uc.getUserId(), uc.getNickname(), (long) challengeAlgoRecordList.size(), period - (long) challengeAlgoRecordList.size()));
+                    break;
+                case "COMMIT":
+                    List<ChallengeRecord> challengeCommitRecordList = challengeRecordRepository.findAllByUserChallengeIdAndStartDateAndEndDateCommit(uc.getId(), challengeRoom.getStartDate(), challengeRoom.getEndDate(), true, challengeRoom.getCommitCount());
+                    rankResponseDtoList.add(new RankResponseDto(0L, uc.getUserId(), uc.getNickname(), (long) challengeCommitRecordList.size(), period - (long) challengeCommitRecordList.size()));
+                    break;
+            }
+            Collections.sort(rankResponseDtoList);
+            for (int i = 0; i < rankResponseDtoList.size(); i++) {
+                rankResponseDtoList.get(i).setRank((long) i + 1);
+            }
         }
-        Collections.sort(algoRankResponseDtoList);
-        for(int i=0;i<algoRankResponseDtoList.size();i++){
-            algoRankResponseDtoList.get(i).setRank((long)i+1);
-        }
-        return algoRankResponseDtoList;
+        return rankResponseDtoList;
     }
 }
