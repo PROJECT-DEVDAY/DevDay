@@ -5,6 +5,8 @@ import com.example.payservice.dto.CustomPage;
 import com.example.payservice.dto.challenge.SimpleChallengeInfo;
 import com.example.payservice.dto.deposit.DepositTransactionHistoryDto;
 import com.example.payservice.dto.deposit.DepositTransactionType;
+import com.example.payservice.dto.request.ChallengeAllSettleRequest;
+import com.example.payservice.dto.request.ChallengeSettleInfo;
 import com.example.payservice.dto.request.ChallengeSettleRequest;
 import com.example.payservice.dto.request.SimpleChallengeInfosRequest;
 import com.example.payservice.dto.request.WithdrawDepositRequest;
@@ -231,9 +233,14 @@ public class DepositService {
      * @param resultList
      */
     @Transactional
-    public void settleChallenge(Long challengeId, List<ChallengeSettleRequest.ChallengeSettleInfo> resultList) {
+    public void settleChallenge(Long challengeId, List<ChallengeSettleInfo> resultList) {
         // 유저마다 챌린지에 결제한 정보를 DB로부터 조회합니다.
         resultList.forEach(result -> settle(challengeId, result));
+    }
+
+    @Transactional
+    public void settleChallengeV2(List<ChallengeSettleInfo> resultList) {
+        resultList.forEach(result -> settle(result.getChallengeId(), result));
     }
 
     /**
@@ -242,7 +249,7 @@ public class DepositService {
      * @param result
      */
     @Transactional
-    public void settle(long challengeId, ChallengeSettleRequest.ChallengeSettleInfo result) {
+    public void settle(long challengeId, ChallengeSettleInfo result) {
         try {
             PayUserEntity challengeUser = userService.getPayUserEntityForUpdate(result.getUserId());
 

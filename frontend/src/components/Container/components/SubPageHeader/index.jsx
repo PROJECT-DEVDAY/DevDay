@@ -6,7 +6,13 @@ import { useRouter } from 'next/router';
 
 import Header from '../Header';
 
-const SubPageHeader = ({ sticky = true, className, title, goNext = null }) => {
+const SubPageHeader = ({
+  sticky = true,
+  className,
+  title,
+  goNext = null,
+  disableBefore,
+}) => {
   const router = useRouter();
 
   const goToBack = () => {
@@ -25,13 +31,17 @@ const SubPageHeader = ({ sticky = true, className, title, goNext = null }) => {
         className,
       )}
     >
-      <button
-        type="button"
-        onClick={goToBack}
-        className="w-8 h-8 flex items-center justify-start"
-      >
-        <SlArrowLeft />
-      </button>
+      <div className="w-8 h-8">
+        {!disableBefore && (
+          <button
+            type="button"
+            onClick={goToBack}
+            className="w-8 h-8 flex items-center justify-start"
+          >
+            <SlArrowLeft />
+          </button>
+        )}
+      </div>
       <div id="sub-header-title" className="font-bold">
         {title}
       </div>

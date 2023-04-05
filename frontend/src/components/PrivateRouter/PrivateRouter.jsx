@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
-import Router from 'next/router';
 import Swal from 'sweetalert2';
 
 const PrivateRouter = WrappedComponent => {
@@ -11,7 +10,8 @@ const PrivateRouter = WrappedComponent => {
       const loginRedirect = async () => {
         if (!user.accessToken) {
           // 이거 끝날떄까지 대기
-          await Router.push('/user/login');
+          // await Router.push('/user/login');
+          return window.location.replace('/user/login');
 
           const Toast = Swal.mixin({
             toast: true,

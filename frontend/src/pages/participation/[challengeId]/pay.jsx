@@ -17,21 +17,25 @@ import {
   LOCALE,
   DEVDAY_ATTENDEE_TICKET,
 } from '@/constants';
+import { getStartWithEndDate, getWeekDiff } from '@/utils';
 
 const pay = ({ challengeInfo }) => {
+  const { id, startDate, endDate, entryFee, participantsSize, title } =
+    challengeInfo;
   const payShot = async () => {
     const tossPayments = await loadTossPayments(PUBLIC_TOSS_CLIENT_KEY); // 회원 결제
 
     await tossPayments.requestPayment('카드', {
-      amount: challengeInfo.entryFee,
+      amount: entryFee,
       orderId: Math.random().toString(36).slice(2),
       orderName: DEVDAY_ATTENDEE_TICKET,
-      successUrl: `${window.location.origin}/participation/${challengeInfo.id}/success`,
-      failUrl: `${window.location.origin}/participation/${challengeInfo.id}/fail`,
+      successUrl: `${window.location.origin}/participation/${id}/success`,
+      failUrl: `${window.location.origin}/participation/${id}/fail`,
       windowTarget: 'self',
     });
   };
 
+  const { week, day } = getWeekDiff(startDate, endDate);
   return (
     <Container>
       <Container.SubPageHeader title="참가하기" />
@@ -44,12 +48,14 @@ const pay = ({ challengeInfo }) => {
           />
           <div className={classNames(style.title)}>
             <div className="ml-4">
-              <p className="text-2xl">{challengeInfo.title}</p>
-              <p>매일, 2주 동안</p>
-              <p>03.20(월) ~ 04.02(일)</p>
+              <p className="text-2xl">{title}</p>
+              <p>
+                매일, {week > 0 && `${week}주`} {day > 0 && ` ${day}일`}동안
+              </p>
+              <p>{getStartWithEndDate(startDate, endDate)}</p>
             </div>
             <div>
-              <p>{`${challengeInfo.participantCount}명 참가`}</p>
+              <p>{`${participantsSize}명 참가`}</p>
             </div>
           </div>
           <div className="mt-8">
@@ -59,7 +65,7 @@ const pay = ({ challengeInfo }) => {
               <span className="text-3xl">
                 {new Intl.NumberFormat(LOCALE, {
                   maximumSignificantDigits: 3,
-                }).format(challengeInfo.entryFee)}
+                }).format(entryFee)}
                 원
               </span>
               <span>(고정)</span>
@@ -78,7 +84,7 @@ const pay = ({ challengeInfo }) => {
             <p>
               {new Intl.NumberFormat(LOCALE, {
                 maximumSignificantDigits: 3,
-              }).format(challengeInfo.entryFee)}
+              }).format(entryFee)}
               원
             </p>
           </div>
@@ -128,4 +134,4 @@ export const getServerSideProps = async context => {
   };
 };
 
-export default pay;
+export default PrivateRouter(pay);

@@ -12,13 +12,4 @@ public class ChallengeSettleRequest {
 
     @JsonProperty("result")
     List<ChallengeSettleInfo> resultList = new ArrayList<>();
-    @Data
-    public static class ChallengeSettleInfo {
-        @JsonProperty("user_id")
-        private Long userId;
-
-        @JsonProperty("money")
-        @Positive
-        private Integer money;
-    }
 }

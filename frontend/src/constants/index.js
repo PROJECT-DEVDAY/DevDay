@@ -39,7 +39,7 @@ export const PRIZE_WITHDRAW_URL = `${PAY_SERVICE}/users/prize`;
 export const GET_MY_DEPOSIT_URL = param =>
   `${PAY_SERVICE}/users/deposit?type=${param}`;
 export const PAYMENT_CHALLENGE_SUCCESS = param =>
-  `${PAY_SERVICE}/${param}/success`;
+  `${PAY_SERVICE}/payments/${param}/success`;
 
 export const PUBLIC_TOSS_CLIENT_KEY = 'test_ck_N5OWRapdA8dWR0eyPm6ro1zEqZKL';
 export const LOCALE = 'ko-KR';

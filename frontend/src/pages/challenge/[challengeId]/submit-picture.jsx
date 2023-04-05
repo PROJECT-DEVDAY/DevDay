@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import Swal from 'sweetalert2';
 
-import { CHALLENGE_PHOTO_RECORD_URL } from '@/components';
+import { CHALLENGE_PHOTO_RECORD_URL } from '@/utils';
 import { Button } from '@/components/Button';
 import Container from '@/components/Container';
 
