@@ -309,6 +309,11 @@ public class ChallengeServiceImpl implements ChallengeService{
                 updateUserBaekjoon(uc.getUserId());
                 log.info("createAlgoRecord 실행");
                 createAlgoRecord(ChallengeRecordRequestDto.from(uc.getUserId(),challengeRoomId));
+            } else if(challengeRoom.getCategory().equals("COMMIT")){
+                log.info("updateUserCommit 실행");
+                updateUserCommit(uc.getUserId());
+                log.info("createCommitRecord 실행");
+                createCommitRecord(ChallengeRecordRequestDto.from(uc.getUserId(),challengeRoomId));
             }
         }
     }
