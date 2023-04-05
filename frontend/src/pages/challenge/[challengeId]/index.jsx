@@ -37,64 +37,129 @@ ChartJS.register(
   Legend,
 );
 
-const labels = ['신대득', '박태환', '이동준', '홍금비', '김기윤', '최형운'];
-
-const options = {
-  responsive: true,
-  scales: {
-    x: {
-      grid: {
-        display: false,
-      },
-    },
-    y: {
-      grid: {
-        display: false,
-      },
-    },
-  },
-};
-
-const data = {
-  labels,
-  datasets: [
-    {
-      label: '성공 횟수',
-      data: [1, 1, 2, 2, 3, 3],
-      backgroundColor: 'rgba(255, 99, 132, 0.5)',
-      borderWidth: 0,
-    },
-  ],
-};
-
-const challenge = props => {
+const challengeDetail = props => {
   const router = useRouter();
   const user = useSelector(state => state.user);
   const { challengeId } = router.query;
   const [challenge, setChallenge] = useState('');
   const [myAlgoKey, setMyAlgoKey] = useState('');
   const [myAlgo, setMyAlgo] = useState('');
+  const [myAlgoIng, setMyAlgoIng] = useState('');
+  const [challengeRank, setChallengeRank] = useState('');
+
   useEffect(() => {
     if (challengeId) {
       http.get(`${CHALLENGE_DETAIL_URL}/${challengeId}`).then(res => {
         setChallenge(res.data);
-        http
-          .get(`${CHALLENGE_AUTH_ALGO_URL}/recent`, {
-            headers: { Authorization: user.accessToken },
-          })
-          .then(response => {
-            if (response) {
-              const key = Object.keys(response.data.data.solvedMap);
-              const value = Object.values(response.data.data.solvedMap);
-              console.log(key);
-              console.log(value);
-              setMyAlgoKey(key);
-              setMyAlgo(response.data.data.solvedMap);
-            }
-          });
+        {
+          challenge.category === 'ALGO' &&
+            http
+              .get(`${CHALLENGE_AUTH_ALGO_URL}/progress/${challengeId}`, {
+                headers: { Authorization: user.accessToken },
+              })
+              .then(response => {
+                setMyAlgoIng(response.data);
+              });
+          challenge.category === 'ALGO' &&
+            http
+              .get(`${CHALLENGE_DETAIL_URL}/baekjoon/rank/${challengeId}`)
+              .then(response => {
+                setChallengeRank(response.data.data);
+                if (response.data.data.length > 6) {
+                  const resRank = response.data.data.slice(0, 6);
+                  setChallengeRank(resRank);
+                }
+              });
+          challenge.category === 'ALGO' &&
+            http
+              .get(`${CHALLENGE_AUTH_ALGO_URL}/recent`, {
+                headers: { Authorization: user.accessToken },
+              })
+              .then(response => {
+                if (response) {
+                  const key = Object.keys(response.data.data.solvedMap);
+                  const value = Object.values(response.data.data.solvedMap);
+                  setMyAlgoKey(key);
+                  setMyAlgo(response.data.data.solvedMap);
+                }
+              });
+          challenge.category === 'COMMIT' &&
+            http
+              .get(`${CHALLENGE_AUTH_ALGO_URL}/progress/${challengeId}`, {
+                headers: { Authorization: user.accessToken },
+              })
+              .then(response => {
+                setMyAlgoIng(response.data);
+              });
+          challenge.category === 'COMMIT' &&
+            http
+              .get(`${CHALLENGE_DETAIL_URL}/baekjoon/rank/${challengeId}`)
+              .then(response => {
+                setChallengeRank(response.data.data);
+                if (response.data.data.length > 6) {
+                  const resRank = response.data.data.slice(0, 6);
+                  setChallengeRank(resRank);
+                }
+              });
+          challenge.category === 'COMMIT' &&
+            http
+              .get(`${CHALLENGE_AUTH_ALGO_URL}/recent`, {
+                headers: { Authorization: user.accessToken },
+              })
+              .then(response => {
+                if (response) {
+                  const key = Object.keys(response.data.data.solvedMap);
+                  const value = Object.values(response.data.data.solvedMap);
+                  setMyAlgoKey(key);
+                  setMyAlgo(response.data.data.solvedMap);
+                }
+              });
+        }
       });
     }
   }, [challengeId]);
+
+  const [labels, setLabels] = useState([]);
+  const [barData, setBarData] = useState([]);
+  useEffect(() => {
+    if (labels.length === 0) {
+      for (let index = challengeRank.length - 1; index >= 0; index--) {
+        setLabels(labels => {
+          return [...labels, challengeRank[index].userNickname];
+        });
+        setBarData(barData => {
+          return [...barData, challengeRank[index].successCount];
+        });
+      }
+    }
+  });
+  const options = {
+    responsive: true,
+    scales: {
+      x: {
+        grid: {
+          display: false,
+        },
+      },
+      y: {
+        grid: {
+          display: false,
+        },
+      },
+    },
+  };
+
+  const data = {
+    labels,
+    datasets: [
+      {
+        label: '성공 횟수',
+        data: barData,
+        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+        borderWidth: 0,
+      },
+    ],
+  };
   const week = Math.abs(
     (Date.parse(challenge.endDate) - Date.parse(challenge.startDate)) /
       (1000 * 60 * 60 * 24 * 7),
@@ -106,7 +171,7 @@ const challenge = props => {
   ];
 
   const HEADER_ITEMS = ['나의 인증 현황', '참가자 인증 현황'];
-  const [selectedItem, setSelectedItem] = useState('참가자 인증 현황');
+  const [selectedItem, setSelectedItem] = useState('나의 인증 현황');
 
   const handleItemChange = event => {
     const targetItem = event.target.value;
@@ -125,7 +190,7 @@ const challenge = props => {
           loader={({ src }) => `${src}`}
           className={classNames('w-full', style.boxStyle)}
         />
-        <p className="absolute bottom-10 w-4/5 left-10 text-4xl font-bold text-white">
+        <p className="absolute bottom-10 w-4/5 left-10 text-4xl font-bold text-white bg-black p-2 rounded-xl">
           {challenge.title}
         </p>
       </div>
@@ -172,32 +237,55 @@ const challenge = props => {
             <div className={classNames('p-4 m-4 font-medium', style.greybox)}>
               <div className="w-1/3 border-solid border-border border-r-2 text-center">
                 <p>진행률</p>
-                <p className="font-bold">85.7%</p>
+                <p className="font-bold">{myAlgoIng.progressRate}</p>
               </div>
               <div className="w-1/3 border-solid border-border border-r-2 text-center">
                 <p>예치금+상금</p>
-                <p className="font-bold">8000원</p>
+                <p className="font-bold">{myAlgoIng.curPrice}</p>
               </div>
               <div className="w-1/3 flex m-auto">
                 <div className="w-1/2 text-center ml-4">
                   <p className="text-green-500">성공</p>
-                  <p className="font-bold">4회</p>
+                  <p className="font-bold">{myAlgoIng.successCount}</p>
                 </div>
                 <div className="w-1/2 text-center">
                   <p className="text-red-500">실패</p>
-                  <p className="font-bold">2회</p>
+                  <p className="font-bold">{myAlgoIng.failCount}</p>
                 </div>
               </div>
             </div>
-            <div className="p-6 grid gap-4 grid-cols-3">
-              {myAlgoKey &&
-                myAlgoKey.map(
-                  item =>
-                    Date.parse(item) >= Date.parse(challenge.startDate) && (
-                      <ChallengeList date={item} array={myAlgo[item]} />
-                    ),
-                )}
-            </div>
+            {challenge.category === 'ALGO' && (
+              <div className="p-6 grid gap-4 grid-cols-3">
+                {myAlgoKey &&
+                  myAlgoKey.map(
+                    item =>
+                      Date.parse(item) >= Date.parse(challenge.startDate) && (
+                        <ChallengeList
+                          date={item}
+                          array={myAlgo[item]}
+                          category="ALGO"
+                        />
+                      ),
+                  )}
+              </div>
+            )}
+            {challenge.category === 'COMMIT' && (
+              <div className="p-6 overflow-scroll">
+                {myAlgoKey &&
+                  myAlgoKey.map(
+                    item =>
+                      Date.parse(item) >= Date.parse(challenge.startDate) && (
+                        <div className="w-1/3">
+                          <ChallengeList
+                            date={item}
+                            array=""
+                            category="COMMIT"
+                          />
+                        </div>
+                      ),
+                  )}
+              </div>
+            )}
             <div className="p-4">
               <Link href={`/challenge/${challengeId}/my-submit-list`}>
                 <SelectArrow title="나의 전체 인증 현황" />
@@ -226,4 +314,4 @@ const challenge = props => {
   );
 };
 
-export default challenge;
+export default challengeDetail;
