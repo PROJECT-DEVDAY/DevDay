@@ -2,7 +2,6 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { PURGE } from 'redux-persist';
 
 import http from '@/api/http';
-
 import { LOGIN_URL } from '@/constants';
 
 export const loginAsync = createAsyncThunk(

@@ -6,8 +6,8 @@ import Image from 'next/image';
 import { PropTypes } from 'prop-types';
 
 import style from './pay.module.scss';
-import http from '@/api/http';
 
+import http from '@/api/http';
 import { Button } from '@/components/Button';
 import Container from '@/components/Container';
 import PrivateRouter from '@/components/PrivateRouter/PrivateRouter';
