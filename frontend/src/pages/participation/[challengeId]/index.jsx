@@ -66,7 +66,6 @@ const challengeintro = props => {
         router.push(`/participation/${challengeId}/pay`);
       })
       .catch(err => {
-        console.log(err);
         if (err.response.data.code === 'J001') {
           router.push(`/challenge/${challengeId}`);
         } else {
