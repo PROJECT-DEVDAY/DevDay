@@ -34,3 +34,11 @@
   display: flex;
   justify-content: center;
 }
+.commitBox {
+  height: 80px;
+  color: var(--color-guembi);
+  border: 2px solid var(--color-chunsik);
+  border-radius: 10px;
+  justify-content: center;
+  padding: 8px;
+}
