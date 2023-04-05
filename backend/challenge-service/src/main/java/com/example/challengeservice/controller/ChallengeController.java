@@ -55,7 +55,7 @@ public class ChallengeController {
      * 챌린지 조회 **/
     @GetMapping("/{challengeId}")
     public ResponseEntity<ChallengeRoomResponseDto> readChallenge(@PathVariable("challengeId") String challengeId){
-        log.info("챌린지 조회 실행");
+
         return ResponseEntity.status(HttpStatus.OK).body(challengeService.readChallenge(Long.parseLong(challengeId)));
     }
 
