@@ -1,6 +1,8 @@
 package com.example.challengeservice.repository;
 
 
+import com.example.challengeservice.client.dto.ChallengeSettleInfo;
+import com.example.challengeservice.client.dto.ChallengeSettlementRequest;
 import com.example.challengeservice.dto.response.MyChallengeResponseDto;
 import com.example.challengeservice.entity.ChallengeRoom;
 import com.example.challengeservice.infra.querydsl.SearchParam;
@@ -68,6 +70,21 @@ public class ChallengeRoomRepoCustomImpl  implements ChallengeRoomRepoCustom {
             default:
         }
 
+        return query.fetch();
+    }
+
+
+    @Override
+    public List<ChallengeSettleInfo> findClosedChallengeUser(String date) {
+
+        JPAQuery<ChallengeSettleInfo> query = jpaQueryFactory.select(Projections.constructor(
+                        ChallengeSettleInfo.class,
+                        challengeRoom.id,
+                        userChallenge.userId,
+                        userChallenge.diffPrice
+                )).from(userChallenge)
+                .join(userChallenge.challengeRoom, challengeRoom)
+                .where(challengeRoom.endDate.eq(date));
         return query.fetch();
     }
 
