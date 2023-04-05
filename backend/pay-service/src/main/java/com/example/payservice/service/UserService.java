@@ -128,8 +128,13 @@ public class UserService {
                 .build();
             challengeServiceClient.sendApproveUserJoinChallenge(userId, requestDto);
         } catch(FeignException ex) {
-            log.error("challenge-service로 참가 승인 메시지를 보내는 데 실패했습니다. userId: {}, challengeId: {}", userId, challengeId);
             // TODO: 에러에 대한 대응하기
+            log.error("challenge-service로 참가 승인 메시지를 보내는 데 실패했습니다. userId: {}, challengeId: {}, nickname:{}, err: {}",
+                userId,
+                challengeId,
+                nickname,
+                ex.getMessage()
+            );
         }
     }
 }
