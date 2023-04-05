@@ -55,7 +55,7 @@ public class ChallengeController {
      * 챌린지 조회 **/
     @GetMapping("/{challengeId}")
     public ResponseEntity<ChallengeRoomResponseDto> readChallenge(@PathVariable("challengeId") String challengeId){
-        log.info("챌린지 조회 실행");
+
         return ResponseEntity.status(HttpStatus.OK).body(challengeService.readChallenge(Long.parseLong(challengeId)));
     }
 
@@ -137,8 +137,8 @@ public class ChallengeController {
     }
 
     @GetMapping("baekjoon/rank/{challengeId}")
-    public ListResult<AlgoRankResponseDto> getAlgoTopRank(@PathVariable String challengeId){
-        return responseService.getListResult(challengeService.getAlgoTopRank(Long.parseLong(challengeId)));
+    public ListResult<RankResponseDto> getTopRank(@PathVariable String challengeId){
+        return responseService.getListResult(challengeService.getTopRank(Long.parseLong(challengeId)));
     }
 
     /**

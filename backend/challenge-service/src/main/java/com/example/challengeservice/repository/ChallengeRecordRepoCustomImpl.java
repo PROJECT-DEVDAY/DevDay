@@ -6,7 +6,6 @@ import com.example.challengeservice.entity.*;
 
 import com.example.challengeservice.service.CommonServiceImpl;
 import com.querydsl.core.types.Projections;
-import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -46,7 +45,7 @@ public class ChallengeRecordRepoCustomImpl implements ChallengeRecordRepoCustom 
     }
 
     @Override
-    public List<PhotoRecordResponseDto> getTeamPhotoRecord(Long challengeRoomId, String viewType ,int days ,String offDate ,String endDate) {
+    public List<PhotoRecordResponseDto> getTeamPhotoRecord(Long challengeRoomId, String date) {
 
         JPAQuery<PhotoRecordResponseDto> query = jpaQueryFactory.select( Projections.constructor(
                         PhotoRecordResponseDto.class,
@@ -55,14 +54,8 @@ public class ChallengeRecordRepoCustomImpl implements ChallengeRecordRepoCustom 
                         challengeRecord.photoUrl
                 ))
                 .from(challengeRecord)
-                .where(challengeRecord.userChallenge.challengeRoom.id.eq(challengeRoomId));
+                .where(challengeRecord.userChallenge.challengeRoom.id.eq(challengeRoomId),challengeRecord.createAt.eq(date));
 
-        if(viewType.equals("PREVIEW")) {
-            query = query.where(challengeRecord.createAt.eq(commonService.getDate()));
-        } else if(viewType.equals("ALL")) {
-            query = query.orderBy(challengeRecord.createAt.desc());
-            query = query.where(challengeRecord.createAt.gt(endDate),challengeRecord.createAt.loe(offDate));
-        }
         return query.fetch();
     }
 

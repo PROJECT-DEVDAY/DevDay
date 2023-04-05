@@ -120,13 +120,13 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.OK).body("인증기록 저장완료");
     }
 
-    /** 팀원의 인증 기록 불러오기 테스트 코드 (로그인이 되어있어야함) **/
+    /** 팀원의 인증 기록 불러오기 **/
     @GetMapping("{challengeId}/record")
-    public ListResult<?> getTeamChallengeRecord(HttpServletRequest request, @PathVariable("challengeId")Long challengeRoomId ,@RequestParam("view") String viewType ,@RequestParam("days") int days ,@RequestParam(value = "offDate", required = false) String offDate){
-        Long userId = Long.parseLong(request.getHeader(USER_ID));
+    public ListResult<?> getTeamChallengeRecord(HttpServletRequest request, @PathVariable("challengeId")Long challengeRoomId ,@RequestParam(value = "date") String date){
 
-        if(!DateValidator.validateDateFormat(offDate)) throw new ApiException(ExceptionEnum.API_PARAMETER_EXCEPTION);
-        return responseService.getListResult(challengeService.getTeamPhotoRecord(userId ,challengeRoomId,viewType,days,offDate));
+        Long userId = Long.parseLong(request.getHeader(USER_ID));
+        if(!DateValidator.validateDateFormat(date)) throw new ApiException(ExceptionEnum.API_PARAMETER_EXCEPTION);
+        return responseService.getListResult(challengeService.getTeamPhotoRecord(userId ,challengeRoomId,date));
     }
 
     /**
@@ -146,9 +146,9 @@ public class AuthController {
      * 오늘 ~ 5일전 푼 커밋 조회하는 API
      */
     @GetMapping("/commit/users/recent")
-    public ListResult<CommitResponseDto> getRecentUserCommit(HttpServletRequest request){
+    public SingleResult<SolvedMapResponseDto> getRecentUserCommit(HttpServletRequest request){
         Long userId = Long.parseLong(request.getHeader(USER_ID));
-        return responseService.getListResult(challengeService.getRecentUserCommit(userId));
+        return responseService.getSingleResult(challengeService.getRecentUserCommit(userId));
     }
 
     /**

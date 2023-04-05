@@ -100,8 +100,7 @@ public class ChallengeServiceImpl implements ChallengeService{
     @Override
     @Transactional(readOnly = true)
     public List<CommitResponseDto> getDateCommitList(Long userId, String startDate, String endDate) {
-        List<CommitResponseDto> commitRecordList=commitRecordRepository.getDateCommit(userId, startDate, endDate);
-        return commitRecordList;
+        return commitRecordRepository.getDateCommit(userId, startDate, endDate);
     }
 
     private User getUser(Long userId) {
