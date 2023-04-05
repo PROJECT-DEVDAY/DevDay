@@ -42,7 +42,6 @@ public class CommonServiceImpl implements CommonService {
             // ParseException이 발생한 경우의 처리 코드
             e.printStackTrace(); // 예외 정보를 출력하는 코드
         }
-
         log.info("cal is : "+cal.getTime());
 
         //return formatter.format(date);
