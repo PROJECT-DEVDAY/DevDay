@@ -10,7 +10,6 @@ import org.springframework.web.server.ResponseStatusException;
 @RequiredArgsConstructor
 @Component
 public class FeignErrorDecoder implements ErrorDecoder {
-//    private final Environment env;
 
     @Override
     public Exception decode(String methodKey, Response response) {
@@ -31,6 +30,9 @@ public class FeignErrorDecoder implements ErrorDecoder {
                 }else if(methodKey.contains("getDateBaekjoonList")){
                     return new ResponseStatusException(HttpStatus.valueOf(response.status()),
                             "user-service의 getDateBaekjoonList을 실행할 수 없습니다.");
+                }else if(methodKey.contains("requestChallengeSettlement")){
+                    return new ResponseStatusException(HttpStatus.valueOf(response.status()),
+                            "pay-service의 requestChallengeSettlement을 실행할 수 없습니다.");
                 }
                 break;
 
