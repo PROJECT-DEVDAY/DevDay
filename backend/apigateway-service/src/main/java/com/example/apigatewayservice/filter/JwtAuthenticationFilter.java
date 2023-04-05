@@ -78,7 +78,7 @@ public class JwtAuthenticationFilter extends AbstractGatewayFilterFactory<JwtAut
             } else if (ex.getClass() == ExpiredJwtException.class) {
                 log.error("토큰이 만료되었습니다.");
                 errorCode = 402;
-                exchange.getResponse().setStatusCode(HttpStatus.FORBIDDEN);
+                exchange.getResponse().setStatusCode(HttpStatus.PAYMENT_REQUIRED);
             } else if (ex.getClass() == MalformedJwtException.class) {
                 log.error("JWT 토큰 구조가 잘못되었습니다.");
                 errorCode = 403;
