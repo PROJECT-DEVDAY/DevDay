@@ -327,7 +327,6 @@ public class ChallengeServiceImpl implements ChallengeService{
         UserResponseDto userResponseDto=userResponseDtoTemp.getData();
         SingleResult<BaekjoonListResponseDto> baekjoonListResponseDto = userServiceClient.getUserBaekjoonList(userResponseDto.getUserId());
 
-        log.info("baekjoonListResponseDto is : {}", baekjoonListResponseDto);
         String baekjoonId = baekjoonListResponseDto.getData().getBaekjoonId();
         if(baekjoonId==null){
             return;
@@ -353,7 +352,6 @@ public class ChallengeServiceImpl implements ChallengeService{
      * **/
     public void updateUserCommit(Long userId) {
         SingleResult<UserResponseDto> userResponseDtoTemp = userServiceClient.getUserInfo(userId);
-        log.info("userResponseDto is : {}", userResponseDtoTemp);
         UserResponseDto userResponseDto = userResponseDtoTemp.getData();
 
         String today = commonService.getDate();
@@ -365,6 +363,18 @@ public class ChallengeServiceImpl implements ChallengeService{
 //            return;
 //        }
         userServiceClient.updateCommitCount(userResponseDto.getUserId(), new CommitRequestDto(today, commitCountResponseDto.getCommitCount()));
+    }
+
+    /**
+     * 신대득
+     * 선택한 유저가 선택한 날짜에
+     * 커밋 개수를 반환하는 메서드
+     */
+    public CommitResponseDto checkDateUserCommit(Long userId, String selectDate){
+        updateUserCommit(userId);
+        UserResponseDto userInfo = userServiceClient.getUserInfo(userId).getData();
+        CommitResponseDto commitResponseDto = userServiceClient.getCommitRecord(userId, selectDate).getData();
+        return commitResponseDto;
     }
 
     /**
@@ -388,7 +398,6 @@ public class ChallengeServiceImpl implements ChallengeService{
      */
     @Override
     public SolvedMapResponseDto getRecentUserBaekjoon(Long userId) {
-        log.info("서비스 호출");
         String today= commonService.getDate();
         String pastDay=commonService.getPastDay(5, commonService.getDate());
 
@@ -401,10 +410,23 @@ public class ChallengeServiceImpl implements ChallengeService{
             String curDate=dateProblemResponseDto.getSuccessDate();
             List<String> problemList= myMap.get(curDate);
             problemList.add(dateProblemResponseDto.getProblemId());
-            log.info("problemList is{}", problemList);
         }
         SolvedMapResponseDto solvedMapResponseDto= new SolvedMapResponseDto(myMap);
         return solvedMapResponseDto;
+    }
+
+    @Override
+    public List<CommitResponseDto> getRecentUserCommit(Long userId) {
+        updateUserCommit(userId); // Todo : 커밋 최신화 속도가 느리다면 빼야함!!!!
+        String today=commonService.getDate();
+        String pastDay=commonService.getPastDay(5, today);
+        log.info("today is {} , pastDay is {}", today, pastDay);
+        List<CommitResponseDto> dateCommitList = userServiceClient.getDateCommitList(userId, pastDay, today).getData();
+        log.info("dateCommitList Size is {}", dateCommitList.size());
+        for(CommitResponseDto commit:dateCommitList){
+            log.info("받아온 커밋 정보는 날짜: {}  횟수 : {}", commit.getCommitDate(), commit.getCommitCount());
+        }
+        return dateCommitList;
     }
 
     /** 신대득
@@ -421,7 +443,6 @@ public class ChallengeServiceImpl implements ChallengeService{
         // 현재 진행중인 알고리즘 챌린지 리스트 조회
         List<UserChallenge> userAlgoChallengeList = userChallengeRepository.findAllByDateAndCategory(today, "ALGO");
 
-        log.info("유저의 알고 챌린지 리스트는 : "+userAlgoChallengeList);
         // Algo 기록 저장
         for(UserChallenge userChallenge:userAlgoChallengeList){
             createAlgoRecord(ChallengeRecordRequestDto.from(userChallenge.getUserId(), userChallenge.getChallengeRoom().getId()));
@@ -429,7 +450,6 @@ public class ChallengeServiceImpl implements ChallengeService{
         
         // 현재 진행중인 커밋 챌린지 리스트 조회
         List<UserChallenge> userCommitChallengeList = userChallengeRepository.findAllByDateAndCategory(today, "COMMIT");
-        log.info("유저의 커밋 챌린지 리스트는 : "+userCommitChallengeList);
         // Commit 기록 저장
         for(UserChallenge userChallenge:userCommitChallengeList){
             createCommitRecord(ChallengeRecordRequestDto.from(userChallenge.getUserId(), userChallenge.getChallengeRoom().getId()));
@@ -442,7 +462,7 @@ public class ChallengeServiceImpl implements ChallengeService{
      * 하루정산 시키기 (1일전 인증기록을 통해서)
      *
      */
-    @Scheduled(cron = "0 59 23 * * ?") // 매일 오후 11시 59분
+    @Scheduled(cron = "0 1 0 * * ?") // 매일 오후 0시 1분
     public void culcDailyPayment(){
         log.info("culcDailyPayment 시작");
         List<ChallengeRoom> challengingRoomList = challengeRoomRepository.findChallengingRoomByDate(commonService.getPastDay(0,commonService.getDate()));
@@ -472,7 +492,6 @@ public class ChallengeServiceImpl implements ChallengeService{
         // user의 solved ac에서 오늘 푼 문제들만 조회하기!
         List<DateProblemResponseDto> todayProblemList = userServiceClient.getDateBaekjoonList(user.getUserId(), date, date).getData();
 
-        log.info("today problem list is :"+todayProblemList);
         // challengeRoom에서 최소 알고리즘 개수 가져오기 미달이면 Exception 발생
         if(todayProblemList.size()<challengeRoom.getAlgorithmCount()){
             return;
@@ -492,7 +511,6 @@ public class ChallengeServiceImpl implements ChallengeService{
             }
 //            throw new ApiException(ExceptionEnum.EXIST_CHALLENGE_RECORD);
         }else{
-            log.info("checkRecordList is : " + algoRecordResponseDto);
             ChallengeRecord challengeRecord = ChallengeRecord.fromAlgo(date, todayProblemList.size(), userChallenge);
             challengeRecordRepository.save(challengeRecord);
         }
@@ -540,7 +558,6 @@ public class ChallengeServiceImpl implements ChallengeService{
             throw new ApiException(ExceptionEnum.EXIST_CHALLENGE_RECORD);
         }else{
             ChallengeRecord challengeRecord = ChallengeRecord.fromCommit(date, commitResponseDto.getData().getCommitCount(), userChallenge);
-            log.info("새로운 commit challengeRecord is : " + challengeRecord);
             challengeRecordRepository.save(challengeRecord);
         }
     }
@@ -554,7 +571,11 @@ public class ChallengeServiceImpl implements ChallengeService{
         Integer period = commonService.diffDay(challengeRoom.getStartDate(), challengeRoom.getEndDate()).intValue();
         int oneDayFee = (int)Math.ceil((double) challengeRoom.getEntryFee() / (period+1)); // 하루 가격
 
-        String toDay = commonService.getDate(); // 오늘 날짜 조회
+        String beforeOneDay = commonService.getPastDay(1, commonService.getDate()); // 어제 날짜 조회
+        // 만약 계산하는 날짜가 챌린지 기간이 아니라면
+        if(commonService.diffDay(beforeOneDay, challengeRoom.getEndDate())<0 || commonService.diffDay(challengeRoom.getStartDate(), beforeOneDay) <0){
+            return;
+        }
 
         // 방에 참여한 참여자들
         List<UserChallenge> userChallengeList = userChallengeRepository.findUserChallengesByChallengeRoomId(challengeRoom.getId());
@@ -565,8 +586,7 @@ public class ChallengeServiceImpl implements ChallengeService{
              * 인증은 무조건 1개!
              * 여러개 들어올 경우 에러처리 필요
              */
-            Optional<ChallengeRecordResponseDto> challengeRecord = challengeRecordRepository.findByUserChallengeIdAndCreateAt(userChallenge.getId(), toDay);
-            log.info("challenge Record is : {}",challengeRecord);
+            Optional<ChallengeRecordResponseDto> challengeRecord = challengeRecordRepository.findByUserChallengeIdAndCreateAt(userChallenge.getId(), beforeOneDay);
             if(!challengeRecord.isPresent()){ // 기록이 없다면 => 무조건 실패
                 failList.add(userChallenge);
             }else{ // 기록이 있다면 (사진 인증인 경우 검사)
@@ -590,7 +610,6 @@ public class ChallengeServiceImpl implements ChallengeService{
         // 성공자들 돈 나눠 갖기
         Long todayMoney=Long.valueOf((long)Math.ceil((double)sum/successList.size()));
         for(UserChallenge userChallenge: successList){
-            log.info("todayMoney is {}",todayMoney);
             log.info("성공한 사람은 {}", userChallenge.getId());
             userChallenge.setDiffPrice(userChallenge.getDiffPrice()+todayMoney);
             userChallengeRepository.save(userChallenge);
@@ -786,7 +805,7 @@ public class ChallengeServiceImpl implements ChallengeService{
      * 진행률, 예치금 + 상금, 성공 / 실패 횟수
      */
     @Override
-    public AlgoProgressResponseDto getProgressUserBaekjoon(Long userId, Long challengeId){
+    public ProgressResponseDto getProgressUserBaekjoon(Long userId, Long challengeId){
         log.info("getProgressUserBaekjoon 실행");
         ChallengeRoomResponseDto challengeRoom=readChallenge(challengeId);
 
@@ -799,7 +818,24 @@ public class ChallengeServiceImpl implements ChallengeService{
         }
         challengeLength++;
         List<ChallengeRecord> challengeRecordList = challengeRecordRepository.findAllByUserChallengeIdAndStartDateAndEndDateAlgo(userChallenge.getId(), challengeRoom.getStartDate(), challengeRoom.getEndDate(), true, challengeRoom.getAlgorithmCount());
-        Long successCount=(long)challengeRecordList.size();
+        Long successCount=0L;
+        for(ChallengeRecord cr:challengeRecordList){
+            switch(challengeRoom.getCategory()){
+                case "ALGO":
+                    if(cr.getAlgorithmCount()>=challengeRoom.getAlgorithmCount())
+                        successCount++;
+                    break;
+                case "COMMIT":
+                    if(cr.isSuccess())
+                        successCount++;
+                    break;
+                case "FREE":
+                    if(cr.getCommitCount()>=challengeRoom.getCommitCount())
+                        successCount++;
+                    break;
+            }
+        }
+//        Long successCount=(long)challengeRecordList.size();
         Long failCount = challengeLength - successCount;
         if(challengeLength==0){
             challengeLength++;
@@ -807,7 +843,7 @@ public class ChallengeServiceImpl implements ChallengeService{
         String progressRate= String.format("%.2f", (double)(successCount*100)/challengeLength);
         // 예치금 + 상금
         Long curPrice=userChallenge.getDiffPrice();
-        return new AlgoProgressResponseDto(progressRate, curPrice, successCount, failCount);
+        return new ProgressResponseDto(progressRate, curPrice, successCount, failCount);
     }
 
 
