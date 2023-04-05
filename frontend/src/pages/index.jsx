@@ -9,7 +9,7 @@ import classNames from 'classnames';
 import Image from 'next/image';
 import Link from 'next/link';
 
-import http from './api/http';
+import http from '@/api/http';
 import style from './index.module.scss';
 
 import { ChallengeItem } from '@/components/ChallengeItem';
@@ -247,9 +247,8 @@ export const getServerSideProps = async () => {
     });
     initialList = [...initialList, ...data];
   } catch (e) {
-    // console.error('초기 리스트를 가져올 수 없습니다.', e);
+    console.error('초기 리스트를 가져올 수 없습니다.', e);
   }
-  console.log(initialList);
   return {
     props: {
       initialList,

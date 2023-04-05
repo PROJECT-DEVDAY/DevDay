@@ -7,8 +7,8 @@ import { useRouter } from 'next/router';
 import Swal from 'sweetalert2';
 
 import style from './inputGithub.module.scss';
-import http from '../../api/http';
 
+import http from '@/api/http';
 import { BtnFooter } from '@/components/BtnFooter';
 import Container from '@/components/Container';
 import { InputBox } from '@/components/InputBox';

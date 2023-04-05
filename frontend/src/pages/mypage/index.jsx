@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 
-import http from '../api/http';
+import http from '@/api/http';
 
 import Container from '@/components/Container';
 import Footer from '@/components/Footer';
@@ -22,15 +22,9 @@ const index = () => {
   const userInfo = useSelector(state => state.user);
   const [myPageInfo, setMyPageInfo] = useState({});
 
-  const headers = {
-    Authorization: userInfo.accessToken,
-  };
-
   useEffect(() => {
     http
-      .get(MYPAGE_URL, {
-        headers,
-      })
+      .get(MYPAGE_URL)
       .then(res => {
         setMyPageInfo(res.data.data);
       })

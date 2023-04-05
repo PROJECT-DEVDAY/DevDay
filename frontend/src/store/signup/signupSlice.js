@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 import { JOIN_URL } from '@/constants';
-import http from '@/pages/api/http';
+import http from '@/api/http';
 
 const initialState = {
   email: '',

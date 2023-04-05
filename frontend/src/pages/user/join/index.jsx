@@ -10,7 +10,7 @@ import Swal from 'sweetalert2';
 import style from './index.module.scss';
 import { Button } from '../../../components/Button';
 import { ReturnArrow } from '../../../components/ReturnArrow';
-import http from '../../api/http';
+import http from '@/api/http';
 
 import Container from '@/components/Container';
 import { InputLabel } from '@/components/InputLabel';

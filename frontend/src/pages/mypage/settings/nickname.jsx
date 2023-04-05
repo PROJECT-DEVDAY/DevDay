@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 import { useRouter } from 'next/router';
 
-import http from '../../api/http';
+import http from '@/api/http';
 
 import { Button } from '@/components/Button';
 import Container from '@/components/Container';

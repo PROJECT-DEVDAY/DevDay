@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
-import http from '../../api/http';
 import classNames from 'classnames';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
+import http from '@/api/http';
 import { Button } from '@/components/Button';
 import Container from '@/components/Container';
 import { PAYMENT_CHALLENGE_SUCCESS } from '@/constants';
@@ -19,18 +19,10 @@ const success = ({ challengeId, paymentInfo }) => {
   const payConfirm = async (nickname, accessToken) => {
     let hasError = false;
     try {
-      const { data } = await http.post(
-        PAYMENT_CHALLENGE_SUCCESS(challengeId),
-        {
-          paymentInfo,
-          nickname,
-        },
-        {
-          headers: {
-            Authorization: accessToken,
-          },
-        },
-      );
+      const { data } = await http.post(PAYMENT_CHALLENGE_SUCCESS(challengeId), {
+        paymentInfo,
+        nickname,
+      });
       const { approve } = data;
     } catch (e) {
       console.error(e);

@@ -8,8 +8,8 @@ import { useRouter } from 'next/router';
 import Swal from 'sweetalert2';
 
 import style from './algo.module.scss';
-import { httpForm } from '../api/http';
 
+import { httpForm } from '@/api/http';
 import { BtnFooter } from '@/components/BtnFooter';
 import Container from '@/components/Container';
 import { ContentInput } from '@/components/ContentInput';
@@ -119,9 +119,7 @@ const algo = props => {
     }).then(result => {
       if (result.isConfirmed) {
         httpForm
-          .post(CHALLENGES_URL, data, {
-            headers: { Authorization: user.accessToken },
-          })
+          .post(CHALLENGES_URL, data)
           .then(res => {
             Swal.fire({
               position: 'center',

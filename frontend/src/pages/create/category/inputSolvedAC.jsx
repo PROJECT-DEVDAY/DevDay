@@ -7,8 +7,8 @@ import { useRouter } from 'next/router';
 import Swal from 'sweetalert2';
 
 import style from './inputSolvedAc.module.scss';
-import http from '../../api/http';
 
+import http from '@/api/http';
 import { BtnFooter } from '@/components/BtnFooter';
 import Container from '@/components/Container';
 import { InputBox } from '@/components/InputBox';
@@ -30,13 +30,7 @@ const inputSolvedAc = props => {
 
   const onClickSaveSolvedAcId = async () => {
     await http
-      .patch(
-        GITHUBBAEKJOON_URL,
-        { github: githubId, baekjoon: solvedAcId },
-        {
-          headers: { Authorization: user.accessToken },
-        },
-      )
+      .patch(GITHUBBAEKJOON_URL, { github: githubId, baekjoon: solvedAcId })
       .then(async () => {
         dispatch(addExtraId([githubId, solvedAcId]));
 

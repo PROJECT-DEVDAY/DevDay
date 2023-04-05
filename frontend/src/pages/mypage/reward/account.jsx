@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames';
 import { useRouter } from 'next/router';
 
-import http from '../../api/http';
+import http from '@/api/http';
 
 import { Button } from '@/components/Button';
 import Container from '@/components/Container';
@@ -17,10 +17,6 @@ const account = () => {
   const router = useRouter();
   const userInfo = useSelector(state => state.user);
   const [myReward, setMyReward] = useState({});
-
-  const headers = {
-    Authorization: userInfo.accessToken,
-  };
 
   const [inputs, setInputs] = useState({
     bankCode: '',
@@ -39,20 +35,14 @@ const account = () => {
   };
 
   const withdraw = () => {
-    http.post(
-      PRIZE_WITHDRAW_URL,
-      {
-        account: {
-          bankCode,
-          number,
-          depositor,
-        },
-        money: router.query.money,
+    http.post(PRIZE_WITHDRAW_URL, {
+      account: {
+        bankCode,
+        number,
+        depositor,
       },
-      {
-        headers,
-      },
-    );
+      money: router.query.money,
+    });
   };
 
   return (

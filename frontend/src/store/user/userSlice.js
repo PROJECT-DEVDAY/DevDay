@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { PURGE } from 'redux-persist';
 
-import http from '../../pages/api/http';
+import http from '@/api/http';
 
 import { LOGIN_URL } from '@/constants';
 
@@ -12,6 +12,15 @@ export const loginAsync = createAsyncThunk(
       email,
       password,
     });
+
+    localStorage.setItem(
+      'accessToken',
+      `Bearer ${response.data.data.accessToken}`,
+    );
+    localStorage.setItem(
+      'refreshToken',
+      `Bearer ${response.data.data.refreshToken}`,
+    );
     return [
       { userInfo: response.data.data.userInfo },
       { accessToken: `Bearer ${response.data.data.accessToken}` },
@@ -30,10 +39,15 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     addExtraId: (state, action) => {
-      state.userInfo.github = action.payload[0];
-      state.userInfo.baekjoon = action.payload[1];
+      // eslint-disable-next-line no-param-reassign
+      state.userInfo = {
+        github: action.payload[0],
+        baekjoon: action.payload[1],
+      };
     },
     reset(state) {
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
       Object.assign(state, {
         userInfo: {},
         accessToken: '',
