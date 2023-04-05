@@ -6,8 +6,6 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import Swal from 'sweetalert2';
 
-import style from './inputSolvedAc.module.scss';
-
 import http from '@/api/http';
 import { BtnFooter } from '@/components/BtnFooter';
 import Container from '@/components/Container';
@@ -82,7 +80,6 @@ const inputSolvedAc = props => {
       <Container.Footer>
         <div
           className={classNames(
-            style.btn,
             `text-center absolute w-full bottom-0 pb-4 m-0`,
           )}
         >
