@@ -13,6 +13,7 @@ import {
   CHALLENGE_ALGO_URL,
   CHALLENGE_COMMIT_URL,
 } from '@/constants';
+import { getDatesStartToLast } from '@/utils';
 
 const mySubmitList = ({ ...props }) => {
   const [date, setDate] = useState('');
@@ -31,21 +32,29 @@ const mySubmitList = ({ ...props }) => {
           const startDate =
             Date.parse(res.data.startDate) / (1000 * 60 * 60 * 24);
           const endDate = Date.parse(res.data.endDate) / (1000 * 60 * 60 * 24);
-          console.log(startDate, endDate);
           setGetDate(endDate - startDate);
-          for (let index = 1; index < endDate - startDate; index++) {
-            const today = startDate + index;
+          const range = getDatesStartToLast(
+            res.data.startDate,
+            res.data.endDate,
+          );
+          range.map(item => {
             http
               .get(
-                `${CHALLENGE_COMMIT_URL}/date?userId=${user.userInfo.userId}&selectDate=${today}`,
+                `${CHALLENGE_COMMIT_URL}/date?userId=${user.userInfo.userId}&selectDate=${item}`,
               )
               .then(res => {
-                console.log(res);
-                // setSolvedList(solvedList => {
-                //   return [...solvedList, res.data.data.solvedList];
-                // });
+                const count = res.data.data.commitCount;
+                console.log(count);
+                setSolvedList(solvedList => {
+                  return [...solvedList, [item.slice(2, 10), count]];
+                });
+              })
+              .catch(err => {
+                setSolvedList(solvedList => {
+                  return [...solvedList, [item.slice(2, 10), 0]];
+                });
               });
-          }
+          });
         }
       });
     }
@@ -86,9 +95,11 @@ const mySubmitList = ({ ...props }) => {
             <div className="grid grid-cols-3 gap-3 mt-4 p-4">
               {solvedList &&
                 solvedList.map(item => (
-                  <div className={style.box}>
-                    <p>{item[0]}</p>
-                    <p className="m-auto text-xl text-medium">{item[1]}</p>
+                  <div className={style.commitBox}>
+                    <p className="pb-2">{item[0]}</p>
+                    <p className="m-auto text-xl text-medium text-black">
+                      {item[1]}
+                    </p>
                   </div>
                 ))}
             </div>
