@@ -3,8 +3,6 @@ package com.example.challengeservice.repository;
 import com.example.challengeservice.dto.response.ChallengeRecordResponseDto;
 import com.example.challengeservice.dto.response.PhotoRecordResponseDto;
 import com.example.challengeservice.entity.*;
-
-import com.example.challengeservice.service.CommonServiceImpl;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -20,9 +18,6 @@ import static com.example.challengeservice.entity.QChallengeRecord.challengeReco
 @RequiredArgsConstructor
 @Repository
 public class ChallengeRecordRepoCustomImpl implements ChallengeRecordRepoCustom {
-
-    private  final  CommonServiceImpl commonService;
-
     private final JPAQueryFactory jpaQueryFactory;
     @Override
     public List<PhotoRecordResponseDto> getSelfPhotoRecord(UserChallenge userChallenge, String viewType) {
@@ -39,8 +34,6 @@ public class ChallengeRecordRepoCustomImpl implements ChallengeRecordRepoCustom 
                 .orderBy(challengeRecord.createAt.desc());
 
         if(viewType.equals("PREVIEW")) query = query.limit(9);
-
-
         return query.fetch();
     }
 
