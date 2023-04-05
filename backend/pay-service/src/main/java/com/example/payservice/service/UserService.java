@@ -2,6 +2,7 @@ package com.example.payservice.service;
 
 import com.example.payservice.client.ChallengeServiceClient;
 import com.example.payservice.client.UserServiceClient;
+import com.example.payservice.dto.challenge.ChallengeJoinRequestDto;
 import com.example.payservice.dto.response.UserResponse;
 import com.example.payservice.dto.user.PayUserDto;
 import com.example.payservice.entity.PayUserEntity;
@@ -118,11 +119,17 @@ public class UserService {
      * @param userId
      * @param challengeId
      */
-    public void sendJoinMessageToChallengeService(long userId, long challengeId) {
+    public void sendJoinMessageToChallengeService(long challengeId, long userId, String nickname) {
         try {
-            challengeServiceClient.sendApproveUserJoinChallenge(userId, challengeId);
+            ChallengeJoinRequestDto requestDto = ChallengeJoinRequestDto.builder()
+                .userId(userId)
+                .challengeRoomId(challengeId)
+                .nickname(nickname)
+                .build();
+            challengeServiceClient.sendApproveUserJoinChallenge(userId, requestDto);
         } catch(FeignException ex) {
             log.error("challenge-service로 참가 승인 메시지를 보내는 데 실패했습니다. userId: {}, challengeId: {}", userId, challengeId);
+            // TODO: 에러에 대한 대응하기
         }
     }
 }
