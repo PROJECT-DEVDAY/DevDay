@@ -104,11 +104,12 @@ const index = () => {
           </div>
         </div>
         <div>
-          <p className="px-4" onClick={goToMyChallenge}>
-            챌린지 현황
-          </p>
+          <p className="px-4">챌린지 현황</p>
           <hr className="w-full" />
-          <div className="flex justify-between my-5 mx-12">
+          <div
+            className="flex justify-between my-5 mx-12"
+            onClick={goToMyChallenge}
+          >
             <div>
               <p className="text-center">{myPageInfo.challengingCnt}</p>
               <p>참가중</p>
