@@ -52,7 +52,7 @@ public interface ChallengeService {
     List<PhotoRecordResponseDto> getSelfPhotoRecord(Long challengeId ,Long userId, String viewType );
     // List<?> getSelfRecord(Long challengeId ,Long userId, String viewType, String category);
 
-    List<PhotoRecordResponseDto> getTeamPhotoRecord(Long userId ,Long challengeRoomId , String viewType, int days, String offDate);
+    List<PhotoRecordResponseDto> getTeamPhotoRecord(Long userId ,Long challengeRoomId , String date);
 
     PhotoRecordDetailResponseDto getPhotoRecordDetail(Long userId ,Long challengeRecordId);
 
