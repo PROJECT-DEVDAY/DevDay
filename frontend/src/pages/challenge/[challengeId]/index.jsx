@@ -257,7 +257,7 @@ const challengeDetail = props => {
 
   return (
     <Container>
-      <Container.SubPageHeader />
+      <Container.SubPageHeader goHome />{' '}
       <div className="relative">
         <Image
           src={challenge.backGroundUrl}
@@ -343,7 +343,7 @@ const challengeDetail = props => {
                     item =>
                       Date.parse(item) >= Date.parse(challenge.startDate) && (
                         <ChallengeList
-                          date={item.slice(2, 10)}
+                          date={item}
                           array={myAlgo[item]}
                           category="ALGO"
                           count={challenge.algorithmCount}
