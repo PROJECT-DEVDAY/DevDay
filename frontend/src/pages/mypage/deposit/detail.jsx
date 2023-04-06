@@ -15,7 +15,7 @@ const History = ({ history = {} }) => {
   const { userId, amount, createdAt, transaction_history_id, type } = history;
   const [data, setData] = useState('');
   const [check, setCheck] = useState([]);
-  if (!(transaction_history_id in check)) {
+  if (!check.includes(transaction_history_id)) {
     http.get(`${CHALLENGE_DETAIL_URL}/${transaction_history_id}`).then(res => {
       setData(res.data);
 
@@ -30,10 +30,10 @@ const History = ({ history = {} }) => {
     return (
       <div id={transaction_history_id} className={historyStyle.Item}>
         <div className="flex align-center font-medium text-lg">
-          <div className="flex-1">
+          <div className="flex-1 whitespace-nowrap">
             {new Date(createdAt).toLocaleDateString()}
           </div>
-          <div className="font-medium text-lg text-right">
+          <div className="font-medium text-lg text-right pl-4">
             <p>{data.title}</p>
           </div>
         </div>
@@ -50,10 +50,10 @@ const History = ({ history = {} }) => {
     return (
       <div id={transaction_history_id} className={historyStyle.Item}>
         <div className="flex align-center font-medium text-lg">
-          <div className="flex-1">
+          <div className="flex-1 whitespace-nowrap">
             {new Date(createdAt).toLocaleDateString()}
           </div>
-          <div className="font-medium text-lg text-right">
+          <div className="font-medium text-lg text-right pl-4">
             <p>{data.title}</p>
           </div>
         </div>
@@ -70,10 +70,10 @@ const History = ({ history = {} }) => {
     return (
       <div id={transaction_history_id} className={historyStyle.Item}>
         <div className="flex align-center font-medium text-lg">
-          <div className="flex-1">
+          <div className="flex-1 whitespace-nowrap">
             {new Date(createdAt).toLocaleDateString()}
           </div>
-          <div className="font-medium text-lg text-right">
+          <div className="font-medium text-lg text-right pl-4">
             <p>{data.title}</p>
           </div>
         </div>
@@ -90,10 +90,10 @@ const History = ({ history = {} }) => {
     return (
       <div id={transaction_history_id} className={historyStyle.Item}>
         <div className="flex align-center font-medium text-lg">
-          <div className="flex-1">
+          <div className="flex-1 whitespace-nowrap">
             {new Date(createdAt).toLocaleDateString()}
           </div>
-          <div className="font-medium text-lg text-right">
+          <div className="font-medium text-lg text-right pl-4">
             <p>{data.title}</p>
           </div>
         </div>
