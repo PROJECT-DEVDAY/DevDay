@@ -44,7 +44,7 @@ const index = () => {
                 <div className="mb-2 p-2 border-2 border-solid border-gray bg-white rounded-md ">
                   <CertificationItem
                     key={id}
-                    id={id}
+                    challengeId={id}
                     imgUrl={backgroundUrl}
                     title={title}
                     period={period}
