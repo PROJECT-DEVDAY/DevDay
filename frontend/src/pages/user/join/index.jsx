@@ -86,7 +86,7 @@ const signup = props => {
     }
   }, [signUpInfos, reset]);
 
-  const passowrd = useRef({});
+  const password = useRef({});
   password.current = watch('password', '');
 
   const validatePasswordCheck = value => {
