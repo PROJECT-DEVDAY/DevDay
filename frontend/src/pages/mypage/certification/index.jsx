@@ -5,9 +5,10 @@ import { CertificationItem } from '@/components/CertificationItem';
 import Container from '@/components/Container';
 import { MY_CHALLENGES_URL } from '@/constants';
 import { getStartWithEndDate } from '@/utils';
+import PrivateRouter from '@/components/PrivateRouter/PrivateRouter';
 
 const INITIAL_PARAMS = {
-  status: 'ALL',
+  status: 'DONE',
   size: 20,
   offset: '',
   search: '',
@@ -70,4 +71,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default PrivateRouter(index);

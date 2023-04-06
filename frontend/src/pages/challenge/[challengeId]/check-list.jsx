@@ -2,6 +2,7 @@ import React from 'react';
 
 import AttendeeSimpleStatusBox from '@/components/AttendeeSimpleStatusBox';
 import Container from '@/components/Container';
+import PrivateRouter from '@/components/PrivateRouter/PrivateRouter';
 
 const CheckList = () => {
   return (
@@ -48,4 +49,4 @@ const CheckList = () => {
   );
 };
 
-export default CheckList;
+export default PrivateRouter(CheckList);

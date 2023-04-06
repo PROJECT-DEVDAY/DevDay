@@ -272,4 +272,4 @@ export const detail = () => {
   );
 };
 
-export default detail;
+export default PrivateRouter(detail);
