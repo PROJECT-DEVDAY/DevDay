@@ -71,6 +71,12 @@ const index = () => {
     });
   };
 
+  const moveSummary = () => {
+    router.push('/mypage/reward/current-situation');
+  };
+  const moveHistory = () => {
+    router.push('/mypage/reward/detail');
+  };
   return (
     <Container>
       <Container.Header className="mb-10">
@@ -94,8 +100,16 @@ const index = () => {
         </p>
         <Button label="다음" onClick={next} />
         <div className="mt-10">
-          <SelectArrow title="상금 사용 현황" className="text-sm" />
-          <SelectArrow title="상금 전체 조회" className="text-sm" />
+          <SelectArrow
+            title="상금 사용 현황"
+            className="text-sm"
+            onClick={moveSummary}
+          />
+          <SelectArrow
+            title="상금 전체 조회"
+            className="text-sm"
+            onClick={moveHistory}
+          />
         </div>
       </Container.Body>
       <Container.Footer>

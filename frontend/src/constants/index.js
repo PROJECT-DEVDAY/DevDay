@@ -15,8 +15,8 @@ export const GITHUBBAEKJOON_URL = `${USER_SERVICE}/auth/user/githubandbaekjoon`;
 export const PASSWORD_URL = `${USER_SERVICE}/auth/user/password`;
 export const DELETEUSER_URL = `${USER_SERVICE}/auth/user`;
 export const TOKEN_REFRESH_URL = `${USER_SERVICE}/refresh`;
-export const UPDATE_PROFILE_URL = `${USER_SERVICE}/auth/user/img`
-export const UPDATE_DEFAULT_PROFILE_URL = `${USER_SERVICE}/auth/user/defaultimg`
+export const UPDATE_PROFILE_URL = `${USER_SERVICE}/auth/user/img`;
+export const UPDATE_DEFAULT_PROFILE_URL = `${USER_SERVICE}/auth/user/defaultimg`;
 
 // 챌린지
 const CHALLENGE_SERVICE = 'challenge-service';
@@ -47,6 +47,7 @@ export const GET_MY_DEPOSIT_URL = param =>
   `${PAY_SERVICE}/users/deposit?type=${param}`;
 export const PAYMENT_CHALLENGE_SUCCESS = param =>
   `${PAY_SERVICE}/payments/${param}/success`;
+export const PRIZE_SUMMARY_URL = `${PAY_SERVICE}/users/prize/summary`;
 
 export const PUBLIC_TOSS_CLIENT_KEY = 'test_ck_N5OWRapdA8dWR0eyPm6ro1zEqZKL';
 export const LOCALE = 'ko-KR';
