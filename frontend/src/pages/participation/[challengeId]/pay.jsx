@@ -20,8 +20,15 @@ import {
 import { getStartWithEndDate, getWeekDiff } from '@/utils';
 
 const pay = ({ challengeInfo }) => {
-  const { id, startDate, endDate, entryFee, curParticipantsSize, title } =
-    challengeInfo;
+  const {
+    id,
+    startDate,
+    endDate,
+    entryFee,
+    curParticipantsSize,
+    backGroundUrl,
+    title,
+  } = challengeInfo;
   const payShot = async () => {
     const tossPayments = await loadTossPayments(PUBLIC_TOSS_CLIENT_KEY); // 회원 결제
 
@@ -42,9 +49,12 @@ const pay = ({ challengeInfo }) => {
       <Container.MainBody className="pt-8">
         <div className="pb-8">
           <Image
-            src={require('@/image/lock.png')}
-            className="h-16 w-16 rounded float-left"
+            src={backGroundUrl}
+            width={100}
+            height={100}
+            className="h-20 w-20 rounded float-left"
             alt="lock"
+            loader={({ src }) => `${src}`}
           />
           <div className={classNames(style.title)}>
             <div className="ml-4">
@@ -53,8 +63,6 @@ const pay = ({ challengeInfo }) => {
                 매일, {week > 0 && `${week}주`} {day > 0 && ` ${day}일`}동안
               </p>
               <p>{getStartWithEndDate(startDate, endDate)}</p>
-            </div>
-            <div className="whitespace-nowrap">
               <p>{`${curParticipantsSize}명 참가`}</p>
             </div>
           </div>
