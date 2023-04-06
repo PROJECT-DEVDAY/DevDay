@@ -117,7 +117,7 @@ const mySubmitList = ({ ...props }) => {
               {solvedList &&
                 solvedList.map(item => (
                   <div className={style.commitBox}>
-                    <p className="pb-2">{item[0]}</p>
+                    <p className="pb-2 whitespace-nowrap">{item[0]}</p>
                     <p className="m-auto text-xl text-medium text-black">
                       {item[1]}
                     </p>

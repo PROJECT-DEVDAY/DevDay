@@ -14,6 +14,7 @@ import { getDatesStartToLast } from '@/utils';
 
 const SubmitList = ({ challengeInfo, today, range }) => {
   const [curDate, setDate] = useState(today);
+  const [data, setData] = useState('');
   const [item, setItem] = useState([]);
   const router = useRouter();
 
@@ -23,6 +24,9 @@ const SubmitList = ({ challengeInfo, today, range }) => {
 
   useEffect(() => {
     console.log(challengeInfo);
+    http.get(`${CHALLENGE_DETAIL_URL}/${challengeInfo.id}`).then(res => {
+      setData(res.data);
+    });
     if (curDate) {
       http
         .get(`${CHALLENGES_URL}/${challengeInfo.id}/record`, {
@@ -70,22 +74,24 @@ const SubmitList = ({ challengeInfo, today, range }) => {
           <div className="grid grid-cols-3 gap-2">
             {item.map((d, i) => {
               const goToRecord = id => {
-                router.push({
-                  pathname: `/challenge/${challengeInfo.id}/submit-list/${id}`,
-                  query: {
-                    title: `${challengeInfo.title}`,
-                  },
-                });
+                if (data.category === 'FREE') {
+                  router.push({
+                    pathname: `/challenge/${challengeInfo.id}/submit-list/${id}`,
+                    query: {
+                      title: `${challengeInfo.title}`,
+                    },
+                  });
+                }
               };
               return (
                 <div
                   onClick={() => goToRecord(d.challengeRecordId)}
                   className="relative w-full h-24 border-2"
                 >
-                  {challengeInfo.category === 'FREE' && (
+                  {data.category === 'FREE' && (
                     <Image fill src={d.photoUrl} alt="user-submit-record" />
                   )}
-                  {challengeInfo.category != 'FREE' && (
+                  {data.category != 'FREE' && (
                     <div className="p-3">
                       {d.success && (
                         <AiOutlineCheck className="w-full" size={50} />
