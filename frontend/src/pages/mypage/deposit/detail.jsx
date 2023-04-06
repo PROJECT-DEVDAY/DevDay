@@ -190,11 +190,7 @@ const Detail = () => {
       <Container.MainBody className={classNames('relative')}>
         <div className="pt-4 pb-4 mb-4 bg-white">
           <HeaderButtons
-<<<<<<< HEAD
             buttonClassName="border-2 border-black"
-=======
-            buttonClassName="border-2 border-black px-2"
->>>>>>> 339a4e4d41128e23c4acfbd2cdb8477ec94f202f
             items={NAV_LIST}
             select={type}
             setSelect={selectType}
@@ -202,40 +198,11 @@ const Detail = () => {
         </div>
         <div className={classNames(detailStyle.List)}>
           {histories.map(history => (
-<<<<<<< HEAD
             <div className="mb-4">
-=======
-            <div className="mb-8">
->>>>>>> 339a4e4d41128e23c4acfbd2cdb8477ec94f202f
               <History history={history} key={history.history_id} />
             </div>
           ))}
         </div>
-<<<<<<< HEAD
-=======
-        <div
-          className={classNames(
-            detailStyle.Pagenation,
-            'text-center font-bold flex items-center w-full',
-          )}
-        >
-          <div className="shrink-0 mr-4">{`${currentPage} / ${totalPages}`}</div>
-          <div className="grid grid-cols-2 gap-2 flex-1">
-            <Button
-              className=""
-              label="이전"
-              disabled={currentPage <= 1}
-              onClick={movePrevPage}
-            />
-            <Button
-              className=""
-              label="다음"
-              disabled={currentPage >= totalPages}
-              onClick={moveNextPage}
-            />
-          </div>
-        </div>
->>>>>>> 339a4e4d41128e23c4acfbd2cdb8477ec94f202f
       </Container.MainBody>
       <Container.MainFooter
         className={classNames(
