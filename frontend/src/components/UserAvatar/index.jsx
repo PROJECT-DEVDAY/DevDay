@@ -2,15 +2,15 @@ import React, { useEffect, useState, useRef } from 'react';
 
 import Image from 'next/image';
 import Swal from 'sweetalert2';
+import { httpForm } from '@/api/http';
 
 import style from './index.module.scss';
+import { UPDATE_PROFILE_URL, UPDATE_DEFAULT_PROFILE_URL } from '@/constants';
 
 export const UserAvatar = ({ imageURL, width, height, ...props }) => {
-  const [imgFile, setImgeFile] = useState(
-    require('../../image/default-user.png'),
-  );
-
   const inputRef = useRef(null);
+
+  const [imgFile, setImgFile] = useState(imageURL);
 
   const onClickImageInput = event => {
     event.preventDefault();
@@ -19,11 +19,13 @@ export const UserAvatar = ({ imageURL, width, height, ...props }) => {
 
   const onChange = e => {
     const reader = new FileReader();
+
     reader.onload = ({ target }) => {
       inputRef.current.src = target.result;
+      setImgFile(inputRef.current.files[0]);
     };
 
-    if (!e.current.files[0]) {
+    if (!inputRef.current.files[0]) {
       Swal.fire({
         position: 'center',
         icon: 'warning',
@@ -35,19 +37,40 @@ export const UserAvatar = ({ imageURL, width, height, ...props }) => {
     }
 
     reader.readAsDataURL(inputRef.current.files[0]);
-    setImgeFile(inputRef.current.files[0]);
+
+    const data = new FormData();
+    data.append('profileImg', inputRef.current.files[0] || null);
+
+    httpForm
+      .patch(UPDATE_PROFILE_URL, data)
+      .then(res => {
+        window.location.reload();
+      })
+      .catch(err => {});
+  };
+
+  const updateProfileDefaultImg = () => {
+    setImgFile(require('../../image/default-user.png'));
+
+    httpForm
+      .patch(UPDATE_DEFAULT_PROFILE_URL)
+      .then(res => {
+        window.location.reload()
+      })
+      .catch(err => {});
   };
 
   return (
     <div className={style.UserAvatar}>
       <Image
-        src={imgFile}
+        src={imageURL || require('../../image/default-user.png')}
         alt="프로필 이미지"
         className="style.Image rounded-full"
         onClick={onClickImageInput}
         width={width}
         height={height}
       />
+      <button onClick={updateProfileDefaultImg}>기본 프로필</button>
       <input
         style={{ display: 'none' }}
         ref={inputRef}

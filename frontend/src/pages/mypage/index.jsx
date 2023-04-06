@@ -70,11 +70,10 @@ const index = () => {
         <div className="div-body p-4 relative">
           <div className="absolute top-5 left-7">
             <UserAvatar
-              imageURL={myPageInfo.profileImgUrl}
+              imageURL={myPageInfo.profileImg}
               width={50}
               height={50}
             />
-            {/* <UserAvatar imageURL="" width={50} height={50} /> */}
           </div>
           <SelectArrow title={myPageInfo.nickname} fill onClick={goToProfile} />
           <div className="px-6 py-8">

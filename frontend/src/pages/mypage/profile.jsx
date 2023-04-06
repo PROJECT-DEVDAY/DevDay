@@ -77,7 +77,7 @@ const profile = () => {
       <div className="div-body pt-6 pb-4">
         <div className="pt-20 flex justify-center">
           <UserAvatar
-            imageURL={profileInfo.profileImgUrl}
+            imageURL={profileInfo.profileImg}
             width={150}
             height={150}
           />
