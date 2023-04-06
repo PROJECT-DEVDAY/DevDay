@@ -22,8 +22,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +39,6 @@ public class PrizeService {
 
     /**
      * 상금을 환급하고 히스토리에 이력을 남깁니다.
-     * TODO: [우선순위 낮음] 요청한 계좌가 유효한지 확인한다. -> 계좌 유효 검사 시에 주민등록 앞자리가 필요함
      * @param userId
      * @param money
      * @param account
