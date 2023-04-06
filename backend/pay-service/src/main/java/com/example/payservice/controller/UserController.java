@@ -4,6 +4,7 @@ import com.example.payservice.common.util.Utils;
 import com.example.payservice.dto.CustomPage;
 import com.example.payservice.dto.InternalResponse;
 import com.example.payservice.dto.bank.AccountDto;
+import com.example.payservice.dto.deposit.DepositSummaryDto;
 import com.example.payservice.dto.deposit.DepositTransactionHistoryDto;
 import com.example.payservice.dto.prize.PrizeHistoryDto;
 import com.example.payservice.dto.prize.PrizeSummaryDto;
@@ -165,9 +166,10 @@ public class UserController {
 	}
 
 	@GetMapping("/deposit/summary")
-	public ResponseEntity<?> getDepositSummary(HttpServletRequest request) {
+	public ResponseEntity<InternalResponse<DepositSummaryDto>> getDepositSummary(HttpServletRequest request) {
 		Long userId = Utils.parseAuthorizedUserId(request);
 
-		return ResponseEntity.ok(null);
+		DepositSummaryDto summary = depositService.getSummary(userId);
+		return ResponseEntity.ok(new InternalResponse<>(summary));
 	}
 }

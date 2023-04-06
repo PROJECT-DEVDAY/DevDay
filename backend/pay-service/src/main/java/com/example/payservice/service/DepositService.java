@@ -3,14 +3,14 @@ package com.example.payservice.service;
 import com.example.payservice.client.ChallengeServiceClient;
 import com.example.payservice.dto.CustomPage;
 import com.example.payservice.dto.challenge.SimpleChallengeInfo;
+import com.example.payservice.dto.deposit.DepositSummaryDto;
 import com.example.payservice.dto.deposit.DepositTransactionHistoryDto;
 import com.example.payservice.dto.deposit.DepositTransactionType;
-import com.example.payservice.dto.request.ChallengeAllSettleRequest;
 import com.example.payservice.dto.request.ChallengeSettleInfo;
-import com.example.payservice.dto.request.ChallengeSettleRequest;
 import com.example.payservice.dto.request.SimpleChallengeInfosRequest;
 import com.example.payservice.dto.request.WithdrawDepositRequest;
 import com.example.payservice.dto.response.WithdrawResponse;
+import com.example.payservice.entity.DepositSummary;
 import com.example.payservice.entity.DepositTransactionHistoryEntity;
 import com.example.payservice.entity.PayUserEntity;
 import com.example.payservice.exception.BadRequestException;
@@ -296,5 +296,59 @@ public class DepositService {
                 .build();
         challengeUser.setDeposit(challengeUser.getDeposit() + amount);
         depositTransactionHistoryRepository.save(newRefundHistoryEntity);
+    }
+
+    /**
+     * 예치금에 대한 간단 정보(충전한 금액, 참가중인 금액, 환불한 금액) 조회합니다.
+     *
+     * 총 예치금 -> charge
+     * 출금 -> cancel
+     * 챌린지 참가중 -> (PAY, REFUND 묶음이 적용되지 않는) PAY
+     * 챌린지 벌금 -> PAY - REFUND
+     *
+     * @param userId
+     * @return
+     */
+    public DepositSummaryDto getSummary(Long userId) {
+        PayUserEntity user = userService.getPayUserEntity(userId);
+        List<DepositSummary> summaries = depositTransactionHistoryRepository.getSummaryInfoByUserAndType(user);
+
+        int charge = 0, cancel = 0, pay = 0, refund = 0;
+        for(DepositSummary summary : summaries) {
+            switch(summary.getDepositTransactionType()) {
+                case CHARGE:
+                    charge = summary.getSum();
+                    break;
+                case CANCEL:
+                    cancel = summary.getSum();
+                    break;
+                case PAY:
+                    pay = summary.getSum();
+                    break;
+                case REFUND:
+                    refund = summary.getSum();
+                    break;
+            }
+        }
+
+        List<Long> doneChallengeIds = depositTransactionHistoryRepository.getDoneChallengesByUser(
+                user,
+                new DepositTransactionType[] {
+                    DepositTransactionType.PAY, DepositTransactionType.REFUND
+                }
+        );
+
+        int challenging = depositTransactionHistoryRepository.getCurrentChallengingAmountByUser(
+                user,
+                doneChallengeIds,
+                DepositTransactionType.PAY
+        );
+        
+        return DepositSummaryDto.builder()
+                .charge(charge)
+                .cancel(cancel)
+                .penalty(pay - refund)
+                .challenging(challenging)
+                .build();
     }
 }

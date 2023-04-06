@@ -118,7 +118,8 @@ const login = props => {
   };
   return (
     <Container>
-      <Container.SubPageHeader title="로그인" />
+      <Container.SubPageHeader goHome />
+
       <Container.MainBody>
         <Image
           src={require('@/image/main_logo.png')}

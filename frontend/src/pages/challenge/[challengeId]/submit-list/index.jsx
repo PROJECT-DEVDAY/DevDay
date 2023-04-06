@@ -1,11 +1,11 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import RGL, { WidthProvider } from 'react-grid-layout';
+import { AiOutlineCheck } from 'react-icons/ai';
+import { BsCheck } from 'react-icons/bs';
 
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import propTypes from 'prop-types';
-import { BsCheck } from 'react-icons/bs';
-import { AiOutlineCheck } from 'react-icons/ai';
 
 import http from '@/api/http';
 import Container from '@/components/Container';
@@ -14,6 +14,7 @@ import { getDatesStartToLast } from '@/utils';
 
 const SubmitList = ({ challengeInfo, today, range }) => {
   const [curDate, setDate] = useState(today);
+  const [data, setData] = useState('');
   const [item, setItem] = useState([]);
   const router = useRouter();
   const changeDate = e => {
@@ -21,7 +22,14 @@ const SubmitList = ({ challengeInfo, today, range }) => {
   };
 
   useEffect(() => {
+<<<<<<< HEAD
     // console.log(challengeInfo);
+=======
+    console.log(challengeInfo);
+    http.get(`${CHALLENGE_DETAIL_URL}/${challengeInfo.id}`).then(res => {
+      setData(res.data);
+    });
+>>>>>>> 6e49fe3cbfb97335b6eba2e88584344e563805bb
     if (curDate) {
       http
         .get(`${CHALLENGES_URL}/${challengeInfo.id}/record`, {
@@ -69,22 +77,24 @@ const SubmitList = ({ challengeInfo, today, range }) => {
           <div className="grid grid-cols-3 gap-2">
             {item.map((d, i) => {
               const goToRecord = id => {
-                router.push({
-                  pathname: `/challenge/${challengeInfo.id}/submit-list/${id}`,
-                  query: {
-                    title: `${challengeInfo.title}`,
-                  },
-                });
+                if (data.category === 'FREE') {
+                  router.push({
+                    pathname: `/challenge/${challengeInfo.id}/submit-list/${id}`,
+                    query: {
+                      title: `${challengeInfo.title}`,
+                    },
+                  });
+                }
               };
               return (
                 <div
                   onClick={() => goToRecord(d.challengeRecordId)}
                   className="relative w-full h-24 border-2"
                 >
-                  {challengeInfo.category === 'FREE' && (
+                  {data.category === 'FREE' && (
                     <Image fill src={d.photoUrl} alt="user-submit-record" />
                   )}
-                  {challengeInfo.category != 'FREE' && (
+                  {data.category != 'FREE' && (
                     <div className="p-3">
                       {d.success && (
                         <AiOutlineCheck className="w-full" size={50} />

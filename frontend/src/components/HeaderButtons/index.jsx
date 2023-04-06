@@ -5,7 +5,12 @@ import PropTypes from 'prop-types';
 
 import style from './index.module.scss';
 
-export const HeaderButtons = ({ items, select, setSelect }) => {
+export const HeaderButtons = ({
+  items,
+  select,
+  setSelect,
+  buttonClassName,
+}) => {
   const handleItemChange = event => {
     setSelect(event.target.value);
   };
@@ -21,8 +26,9 @@ export const HeaderButtons = ({ items, select, setSelect }) => {
         <label
           key={index}
           className={classNames(
+            buttonClassName,
             select === item && style.selected,
-            `inline-block rounded-2xl px-5 py-2 font-medium text-sm bg-white`,
+            `inline-block rounded-2xl px-4 py-2 font-medium text-sm bg-white break-keep`,
           )}
         >
           <input

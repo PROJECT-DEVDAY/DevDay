@@ -12,6 +12,7 @@ const detail = () => {
   const [challengeDetail, setChallengeDetail] = useState();
 
   const user = useState(state => state.user);
+
   useEffect(() => {
     if (challengeId) {
       http
@@ -31,5 +32,4 @@ const detail = () => {
     </Container>
   );
 };
-
 export default detail;

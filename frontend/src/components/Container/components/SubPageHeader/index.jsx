@@ -1,4 +1,5 @@
 import React, { memo } from 'react';
+import { BiHomeHeart } from 'react-icons/bi';
 import { SlArrowLeft, SlArrowRight } from 'react-icons/sl';
 
 import cx from 'classnames';
@@ -11,6 +12,7 @@ const SubPageHeader = ({
   className,
   title,
   goNext = null,
+  goHome = null,
   disableBefore,
 }) => {
   const router = useRouter();
@@ -21,6 +23,10 @@ const SubPageHeader = ({
 
   const goToNext = () => {
     goNext();
+  };
+
+  const goToHome = () => {
+    router.push('/');
   };
 
   return (
@@ -44,6 +50,7 @@ const SubPageHeader = ({
       </div>
       <div id="sub-header-title" className="font-bold">
         {title}
+        {goHome && <BiHomeHeart className="text-4xl" onClick={goToHome} />}
       </div>
       <div className="w-8 h-8">
         {goNext && (

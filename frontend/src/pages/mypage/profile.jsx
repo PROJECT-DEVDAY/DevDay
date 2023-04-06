@@ -80,6 +80,7 @@ const profile = () => {
             imageURL={profileInfo.profileImg}
             width={150}
             height={150}
+            changable={false}
           />
         </div>
         <p className="text-center text-xl font-medium mt-4 mb-10">
