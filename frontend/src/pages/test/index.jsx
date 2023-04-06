@@ -199,7 +199,7 @@ function App() {
         .getChallengesForAddress(walletAddress)
         .call();
 
-      console.log(challengess + ' 가져와보세요');
+      console.log(`${challengess} 가져와보세요`);
       setChallenges(challengess);
     };
 

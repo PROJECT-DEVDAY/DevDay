@@ -196,7 +196,7 @@ export const detail = () => {
       <Container.SubPageHeader />
       <div>{user.userInfo.name}</div>
 
-      <Container.MainFooter className={`p-4`}>
+      <Container.MainFooter className="p-4">
         <Button label="저장하기" onClick={handleSubmit} />
       </Container.MainFooter>
     </Container>
