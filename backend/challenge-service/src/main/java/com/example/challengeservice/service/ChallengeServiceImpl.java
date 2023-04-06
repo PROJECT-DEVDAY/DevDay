@@ -279,8 +279,6 @@ public class ChallengeServiceImpl implements ChallengeService{
     @Transactional
     public void createAlgoRecord(ChallengeRecordRequestDto requestDto) {
         log.info("챌린지id " + requestDto.getChallengeRoomId() + "유저아이디id" + requestDto.getUserId());
-        // Todo : 방장이 없어진 경우 처리해야함
-//        ChallengeRoomResponseDto challengeRoom = readChallenge(requestDto.getChallengeRoomId());
         ChallengeRoom challengeRoom = basicChallengeService.getChallengeRoomEntity(requestDto.getChallengeRoomId());
 
         UserResponseDto user = userServiceClient.getUserInfo(requestDto.getUserId()).getData();
@@ -320,7 +318,6 @@ public class ChallengeServiceImpl implements ChallengeService{
      * 커밋 인증 기록을 저장하는 메서드
      * @param requestDto
      */
-
     @Override
     @Transactional
     public void createCommitRecord(ChallengeRecordRequestDto requestDto) {
@@ -526,5 +523,65 @@ public class ChallengeServiceImpl implements ChallengeService{
             }
         }
         return rankResponseDtoList;
+    }
+
+    /**
+     * @Author 신대득
+     * 현재 유저가 들어온 방에서 자신의
+     * 진행율을 계산하는 메서드
+     * @param userChallengeId
+     * @param challengeRoom
+     * @return
+     */
+    public String getProgressRate(Long userChallengeId, ChallengeRoomResponseDto challengeRoom){
+        // 진행률 계산
+        Long challengeLength = commonService.diffDay(challengeRoom.getStartDate(), challengeRoom.getEndDate());
+        if(challengeLength<0){
+            challengeLength=-1L;
+        }
+        challengeLength++;
+        Long successCount=0L;
+        List<ChallengeRecord> challengeRecordList = challengeRecordRepository.findAllByUserChallengeIdAndStartDateAndEndDate(userChallengeId, challengeRoom.getStartDate(), challengeRoom.getEndDate(), true);
+        if(challengeRecordList.size()==0){
+            return "0";
+        }
+        for(ChallengeRecord cr:challengeRecordList){
+            switch(challengeRoom.getCategory()){
+                case "ALGO":
+                    if(cr.getAlgorithmCount()>=challengeRoom.getAlgorithmCount())
+                        successCount++;
+                    break;
+                case "COMMIT":
+                    if(cr.getCommitCount()>=challengeRoom.getCommitCount())
+                        successCount++;
+                    break;
+                case "FREE":
+                    if(cr.isSuccess())
+                        successCount++;
+                    break;
+            }
+        }
+        if(challengeLength==0){
+            challengeLength++;
+        }
+        return String.format("%.2f", (double)(successCount*100)/challengeLength);
+    }
+
+    /**
+     * 유저가 선택한 챌린지의 인증서 정보를 조회하는 메서드
+     * @author 신대득
+     * @param userId : 헤더에 담긴 유저id
+     * @param challengeRoomId : 선택한 챌린지의 번호
+     * @return
+     */
+    public CertificationResponseDto getCertification(Long userId, Long challengeRoomId){
+        ChallengeRoomResponseDto challengeRoom = basicChallengeService.readChallenge(challengeRoomId);
+        UserChallenge userChallenge = userChallengeRepository.findByChallengeRoomIdAndUserId(challengeRoomId, userId)
+                .orElseThrow(() -> new ApiException(ExceptionEnum.USER_CHALLENGE_NOT_EXIST_EXCEPTION));
+        UserResponseDto userResponseDto= userServiceClient.getUserInfo(userId).getData();
+        String progressRate= getProgressRate(userChallenge.getId(), challengeRoom);
+
+        return new CertificationResponseDto(userResponseDto.getName(), userChallenge.getChallengeRoom().getTitle(), userChallenge.getChallengeRoom().getStartDate(),
+                userChallenge.getChallengeRoom().getEndDate(), progressRate, userChallenge.getId());
     }
 }

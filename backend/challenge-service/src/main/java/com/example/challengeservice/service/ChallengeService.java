@@ -44,4 +44,6 @@ public interface ChallengeService {
     ProgressResponseDto getProgressUserBaekjoon(Long userId, Long challengeId);
 
     List<RankResponseDto> getTopRank(Long challengeId);
+    /** 유저가 선택한 챌린지에 대한 증명서 정보를 반환하는 메서드 **/
+    CertificationResponseDto getCertification(Long userId, Long challengeRoomId);
 }
