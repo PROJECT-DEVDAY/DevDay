@@ -359,7 +359,7 @@ const challengeDetail = props => {
                     item =>
                       Date.parse(item) >= Date.parse(challenge.startDate) && (
                         <ChallengeList
-                          date={item}
+                          date={item.slice(2, 10)}
                           array={myAlgo[item]}
                           category="COMMIT"
                           count={challenge.commitCount}
