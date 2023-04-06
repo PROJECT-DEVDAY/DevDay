@@ -43,37 +43,7 @@ const challengeintro = props => {
   const user = useSelector(state => state.user);
 
   const clickJoin = () => {
-    const datas = {
-      challengeRoomId: challengeId,
-      nickname: user.userInfo.nickname,
-    };
-    http
-      .get(CHALLENGE_JOIN_URL, {
-        params: {
-          challengeRoomId: challengeId,
-          nickname: user.userInfo.nickname,
-        },
-      })
-      .then(res => {
-        router.push(`/participation/${challengeId}/pay`);
-      })
-      .catch(err => {
-        console.log(err);
-        if (err.response.data.code === 'J001') {
-          router.replace(`/challenge/${challengeId}`);
-        } else if (err.response.data.code === 'J001') {
-          router.replace(`/challenge/${challengeId}`);
-        } else {
-          Swal.fire({
-            position: 'center',
-            icon: 'warning',
-            title: '실패!',
-            text: err.response.data.message,
-            showConfirmButton: false,
-            timer: 1500,
-          });
-        }
-      });
+    router.push(`/participation/${challengeId}/pay`);
   };
 
   const { week, day } = getWeekDiff(data.startDate, data.endDate);
