@@ -1,7 +1,6 @@
 package com.example.payservice.repository.backup;
 
 import com.example.payservice.entity.DepositTransactionHistoryEntity;
-import com.example.payservice.entity.backup.BackUpDepositTransactionHistoryEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;

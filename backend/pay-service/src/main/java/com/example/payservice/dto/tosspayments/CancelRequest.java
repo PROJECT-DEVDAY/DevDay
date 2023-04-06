@@ -14,7 +14,11 @@ public class CancelRequest implements Serializable {
 	private Integer cancelAmount;
 
 	public CancelRequest(int cancelAmount) {
-		this.cancelReason = "devday 고객환불 요청";
+		this("devday 고객환불 요청", cancelAmount);
+	}
+
+	public CancelRequest(String cancelReason, int cancelAmount) {
+		this.cancelReason = cancelReason;
 		this.cancelAmount = cancelAmount;
 	}
 }
