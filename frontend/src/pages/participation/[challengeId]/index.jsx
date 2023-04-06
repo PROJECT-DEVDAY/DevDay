@@ -56,11 +56,12 @@ const challengeintro = props => {
       })
       .then(res => {
         router.push(`/participation/${challengeId}/pay`);
-        console.log(res);
       })
       .catch(err => {
         console.log(err);
         if (err.response.data.code === 'J001') {
+          router.replace(`/challenge/${challengeId}`);
+        } else if (err.response.data.code === 'J001') {
           router.replace(`/challenge/${challengeId}`);
         } else {
           Swal.fire({
