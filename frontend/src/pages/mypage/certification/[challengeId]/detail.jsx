@@ -4,8 +4,6 @@ import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import Web3 from 'web3';
 
-import challenge from '../../challenge';
-
 import http from '@/api/http';
 import { Button } from '@/components/Button';
 import Container from '@/components/Container';
@@ -118,7 +116,7 @@ export const detail = () => {
   const router = useRouter();
   const { challengeId } = router.query;
 
-  const [challengeDetail, setChallengeDetail] = useState();
+  const [challengeDetail, setChallengeDetail] = useState(null);
 
   const user = useSelector(state => state.user);
 
@@ -136,6 +134,7 @@ export const detail = () => {
       http
         .post(`${CHALLENGE_CERTIFICATION_DETAIL}/${challengeId}`)
         .then(res => {
+          console.log(res.data);
           setChallengeDetail(res.data);
         })
         .catch(error => {
@@ -169,21 +168,8 @@ export const detail = () => {
       challengeDetail.startDate !== '' &&
       challengeDetail.endDate !== '' &&
       challengeDetail.name !== '' &&
-      challengeDetail.successRate !== ''
+      challengeDetail.progressRate !== ''
     ) {
-      console.log(
-        challengeDetail.userChallengeId +
-          ' ' +
-          challengeDetail.title +
-          ' ' +
-          challengeDetail.startDate +
-          ' ' +
-          challengeDetail.endDate +
-          ' ' +
-          challengeDetail.name +
-          ' ' +
-          challengeDetail.progressRate,
-      );
       await contractInstance.methods
         .addChallenge(
           challengeDetail.userChallengeId,
@@ -201,11 +187,10 @@ export const detail = () => {
 
   return (
     <Container>
-      <Container.MainHeader>
-        <div>{user.name}</div>
-      </Container.MainHeader>
+      <Container.SubPageHeader />
+      <div>{user.userInfo.name}</div>
 
-      <Container.MainFooter>
+      <Container.MainFooter className={`p-4`}>
         <Button label="저장하기" onClick={handleSubmit} />
       </Container.MainFooter>
     </Container>
