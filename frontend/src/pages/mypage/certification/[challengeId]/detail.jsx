@@ -1,13 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
+import classNames from 'classnames';
+import Image from 'next/image';
 import { useRouter } from 'next/router';
 import Web3 from 'web3';
 
 import http from '@/api/http';
 import { Button } from '@/components/Button';
 import Container from '@/components/Container';
+import PrivateRouter from '@/components/PrivateRouter/PrivateRouter';
 import { CHALLENGE_CERTIFICATION_DETAIL } from '@/constants';
+
+// import style from './detail.modules.scss';
+
+import { getStartWithEndDate } from '@/utils';
 
 const web3 = new Web3(
   Web3.givenProvider ||
@@ -124,6 +131,7 @@ export const detail = () => {
     progressRate: '',
     userChallengeId: '',
   });
+
   const user = useSelector(state => state.user);
 
   const [account, setAccount] = useState('');
@@ -193,14 +201,76 @@ export const detail = () => {
 
   return (
     <Container>
-      <Container.SubPageHeader />
-      <div>{user.userInfo.name}</div>
+      <Container.SubPageHeader title="인증서" />
+
+      <Container.Body className="px-10 pb-8 w-full h-full">
+        <div className="w-full mt-4 text-center font-bold text-xl">
+          CERTIFICATE OF COMPLETION
+        </div>
+        <div className="w-full text-center mt-2 font-bold text-base">
+          챌린지 달성 확인서
+        </div>
+
+        <div
+          className="w-full mt-10 pb-1 text-center text-2xl font-bold"
+          style={{ borderBottom: '3px solid black' }}
+        >
+          {user.userInfo.name}
+        </div>
+        <div
+          className="w-full mt-1 text-center text-sm"
+          style={{ color: 'var(--gray-extra)' }}
+        >
+          NAME
+        </div>
+
+        <div
+          className="w-full mt-10 pb-1 text-center text-2xl font-bold"
+          style={{ borderBottom: '3px solid black' }}
+        >
+          {challengeDetail.title}
+        </div>
+
+        <div
+          className="w-full mt-1 text-center text-sm"
+          style={{ color: 'var(--gray-extra)' }}
+        >
+          CHALLENGE
+        </div>
+
+        <div
+          className="w-full mt-4 text-center text-base"
+          style={{ 'font-family': 'Gmarket-Sans-Medium' }}
+        >
+          위의 챌린지를 성공적으로 수행했음을
+          <br />
+          인정하여 인증서를 수여합니다.
+        </div>
+
+        <div className="w-full mt-10 text-right font-medium text-base">
+          챌린지 기간 : {challengeDetail.startDate} ~ {challengeDetail.endDate}
+        </div>
+        <div className="w-full mt-4 text-right font-medium text-base">
+          달성률 : {challengeDetail.progressRate} %{' '}
+        </div>
+
+        <div className="imageContainer flex justify-center" style={{}}>
+          <div className="w-44 h-32 mt-10 relative">
+            <Image
+              src={require('../../../../image/main_logo.png')}
+              className="w-full"
+              alt="logo"
+              fill
+            />
+          </div>
+        </div>
+      </Container.Body>
 
       <Container.MainFooter className="p-4">
-        <Button label="저장하기" onClick={handleSubmit} />
+        <Button label="블록체인에 저장하기" onClick={handleSubmit} />
       </Container.MainFooter>
     </Container>
   );
 };
 
-export default detail;
+export default PrivateRouter(detail);

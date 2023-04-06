@@ -26,6 +26,7 @@ import { Button } from '@/components/Button';
 import { ChallengeList } from '@/components/ChallengeList';
 import Container from '@/components/Container';
 import Footer from '@/components/Footer';
+import PrivateRouter from '@/components/PrivateRouter/PrivateRouter';
 import { SelectArrow } from '@/components/SelectArrow';
 import { CHALLENGE_DETAIL_URL, CHALLENGE_AUTH_ALGO_URL } from '@/constants';
 
@@ -257,7 +258,7 @@ const challengeDetail = props => {
 
   return (
     <Container>
-      <Container.SubPageHeader />
+      <Container.SubPageHeader goHome />{' '}
       <div className="relative">
         <Image
           src={challenge.backGroundUrl}
@@ -343,7 +344,7 @@ const challengeDetail = props => {
                     item =>
                       Date.parse(item) >= Date.parse(challenge.startDate) && (
                         <ChallengeList
-                          date={item.slice(2, 10)}
+                          date={item}
                           array={myAlgo[item]}
                           category="ALGO"
                           count={challenge.algorithmCount}
@@ -373,7 +374,8 @@ const challengeDetail = props => {
                 {myAlgo &&
                   myAlgo.map(
                     item =>
-                      Date.parse(item) >= Date.parse(challenge.startDate) && (
+                      Date.parse(item.createAt) >=
+                        Date.parse(challenge.startDate) && (
                         <div>
                           <Image
                             src={item.photoUrl}
@@ -418,4 +420,4 @@ const challengeDetail = props => {
   );
 };
 
-export default challengeDetail;
+export default PrivateRouter(challengeDetail);

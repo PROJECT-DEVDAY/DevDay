@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 
 import http from '@/api/http';
 import Container from '@/components/Container';
+import PrivateRouter from '@/components/PrivateRouter/PrivateRouter';
 import { DEPOSIT_SUMMARY_URL, LOCALE } from '@/constants';
 
 const CurrentSituation = () => {
@@ -56,4 +57,4 @@ const CurrentSituation = () => {
   );
 };
 
-export default CurrentSituation;
+export default PrivateRouter(CurrentSituation);

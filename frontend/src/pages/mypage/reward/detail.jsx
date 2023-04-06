@@ -8,6 +8,7 @@ import historyStyle from './history.module.scss';
 import detailStyle from './detail.module.scss';
 import classNames from 'classnames';
 import { Button } from '@/components/Button';
+import PrivateRouter from '@/components/PrivateRouter/PrivateRouter';
 
 const History = ({ history = {} }) => {
   const {
@@ -185,4 +186,4 @@ const Detail = () => {
   );
 };
 
-export default Detail;
+export default PrivateRouter(Detail);
