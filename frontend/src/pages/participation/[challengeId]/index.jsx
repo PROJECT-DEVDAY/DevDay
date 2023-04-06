@@ -109,6 +109,8 @@ const challengeintro = props => {
             <Image
               src={require('@/image/default-user.png')}
               alt="user"
+              width={100}
+              height={100}
               className="w-16 h-16 mr-4"
             />
           )}
@@ -117,6 +119,8 @@ const challengeintro = props => {
               src={data.hostProfileImage}
               loader={({ src }) => `${src}`}
               alt="user"
+              width={100}
+              height={100}
               className="w-16 h-16 mr-4"
             />
           )}
