@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 
 import classNames from 'classnames';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 import Swal from 'sweetalert2';
 
 import style from './normal.module.scss';
@@ -20,7 +21,7 @@ import { CHALLENGES_URL } from '@/constants';
 
 const normal = props => {
   const [member, setMember] = useState(1);
-
+  const router = useRouter();
   const user = useSelector(state => state.user);
 
   const today = new Date();
@@ -204,6 +205,7 @@ const normal = props => {
               showConfirmButton: false,
               timer: 1500,
             });
+            router.push(`/participation/${res.data.id}`);
           })
           .catch(error => {
             Swal.fire({
