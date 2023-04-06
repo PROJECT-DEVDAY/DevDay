@@ -45,11 +45,14 @@ export const userSlice = createSlice({
     reset(state) {
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
-      Object.assign(state, {
+
+      // eslint-disable-next-line no-param-reassign
+      state = {
+        ...state,
         userInfo: {},
         accessToken: '',
         refreshToken: '',
-      });
+      };
     },
   },
   extraReducers: builder => {
