@@ -1,30 +1,44 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import classnames from 'classnames';
-
-import './inputbox.css';
 import { CiMail } from 'react-icons/ci';
 
-export const InputBox = ({ className, content, placeholder, ...props }) => {
+import classNames from 'classnames';
+import PropTypes from 'prop-types';
+
+import style from './index.module.scss';
+
+export const InputBox = ({
+  className,
+  placeholder,
+  name,
+  onChange,
+  defaultValue,
+  ...props
+}) => {
   return (
-    <div className={classnames('box', className)} {...props}>
-      <CiMail className="icon" />
+    <div
+      className={classNames(
+        `flex p-2 h-14 mt-6 w-full rounded-xl items-center`,
+        style.box,
+      )}
+      {...props}
+    >
+      <CiMail className={classNames(`text-2xl`, style.icon)} />
       <input
-        className="inputbox"
-        value={content}
+        className={classNames(`rounded-none w-full pl2`, style.inputbox)}
         type="text"
         placeholder={placeholder}
+        name={name}
+        onChange={onChange}
+        defaultValue={defaultValue}
       />
     </div>
   );
 };
 
 InputBox.propTypes = {
-  content: PropTypes.string.isRequired,
   placeholder: PropTypes.string,
 };
 
 InputBox.defaultProps = {
-  content: null,
   placeholder: null,
 };

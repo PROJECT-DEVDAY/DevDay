@@ -1,53 +1,49 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import classnames from 'classnames';
 
-import './selectoption.css';
+import classNames from 'classnames';
+import Image from 'next/image';
+import PropTypes from 'prop-types';
+
+import style from './index.module.scss';
 
 export const SelectOption = ({
   fill,
-  className,
-  iconname,
+  check,
   title,
   content,
+  iconUrl,
   ...props
 }) => {
   return (
     <div
-      className={classnames(
-        'Select',
-        className,
-        fill && 'Select-background-fill',
+      className={classNames(
+        !check && style.Select,
+        check && style.Selected,
+        'flex',
+        fill && style[`SelectOption-background-fill`],
       )}
     >
-      <p className="title">{title}</p>
-      <p className="content">{content}</p>
+      <div>
+        <div className={style.Title}>{title}</div>
+        <div className={style.Content}>{content}</div>
+      </div>
+      {iconUrl && (
+        <div className={style.iconImage}>
+          <Image src={iconUrl} alt={title} />
+        </div>
+      )}
     </div>
-    // <button
-    //   type="button"
-    //   className={classnames(
-    //     'Button',
-    //     `Button-${color}`,
-    //     fill && 'Button-background-fill',
-    //     className,
-    //   )}
-    //   {...props}
-    // >
-    //   {label}
-    // </button>
   );
 };
 
 SelectOption.propTypes = {
   fill: PropTypes.bool,
-  title: PropTypes.string.isRequired,
-  content: PropTypes.string.isRequired,
   onClick: PropTypes.func,
+  iconUrl: PropTypes.string,
 };
 
 SelectOption.defaultProps = {
-  fill: true,
-  title: null,
-  content: null,
+  fill: false,
   onClick: undefined,
+  iconUrl: null,
 };

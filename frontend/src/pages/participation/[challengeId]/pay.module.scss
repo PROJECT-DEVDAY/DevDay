@@ -1,0 +1,18 @@
+.title {
+  display: flex;
+  justify-content: space-between;
+}
+.redline {
+  border-bottom: 4px solid red;
+  margin-top: 20px;
+  text-align: center;
+}
+.alpha {
+  background-color: var(--gray-border);
+}
+.spacebet {
+  margin-top: 8px;
+  font-size: large;
+  display: flex;
+  justify-content: space-between;
+}

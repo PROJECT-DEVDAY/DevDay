@@ -1,0 +1,43 @@
+.emailCheck {
+  background-color: var(--gray-border);
+}
+.emailInput {
+  background-color: transparent;
+}
+
+.nickNamePass {
+  background-color: var(--color-taehwan);
+}
+
+.nickNameFail {
+  background-color: var(--red-border);
+}
+
+.InputText {
+  border-bottom: 2px solid var(--gray-extra);
+  :focus {
+    outline: none;
+  }
+
+  .Content {
+    background-color: var(--gray-bg);
+  }
+  .RightBtn {
+    white-space: nowrap;
+  }
+}
+
+.Error {
+  color: var(--color-warning);
+}
+
+.nickNameCheck {
+  top: -8px;
+}
+
+.pass.nickNameCheck {
+  background-color: var(--color-success);
+}
+.nonPass.nickNameCheck {
+  background-color: var(--color-fail);
+}

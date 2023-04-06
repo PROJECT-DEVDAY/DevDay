@@ -1,0 +1,16 @@
+.RadioGroup {
+  flex-direction: row;
+
+  label {
+    cursor: pointer;
+
+    &.selected {
+      background-color: black;
+      color: var(--gray-bg);
+    }
+  }
+
+  input[type='radio'] {
+    display: none;
+  }
+}

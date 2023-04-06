@@ -1,0 +1,13 @@
+.box {
+  background-color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  border: 2px solid var(--gray-border);
+  .icon {
+    margin: 10px;
+    box-sizing: border-box;
+  }
+  .inputbox:focus {
+    outline: none;
+  }
+}
