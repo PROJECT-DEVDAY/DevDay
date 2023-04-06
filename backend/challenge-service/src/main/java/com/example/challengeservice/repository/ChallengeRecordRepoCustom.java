@@ -15,7 +15,7 @@ public interface ChallengeRecordRepoCustom {
 
     Optional<ChallengeRecord> findByCreateAtAndUserChallenge(String createAt, UserChallenge userChallenge);
 
-    Optional<ChallengeRecordResponseDto> findByUserChallengeIdAndCreateAt(Long userChallengeId, String createAt);
+    List<ChallengeRecordResponseDto> findByUserChallengeIdAndCreateAt(Long userChallengeId, String createAt);
 
     List<RecordResponseDto> getTeamCommitRecord(Long challengeRoomId, String date);
     List<RecordResponseDto> getTeamAlgoRecord(Long challengeRoomId, String date);
