@@ -52,7 +52,7 @@ public class ChallengeRecord {
     private int commitCount;
 
     // 사진 생성자
-    public static ChallengeRecord from(ChallengeRecordRequestDto dto ,String date ,String photoUrl, UserChallenge userChallenge){
+    public static ChallengeRecord from(String date ,String photoUrl, UserChallenge userChallenge){
         return ChallengeRecord.builder()
                 .createAt(date)
                 .userChallenge(userChallenge)

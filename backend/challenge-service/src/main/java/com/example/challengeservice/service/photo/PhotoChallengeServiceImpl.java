@@ -56,7 +56,7 @@ public class PhotoChallengeServiceImpl implements PhotoChallengeService {
 
         //인증 사진이 정상적으로 온 경우 사진을 s3에 업로드한다.
         String photoUrl = amazonS3Service.upload(requestDto.getPhotoCertFile(),"CertificationPhoto");
-        ChallengeRecord challengeRecord = ChallengeRecord.from(requestDto,date,photoUrl,userChallenge);
+        ChallengeRecord challengeRecord = ChallengeRecord.from(date,photoUrl,userChallenge);
 
         challengeRecordRepository.save(challengeRecord);
     }

@@ -36,7 +36,7 @@ public class CommitController {
      * 신대득
      * 유저의 커밋 정보 갱신
      */
-    @PostMapping("/github/update/users") //post로 변경
+    @PostMapping("/github/update/users")
     public Result updateUserBaekjoon(HttpServletRequest request){
         Long userId=Long.parseLong(request.getHeader("userId"));
         challengeService.updateUserCommit(userId);
