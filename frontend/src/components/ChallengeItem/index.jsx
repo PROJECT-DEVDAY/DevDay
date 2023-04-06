@@ -1,17 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useState } from 'react';
 
 import classNames from 'classnames';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
-import Swal from 'sweetalert2';
 
 import style from './index.module.scss';
-
-import http from '@/api/http';
-import { CHALLENGE_JOIN_URL } from '@/constants';
 
 export const ChallengeItem = ({
   className,
@@ -24,37 +18,16 @@ export const ChallengeItem = ({
   onClick,
   ...props
 }) => {
-  const router = useRouter();
-  const user = useSelector(state => state.user);
-  const checkPartici = () => {
-    http
-      .get(CHALLENGE_JOIN_URL, {
-        params: {
-          challengeRoomId: id,
-          nickname: user.userInfo.nickname,
-        },
-      })
-      .then(res => {
-        router.replace(`/participation/${id}`);
-      })
-      .catch(err => {
-        console.log(err.response.data.code);
-        if (err.response.data.code === 'J001') {
-          router.replace(`/challenge/${id}`);
-        } else {
-          Swal.fire({
-            position: 'center',
-            icon: 'warning',
-            title: '실패!',
-            text: err.response.data.message,
-            showConfirmButton: false,
-            timer: 1500,
-          });
-        }
-      });
-  };
+  const itemHref = props.isParticiting
+    ? `participation/${id}`
+    : `challenge/${id}`;
   return (
-    <div onClick={checkPartici} className={style.ChallengeItem} type="button">
+    <Link
+      href={itemHref}
+      className={style.ChallengeItem}
+      role="button"
+      tabIndex={0}
+    >
       <div
         className={classNames(style.ImageContainer, `relative object-cover`)}
       >
@@ -90,7 +63,7 @@ export const ChallengeItem = ({
           {period}
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 
