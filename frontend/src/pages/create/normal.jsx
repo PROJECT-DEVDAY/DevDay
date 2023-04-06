@@ -205,7 +205,7 @@ const normal = props => {
               showConfirmButton: false,
               timer: 1500,
             });
-            router.push(`/participation/${res.data.id}`);
+            router.push(`/participation/${result.data.id}`);
           })
           .catch(error => {
             Swal.fire({
