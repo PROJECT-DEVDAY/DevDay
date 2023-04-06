@@ -345,6 +345,7 @@ const challengeDetail = props => {
                           date={item}
                           array={myAlgo[item]}
                           category="ALGO"
+                          count={challenge.algorithmCount}
                         />
                       ),
                   )}
@@ -360,6 +361,7 @@ const challengeDetail = props => {
                           date={item}
                           array={myAlgo[item]}
                           category="COMMIT"
+                          count={challenge.commitCount}
                         />
                       ),
                   )}
