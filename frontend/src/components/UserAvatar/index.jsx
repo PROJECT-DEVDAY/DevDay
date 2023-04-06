@@ -3,11 +3,19 @@ import React, { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
 import Swal from 'sweetalert2';
 import { httpForm } from '@/api/http';
-
+import classnames from 'classnames';
 import style from './index.module.scss';
 import { UPDATE_PROFILE_URL, UPDATE_DEFAULT_PROFILE_URL } from '@/constants';
 
-export const UserAvatar = ({ imageURL, width, height, ...props }) => {
+import { ImCancelCircle } from 'react-icons/im';
+
+export const UserAvatar = ({
+  imageURL,
+  width,
+  height,
+  changable,
+  ...props
+}) => {
   const inputRef = useRef(null);
 
   const [imgFile, setImgFile] = useState(imageURL);
@@ -55,36 +63,54 @@ export const UserAvatar = ({ imageURL, width, height, ...props }) => {
     httpForm
       .patch(UPDATE_DEFAULT_PROFILE_URL)
       .then(res => {
-        window.location.reload()
+        window.location.reload();
       })
       .catch(err => {});
   };
 
+  const dummyFunction = () => {};
+
   return (
-    <div className={style.UserAvatar}>
+    <div
+      className={classnames(style.UserAvatar, 'relative')}
+      style={{
+        width,
+        height,
+      }}
+    >
       <Image
         src={imageURL || require('../../image/default-user.png')}
         alt="프로필 이미지"
-        className="style.Image rounded-full"
-        onClick={onClickImageInput}
-        width={width}
-        height={height}
+        className="style.Image rounded-full object-cover"
+        onClick={changable ? dummyFunction : onClickImageInput}
+        fill
       />
-      <button onClick={updateProfileDefaultImg}>기본 프로필</button>
-      <input
-        style={{ display: 'none' }}
-        ref={inputRef}
-        type="file"
-        className={style.ImgInput}
-        id="logoImg"
-        accept="image/*"
-        name="file"
-        onChange={onChange}
-      />
+      {changable || (
+        <div>
+          <div className="flex justify-end px-4 pt-36">
+            <ImCancelCircle
+              className="text-xl text-red-400 z-50"
+              onClick={updateProfileDefaultImg}
+            />
+          </div>
+          <input
+            style={{ display: 'none' }}
+            ref={inputRef}
+            type="file"
+            className={style.ImgInput}
+            id="logoImg"
+            accept="image/*"
+            name="file"
+            onChange={onChange}
+          />
+        </div>
+      )}
     </div>
   );
 };
 
 UserAvatar.propTypes = {};
 
-UserAvatar.defaultProps = {};
+UserAvatar.defaultProps = {
+  changable: true,
+};
