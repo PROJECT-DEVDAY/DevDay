@@ -9,6 +9,7 @@ import style from './challenge.module.scss';
 
 import http from '@/api/http';
 import Container from '@/components/Container';
+import PrivateRouter from '@/components/PrivateRouter/PrivateRouter';
 import {
   CHALLENGE_DETAIL_URL,
   CHALLENGE_ALGO_URL,
@@ -16,7 +17,6 @@ import {
   CHALLENGE_AUTH_ALGO_URL,
 } from '@/constants';
 import { getDatesStartToLast } from '@/utils';
-import PrivateRouter from '@/components/PrivateRouter/PrivateRouter';
 
 const mySubmitList = ({ ...props }) => {
   const [date, setDate] = useState('');

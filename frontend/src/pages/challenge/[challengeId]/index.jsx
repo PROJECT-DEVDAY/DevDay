@@ -26,9 +26,9 @@ import { Button } from '@/components/Button';
 import { ChallengeList } from '@/components/ChallengeList';
 import Container from '@/components/Container';
 import Footer from '@/components/Footer';
+import PrivateRouter from '@/components/PrivateRouter/PrivateRouter';
 import { SelectArrow } from '@/components/SelectArrow';
 import { CHALLENGE_DETAIL_URL, CHALLENGE_AUTH_ALGO_URL } from '@/constants';
-import PrivateRouter from '@/components/PrivateRouter/PrivateRouter';
 
 ChartJS.register(
   CategoryScale,
