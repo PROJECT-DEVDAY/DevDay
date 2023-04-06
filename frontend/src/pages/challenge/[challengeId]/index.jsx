@@ -383,7 +383,7 @@ const challengeDetail = props => {
                             loader={({ src }) => src}
                             className={classNames('w-full', style.boxStyle)}
                           />
-                        </div>,
+                        </div>
                       ),
                   )}
               </div>
