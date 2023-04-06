@@ -24,7 +24,6 @@ import PrivateRouter from '@/components/PrivateRouter/PrivateRouter';
 import http from '@/api/http';
 
 const NAV = {
-  전체: 'ALL',
   시작전: 'NOT_OPEN',
   진행중인: 'PROCEED',
   완료한: 'DONE',
@@ -32,9 +31,9 @@ const NAV = {
 
 const NAV_LIST = Object.keys(NAV);
 
-const INITIAL_NAV_KEY = '전체';
+const INITIAL_NAV_KEY = '시작전';
 const INITIAL_PARAMS = {
-  status: 'ALL',
+  status: 'NOT_OPEN',
   size: 20,
   offset: '',
   search: '',
