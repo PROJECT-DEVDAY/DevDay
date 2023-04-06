@@ -373,7 +373,8 @@ const challengeDetail = props => {
                 {myAlgo &&
                   myAlgo.map(
                     item =>
-                      Date.parse(item) >= Date.parse(challenge.startDate) && (
+                      Date.parse(item.createAt) >=
+                        Date.parse(challenge.startDate) && (
                         <div>
                           <Image
                             src={item.photoUrl}
