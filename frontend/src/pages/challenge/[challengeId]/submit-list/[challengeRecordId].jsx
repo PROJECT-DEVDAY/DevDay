@@ -13,6 +13,7 @@ import {
   CHALLENGE_USER_RECORD_REPORT_URL,
   CHALLENGE_DETAIL_URL,
 } from '@/constants';
+import PrivateRouter from '@/components/PrivateRouter/PrivateRouter';
 
 const Page = () => {
   const router = useRouter();
@@ -110,4 +111,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default PrivateRouter(Page);

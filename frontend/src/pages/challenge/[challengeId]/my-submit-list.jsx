@@ -16,6 +16,7 @@ import {
   CHALLENGE_AUTH_ALGO_URL,
 } from '@/constants';
 import { getDatesStartToLast } from '@/utils';
+import PrivateRouter from '@/components/PrivateRouter/PrivateRouter';
 
 const mySubmitList = ({ ...props }) => {
   const [date, setDate] = useState('');
@@ -152,4 +153,4 @@ const mySubmitList = ({ ...props }) => {
   );
 };
 
-export default mySubmitList;
+export default PrivateRouter(mySubmitList);

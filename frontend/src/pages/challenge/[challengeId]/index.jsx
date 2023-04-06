@@ -28,6 +28,7 @@ import Container from '@/components/Container';
 import Footer from '@/components/Footer';
 import { SelectArrow } from '@/components/SelectArrow';
 import { CHALLENGE_DETAIL_URL, CHALLENGE_AUTH_ALGO_URL } from '@/constants';
+import PrivateRouter from '@/components/PrivateRouter/PrivateRouter';
 
 ChartJS.register(
   CategoryScale,
@@ -419,4 +420,4 @@ const challengeDetail = props => {
   );
 };
 
-export default challengeDetail;
+export default PrivateRouter(challengeDetail);
