@@ -236,7 +236,7 @@ const commit = props => {
           </div>
         </div>
         <div className="mt-6 flex">
-          <InputLabel content="최소 인증 커밋 수" asterisk />
+          <InputLabel content="최소 커밋 수" asterisk />
           <div className={classNames('flex', style.changeMember)}>
             {commitCount > 1 ? (
               <button
