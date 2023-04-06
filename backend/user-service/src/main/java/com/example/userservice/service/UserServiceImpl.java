@@ -47,15 +47,18 @@ public class UserServiceImpl implements UserService{
     @Transactional
     public void join(Long emailAuthId, SignUpRequestDto requestDto) {
 
+        // 이메일 인증 요청을 보낸적이 없으면 에러
         EmailAuth emailAuth = emailAuthRepository.findById(emailAuthId)
                 .orElseThrow(() -> new ApiException(ExceptionEnum.EMAIL_NOT_ACCEPT_EXCEPTION));
 
+        // 이메일 인증를 통과하지 않으면 에러
         if (!emailAuth.getIsChecked()) throw new ApiException(ExceptionEnum.EMAIL_NOT_ACCEPT_EXCEPTION);
 
         // 회원 저장
         User user = User.from(requestDto);
         User saveUser = userRepository.save(user);
 
+        // 회원가입시 백준 아이디 기입했으면 푼 문제 리스트 어제 날짜로 저장
         if (saveUser.getBaekjoon() != null && !saveUser.getBaekjoon().isBlank()) commonService.saveProblemList(saveUser);
 
         // 이메일 인증 기록 삭제
