@@ -1,6 +1,5 @@
 .btnFooter {
   border-top: 2px solid var(--gray-hr);
-  background-color: var(--gray-bg);
 
   .content {
     height: 100%;
@@ -24,6 +23,7 @@
     font-size: large;
     color: red;
     font-family: 'Gmarket-Sans-Medium';
-    margin: 20px 0 12px 0;
+    margin: 30px 0 22px 0;
+    text-align: center;
   }
 }

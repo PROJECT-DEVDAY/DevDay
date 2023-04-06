@@ -276,20 +276,21 @@ const algo = props => {
           </div>
         </div>
         <div className={style.datePick}>
-          <label htmlFor="inputStartDate">
+          <div>
             <InputLabel content="챌린지 시작일" asterisk />
             <input
-              id="inputStartDate"
+              className={style.date}
               type="date"
               name="startDate"
               onChange={handleChange}
               min={dateString}
             />
-          </label>
+          </div>
           {challenge.startDate && (
             <div>
               <InputLabel content="챌린지 종료일" asterisk />
               <input
+                className={style.date}
                 type="date"
                 name="endDate"
                 onChange={handleChange}
