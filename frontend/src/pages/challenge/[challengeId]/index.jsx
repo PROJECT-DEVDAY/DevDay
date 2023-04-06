@@ -359,7 +359,7 @@ const challengeDetail = props => {
                     item =>
                       Date.parse(item) >= Date.parse(challenge.startDate) && (
                         <ChallengeList
-                          date={item}
+                          date={item.slice(2, 10)}
                           array={myAlgo[item]}
                           category="COMMIT"
                           count={challenge.commitCount}
@@ -371,18 +371,21 @@ const challengeDetail = props => {
             {challenge.category === 'FREE' && (
               <div className="p-6 grid gap-4 grid-cols-3">
                 {myAlgo &&
-                  myAlgo.map(item => (
-                    <div>
-                      <Image
-                        src={item.photoUrl}
-                        alt="free"
-                        width={100}
-                        height={100}
-                        loader={({ src }) => src}
-                        className={classNames('w-full', style.boxStyle)}
-                      />
-                    </div>
-                  ))}
+                  myAlgo.map(
+                    item =>
+                      Date.parse(item) >= Date.parse(challenge.startDate) && (
+                        <div>
+                          <Image
+                            src={item.photoUrl}
+                            alt="free"
+                            width={100}
+                            height={100}
+                            loader={({ src }) => src}
+                            className={classNames('w-full', style.boxStyle)}
+                          />
+                        </div>
+                      ),
+                  )}
               </div>
             )}
             <div className="p-4">

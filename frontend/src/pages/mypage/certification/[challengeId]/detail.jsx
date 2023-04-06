@@ -202,6 +202,7 @@ export const detail = () => {
     <Container>
       <Container.SubPageHeader title={'인증서'} />
 
+<<<<<<< HEAD
       <Container.Body className={'px-10 pb-8 w-full h-full'}>
         <div className="w-full mt-20 text-center font-bold text-xl">
           CERTIFICATE OF COMPLETION
@@ -268,6 +269,11 @@ export const detail = () => {
       <Container.Footer>
         <Button label={'저장하기'} onClick={handleSubmit}></Button>
       </Container.Footer>
+=======
+      <Container.MainFooter className="p-4">
+        <Button label="저장하기" onClick={handleSubmit} />
+      </Container.MainFooter>
+>>>>>>> 18935e34f9932a999c812916ca04dda426c554a8
     </Container>
   );
 };

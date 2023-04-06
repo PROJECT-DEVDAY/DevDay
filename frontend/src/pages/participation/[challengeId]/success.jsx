@@ -15,34 +15,64 @@ const success = ({ challengeId, paymentInfo }) => {
   const [loading, setLoading] = useState(true);
   const user = useSelector(state => state.user);
   const router = useRouter();
+  const [hasError, setHasError] = useState(null);
 
   const payConfirm = async (nickname, accessToken) => {
-    let hasError = false;
+    let error = false;
     try {
       const { data } = await http.post(PAYMENT_CHALLENGE_SUCCESS(challengeId), {
         paymentInfo,
         nickname,
       });
-      const { approve } = data;
+      const { approve, message } = data.data;
+      if (!approve) {
+        error = {
+          code: '0000',
+          message,
+        };
+      }
     } catch (e) {
-      console.error(e);
-      hasError = true;
-    }
-    if (hasError) {
-      //  return router.replace(`/participation/${challengeId}/fail`);
+      if (e.response.data) {
+        error = {
+          ...e.response.data,
+        };
+      }
     }
     // approve가 false 일 때, 처리할 것
     setLoading(false);
-    const datas = {
-      challengeRoomId: challengeId,
-      nickname,
-    };
-    http.post(CHALLENGE_JOIN_URL, datas);
+    setHasError(error);
   };
 
   useEffect(() => {
     payConfirm(user.userInfo.nickname, user.accessToken);
   }, [user]);
+
+  if (hasError) {
+    return (
+      <Container>
+        <Container.SubPageHeader title="결제 실패" disableBefore />
+        <Container.MainBody>
+          {hasError && (
+            <div>
+              <h2 className="text-2xl font-bold my-8">결제에 실패했습니다.</h2>
+              <p className="text-lg">{hasError.message}</p>
+              <p className="text-sm my-4">CODE: {hasError.code}</p>
+            </div>
+          )}
+        </Container.MainBody>
+        <Container.MainFooter className="px-4 py-4">
+          <div className="gap-2 grid grid-cols-2">
+            <Link href="/">
+              <Button color="danger" label="메인으로" />
+            </Link>
+            <Link href={`/participation/${challengeId}/pay`}>
+              <Button label="다시 결제하기" />
+            </Link>
+          </div>
+        </Container.MainFooter>
+      </Container>
+    );
+  }
 
   return (
     <Container>
@@ -84,7 +114,7 @@ const success = ({ challengeId, paymentInfo }) => {
 export const getServerSideProps = async context => {
   const { challengeId } = context.params;
   const paymentInfo = context.query;
-
+  console.log(challengeId, paymentInfo);
   return {
     props: {
       paymentInfo,
