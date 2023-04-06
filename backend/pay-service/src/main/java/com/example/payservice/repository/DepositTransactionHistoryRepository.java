@@ -45,4 +45,10 @@ public interface DepositTransactionHistoryRepository extends JpaRepository<Depos
             "WHERE p.user = :user and p.challengeId not in :challengeIds and p.type = :type"
     )
     Integer getCurrentChallengingAmountByUser(PayUserEntity user, List<Long> challengeIds, DepositTransactionType type);
+
+    @Query("SELECT coalesce(SUM(p.amount), 0) " +
+            "FROM DepositTransactionHistoryEntity p " +
+            "WHERE p.user = :user and p.challengeId in :challengeIds and p.type = :type"
+    )
+    Integer getDoneChallengeAmountByUserAndType(PayUserEntity user, List<Long> challengeIds, DepositTransactionType type);
 }

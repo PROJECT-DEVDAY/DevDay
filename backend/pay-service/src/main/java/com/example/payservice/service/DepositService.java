@@ -314,9 +314,7 @@ public class DepositService {
 
         int charge = 0;
         int cancel = 0;
-        int pay = 0;
-        int refund = 0;
-
+        int challenging = 0;
         for(DepositSummary summary : summaries) {
             switch(summary.getDepositTransactionType()) {
                 case CHARGE:
@@ -324,12 +322,6 @@ public class DepositService {
                     break;
                 case CANCEL:
                     cancel = summary.getSum();
-                    break;
-                case PAY:
-                    pay = summary.getSum();
-                    break;
-                case REFUND:
-                    refund = summary.getSum();
                     break;
             }
         }
@@ -341,16 +333,26 @@ public class DepositService {
                 }
         );
 
-        int challenging = depositTransactionHistoryRepository.getCurrentChallengingAmountByUser(
+        challenging = depositTransactionHistoryRepository.getCurrentChallengingAmountByUser(
                 user,
                 doneChallengeIds,
                 DepositTransactionType.PAY
+        );
+        int donePay = depositTransactionHistoryRepository.getDoneChallengeAmountByUserAndType(
+                user,
+                doneChallengeIds,
+                DepositTransactionType.PAY
+        );
+        int doneRefund = depositTransactionHistoryRepository.getDoneChallengeAmountByUserAndType(
+                user,
+                doneChallengeIds,
+                DepositTransactionType.REFUND
         );
         
         return DepositSummaryDto.builder()
                 .charge(charge)
                 .cancel(cancel)
-                .penalty(pay - refund)
+                .penalty(donePay - doneRefund)
                 .challenging(challenging)
                 .build();
     }
