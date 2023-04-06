@@ -31,18 +31,19 @@
 .Title {
   font-size: large;
   font-weight: bolder;
+  font-family: 'Gmarket-Sans-Medium';
   margin: 0;
-  margin: 15px 15px 0 15px;
+  margin: 15px 15px 0 20px;
 }
 
 .Content {
-  font-family: 'Gmarket-Sans-Medium';
   margin: 0;
   margin: 0 0 15px 20px;
+  word-break: keep-all;
 }
 
 .iconImage {
-  width: 100px;
+  width: 80px;
   margin: auto;
   padding: 8px;
 }

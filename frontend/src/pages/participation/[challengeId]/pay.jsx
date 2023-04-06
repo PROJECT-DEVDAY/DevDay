@@ -20,7 +20,7 @@ import {
 import { getStartWithEndDate, getWeekDiff } from '@/utils';
 
 const pay = ({ challengeInfo }) => {
-  const { id, startDate, endDate, entryFee, participantsSize, title } =
+  const { id, startDate, endDate, entryFee, curParticipantsSize, title } =
     challengeInfo;
   const payShot = async () => {
     const tossPayments = await loadTossPayments(PUBLIC_TOSS_CLIENT_KEY); // 회원 결제
@@ -54,8 +54,8 @@ const pay = ({ challengeInfo }) => {
               </p>
               <p>{getStartWithEndDate(startDate, endDate)}</p>
             </div>
-            <div>
-              <p>{`${participantsSize}명 참가`}</p>
+            <div className="whitespace-nowrap">
+              <p>{`${curParticipantsSize}명 참가`}</p>
             </div>
           </div>
           <div className="mt-8">
