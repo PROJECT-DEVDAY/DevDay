@@ -26,36 +26,40 @@ const type = props => {
       id: 0,
       title: (
         <div className="flex">
-          <span>공개챌린지</span>
+          <span className="font-medium">공개챌린지</span>
           <Image
             src={require('@/image/handshake.png')}
-            className="h-8 w-8"
+            className="h-8 w-8 pb-1"
             alt="handshake"
           />
         </div>
       ),
       content: [
-        '여러 사람들이 모여서 챌린지를 함께 할 수 있어요!',
-        <br />,
-        '함께 도전해보세요.',
+        <label>
+          여러 사람들이 모여서 챌린지를 함께 할 수 있어요!
+          <br />
+          함께 도전해보세요.
+        </label>,
       ],
     },
     {
       id: 1,
       title: (
         <div className="flex">
-          <span>비공개챌린지</span>
+          <span className="font-medium">비공개챌린지</span>
           <Image
             src={require('@/image/lock.png')}
-            className="h-8 w-8"
+            className="h-6 w-6 pb-1 mb-2"
             alt="lock"
           />
         </div>
       ),
       content: [
-        '코드 공유로 함께할 수 있는 챌린지입니다!',
-        <br />,
-        '지인들과 함께 챌린지에 도전해보세요.',
+        <label>
+          코드 공유로 함께할 수 있는 챌린지입니다!
+          <br />
+          지인들과 함께 챌린지에 도전해보세요.
+        </label>,
       ],
     },
   ];

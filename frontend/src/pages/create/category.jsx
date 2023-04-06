@@ -40,7 +40,7 @@ const category = props => {
   const notPreferArr = [
     {
       id: 0,
-      title: <span>알고리즘 챌린지</span>,
+      title: <span className="font-medium">알고리즘 챌린지</span>,
       content: [
         '알고리즘 챌린지에 도전해보세요!',
         <br />,
@@ -50,7 +50,7 @@ const category = props => {
     },
     {
       id: 1,
-      title: <span>커밋 챌린지</span>,
+      title: <span className="font-medium">커밋 챌린지</span>,
       content: [
         '1일 1커밋 챌린지로 잔디를 쌓아보세요!',
         <br />,
@@ -60,7 +60,7 @@ const category = props => {
     },
     {
       id: 2,
-      title: <span>자유주제 챌린지</span>,
+      title: <span className="font-medium">자유주제 챌린지</span>,
       content: [
         '도전해보고 싶은 챌린지를 만들어보세요!',
         <br />,
