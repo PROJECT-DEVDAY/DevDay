@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
+import { CiMail } from 'react-icons/ci';
+import { SlArrowRight } from 'react-icons/sl';
 
 import classNames from 'classnames';
 import Image from 'next/image';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
-
-import { CiMail } from 'react-icons/ci';
-import { SlArrowRight } from 'react-icons/sl';
 
 import style from './index.module.scss';
 
@@ -46,10 +45,10 @@ export const CertificationItem = ({
         </div>
 
         <div style={{ flex: 1 }}>
-          <p className={'font-medium '}>{title}</p>
-          <p className={'text-xs'}>{period}</p>
+          <p className="font-medium ">{title}</p>
+          <p className="text-xs">{period}</p>
         </div>
-        <button type="button" className={''}>
+        <button type="button" className="">
           <SlArrowRight className={style.Arrow} width={30} />
         </button>
       </div>
