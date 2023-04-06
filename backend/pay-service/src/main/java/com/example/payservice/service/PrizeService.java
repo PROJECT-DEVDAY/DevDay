@@ -6,10 +6,12 @@ import com.example.payservice.dto.bank.AccountDto;
 import com.example.payservice.dto.challenge.SimpleChallengeInfo;
 import com.example.payservice.dto.prize.PrizeHistoryDto;
 import com.example.payservice.dto.prize.PrizeHistoryType;
+import com.example.payservice.dto.prize.PrizeSummaryDto;
 import com.example.payservice.dto.request.SimpleChallengeInfosRequest;
 import com.example.payservice.dto.response.WithdrawResponse;
 import com.example.payservice.entity.PayUserEntity;
 import com.example.payservice.entity.PrizeHistoryEntity;
+import com.example.payservice.entity.PrizeSummary;
 import com.example.payservice.exception.LackOfPrizeException;
 import com.example.payservice.repository.PrizeHistoryRepository;
 import feign.FeignException;
@@ -20,6 +22,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -162,5 +167,27 @@ public class PrizeService {
                 .build();
         challengeUser.setPrize(challengeUser.getPrize() + amount);
         prizeHistoryRepository.save(newPrizeHistoryEntity);
+    }
+
+    public PrizeSummaryDto getSummary(long userId) {
+        List<PrizeSummary> summaryList = prizeHistoryRepository.getSummaryByUserId(userId);
+
+        Iterator<PrizeSummary> iter = summaryList.iterator();
+
+        PrizeSummaryDto dto = new PrizeSummaryDto();
+        while(iter.hasNext()) {
+            PrizeSummary summary = iter.next();
+            switch(summary.getPrizeHistoryType()) {
+                case IN:
+                    dto.setIn(summary.getSum());
+                    break;
+                case OUT:
+                    dto.setOut(summary.getSum());
+                    break;
+                default:
+            }
+        }
+
+        return dto;
     }
 }
