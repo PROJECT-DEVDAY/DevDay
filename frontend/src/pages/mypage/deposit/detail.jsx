@@ -187,12 +187,10 @@ const Detail = () => {
         title="예치금 내역 조회"
         className="border-b-2"
       />
-      <Container.MainBody
-        className={classNames('bg-white relative', detailStyle.Body)}
-      >
-        <div className="pt-4 pb-8">
+      <Container.MainBody className={classNames('relative')}>
+        <div className="pt-4 pb-4 mb-4 bg-white">
           <HeaderButtons
-            buttonClassName="border-2 border-black px-2"
+            buttonClassName="border-2 border-black"
             items={NAV_LIST}
             select={type}
             setSelect={selectType}
@@ -200,34 +198,34 @@ const Detail = () => {
         </div>
         <div className={classNames(detailStyle.List)}>
           {histories.map(history => (
-            <div className="mb-8">
+            <div className="mb-4">
               <History history={history} key={history.history_id} />
             </div>
           ))}
         </div>
-        <div
-          className={classNames(
-            detailStyle.Pagenation,
-            'text-center font-bold flex items-center w-full',
-          )}
-        >
-          <div className="shrink-0 mr-4">{`${currentPage} / ${totalPages}`}</div>
-          <div className="grid grid-cols-2 gap-2 flex-1">
-            <Button
-              className=""
-              label="이전"
-              disabled={currentPage <= 1}
-              onClick={movePrevPage}
-            />
-            <Button
-              className=""
-              label="다음"
-              disabled={currentPage >= totalPages}
-              onClick={moveNextPage}
-            />
-          </div>
-        </div>
       </Container.MainBody>
+      <Container.MainFooter
+        className={classNames(
+          detailStyle.Pagenation,
+          'text-center font-bold flex items-center w-full p-4',
+        )}
+      >
+        <div className="shrink-0 mr-4">{`${currentPage} / ${totalPages}`}</div>
+        <div className="grid grid-cols-2 gap-2 flex-1">
+          <Button
+            className=""
+            label="이전"
+            disabled={currentPage <= 1}
+            onClick={movePrevPage}
+          />
+          <Button
+            className=""
+            label="다음"
+            disabled={currentPage >= totalPages}
+            onClick={moveNextPage}
+          />
+        </div>
+      </Container.MainFooter>
     </Container>
   );
 };
