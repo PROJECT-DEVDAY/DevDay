@@ -72,6 +72,8 @@ const main = ({ initialList, ...props }) => {
 
   const selectType = value => {
     setType(value);
+
+    setChallengeList([]);
     updateSearchParams({
       category: NAV[value],
       offset: '',
@@ -195,7 +197,7 @@ const main = ({ initialList, ...props }) => {
             setSelect={selectType}
           />
         </div>
-        <div className="grid gap-0 grid-cols-1 mob:grid-cols-2 mob:gap-4">
+        <div className="grid grid-cols-2 gap-4">
           {challengeList &&
             challengeList.map((item, i) => {
               const {

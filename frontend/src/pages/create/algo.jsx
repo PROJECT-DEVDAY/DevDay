@@ -236,7 +236,7 @@ const algo = props => {
           </div>
         </div>
         <div className="mt-6 flex">
-          <InputLabel content="최소 알고리즘 커밋 수" asterisk />
+          <InputLabel content="최소 알고리즘 수" asterisk />
           <div className={classNames('flex', style.changeMember)}>
             {algoithmCount > 1 ? (
               <button
@@ -276,20 +276,21 @@ const algo = props => {
           </div>
         </div>
         <div className={style.datePick}>
-          <label htmlFor="inputStartDate">
+          <div>
             <InputLabel content="챌린지 시작일" asterisk />
             <input
-              id="inputStartDate"
+              className={style.date}
               type="date"
               name="startDate"
               onChange={handleChange}
               min={dateString}
             />
-          </label>
+          </div>
           {challenge.startDate && (
             <div>
               <InputLabel content="챌린지 종료일" asterisk />
               <input
+                className={style.date}
                 type="date"
                 name="endDate"
                 onChange={handleChange}

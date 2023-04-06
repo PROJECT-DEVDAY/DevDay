@@ -1,7 +1,6 @@
 package com.example.challengeservice.repository;
 
 import com.example.challengeservice.entity.ChallengeRoom;
-import com.example.challengeservice.entity.UserChallenge;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -18,4 +17,7 @@ public interface ChallengeRoomRepository extends JpaRepository<ChallengeRoom, Lo
     List<ChallengeRoom> findChallengingRoomByDate(@Param("getDate") String getDate);
 
     Long countByHostId(Long hostId);
+
+    @Query("select cr.category from ChallengeRoom cr where cr.id = :challengeId")
+    String getCategory (@Param("challengeId") Long challengeId);
 }

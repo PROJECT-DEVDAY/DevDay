@@ -120,6 +120,7 @@ const challengeDetail = props => {
               .get(`${CHALLENGE_DETAIL_URL}/baekjoon/rank/${challengeId}`)
               .then(response => {
                 setChallengeRank(response.data.data);
+                console.log(response);
                 if (response.data.data.length > 6) {
                   const resRank = response.data.data.slice(0, 6);
                   setChallengeRank(resRank);

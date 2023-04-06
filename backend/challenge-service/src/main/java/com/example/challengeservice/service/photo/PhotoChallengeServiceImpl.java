@@ -4,6 +4,7 @@ import com.example.challengeservice.dto.request.ChallengeRecordRequestDto;
 import com.example.challengeservice.dto.request.ReportRecordRequestDto;
 import com.example.challengeservice.dto.response.PhotoRecordDetailResponseDto;
 import com.example.challengeservice.dto.response.PhotoRecordResponseDto;
+import com.example.challengeservice.dto.response.RecordResponseDto;
 import com.example.challengeservice.entity.ChallengeRecord;
 import com.example.challengeservice.entity.ChallengeRoom;
 import com.example.challengeservice.entity.ReportRecord;
@@ -56,7 +57,7 @@ public class PhotoChallengeServiceImpl implements PhotoChallengeService {
 
         //인증 사진이 정상적으로 온 경우 사진을 s3에 업로드한다.
         String photoUrl = amazonS3Service.upload(requestDto.getPhotoCertFile(),"CertificationPhoto");
-        ChallengeRecord challengeRecord = ChallengeRecord.from(requestDto,date,photoUrl,userChallenge);
+        ChallengeRecord challengeRecord = ChallengeRecord.from(date,photoUrl,userChallenge);
 
         challengeRecordRepository.save(challengeRecord);
     }
@@ -76,7 +77,7 @@ public class PhotoChallengeServiceImpl implements PhotoChallengeService {
 
     /**같은 방 챌린지 참여자의 인증 내역 조회 **/
     @Override
-    public List<PhotoRecordResponseDto> getTeamPhotoRecord(Long userId ,Long challengeRoomId, String date) {
+    public List<RecordResponseDto> getTeamPhotoRecord(Long userId , Long challengeRoomId, String date) {
 
         if(!userChallengeRepository.existsByChallengeRoomIdAndUserId(challengeRoomId , userId)) throw new ApiException(ExceptionEnum.USER_CHALLENGE_NOT_EXIST_EXCEPTION);
         return challengeRecordRepository.getTeamPhotoRecord(challengeRoomId ,date);

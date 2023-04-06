@@ -21,6 +21,7 @@ import { getStartWithEndDate } from '@/utils';
 
 import _debounce from 'lodash/debounce';
 import loadingImage from '@/image/loading.gif';
+import PrivateRouter from '@/components/PrivateRouter/PrivateRouter';
 
 const NAV = {
   전체: 'ALL',
@@ -47,21 +48,21 @@ const fetch = async params => {
         ...params,
       },
     });
-    return data;
+    return data.data;
   } catch (e) {
     console.error('데이터를 fetch하는 과정에서 문제가 생겼어요.', e);
     return [];
   }
 };
 
-const auth = ({ initialList, ...props }) => {
+const auth = ({ ...props }) => {
   const [searchMode, setSearchMode] = useState(false);
   const [loading, setLoading] = useState(false);
   const searchParams = useRef(INITIAL_PARAMS);
   const searchRef = useRef();
   const observerRef = useRef();
   const loadingRef = useRef();
-  const [challengeList, setChallengeList] = useState(initialList);
+  const [challengeList, setChallengeList] = useState();
   const lastChallengeId = useRef();
   const [type, setType] = useState(INITIAL_NAV_KEY);
 
@@ -75,8 +76,10 @@ const auth = ({ initialList, ...props }) => {
 
   const selectType = value => {
     setType(value);
+
+    setChallengeList([]);
     updateSearchParams({
-      category: NAV[value],
+      status: NAV[value],
       offset: '',
     });
   };
@@ -150,6 +153,10 @@ const auth = ({ initialList, ...props }) => {
     }
   });
 
+  useEffect(() => {
+    search();
+  }, []);
+
   return (
     <Container>
       <Container.MainHeader>
@@ -201,15 +208,8 @@ const auth = ({ initialList, ...props }) => {
         <div className="grid gap-0 grid-cols-1 mob:grid-cols-2 mob:gap-4">
           {challengeList &&
             challengeList.map((item, i) => {
-              const {
-                id,
-                backGroundUrl,
-                curParticipantsSize,
-                nickname,
-                title,
-                startDate,
-                endDate,
-              } = item;
+              const { id, backGroundUrl, nickname, title, startDate, endDate } =
+                item;
 
               const period = getStartWithEndDate(startDate, endDate);
               return (
@@ -218,10 +218,11 @@ const auth = ({ initialList, ...props }) => {
                   key={id}
                   id={id}
                   imgUrl={backGroundUrl}
-                  participants={curParticipantsSize}
                   leader={nickname}
                   title={title}
                   period={period}
+                  participants={-1}
+                  isParticipating={false}
                 />
               );
             })}
@@ -242,21 +243,4 @@ const auth = ({ initialList, ...props }) => {
   );
 };
 
-export const getServerSideProps = async () => {
-  let initialList = [];
-  try {
-    const { data } = await http.get(MY_CHALLENGES_URL, {
-      params: INITIAL_PARAMS,
-    });
-    initialList = [...initialList, ...data];
-  } catch (e) {
-    console.error('초기 리스트를 가져올 수 없습니다.', e);
-  }
-  return {
-    props: {
-      initialList,
-    },
-  };
-};
-
-export default auth;
+export default PrivateRouter(auth);
