@@ -12,7 +12,7 @@ import style from './index.module.scss';
 
 export const CertificationItem = ({
   className,
-  id,
+  challengeId,
   imgUrl,
   title,
   period,
@@ -20,7 +20,7 @@ export const CertificationItem = ({
 }) => {
   return (
     <Link
-      href={`./certification/${id}/detail`}
+      href={`./certification/${challengeId}/detail`}
       className={style.CertificationItem}
       role="button"
       tabIndex={0}
