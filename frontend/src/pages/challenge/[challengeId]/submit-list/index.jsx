@@ -1,11 +1,11 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import RGL, { WidthProvider } from 'react-grid-layout';
+import { AiOutlineCheck } from 'react-icons/ai';
+import { BsCheck } from 'react-icons/bs';
 
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import propTypes from 'prop-types';
-import { BsCheck } from 'react-icons/bs';
-import { AiOutlineCheck } from 'react-icons/ai';
 
 import http from '@/api/http';
 import Container from '@/components/Container';

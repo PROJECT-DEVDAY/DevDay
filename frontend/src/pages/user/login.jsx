@@ -118,7 +118,7 @@ const login = props => {
   };
   return (
     <Container>
-      <Container.SubPageHeader goHome={true}/>
+      <Container.SubPageHeader goHome />
 
       <Container.MainBody>
         <Image

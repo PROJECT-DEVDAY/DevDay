@@ -1,11 +1,11 @@
 import React, { memo } from 'react';
+import { BiHomeHeart } from 'react-icons/bi';
 import { SlArrowLeft, SlArrowRight } from 'react-icons/sl';
 
 import cx from 'classnames';
 import { useRouter } from 'next/router';
 
 import Header from '../Header';
-import { BiHomeHeart } from 'react-icons/bi';
 
 const SubPageHeader = ({
   sticky = true,
