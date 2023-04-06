@@ -14,9 +14,9 @@ const INITIAL_PARAMS = {
   offset: '',
   search: '',
 };
-const user = useSelector(state => state.user);
 
 const index = () => {
+  const user = useSelector(state => state.user);
   const [certificationList, setCertificationList] = useState([]);
 
   const getCertificationList = async () => {
@@ -73,4 +73,4 @@ const index = () => {
   );
 };
 
-export default PrivateRouter(index);
+export default index;
