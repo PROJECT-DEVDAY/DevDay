@@ -15,6 +15,8 @@ export const GITHUBBAEKJOON_URL = `${USER_SERVICE}/auth/user/githubandbaekjoon`;
 export const PASSWORD_URL = `${USER_SERVICE}/auth/user/password`;
 export const DELETEUSER_URL = `${USER_SERVICE}/auth/user`;
 export const TOKEN_REFRESH_URL = `${USER_SERVICE}/refresh`;
+export const UPDATE_PROFILE_URL = `${USER_SERVICE}/auth/user/img`
+export const UPDATE_DEFAULT_PROFILE_URL = `${USER_SERVICE}/auth/user/defaultimg`
 
 // 챌린지
 const CHALLENGE_SERVICE = 'challenge-service';
