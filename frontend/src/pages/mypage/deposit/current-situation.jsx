@@ -23,9 +23,7 @@ const currentSituation = () => {
       .then(res => {
         setMyDepositInfo(res.data.data);
       })
-      .catch(e => {
-        router.push('/user/login');
-      });
+      .catch(e => {});
   }, []);
 
   return (

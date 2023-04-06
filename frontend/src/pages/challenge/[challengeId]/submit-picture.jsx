@@ -8,23 +8,15 @@ import Swal from 'sweetalert2';
 import http from '@/api/http';
 import { Button } from '@/components/Button';
 import Container from '@/components/Container';
-import { CHALLENGE_PHOTO_RECORD_URL } from '@/constants';
+import { CHALLENGE_PHOTO_RECORD_URL, CHALLENGE_DETAIL_URL } from '@/constants';
 
 const SubmitPicture = () => {
   const router = useRouter();
-  const challengeInfo = {
-    id: 1,
-    name: '1일 1회의',
-  };
-
-  const userInfo = {
-    id: 1,
-    name: 'pthwan',
-  };
-
+  const [challengeInfo, setChallengeInfo] = useState(null);
   const [isSelect, setIsSelect] = useState(false);
+  const [imageSrc, setImageSrc] = useState(null);
   const inputRef = useRef();
-  const imageRef = useRef();
+  const { challengeId } = router.query;
 
   const onClickImage = () => {
     inputRef.current.click();
@@ -33,7 +25,7 @@ const SubmitPicture = () => {
   const onChageImage = e => {
     const reader = new FileReader();
     reader.onload = ({ target }) => {
-      imageRef.current.src = target.result;
+      setImageSrc(target.result);
       setIsSelect(true);
     };
 
@@ -90,21 +82,31 @@ const SubmitPicture = () => {
       });
     }
   };
+
+  useEffect(() => {
+    if (challengeId) {
+      http.get(`${CHALLENGE_DETAIL_URL}/${challengeId}`).then(res => {
+        setChallengeInfo(res.data);
+      });
+    }
+  }, [challengeId]);
+
+  if (!challengeInfo) {
+    return null;
+  }
   return (
     <Container>
-      <Container.SubPageHeader title={challengeInfo.name} />
+      <Container.SubPageHeader title={challengeInfo.title} />
       <Container.Body className="mt-4 px-4">
         <div className="col-span-full">
           <div
             onClick={onClickImage}
-            className="flex justify-center align-middle rounded-lg border border-dashed border-gray-900/25 h-80"
+            className="relative flex justify-center align-middle rounded-lg border border-dashed border-gray-900/25 h-80"
           >
             <Image
-              className={classNames(
-                'w-full h-full object-contain',
-                !isSelect && 'hidden',
-              )}
-              ref={imageRef}
+              fill
+              className={classNames('object-contain', !isSelect && 'hidden')}
+              src={imageSrc || ''}
               id="image-upload-preview"
               alt="업로드할 이미지를 미리볼 수 있습니다."
             />
