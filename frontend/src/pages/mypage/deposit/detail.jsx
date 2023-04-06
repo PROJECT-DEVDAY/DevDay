@@ -10,6 +10,7 @@ import { Button } from '@/components/Button';
 import Container from '@/components/Container';
 import { HeaderButtons } from '@/components/HeaderButtons';
 import { DEPOSIT_WITHDRAW_URL, CHALLENGE_DETAIL_URL } from '@/constants';
+import PrivateRouter from '@/components/PrivateRouter/PrivateRouter';
 
 const History = ({ history = {} }) => {
   const { userId, amount, createdAt, transaction_history_id, type } = history;
@@ -24,7 +25,6 @@ const History = ({ history = {} }) => {
       });
     });
   }
-  console.log(check);
   // 입금일 경우
   if (type === 'REFUND') {
     return (
@@ -238,4 +238,4 @@ const Detail = () => {
   );
 };
 
-export default Detail;
+export default PrivateRouter(Detail);
