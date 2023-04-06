@@ -31,7 +31,7 @@ export const CHALLENGE_JOIN_URL = `${CHALLENGE_SERVICE}/auth/challenges/join`;
 export const CHALLENGE_PHOTO_RECORD_URL = `${CHALLENGE_SERVICE}/auth/challenges/photo-record`;
 export const CHALLENGE_ALGO_URL = `${CHALLENGE_SERVICE}/challenges/baekjoon/users`;
 export const CHALLENGE_SUBMIT_RECORD_URL = param =>
-  `${CHALLENGE_SERVICE}/auth/challenges/${param}/record`;
+  `${CHALLENGE_SERVICE}/auth/challenges/${param.challenge}/record?date=${param.date}`;
 export const CHALLENGE_COMMIT_URL = `${CHALLENGE_SERVICE}/challenges/commit/users`;
 export const CHALLENGE_AUTH_ALGO_URL = `${CHALLENGE_SERVICE}/auth/challenges`;
 export const CHALLENGE_USER_RECORD_DETAIL_URL = recordId =>
