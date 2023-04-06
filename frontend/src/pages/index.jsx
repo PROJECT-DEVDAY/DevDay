@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { useSelector } from 'react-redux';
 import {
   AiOutlineSearch,
   AiOutlinePlus,
@@ -15,7 +16,7 @@ import style from './index.module.scss';
 import { ChallengeItem } from '@/components/ChallengeItem';
 import Container from '@/components/Container';
 import { HeaderButtons } from '@/components/HeaderButtons';
-import { CHALLENGES_SEARCH_URL } from '@/constants';
+import { CHALLENGES_SEARCH_URL, CHALLENGE_JOIN_URL } from '@/constants';
 import { getStartWithEndDate } from '@/utils';
 
 import _debounce from 'lodash/debounce';
@@ -209,19 +210,50 @@ const main = ({ initialList, ...props }) => {
                 hostNickname,
                 endDate,
               } = item;
-
+              const user = useSelector(state => state.user);
+              const [itemHref, setItemHref] = useState('');
+              const checkParticiting = () => {
+                http
+                  .get(CHALLENGE_JOIN_URL, {
+                    params: {
+                      challengeRoomId: id,
+                      nickname: user.userInfo.nickname,
+                    },
+                  })
+                  .then(() => {
+                    setItemHref(`participation/${id}`);
+                  })
+                  .catch(err => {
+                    console.log(err);
+                    if (err.response.data.code === 'J001') {
+                      setItemHref(`/challenge/${id}`);
+                    } else {
+                      Swal.fire({
+                        position: 'center',
+                        icon: 'warning',
+                        title: '실패!',
+                        text: err.response.data.message,
+                        showConfirmButton: false,
+                        timer: 1500,
+                      });
+                      setItemHref('/');
+                    }
+                  });
+              };
               const period = getStartWithEndDate(startDate, endDate);
               return (
-                <ChallengeItem
-                  className="bg-black"
-                  key={id}
-                  id={id}
-                  imgUrl={backGroundUrl}
-                  participants={curParticipantsSize}
-                  leader={hostNickname}
-                  title={title}
-                  period={period}
-                />
+                <div onClick={checkParticiting}>
+                  <ChallengeItem
+                    className="bg-black"
+                    key={id}
+                    id={id}
+                    imgUrl={backGroundUrl}
+                    participants={curParticipantsSize}
+                    leader={hostNickname}
+                    title={title}
+                    period={period}
+                  />
+                </div>
               );
             })}
         </div>

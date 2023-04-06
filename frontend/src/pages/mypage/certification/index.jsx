@@ -1,9 +1,8 @@
+import React, { useEffect, useState } from 'react';
+
+import http from '@/api/http';
 import { CertificationItem } from '@/components/CertificationItem';
 import Container from '@/components/Container';
-import React, { useEffect, useState } from 'react';
-import nickname from '../settings/nickname';
-import http from '@/api/http';
-import axios from 'axios';
 import { MY_CHALLENGES_URL } from '@/constants';
 import { getStartWithEndDate } from '@/utils';
 
@@ -16,7 +15,6 @@ const INITIAL_PARAMS = {
 
 const index = () => {
   const [certificationList, setCertificationList] = useState([]);
-  const user = user;
 
   const getCertificationList = async () => {
     const data = await http.get(MY_CHALLENGES_URL, {
@@ -24,7 +22,6 @@ const index = () => {
         ...INITIAL_PARAMS,
       },
     });
-    console.log(data);
     setCertificationList(data.data.data);
   };
   useEffect(() => {
