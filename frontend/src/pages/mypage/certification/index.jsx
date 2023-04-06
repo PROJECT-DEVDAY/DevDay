@@ -53,7 +53,7 @@ const index = () => {
               return (
                 <CertificationItem
                   key={id}
-                  id={id}
+                  challengeId={id}
                   imgUrl={backgroundUrl}
                   title={title}
                   period={period}
