@@ -1,6 +1,5 @@
 package com.example.payservice.service;
 
-import com.example.payservice.dto.response.ChallengeJoinResponse;
 import com.example.payservice.dto.tosspayments.Payment;
 import com.example.payservice.entity.PayUserEntity;
 import com.example.payservice.repository.DepositTransactionHistoryRepository;
@@ -41,13 +40,9 @@ class PaymentServiceTest {
         when(userService.getPayUserEntityForUpdate(1L)).thenReturn(entity);
 
         // then
-        Assertions.assertEquals(
-                paymentService.saveTransaction(payment, 1L, 2L),
-                ChallengeJoinResponse.builder()
-                .userId(1L)
-                .challengeId(2L)
-                .approve(true)
-                .build());
+        Assertions.assertDoesNotThrow(() -> {
+                paymentService.saveTransaction(payment, 1L, 2L);
+        });
     }
 
 }

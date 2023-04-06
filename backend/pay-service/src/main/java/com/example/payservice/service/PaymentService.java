@@ -7,7 +7,6 @@ import com.example.payservice.dto.deposit.DepositWithdrawTransaction;
 import com.example.payservice.dto.nhbank.Header;
 import com.example.payservice.dto.nhbank.ReceivedTransferType;
 import com.example.payservice.dto.nhbank.RequestTransfer;
-import com.example.payservice.dto.response.ChallengeJoinResponse;
 import com.example.payservice.dto.tosspayments.CancelRequest;
 import com.example.payservice.dto.tosspayments.Payment;
 import com.example.payservice.dto.tosspayments.PaymentInfo;
@@ -30,12 +29,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import javax.transaction.Transactional;
-
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * 토스페이, 농협오픈뱅킹과 관련된 서비스를 처리합니다.
@@ -61,18 +55,12 @@ public class PaymentService {
      * @return
      */
     @Transactional
-    public ChallengeJoinResponse saveTransaction(Payment payment, Long userId, Long challengeId) {
+    public void saveTransaction(Payment payment, Long userId, Long challengeId) {
         PayUserEntity userEntity = userService.getPayUserEntityForUpdate(userId);
 
         DepositTransactionEntity dtEntity = createTransaction(payment, userEntity);
         saveChargeTransactionHistory(payment, userEntity, dtEntity);
         savePayTransactionHistory(payment, userEntity, challengeId);
-
-        return ChallengeJoinResponse.builder()
-                .userId(userId)
-                .challengeId(challengeId)
-                .approve(true)
-                .build();
     }
 
     /**
@@ -144,7 +132,30 @@ public class PaymentService {
                 .block();
     }
 
+    /**
+     *
+     */
+    public Payment cancelForNoSeat(Payment payment) {
+        WebClient client = WebClient.builder()
+                .baseUrl(env.getProperty("payment.toss.baseUrl"))
+                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .defaultHeader(HttpHeaders.AUTHORIZATION, env.getProperty("payment.toss.secret"))
+                .build();
 
+        return client.post()
+                .uri(
+                        String.format(
+                                env.getProperty("payment.toss.path.cancel"),
+                                payment.getPaymentKey())
+                ).bodyValue(new CancelRequest("챌린지 참여 불가로 환불", payment.getTotalAmount()))
+                .retrieve()
+                .onStatus(HttpStatus::isError, response ->
+                        response.bodyToMono(String.class) // error body as String or other class
+                                .flatMap(error -> Mono.error(new PaymentCancelException(error)))
+                )
+                .bodyToMono(Payment.class)
+                .block();
+    }
     /**
      * 결제가 취소/환급에 대해 메시지를 토스에게 전달합니다.
      * @return
