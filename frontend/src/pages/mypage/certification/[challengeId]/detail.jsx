@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
+import classNames from 'classnames';
+import Image from 'next/image';
 import { useRouter } from 'next/router';
 import Web3 from 'web3';
 
 import http from '@/api/http';
 import { Button } from '@/components/Button';
 import Container from '@/components/Container';
+import PrivateRouter from '@/components/PrivateRouter/PrivateRouter';
 import { CHALLENGE_CERTIFICATION_DETAIL } from '@/constants';
 
 // import style from './detail.modules.scss';
 
 import { getStartWithEndDate } from '@/utils';
-import classNames from 'classnames';
-import Image from 'next/image';
 
 const web3 = new Web3(
   Web3.givenProvider ||
@@ -200,10 +201,10 @@ export const detail = () => {
 
   return (
     <Container>
-      <Container.SubPageHeader title={'인증서'} />
+      <Container.SubPageHeader title="인증서" />
 
-      <Container.Body className={'px-10 pb-8 w-full h-full'}>
-        <div className="w-full mt-20 text-center font-bold text-xl">
+      <Container.Body className="px-10 pb-8 w-full h-full">
+        <div className="w-full mt-4 text-center font-bold text-xl">
           CERTIFICATE OF COMPLETION
         </div>
         <div className="w-full text-center mt-2 font-bold text-base">
@@ -246,10 +247,10 @@ export const detail = () => {
           인정하여 인증서를 수여합니다.
         </div>
 
-        <div className="w-full mt-14 text-right text-bold text-base">
+        <div className="w-full mt-10 text-right font-medium text-base">
           챌린지 기간 : {challengeDetail.startDate} ~ {challengeDetail.endDate}
         </div>
-        <div className="w-full mt-4 text-right text-bold text-base">
+        <div className="w-full mt-4 text-right font-medium text-base">
           달성률 : {challengeDetail.progressRate} %{' '}
         </div>
 
@@ -266,7 +267,7 @@ export const detail = () => {
       </Container.Body>
 
       <Container.MainFooter className="p-4">
-        <Button label="저장하기" onClick={handleSubmit} />
+        <Button label="블록체인에 저장하기" onClick={handleSubmit} />
       </Container.MainFooter>
     </Container>
   );

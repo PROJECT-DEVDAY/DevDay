@@ -9,8 +9,8 @@ import http from '@/api/http';
 import { Button } from '@/components/Button';
 import Container from '@/components/Container';
 import { HeaderButtons } from '@/components/HeaderButtons';
-import { DEPOSIT_WITHDRAW_URL, CHALLENGE_DETAIL_URL } from '@/constants';
 import PrivateRouter from '@/components/PrivateRouter/PrivateRouter';
+import { DEPOSIT_WITHDRAW_URL, CHALLENGE_DETAIL_URL } from '@/constants';
 
 const History = ({ history = {} }) => {
   const { userId, amount, createdAt, transaction_history_id, type } = history;
