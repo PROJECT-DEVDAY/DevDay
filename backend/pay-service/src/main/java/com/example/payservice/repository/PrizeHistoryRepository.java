@@ -29,7 +29,7 @@ public interface PrizeHistoryRepository extends JpaRepository<PrizeHistoryEntity
 
     @Query("SELECT p.prizeHistoryType as prizeHistoryType, SUM(p.amount) as sum"
         + " FROM PrizeHistoryEntity p"
-        + " WHERE p.user.userId= :userId"
+        + " WHERE p.user = :user"
         + " GROUP BY p.prizeHistoryType")
-    List<PrizeSummary> getSummaryByUserId(Long userId);
+    List<PrizeSummary> getSummaryByUser(PayUserEntity user);
 }

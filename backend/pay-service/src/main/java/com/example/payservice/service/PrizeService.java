@@ -170,7 +170,8 @@ public class PrizeService {
     }
 
     public PrizeSummaryDto getSummary(long userId) {
-        List<PrizeSummary> summaryList = prizeHistoryRepository.getSummaryByUserId(userId);
+        PayUserEntity user = userService.getPayUserEntity(userId);
+        List<PrizeSummary> summaryList = prizeHistoryRepository.getSummaryByUser(user);
 
         Iterator<PrizeSummary> iter = summaryList.iterator();
 
