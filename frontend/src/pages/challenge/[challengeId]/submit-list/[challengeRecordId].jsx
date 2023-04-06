@@ -11,6 +11,7 @@ import Container from '@/components/Container';
 import {
   CHALLENGE_USER_RECORD_DETAIL_URL,
   CHALLENGE_USER_RECORD_REPORT_URL,
+  CHALLENGE_DETAIL_URL,
 } from '@/constants';
 
 const Page = () => {
@@ -18,11 +19,14 @@ const Page = () => {
   const user = useSelector(state => state.user);
   const { challengeId, challengeRecordId, title } = router.query;
   const [record, setRecord] = useState(null);
+  const [data, setData] = useState('');
 
   const fetchRecord = async id => {
     try {
-      const { data } = http.get(CHALLENGE_USER_RECORD_DETAIL_URL(id));
-      setRecord(data.data);
+      http.get(CHALLENGE_USER_RECORD_DETAIL_URL(id)).then(res => {
+        console.log(res);
+        setRecord(res.data.data);
+      });
     } catch (e) {
       console.error(e);
     }
@@ -30,6 +34,9 @@ const Page = () => {
 
   useEffect(() => {
     if (challengeRecordId) fetchRecord(challengeRecordId);
+    http.get(`${CHALLENGE_DETAIL_URL}/${challengeId}`).then(res => {
+      setData(res.data);
+    });
   }, [challengeRecordId]);
 
   const report = async () => {
@@ -49,10 +56,11 @@ const Page = () => {
         timer: 800,
       });
     } catch (e) {
+      console.log(e);
       Swal.fire({
         position: 'center',
         icon: 'error',
-        title: e.message,
+        title: e.response.data.message,
         showConfirmButton: false,
         timer: 800,
       });
@@ -73,6 +81,12 @@ const Page = () => {
               챌린저님
               <span className="text-xl font-bold"> 의 인증내역</span>
             </h5>
+            <div className="mt-4 mb-6 text-left w-full">
+              <div className="flex justify-between">
+                <div className="font-medium">인증 날짜</div>
+                <div>{record.createAt}</div>
+              </div>
+            </div>
             <div className="w-full h-40 relative">
               <Image
                 src={record.photoUrl}
@@ -80,21 +94,13 @@ const Page = () => {
                 fill
               />
             </div>
-            <div className="mt-4 mb-6 text-left w-full">
-              <div className="grid grid-cols-2">
-                <div className="font-medium">인증 날짜</div>
-                <div>{record.createAt}</div>
-              </div>
-            </div>
-            <div>
-              <div className="w-fit ml-auto">
-                <Button
-                  className="px-2"
-                  color="danger"
-                  label="신고하기"
-                  onClick={report}
-                />
-              </div>
+            <div className="w-fit ml-auto">
+              <Button
+                className="px-2"
+                color="danger"
+                label="신고하기"
+                onClick={report}
+              />
             </div>
           </div>
         )}
