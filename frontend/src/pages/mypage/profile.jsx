@@ -42,7 +42,7 @@ const profile = () => {
   };
 
   const challengeCertification = () => {
-    router.push('');
+    router.push('/mypage/certification');
   };
   const onClickLogout = async () => {
     Swal.fire({

@@ -16,13 +16,12 @@ const SubmitList = ({ challengeInfo, today, range }) => {
   const [curDate, setDate] = useState(today);
   const [item, setItem] = useState([]);
   const router = useRouter();
-
   const changeDate = e => {
     setDate(e.target.value);
   };
 
   useEffect(() => {
-    console.log(challengeInfo);
+    // console.log(challengeInfo);
     if (curDate) {
       http
         .get(`${CHALLENGES_URL}/${challengeInfo.id}/record`, {
