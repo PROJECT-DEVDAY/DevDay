@@ -18,10 +18,9 @@ export const ChallengeItem = ({
   onClick,
   ...props
 }) => {
-  const itemHref = `participation/${id}`;
   return (
     <Link
-      href={itemHref}
+      href={`/participation/${id}`}
       className={style.ChallengeItem}
       role="button"
       tabIndex={0}
