@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Button from '.';
+import { Button } from '.';
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
@@ -24,5 +24,5 @@ export const Primary = Template.bind({});
 Primary.args = {
   color: 'primary',
   label: 'Button',
-  fill: false,
+  fill: true,
 };

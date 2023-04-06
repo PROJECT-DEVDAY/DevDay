@@ -1,8 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
   --color-chunsik: #fff962;
   --color-kiyoon: #5669ff;
   --color-guembi: #ffaf14;
   --color-taehwan: #e6e6fa;
+
+  --color-warning: #ff4444;
+  --gray-bg: #fafafa;
+  --gray-border: #e7e7e7;
+  --gray-hr: #dddddd;
+  --gray-enabled: #d5d5d5;
+  --gray-extra: #595959;
+
+  --color-success: #9bffa037;
+  --color-fail: #ff9b9b55;
+
+  --red-border: #ff9b9b;
 }
 
 * {
@@ -15,6 +31,7 @@ html,
 body {
   max-width: 100vw;
   overflow-x: hidden;
+  background-color: #fafafa;
 }
 
 a {
@@ -22,6 +39,32 @@ a {
   text-decoration: none;
 }
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* 배경색 */
+.gray-bg {
+  background-color: #fafafa;
+}
+
+/* 선색, 부가설명 배경 */
+.gray-border {
+  background-color: #e7e7e7;
+}
+
+/* 구분선 */
+.gray-hr {
+  background-color: #dddddd;
+}
+
+/* 미사용 버튼 */
+.gray-enabled {
+  background-color: #d5d5d5;
+}
+
+/* 부가설명 */
+.gray-extra {
+  background-color: #595959;
+}
+
+/* 작은 글시 */
+.very-very-small {
+  font-size: 8px;
+}

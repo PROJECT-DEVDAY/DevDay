@@ -1,0 +1,20 @@
+.HeaderSearch {
+  height: 100%;
+  .searchContainer {
+    position: relative;
+    input {
+      background-color: var(--gray-border);
+      width: 100%;
+      padding-right: 48px;
+    }
+    svg {
+      color: var(--gray-extra);
+      position: absolute;
+      right: 12px;
+      cursor: pointer;
+    }
+    svg:nth-child(2) {
+      right: 10px;
+    }
+  }
+}

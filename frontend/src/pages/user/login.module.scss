@@ -1,0 +1,52 @@
+.signup {
+  color: var(--color-kiyoon);
+  font-family: Gmarket-Sans-Medium;
+}
+
+.bottom-sheet {
+  position: fixed;
+  bottom: -250px; /* 아래로 숨겨진 상태 */
+  left: 0;
+  width: 100%;
+  height: 100px;
+  background-color: #fff;
+  box-shadow: 0 -1px 10px rgba(0, 0, 0, 0.3);
+  transition: bottom 0.3s ease-out; /* bottom 속성을 변경할 때, 0.3초 동안 천천히 변화 */
+  z-index: 9999;
+}
+
+.bottom-sheet.show {
+  bottom: 0; /* 아래에서 올라옴 */
+}
+
+.toggle {
+  display: none;
+  &:checked + div {
+    background-color: var(--color-kiyoon);
+  }
+  &:checked + div:after {
+    left: calc(100% - 35 * 0.5px);
+  }
+}
+.togglelabel {
+  display: inline-block;
+}
+.togglelabelhandle {
+  width: 80 * 0.4px;
+  height: 35 * 0.5px;
+  padding: 1px 0px 0px 1px;
+  border-radius: 20px;
+  background-color: var(--color-taehwan);
+}
+
+.togglelabelhandle::after {
+  content: '';
+  position: relative;
+  left: 0;
+  display: block;
+  width: 30 * 0.5px;
+  height: 30 * 0.5px;
+  border-radius: 50%;
+  background-color: white;
+  transition: left 0.4s ease-in-out;
+}
