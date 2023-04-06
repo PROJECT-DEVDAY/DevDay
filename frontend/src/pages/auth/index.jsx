@@ -133,6 +133,7 @@ const auth = ({ ...props }) => {
       offset: '',
     });
   };
+  ``;
 
   useEffect(() => {
     if (challengeList && challengeList.length > 0) {
