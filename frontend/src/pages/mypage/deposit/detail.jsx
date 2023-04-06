@@ -1,120 +1,103 @@
 import { useEffect, useState } from 'react';
 
-import http from '@/api/http';
-import Container from '@/components/Container';
-import { DEPOSIT_WITHDRAW_URL } from '@/constants';
-import { HeaderButtons } from '@/components/HeaderButtons';
-import historyStyle from './history.module.scss';
-import detailStyle from './detail.module.scss';
 import classNames from 'classnames';
+
+import detailStyle from './detail.module.scss';
+import historyStyle from './history.module.scss';
+
+import http from '@/api/http';
 import { Button } from '@/components/Button';
+import Container from '@/components/Container';
+import { HeaderButtons } from '@/components/HeaderButtons';
+import { DEPOSIT_WITHDRAW_URL, CHALLENGE_DETAIL_URL } from '@/constants';
 
 const History = ({ history = {} }) => {
-  const {
-    userId,
-    amount,
-    account,
-    createdAt,
-    history_id: historyId,
-    challenge,
-    type,
-  } = history;
-
+  const { userId, amount, createdAt, transaction_history_id, type } = history;
+  const [data, setData] = useState('');
+  http.get(`${CHALLENGE_DETAIL_URL}/${transaction_history_id}`).then(res => {
+    setData(res.data);
+  });
   // 입금일 경우
   if (type === 'REFUND') {
     return (
-      <div id={historyId} className={historyStyle.Item}>
-        <div className={'flex align-center font-medium text-lg'}>
+      <div id={transaction_history_id} className={historyStyle.Item}>
+        <div className="flex align-center font-medium text-lg">
           <div className="flex-1">
             {new Date(createdAt).toLocaleDateString()}
           </div>
-
-          <div className="flex-1 shrink-0">{'상금 획득'}</div>
-          <div className="flex-1 shrink-0 text-right text-blue-700">
-            + {amount}
+          <div className="font-medium text-lg text-right">
+            <p>{data.title}</p>
           </div>
         </div>
-        <div className="text-sm text-right">
-          <p>{challenge.title}</p>
-          <p>{`(${challenge.startDate}~${challenge.endDate})`}</p>
-        </div>
-      </div>
-    );
-  } else if (type === 'PAY') {
-    return (
-      <div id={historyId} className={historyStyle.Item}>
-        <div className={'flex align-center font-medium text-lg'}>
-          <div className="flex-1">
-            {new Date(createdAt).toLocaleDateString()}
+        <div className="flex align-center">
+          <div className="flex-1 shrink-0">예치금 환급</div>
+          <div className="flex-1 shrink-0 font-medium text-lg text-right text-blue-700">
+            + {amount}원
           </div>
-
-          <div className="flex-1 shrink-0">{'상금 획득'}</div>
-          <div className="flex-1 shrink-0 text-right text-blue-700">
-            + {amount}
-          </div>
-        </div>
-        <div className="text-sm text-right">
-          <p>{challenge.title}</p>
-          <p>{`(${challenge.startDate}~${challenge.endDate})`}</p>
-        </div>
-      </div>
-    );
-  } else if (type === 'CHARGE') {
-    return (
-      <div id={historyId} className={historyStyle.Item}>
-        <div className={'flex align-center font-medium text-lg'}>
-          <div className="flex-1">
-            {new Date(createdAt).toLocaleDateString()}
-          </div>
-
-          <div className="flex-1 shrink-0">{'상금 획득'}</div>
-          <div className="flex-1 shrink-0 text-right text-blue-700">
-            + {amount}
-          </div>
-        </div>
-        <div className="text-sm text-right">
-          <p>{challenge.title}</p>
-          <p>{`(${challenge.startDate}~${challenge.endDate})`}</p>
-        </div>
-      </div>
-    );
-  } else if (type === 'CANCEL') {
-    return (
-      <div id={historyId} className={historyStyle.Item}>
-        <div className={'flex align-center font-medium text-lg'}>
-          <div className="flex-1">
-            {new Date(createdAt).toLocaleDateString()}
-          </div>
-
-          <div className="flex-1 shrink-0">{'상금 획득'}</div>
-          <div className="flex-1 shrink-0 text-right text-blue-700">
-            + {amount}
-          </div>
-        </div>
-        <div className="text-sm text-right">
-          <p>{challenge.title}</p>
-          <p>{`(${challenge.startDate}~${challenge.endDate})`}</p>
         </div>
       </div>
     );
   }
-
-  // 출금일 경우
-  return (
-    <div id={historyId} className={historyStyle.Item}>
-      <div className={'flex align-center font-medium text-lg'}>
-        <div className="flex-1">{new Date(createdAt).toLocaleDateString()}</div>
-
-        <div className="flex-1 shrink-0">{'상금 출금'}</div>
-        <div className="flex-1 shrink-0 text-right text-red-700">
-          - {amount}
+  if (type === 'PAY') {
+    return (
+      <div id={transaction_history_id} className={historyStyle.Item}>
+        <div className="flex align-center font-medium text-lg">
+          <div className="flex-1">
+            {new Date(createdAt).toLocaleDateString()}
+          </div>
+          <div className="font-medium text-lg text-right">
+            <p>{data.title}</p>
+          </div>
+        </div>
+        <div className="flex align-center ">
+          <div className="flex-1 shrink-0">예치금 사용</div>
+          <div className="flex-1 shrink-0 font-medium text-lg text-right text-red-700">
+            - {amount}원
+          </div>
         </div>
       </div>
-      <div className="text-sm text-right">
-        <p>{`${account?.number} ${account?.depositor}`}</p>
+    );
+  }
+  if (type === 'CHARGE') {
+    return (
+      <div id={transaction_history_id} className={historyStyle.Item}>
+        <div className="flex align-center font-medium text-lg">
+          <div className="flex-1">
+            {new Date(createdAt).toLocaleDateString()}
+          </div>
+          <div className="font-medium text-lg text-right">
+            <p>{data.title}</p>
+          </div>
+        </div>
+        <div className="flex align-center">
+          <div className="flex-1 shrink-0">예치금 충전</div>
+          <div className="flex-1 shrink-0 font-medium text-lg text-right text-blue-700">
+            + {amount}원
+          </div>
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
+  if (type === 'CANCEL') {
+    return (
+      <div id={transaction_history_id} className={historyStyle.Item}>
+        <div className="flex align-center font-medium text-lg">
+          <div className="flex-1">
+            {new Date(createdAt).toLocaleDateString()}
+          </div>
+          <div className="font-medium text-lg text-right">
+            <p>{data.title}</p>
+          </div>
+        </div>
+        <div className="flex align-center">
+          <div className="flex-1 shrink-0">예치금 환불</div>
+          <div className="flex-1 shrink-0  text-lg font-medium text-right text-red-700">
+            - {amount}원
+          </div>
+        </div>
+      </div>
+    );
+  }
 };
 
 const NAV = {
@@ -209,7 +192,7 @@ const Detail = () => {
       >
         <div className="pt-4 pb-8">
           <HeaderButtons
-            buttonClassName="border-2 border-black px-8"
+            buttonClassName="border-2 border-black px-2"
             items={NAV_LIST}
             select={type}
             setSelect={selectType}
@@ -217,7 +200,9 @@ const Detail = () => {
         </div>
         <div className={classNames(detailStyle.List)}>
           {histories.map(history => (
-            <History history={history} key={history.history_id} />
+            <div className="mb-8">
+              <History history={history} key={history.history_id} />
+            </div>
           ))}
         </div>
         <div
@@ -230,13 +215,13 @@ const Detail = () => {
           <div className="grid grid-cols-2 gap-2 flex-1">
             <Button
               className=""
-              label={'이전'}
+              label="이전"
               disabled={currentPage <= 1}
               onClick={movePrevPage}
             />
             <Button
               className=""
-              label={'다음'}
+              label="다음"
               disabled={currentPage >= totalPages}
               onClick={moveNextPage}
             />
