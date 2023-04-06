@@ -160,6 +160,15 @@ public class AuthController {
         return challengeService.getProgressUserBaekjoon(userId, Long.parseLong(challengeId));
     }
 
+    /**
+     * 챌린지 완료 중 하나를 선택했을 때
+     * 그 인증 정보를 가지고 오는 API
+     */
+    @PostMapping("/certification/users/{challengeId}")
+    public CertificationResponseDto getCertification(HttpServletRequest request, @PathVariable String challengeId){
+        Long userId= Long.parseLong(request.getHeader(USER_ID));
+        return challengeService.getCertification(userId, Long.parseLong(challengeId));
+    }
 
 
 }
