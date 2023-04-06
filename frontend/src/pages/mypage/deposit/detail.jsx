@@ -14,9 +14,17 @@ import { DEPOSIT_WITHDRAW_URL, CHALLENGE_DETAIL_URL } from '@/constants';
 const History = ({ history = {} }) => {
   const { userId, amount, createdAt, transaction_history_id, type } = history;
   const [data, setData] = useState('');
-  http.get(`${CHALLENGE_DETAIL_URL}/${transaction_history_id}`).then(res => {
-    setData(res.data);
-  });
+  const [check, setCheck] = useState([]);
+  if (!(transaction_history_id in check)) {
+    http.get(`${CHALLENGE_DETAIL_URL}/${transaction_history_id}`).then(res => {
+      setData(res.data);
+
+      setCheck(check => {
+        return [...check, transaction_history_id];
+      });
+    });
+  }
+  console.log(check);
   // 입금일 경우
   if (type === 'REFUND') {
     return (
