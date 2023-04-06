@@ -82,7 +82,6 @@ const nickname = () => {
       email: email,
       password: password,
     };
-    console.log(data);
     http.patch(CHANGE_NICKNAME_URL, data).then(res => {
       router.back();
     });
