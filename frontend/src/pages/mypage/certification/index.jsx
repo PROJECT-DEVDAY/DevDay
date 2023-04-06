@@ -4,9 +4,9 @@ import { useSelector } from 'react-redux';
 import http from '@/api/http';
 import { CertificationItem } from '@/components/CertificationItem';
 import Container from '@/components/Container';
+import PrivateRouter from '@/components/PrivateRouter/PrivateRouter';
 import { MY_CHALLENGES_URL } from '@/constants';
 import { getStartWithEndDate } from '@/utils';
-import PrivateRouter from '@/components/PrivateRouter/PrivateRouter';
 
 const INITIAL_PARAMS = {
   status: 'DONE',
@@ -14,9 +14,9 @@ const INITIAL_PARAMS = {
   offset: '',
   search: '',
 };
-const user = useSelector(state => state.user);
 
 const index = () => {
+  const user = useSelector(state => state.user);
   const [certificationList, setCertificationList] = useState([]);
 
   const getCertificationList = async () => {
@@ -73,4 +73,4 @@ const index = () => {
   );
 };
 
-export default PrivateRouter(index);
+export default index;
