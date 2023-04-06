@@ -30,18 +30,7 @@ const challengeintro = props => {
       });
     }
   }, [challengeId]);
-  const expData = {
-    datasets: [
-      {
-        labels: ['A', 'B', 'C', 'D'],
-        data: [1, 1, 1, 1],
-        borderWidth: 2,
-        hoverBorderWidth: 3,
-        backgroundColor: ['#ffaf14', '#fff962', '#ffaf14', '#fff962'],
-        fill: true,
-      },
-    ],
-  };
+
   const settings = {
     dots: true,
     infinite: true,
@@ -67,10 +56,12 @@ const challengeintro = props => {
       })
       .then(res => {
         router.push(`/participation/${challengeId}/pay`);
+        console.log(res);
       })
       .catch(err => {
+        console.log(err);
         if (err.response.data.code === 'J001') {
-          router.push(`/challenge/${challengeId}`);
+          router.replace(`/challenge/${challengeId}`);
         } else {
           Swal.fire({
             position: 'center',
