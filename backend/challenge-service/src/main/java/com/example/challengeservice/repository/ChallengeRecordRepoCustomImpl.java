@@ -104,7 +104,7 @@ public class ChallengeRecordRepoCustomImpl implements ChallengeRecordRepoCustom 
 
 
     @Override
-    public Optional<ChallengeRecordResponseDto> findByUserChallengeIdAndCreateAt(Long userChallengeId, String createAt) {
+    public List<ChallengeRecordResponseDto> findByUserChallengeIdAndCreateAt(Long userChallengeId, String createAt) {
         JPAQuery<ChallengeRecordResponseDto> query= jpaQueryFactory.select(Projections.constructor(
                         ChallengeRecordResponseDto.class,
                         challengeRecord.id,
@@ -117,6 +117,7 @@ public class ChallengeRecordRepoCustomImpl implements ChallengeRecordRepoCustom 
                 .from(challengeRecord)
                 .where(challengeRecord.userChallenge.id.eq(userChallengeId)
                         .and(challengeRecord.createAt.eq(createAt)));
-        return Optional.ofNullable(query.fetchOne());
+        return query.fetch();
+//        return Optional.ofNullable(query.fetchOne());
     }
 }
