@@ -8,7 +8,7 @@ export const EMAIL_URL = `${USER_SERVICE}/email`;
 export const CONFIRM_EMAIL_URL = `${USER_SERVICE}/confirm-email`;
 
 export const NICKNAME_URL = `${USER_SERVICE}/nickname`;
-
+export const CHANGE_NICKNAME_URL = `${USER_SERVICE}/auth/user/nickname`;
 export const MYPAGE_URL = `${USER_SERVICE}/auth`;
 export const PROFILE_URL = `${USER_SERVICE}/auth/user/detail`;
 export const GITHUBBAEKJOON_URL = `${USER_SERVICE}/auth/user/githubandbaekjoon`;
