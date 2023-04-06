@@ -81,6 +81,9 @@ const index = () => {
   const goToCurrentSituation = () => {
     router.push('/mypage/deposit/current-situation');
   };
+  const goToDetail = () => {
+    router.push('/mypage/deposit/detail');
+  };
 
   return (
     <Container>
@@ -107,7 +110,11 @@ const index = () => {
             className="text-sm"
             onClick={goToCurrentSituation}
           />
-          <SelectArrow title="예치금 전체 조회" className="text-sm" />
+          <SelectArrow
+            title="예치금 전체 조회"
+            className="text-sm"
+            onClick={goToDetail}
+          />
         </div>
       </Container.Body>
       <Container.Footer>

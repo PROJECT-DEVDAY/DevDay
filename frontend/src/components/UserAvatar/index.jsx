@@ -1,13 +1,14 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { ImCancelCircle } from 'react-icons/im';
 
+import classnames from 'classnames';
 import Image from 'next/image';
 import Swal from 'sweetalert2';
-import { httpForm } from '@/api/http';
-import classnames from 'classnames';
-import style from './index.module.scss';
-import { UPDATE_PROFILE_URL, UPDATE_DEFAULT_PROFILE_URL } from '@/constants';
 
-import { ImCancelCircle } from 'react-icons/im';
+import style from './index.module.scss';
+
+import { httpForm } from '@/api/http';
+import { UPDATE_PROFILE_URL, UPDATE_DEFAULT_PROFILE_URL } from '@/constants';
 
 export const UserAvatar = ({
   imageURL,
