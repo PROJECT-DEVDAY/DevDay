@@ -8,6 +8,7 @@ import Swal from 'sweetalert2';
 import http from '@/api/http';
 import { Button } from '@/components/Button';
 import Container from '@/components/Container';
+import PrivateRouter from '@/components/PrivateRouter/PrivateRouter';
 import { CHALLENGE_PHOTO_RECORD_URL, CHALLENGE_DETAIL_URL } from '@/constants';
 
 const SubmitPicture = () => {
@@ -154,4 +155,4 @@ const SubmitPicture = () => {
   );
 };
 
-export default SubmitPicture;
+export default PrivateRouter(SubmitPicture);

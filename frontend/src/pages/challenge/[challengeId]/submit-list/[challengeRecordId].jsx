@@ -8,6 +8,7 @@ import Swal from 'sweetalert2';
 import http from '@/api/http';
 import { Button } from '@/components/Button';
 import Container from '@/components/Container';
+import PrivateRouter from '@/components/PrivateRouter/PrivateRouter';
 import {
   CHALLENGE_USER_RECORD_DETAIL_URL,
   CHALLENGE_USER_RECORD_REPORT_URL,
@@ -110,4 +111,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default PrivateRouter(Page);

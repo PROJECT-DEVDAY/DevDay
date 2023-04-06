@@ -1,6 +1,8 @@
 server:
   port: 0
 cloud:
+  jackson:
+    time-zone: Asia/Seoul
   aws:
     region:
       static: ap-northeast-2

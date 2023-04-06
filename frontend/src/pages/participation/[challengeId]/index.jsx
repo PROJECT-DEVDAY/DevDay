@@ -79,7 +79,7 @@ const challengeintro = props => {
   const { week, day } = getWeekDiff(data.startDate, data.endDate);
   return (
     <Container>
-      <Container.SubPageHeader />
+      <Container.SubPageHeader goHome />
       <Image
         src={data.backGroundUrl}
         alt="logo"

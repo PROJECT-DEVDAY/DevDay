@@ -9,6 +9,7 @@ import http from '@/api/http';
 import { Button } from '@/components/Button';
 import Container from '@/components/Container';
 import { HeaderButtons } from '@/components/HeaderButtons';
+import PrivateRouter from '@/components/PrivateRouter/PrivateRouter';
 import { DEPOSIT_WITHDRAW_URL, CHALLENGE_DETAIL_URL } from '@/constants';
 
 const History = ({ history = {} }) => {
@@ -24,7 +25,6 @@ const History = ({ history = {} }) => {
       });
     });
   }
-  console.log(check);
   // 입금일 경우
   if (type === 'REFUND') {
     return (
@@ -238,4 +238,4 @@ const Detail = () => {
   );
 };
 
-export default Detail;
+export default PrivateRouter(Detail);

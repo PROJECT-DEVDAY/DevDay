@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 
 import http from '@/api/http';
 import { CertificationItem } from '@/components/CertificationItem';
 import Container from '@/components/Container';
+import PrivateRouter from '@/components/PrivateRouter/PrivateRouter';
 import { MY_CHALLENGES_URL } from '@/constants';
 import { getStartWithEndDate } from '@/utils';
 
@@ -14,6 +16,7 @@ const INITIAL_PARAMS = {
 };
 
 const index = () => {
+  const user = useSelector(state => state.user);
   const [certificationList, setCertificationList] = useState([]);
 
   const getCertificationList = async () => {
@@ -58,7 +61,7 @@ const index = () => {
             성공적으로 마친 챌린지를 볼 수 있습니다.
           </div>
           <div>
-            홍길동님이 완료된 챌린지는{' '}
+            {user.userInfo.nickname}님이 완료된 챌린지는
             <span className="text-red-500 font-bold text-lg">
               {certificationList.length}
             </span>

@@ -9,6 +9,7 @@ import style from './challenge.module.scss';
 
 import http from '@/api/http';
 import Container from '@/components/Container';
+import PrivateRouter from '@/components/PrivateRouter/PrivateRouter';
 import {
   CHALLENGE_DETAIL_URL,
   CHALLENGE_ALGO_URL,
@@ -152,4 +153,4 @@ const mySubmitList = ({ ...props }) => {
   );
 };
 
-export default mySubmitList;
+export default PrivateRouter(mySubmitList);
