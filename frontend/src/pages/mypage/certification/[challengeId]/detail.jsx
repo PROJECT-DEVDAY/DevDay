@@ -9,6 +9,12 @@ import { Button } from '@/components/Button';
 import Container from '@/components/Container';
 import { CHALLENGE_CERTIFICATION_DETAIL } from '@/constants';
 
+// import style from './detail.modules.scss';
+
+import { getStartWithEndDate } from '@/utils';
+import classNames from 'classnames';
+import Image from 'next/image';
+
 const web3 = new Web3(
   Web3.givenProvider ||
     'https://sepolia.infura.io/v3/ec420a0b4477455bbd302b977d63a3ef',
@@ -124,6 +130,7 @@ export const detail = () => {
     progressRate: '',
     userChallengeId: '',
   });
+
   const user = useSelector(state => state.user);
 
   const [account, setAccount] = useState('');
@@ -193,12 +200,80 @@ export const detail = () => {
 
   return (
     <Container>
-      <Container.SubPageHeader />
-      <div>{user.userInfo.name}</div>
+      <Container.SubPageHeader title={'인증서'} />
 
+<<<<<<< HEAD
+      <Container.Body className={'px-10 pb-8 w-full h-full'}>
+        <div className="w-full mt-20 text-center font-bold text-xl">
+          CERTIFICATE OF COMPLETION
+        </div>
+        <div className="w-full text-center mt-2 font-bold text-base">
+          챌린지 달성 확인서
+        </div>
+
+        <div
+          className="w-full mt-10 pb-1 text-center text-2xl font-bold"
+          style={{ borderBottom: '3px solid black' }}
+        >
+          {user.userInfo.name}
+        </div>
+        <div
+          className="w-full mt-1 text-center text-sm"
+          style={{ color: 'var(--gray-extra)' }}
+        >
+          NAME
+        </div>
+
+        <div
+          className="w-full mt-10 pb-1 text-center text-2xl font-bold"
+          style={{ borderBottom: '3px solid black' }}
+        >
+          {challengeDetail.title}
+        </div>
+
+        <div
+          className="w-full mt-1  text-center text-sm"
+          style={{ color: 'var(--gray-extra)' }}
+        >
+          CHALLENGE
+        </div>
+
+        <div
+          className="w-full mt-4 text-center text-base"
+          style={{ 'font-family': 'Gmarket-Sans-Medium' }}
+        >
+          위의 챌린지를 성공적으로 수행했음을
+          <br />
+          인정하여 인증서를 수여합니다.
+        </div>
+
+        <div className="w-full mt-14 text-right text-bold text-base">
+          챌린지 기간 : {challengeDetail.startDate} ~ {challengeDetail.endDate}
+        </div>
+        <div className="w-full mt-4 text-right text-bold text-base">
+          달성률 : {challengeDetail.progressRate} %{' '}
+        </div>
+
+        <div className="imageContainer flex justify-center" style={{}}>
+          <div className="w-44 h-32 mt-10 relative">
+            <Image
+              src={require('../../../../image/main_logo.png')}
+              className="w-full"
+              alt="logo"
+              fill
+            />
+          </div>
+        </div>
+      </Container.Body>
+
+      <Container.Footer>
+        <Button label={'저장하기'} onClick={handleSubmit}></Button>
+      </Container.Footer>
+=======
       <Container.MainFooter className="p-4">
         <Button label="저장하기" onClick={handleSubmit} />
       </Container.MainFooter>
+>>>>>>> 18935e34f9932a999c812916ca04dda426c554a8
     </Container>
   );
 };
