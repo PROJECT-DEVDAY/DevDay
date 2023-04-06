@@ -10,7 +10,7 @@ import { InputLabel } from '@/components/InputLabel';
 import { InputText } from '@/components/InputText';
 import PrivateRouter from '@/components/PrivateRouter/PrivateRouter';
 import { ReturnArrow } from '@/components/ReturnArrow';
-import { NICKNAME_URL } from '@/constants';
+import { NICKNAME_URL, CHANGE_NICKNAME_URL } from '@/constants';
 import { useSelector } from 'react-redux';
 
 import style from './nickname.module.scss';
@@ -29,19 +29,16 @@ const nickname = () => {
 
     return errors;
   };
+
   const {
     register,
     formState: { errors },
     reset,
+    watch,
   } = useForm({ validate, mode: 'onBlur' });
 
-  const [inputs, setInputs] = useState({
-    newNickname: '',
-    email: '',
-    password: '',
-  });
+  const [inputs, setInputs] = useState('');
 
-  const { newNickname, email, password } = inputs;
   const onChangeInputs = e => {
     const { value, name } = e.target;
     setInputs({
@@ -50,10 +47,23 @@ const nickname = () => {
     });
   };
 
+  const [nickname, setNickname] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const onChangeNickname = e => {
+    setNickname(e.target.value);
+  };
+  const onChangeEmail = e => {
+    setEmail(e.target.value);
+  };
+  const onChangePassword = e => {
+    setPassword(e.target.value);
+  };
   // nickname check logic
   const onClickDuplicateCheck = async () => {
     await http
-      .post(NICKNAME_URL, { newNickname })
+      .post(NICKNAME_URL, { nickname: watch('nickname') })
       .then(() => {
         setUserNickNameDuplicatedChk(true);
         setUserNickNameValidCheck(true);
@@ -65,6 +75,17 @@ const nickname = () => {
   const retryNickname = () => {
     setUserNickNameDuplicatedChk(false);
     setUserNickNameValidCheck(false);
+  };
+  const changeNickname = () => {
+    const data = {
+      nickname: watch('nickname'),
+      email: email,
+      password: password,
+    };
+    console.log(data);
+    http.patch(CHANGE_NICKNAME_URL, data).then(res => {
+      router.back();
+    });
   };
   return (
     <Container>
@@ -79,10 +100,10 @@ const nickname = () => {
         <div className={classNames(style.InputText, 'flex w-full my-2 pb-1')}>
           <input
             type="text"
-            name="newNickname"
+            name={'nickname'}
             placeholder="닉네임을 입력해주세요"
             className={classNames(style.Content, `w-full h-6`)}
-            onChange={onChangeInputs}
+            onChange={onChangeNickname}
             readOnly={nickNameValidCheck}
             {...register('nickname', {
               required: true,
@@ -140,7 +161,7 @@ const nickname = () => {
         <InputText
           content="welcome@devday.com"
           name={'email'}
-          onChange={onChangeInputs}
+          onChange={onChangeEmail}
         />
         <div className="mt-8 mb-4">
           <InputLabel content="비밀번호" />
@@ -148,11 +169,11 @@ const nickname = () => {
         <InputText
           content="12자리 이상, 대문자, 소문자, 특수문자 포함"
           name={'password'}
-          onChange={onChangeInputs}
+          onChange={onChangePassword}
         />
       </Container.Body>
       <Container.Footer className="p-4">
-        <Button label="확인" />
+        <Button label="확인" onClick={changeNickname} />
       </Container.Footer>
     </Container>
   );
