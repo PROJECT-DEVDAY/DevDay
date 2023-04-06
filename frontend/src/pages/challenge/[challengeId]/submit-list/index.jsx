@@ -4,10 +4,12 @@ import RGL, { WidthProvider } from 'react-grid-layout';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import propTypes from 'prop-types';
+import { BsCheck } from 'react-icons/bs';
+import { AiOutlineCheck } from 'react-icons/ai';
 
 import http from '@/api/http';
 import Container from '@/components/Container';
-import { CHALLENGE_DETAIL_URL, CHALLENGE_SUBMIT_RECORD_URL } from '@/constants';
+import { CHALLENGE_DETAIL_URL, CHALLENGES_URL } from '@/constants';
 import { getDatesStartToLast } from '@/utils';
 
 const SubmitList = ({ challengeInfo, today, range }) => {
@@ -20,35 +22,10 @@ const SubmitList = ({ challengeInfo, today, range }) => {
   };
 
   useEffect(() => {
-    if (curDate && challengeInfo.category === 'FREE') {
+    console.log(challengeInfo);
+    if (curDate) {
       http
-        .get(CHALLENGE_SUBMIT_RECORD_URL(challengeInfo.id), {
-          params: {
-            date: curDate,
-          },
-        })
-        .then(({ data }) => {
-          setItem(data.data);
-        })
-        .catch(e => {
-          console.error(e);
-        });
-    } else if (curDate && challengeInfo.category === 'COMMIT') {
-      http
-        .get(CHALLENGE_SUBMIT_RECORD_URL(challengeInfo.id), {
-          params: {
-            date: curDate,
-          },
-        })
-        .then(({ data }) => {
-          setItem(data.data);
-        })
-        .catch(e => {
-          console.error(e);
-        });
-    } else if (curDate && challengeInfo.category === 'ALGO') {
-      http
-        .get(CHALLENGE_SUBMIT_RECORD_URL(challengeInfo.id), {
+        .get(`${CHALLENGES_URL}/${challengeInfo.id}/record`, {
           params: {
             date: curDate,
           },
@@ -105,7 +82,18 @@ const SubmitList = ({ challengeInfo, today, range }) => {
                   onClick={() => goToRecord(d.challengeRecordId)}
                   className="relative w-full h-24 border-2"
                 >
-                  <Image fill src={d.photoUrl} alt="user-submit-record" />
+                  {challengeInfo.category === 'FREE' && (
+                    <Image fill src={d.photoUrl} alt="user-submit-record" />
+                  )}
+                  {challengeInfo.category != 'FREE' && (
+                    <div className="p-3">
+                      {d.success && (
+                        <AiOutlineCheck className="w-full" size={50} />
+                      )}
+                      {!d.success && <div className="h-12" />}
+                      <p>{d.nickname}</p>
+                    </div>
+                  )}
                 </div>
               );
             })}
