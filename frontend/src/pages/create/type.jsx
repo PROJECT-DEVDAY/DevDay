@@ -95,12 +95,7 @@ const type = props => {
       </Container.MainBody>
 
       <Container.Footer>
-        <div
-          className={classNames(
-            style.btn,
-            `text-center absolute w-full bottom-0 pb-4 m-0`,
-          )}
-        >
+        <div>
           <BtnFooter
             content=""
             label="다음으로"
