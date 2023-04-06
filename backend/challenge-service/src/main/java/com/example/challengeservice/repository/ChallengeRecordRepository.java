@@ -10,13 +10,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ChallengeRecordRepository extends JpaRepository<ChallengeRecord,Long> ,ChallengeRecordRepoCustom{
+public interface ChallengeRecordRepository extends JpaRepository<ChallengeRecord,Long> ,ChallengeRecordRepoCustom {
 
 
+   Optional<ChallengeRecord> findById(Long challengeRecordId);
 
-   Optional<ChallengeRecord> findById( Long challengeRecordId);
-
-   boolean existsById( Long challengeRecordId);
+   boolean existsById(Long challengeRecordId);
 
 //   List<ChallengeRecord> findAllByUserChallengeId(Long userChallengeId);
 

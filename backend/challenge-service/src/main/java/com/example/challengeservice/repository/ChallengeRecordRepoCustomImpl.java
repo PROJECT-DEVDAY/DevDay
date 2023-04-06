@@ -2,6 +2,7 @@ package com.example.challengeservice.repository;
 
 import com.example.challengeservice.dto.response.ChallengeRecordResponseDto;
 import com.example.challengeservice.dto.response.PhotoRecordResponseDto;
+import com.example.challengeservice.dto.response.RecordResponseDto;
 import com.example.challengeservice.entity.*;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.example.challengeservice.entity.QChallengeRecord.challengeRecord;
+import static com.example.challengeservice.entity.QUserChallenge.*;
 
 
 @RequiredArgsConstructor
@@ -38,19 +40,58 @@ public class ChallengeRecordRepoCustomImpl implements ChallengeRecordRepoCustom 
     }
 
     @Override
-    public List<PhotoRecordResponseDto> getTeamPhotoRecord(Long challengeRoomId, String date) {
+    public List<RecordResponseDto> getTeamPhotoRecord(Long challengeRoomId, String date) {
 
-        JPAQuery<PhotoRecordResponseDto> query = jpaQueryFactory.select( Projections.constructor(
-                        PhotoRecordResponseDto.class,
+        JPAQuery<RecordResponseDto> query = jpaQueryFactory.select( Projections.constructor(
+                        RecordResponseDto.class,
                         challengeRecord.id,
                         challengeRecord.createAt,
                         challengeRecord.photoUrl
+
                 ))
                 .from(challengeRecord)
                 .where(challengeRecord.userChallenge.challengeRoom.id.eq(challengeRoomId),challengeRecord.createAt.eq(date));
 
         return query.fetch();
     }
+
+    @Override
+    public List<RecordResponseDto> getTeamAlgoRecord(Long challengeRoomId, String date) {
+        JPAQuery<RecordResponseDto> query = jpaQueryFactory.select( Projections.constructor(
+                        RecordResponseDto.class,
+                        challengeRecord.id,
+                        userChallenge.userId,
+                        challengeRecord.algorithmCount,
+                        userChallenge.nickname,
+                        challengeRecord.success
+                ))
+                .from(userChallenge)
+                .leftJoin(challengeRecord)
+                .on(userChallenge.id.eq(challengeRecord.userChallenge.id),challengeRecord.createAt.eq(date))
+                .where(userChallenge.challengeRoom.id.eq(challengeRoomId));
+
+        return query.fetch();
+    }
+
+    @Override
+    public List<RecordResponseDto> getTeamCommitRecord(Long challengeRoomId, String date) {
+
+        JPAQuery<RecordResponseDto> query = jpaQueryFactory.select( Projections.constructor(
+                        RecordResponseDto.class,
+                        challengeRecord.id,
+                        userChallenge.userId,
+                        challengeRecord.commitCount,
+                        userChallenge.nickname,
+                        challengeRecord.success
+                ))
+                .from(userChallenge)
+                .leftJoin(challengeRecord)
+                .on(userChallenge.id.eq(challengeRecord.userChallenge.id),challengeRecord.createAt.eq(date))
+                .where(userChallenge.challengeRoom.id.eq(challengeRoomId));
+
+        return query.fetch();
+    }
+
 
     @Override
     public Optional<ChallengeRecord> findByCreateAtAndUserChallenge(String createAt, UserChallenge userChallenge){
