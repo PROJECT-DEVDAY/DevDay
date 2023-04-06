@@ -19,8 +19,8 @@ const History = ({ history = {} }) => {
     http.get(`${CHALLENGE_DETAIL_URL}/${transaction_history_id}`).then(res => {
       setData(res.data);
 
-      setCheck(check => {
-        return [...check, transaction_history_id];
+      setCheck(checkValue => {
+        return [...checkValue, transaction_history_id];
       });
     });
   }

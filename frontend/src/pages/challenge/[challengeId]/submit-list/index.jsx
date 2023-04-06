@@ -22,7 +22,6 @@ const SubmitList = ({ challengeInfo, today, range }) => {
   };
 
   useEffect(() => {
-    // console.log(challengeInfo);
     if (curDate) {
       http
         .get(`${CHALLENGES_URL}/${challengeInfo.id}/record`, {

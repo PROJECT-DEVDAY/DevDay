@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 import Web3 from 'web3';
 
-// import MyContract from './MyContract.json';
+import MyContract from './MyContract.json';
 
 const web3 = new Web3(
   Web3.givenProvider ||
