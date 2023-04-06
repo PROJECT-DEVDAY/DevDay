@@ -1,7 +1,6 @@
 package com.example.challengeservice.controller;
 
 import com.example.challengeservice.client.PayServiceClient;
-import com.example.challengeservice.client.dto.ChallengeSettlementRequest;
 import com.example.challengeservice.common.response.ResponseService;
 import com.example.challengeservice.common.result.ListResult;
 import com.example.challengeservice.common.result.Result;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
