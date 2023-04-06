@@ -54,8 +54,6 @@ http.interceptors.response.use(
         window.location.href = '/user/login';
         return Promise.reject(err);
       }
-    } else {
-      return Promise.reject(err);
     }
   },
 );
