@@ -236,7 +236,7 @@ const algo = props => {
           </div>
         </div>
         <div className="mt-6 flex">
-          <InputLabel content="최소 알고리즘 커밋 수" asterisk />
+          <InputLabel content="최소 알고리즘 수" asterisk />
           <div className={classNames('flex', style.changeMember)}>
             {algoithmCount > 1 ? (
               <button
