@@ -1,0 +1,49 @@
+server:
+  port: 0
+cloud:
+  aws:
+    region:
+      static: ap-northeast-2
+    s3:
+      bucket: devday-bucket
+    credentials:
+      access-key: AKIAXEUXRPXD5YMMPF6T
+      secret-key: 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
+    stack:
+      auto: false
+spring:
+  application:
+    name: challenge-service
+  datasource:
+      url: jdbc:mysql://172.18.0.1:3307/devday?useSSL=false&serverTimezone=UTC
+      username: root
+      password: devday1234
+      driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    generate-ddl: true
+    
+    database : mysql
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    properties:
+      hibernate:
+        format_sql: true
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://127.0.0.1:8761/eureka
+
+logging:
+  level:
+    com.example.challengeservice.client: DEBUG
+
+
+

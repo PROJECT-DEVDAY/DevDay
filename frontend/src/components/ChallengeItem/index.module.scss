@@ -1,0 +1,15 @@
+.ChallengeItem {
+  
+  .Image {
+    border: 1px solid var(--gray-extra);
+    width: 100%;
+    height: 110px;
+  }
+
+  .Participants {
+    background-color: rgba(0, 0, 0, 0.5);
+    color: var(--gray-bg);
+    top: 5px;
+    right: 5px;
+  }
+}

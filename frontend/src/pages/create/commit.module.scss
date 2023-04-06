@@ -1,0 +1,35 @@
+.membercheck {
+  border: 1px solid black;
+  border-radius: 12px;
+  padding: 10px;
+  width: 47%;
+  margin: 5px;
+}
+.changeMember {
+  justify-content: center;
+}
+.selected {
+  border: 1px solid var(--color-kiyoon);
+  filter: drop-shadow(0px 2px 5px var(--color-kiyoon));
+  background-color: white;
+  border-radius: 12px;
+  padding: 10px;
+  width: 47%;
+  margin: 5px;
+}
+.plusMinus {
+  border: 1px solid black;
+  width: 50px;
+  padding: 8px;
+}
+.datePick {
+  margin-top: 32px;
+  display: flex;
+  justify-content: space-between;
+  input[type='date'] {
+    background-color: transparent;
+  }
+  input[type='date']:focus {
+    outline: none;
+  }
+}

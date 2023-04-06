@@ -1,0 +1,17 @@
+pay-service:
+  image: gradle:7.6.1-jdk11
+  variables:
+    SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Defines the location of the analysis task cache
+    GIT_DEPTH: "0"  # Tells git to fetch all the branches of the project, required by the analysis task
+  cache:
+    key: "${CI_JOB_NAME}"
+    paths:
+      - .sonar/cache
+  allow_failure: true
+  script: cd backend/pay-service && gradle sonar
+  only:
+    refs:
+      - merge_requests
+    changes:
+      - backend/pay-service/**/*
+

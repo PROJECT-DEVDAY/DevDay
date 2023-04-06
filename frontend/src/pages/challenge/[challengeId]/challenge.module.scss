@@ -1,0 +1,51 @@
+.boxStyle {
+  border-bottom: 4px solid var(--gray-border);
+}
+.RadioGroup {
+  flex-direction: row;
+
+  label {
+    background-color: var(--gray-bg);
+    cursor: pointer;
+
+    &.selected {
+      border-bottom: 2px solid black;
+    }
+  }
+
+  input[type='radio'] {
+    display: none;
+  }
+}
+.greybox {
+  display: flex;
+  border-radius: 12px;
+  border: 2px solid var(--gray-border);
+  color: var(--gray-extra);
+}
+.peopleBox {
+  margin-top: 8px;
+}
+.box {
+  height: 80px;
+  color: var(--color-guembi);
+  border: 2px solid var(--color-chunsik);
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+}
+.commitBox {
+  height: 80px;
+  color: var(--color-guembi);
+  border: 2px solid var(--color-chunsik);
+  border-radius: 10px;
+  justify-content: center;
+  padding: 8px;
+}
+.freeBox {
+  color: var(--color-guembi);
+  border: 2px solid var(--color-chunsik);
+  border-radius: 10px;
+  justify-content: center;
+  padding: 8px;
+}
