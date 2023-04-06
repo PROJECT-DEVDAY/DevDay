@@ -15,7 +15,6 @@ spring:
   application:
     name: challenge-service
   datasource:
-#      url: jdbc:mysql://localhost:3308/devday?useSSL=false&serverTimezone=UTC
       url: jdbc:mysql://172.18.0.1:3307/devday?useSSL=false&serverTimezone=UTC
       username: root
       password: devday1234

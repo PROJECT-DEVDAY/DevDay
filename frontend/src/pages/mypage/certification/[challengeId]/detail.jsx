@@ -116,8 +116,14 @@ export const detail = () => {
   const router = useRouter();
   const { challengeId } = router.query;
 
-  const [challengeDetail, setChallengeDetail] = useState(null);
-
+  const [challengeDetail, setChallengeDetail] = useState({
+    name: '',
+    title: '',
+    startDate: '',
+    endDate: '',
+    progressRate: '',
+    userChallengeId: '',
+  });
   const user = useSelector(state => state.user);
 
   const [account, setAccount] = useState('');
