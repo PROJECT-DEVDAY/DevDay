@@ -18,9 +18,7 @@ export const ChallengeItem = ({
   onClick,
   ...props
 }) => {
-  const itemHref = props.isParticiting
-    ? `participation/${id}`
-    : `challenge/${id}`;
+  const itemHref = `participation/${id}`;
   return (
     <Link
       href={itemHref}
