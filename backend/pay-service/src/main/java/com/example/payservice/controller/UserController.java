@@ -6,6 +6,7 @@ import com.example.payservice.dto.InternalResponse;
 import com.example.payservice.dto.bank.AccountDto;
 import com.example.payservice.dto.deposit.DepositTransactionHistoryDto;
 import com.example.payservice.dto.prize.PrizeHistoryDto;
+import com.example.payservice.dto.prize.PrizeSummaryDto;
 import com.example.payservice.dto.request.WithdrawDepositRequest;
 import com.example.payservice.dto.request.WithdrawPrizeRequest;
 import com.example.payservice.dto.response.WithdrawResponse;
@@ -118,6 +119,13 @@ public class UserController {
 		return ResponseEntity.ok(response);
 	}
 
+	@GetMapping("/prize/summary")
+	public ResponseEntity<InternalResponse<PrizeSummaryDto>> getPrizeSummary(HttpServletRequest servletRequest) {
+		Long userId = Utils.parseAuthorizedUserId(servletRequest);
+
+		PrizeSummaryDto summary = prizeService.getSummary(userId);
+		return ResponseEntity.ok(new InternalResponse<>(summary));
+	}
 	/**
 	 * 예치금 환불 API 입니다.
 	 * @param servletRequest
@@ -146,7 +154,6 @@ public class UserController {
 	@GetMapping("/deposit")
 	public ResponseEntity<InternalResponse<CustomPage<DepositTransactionHistoryDto>>> getDepositHistory(
 			HttpServletRequest request,
-
 			@RequestParam(required = false, defaultValue = "") String type,
 			@PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
 	) {
@@ -157,4 +164,10 @@ public class UserController {
 		return ResponseEntity.ok(response);
 	}
 
+	@GetMapping("/deposit/summary")
+	public ResponseEntity<?> getDepositSummary(HttpServletRequest request) {
+		Long userId = Utils.parseAuthorizedUserId(request);
+
+		return ResponseEntity.ok(null);
+	}
 }
