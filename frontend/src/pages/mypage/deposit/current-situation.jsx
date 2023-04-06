@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 
 import http from '@/api/http';
 import Container from '@/components/Container';
-import { DEPOSIT_SUMMARY_URL, LOCALE } from '@/constants';
 import PrivateRouter from '@/components/PrivateRouter/PrivateRouter';
+import { DEPOSIT_SUMMARY_URL, LOCALE } from '@/constants';
 
 const CurrentSituation = () => {
   const [myData, setMyData] = useState(null);

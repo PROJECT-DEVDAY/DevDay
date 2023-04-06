@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
+import classNames from 'classnames';
+import Image from 'next/image';
 import { useRouter } from 'next/router';
 import Web3 from 'web3';
 
 import http from '@/api/http';
 import { Button } from '@/components/Button';
 import Container from '@/components/Container';
+import PrivateRouter from '@/components/PrivateRouter/PrivateRouter';
 import { CHALLENGE_CERTIFICATION_DETAIL } from '@/constants';
 
 // import style from './detail.modules.scss';
 
 import { getStartWithEndDate } from '@/utils';
-import classNames from 'classnames';
-import Image from 'next/image';
 
 const web3 = new Web3(
   Web3.givenProvider ||
@@ -200,9 +201,9 @@ export const detail = () => {
 
   return (
     <Container>
-      <Container.SubPageHeader title={'인증서'} />
+      <Container.SubPageHeader title="인증서" />
 
-      <Container.Body className={'px-10 pb-8 w-full h-full'}>
+      <Container.Body className="px-10 pb-8 w-full h-full">
         <div className="w-full mt-20 text-center font-bold text-xl">
           CERTIFICATE OF COMPLETION
         </div>
