@@ -13,10 +13,7 @@ import com.example.payservice.dto.response.WithdrawResponse;
 import com.example.payservice.entity.DepositSummary;
 import com.example.payservice.entity.DepositTransactionHistoryEntity;
 import com.example.payservice.entity.PayUserEntity;
-import com.example.payservice.exception.BadRequestException;
-import com.example.payservice.exception.LackOfDepositException;
-import com.example.payservice.exception.UnRefundableException;
-import com.example.payservice.exception.UserNotExistException;
+import com.example.payservice.exception.*;
 import com.example.payservice.repository.DepositTransactionHistoryRepository;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
@@ -260,7 +257,7 @@ public class DepositService {
                     challengeUser, challengeId, DepositTransactionType.REFUND
             );
             if(isAlreadyRefundUser) {
-                throw new RuntimeException("이미 정산된 유저입니다.");
+                throw new AlreadyRefundableException("이미 정산된 유저입니다.");
             }
 
             if(history.getAmount() < result.getMoney()) {
@@ -274,7 +271,9 @@ public class DepositService {
         } catch(UserNotExistException ex) {
             log.error("pay-service에 userId: {}가 존재하지 않습니다.", result.getUserId());
         } catch(UnRefundableException ex) {
-            log.error("challengeId: {}에 해당하는 userId: {}의 결제 이력이 없습니다.",challengeId, result.getUserId());
+            log.error("challengeId: {}에 해당하는 userId: {}의 결제 이력이 없습니다.", challengeId, result.getUserId());
+        } catch(AlreadyRefundableException ex) {
+            log.error("challengeId: {}에 해당하는 userId: {}는 이미 정산되어 있습니다.", challengeId, result.getUserId());
         } catch(RuntimeException ex) {
             log.error("challengeId: {} 정산과정 중 문제가 발생했습니다. -> {}", challengeId, ex.getMessage());
         }
@@ -313,7 +312,11 @@ public class DepositService {
         PayUserEntity user = userService.getPayUserEntity(userId);
         List<DepositSummary> summaries = depositTransactionHistoryRepository.getSummaryInfoByUserAndType(user);
 
-        int charge = 0, cancel = 0, pay = 0, refund = 0;
+        int charge = 0;
+        int cancel = 0;
+        int pay = 0;
+        int refund = 0;
+
         for(DepositSummary summary : summaries) {
             switch(summary.getDepositTransactionType()) {
                 case CHARGE:

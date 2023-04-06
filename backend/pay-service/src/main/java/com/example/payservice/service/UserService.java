@@ -6,8 +6,11 @@ import com.example.payservice.dto.challenge.ChallengeJoinRequestDto;
 import com.example.payservice.dto.response.UserResponse;
 import com.example.payservice.dto.user.PayUserDto;
 import com.example.payservice.entity.PayUserEntity;
+import com.example.payservice.exception.ChallengeServiceException;
 import com.example.payservice.exception.UserNotExistException;
 import com.example.payservice.repository.PayUserRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +19,7 @@ import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -119,7 +123,7 @@ public class UserService {
      * @param userId
      * @param challengeId
      */
-    public void sendJoinMessageToChallengeService(long challengeId, long userId, String nickname) {
+    public void sendJoinMessageToChallengeService(long challengeId, long userId, String nickname) throws ChallengeServiceException {
         try {
             ChallengeJoinRequestDto requestDto = ChallengeJoinRequestDto.builder()
                 .userId(userId)
@@ -128,13 +132,22 @@ public class UserService {
                 .build();
             challengeServiceClient.sendApproveUserJoinChallenge(userId, requestDto);
         } catch(FeignException ex) {
-            // TODO: 에러에 대한 대응하기
             log.error("challenge-service로 참가 승인 메시지를 보내는 데 실패했습니다. userId: {}, challengeId: {}, nickname:{}, err: {}",
                 userId,
                 challengeId,
                 nickname,
                 ex.getMessage()
             );
+            String resposneJson = ex.contentUTF8();
+            Map<String, String> responseMap = null;
+
+            try {
+                responseMap = new ObjectMapper().readValue(resposneJson, Map.class);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+
+            throw new ChallengeServiceException(responseMap);
         }
     }
 }

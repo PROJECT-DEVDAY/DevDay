@@ -32,7 +32,10 @@ export const CertificationItem = ({
         )}
       >
         <div
-          className={classNames(style.ImageContainer, `relative object-cover`)}
+          className={classNames(
+            style.ImageContainer,
+            `relative object-cover mr-2`,
+          )}
         >
           <Image
             className={classNames(style.Image, `rounded-lg`)}
@@ -43,8 +46,8 @@ export const CertificationItem = ({
         </div>
 
         <div style={{ flex: 1 }}>
-          <p className={''}>{title}</p>
-          <p className={''}>{period}</p>
+          <p className={'font-medium '}>{title}</p>
+          <p className={'text-xs'}>{period}</p>
         </div>
         <button type="button" className={''}>
           <SlArrowRight className={style.Arrow} width={30} />
