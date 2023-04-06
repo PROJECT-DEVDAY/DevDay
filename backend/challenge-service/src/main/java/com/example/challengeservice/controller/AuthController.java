@@ -12,6 +12,7 @@ import com.example.challengeservice.dto.response.*;
 import com.example.challengeservice.exception.ApiException;
 import com.example.challengeservice.exception.ExceptionEnum;
 import com.example.challengeservice.service.ChallengeService;
+import com.example.challengeservice.service.challenge.BasicChallengeService;
 import com.example.challengeservice.service.photo.PhotoChallengeService;
 import com.example.challengeservice.validator.DateValidator;
 import lombok.RequiredArgsConstructor;
@@ -35,80 +36,75 @@ public class AuthController {
     private static final String USER_ID = "userId";
     private final PhotoChallengeService photoChallengeService;
 
+    private final BasicChallengeService basicChallengeService;
+
     /**
-     * author  : 홍금비
-     * explain :챌린지방 생성
+     * 챌린지방 생성
+     * @param challengeRoomRequestDto : 챌린지 방 생성에 필요한 정보
      * **/
     @PostMapping()
-    public ResponseEntity<ChallengeCreateResponseDto> createChallenge(@Valid @ModelAttribute ChallengeRoomRequestDto challengeRoomRequestDto, HttpServletRequest request) throws IOException {
-
+    public ResponseEntity<ChallengeCreateResponseDto> createChallenge(HttpServletRequest request ,@Valid @ModelAttribute ChallengeRoomRequestDto challengeRoomRequestDto) throws IOException {
         challengeRoomRequestDto.setHostId(Long.parseLong(request.getHeader(USER_ID)));
-        return ResponseEntity.status(HttpStatus.CREATED).body(challengeService.createChallenge(challengeRoomRequestDto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(basicChallengeService.createChallenge(challengeRoomRequestDto));
     }
 
-    /** 신대득
+    /**
      * 챌린지 참가하기
      * pay-service로부터 호출되는 API입니다.
      * 챌린지에 유저가 결제가 완료된 뒤, 응답으로 받습니다.
-     * @author djunnni
      * @param joinRequestDto 첼린지방 참가에 필요한 정보
-     * @param request  헤더에서 userId 가져오기위함
-     * @return
      **/
     @PostMapping("/join")
-    public SingleResult<String> joinChallenge(@RequestBody ChallengeJoinRequestDto joinRequestDto, HttpServletRequest request){
+    public SingleResult<String> joinChallenge(@Valid @RequestBody ChallengeJoinRequestDto joinRequestDto, HttpServletRequest request){
         joinRequestDto.setUserId(Long.parseLong(request.getHeader(USER_ID)));
-      //log.info("pay-service로 부터 받은 데이터 => challengeId: {}, userId: {}", challengeRoomId, userId);
-        return responseService.getSingleResult(challengeService.joinChallenge(joinRequestDto));
+        return responseService.getSingleResult(basicChallengeService.joinChallenge(joinRequestDto));
     }
 
+
+    /** 회원의 해당 챌린지 참여 유무 체크 **/
     @GetMapping("/join")
     public Result checkJoinChallenge(@RequestParam String challengeRoomId, @RequestParam String nickname, HttpServletRequest request){
-        ChallengeJoinRequestDto joinRequestDto=new ChallengeJoinRequestDto(Long.parseLong(request.getHeader(USER_ID)), Long.parseLong(challengeRoomId), nickname);
-        challengeService.checkJoinChallenge(joinRequestDto);
+        ChallengeJoinRequestDto joinRequestDto = new ChallengeJoinRequestDto(Long.parseLong(request.getHeader(USER_ID)), Long.parseLong(challengeRoomId), nickname);
+        basicChallengeService.checkJoinChallenge(joinRequestDto);
         return responseService.getSuccessResult();
     }
 
 
     /**
-     * author : 홍금비
-     * explain : 내가 참여한 챌린지 조회
-     * (헤더 유저 id **) 나의 챌린지 기록 조회 (완료 , 진행중 , 시작전)
+     *  내가 참여한 챌린지 상세 조회
      * @param status : PROCEED | DONE | NOT_OPEN
+     * @param offset : 마지막으로 조회된 챌린지 방 ID
+     * @param size   : 조회할 개수
+     * @param search : 검색어
      */
     @GetMapping("/my-challenge")
-    public ListResult<MyChallengeResponseDto> getMyChallengeList(HttpServletRequest request, @RequestParam (value = "offset", required = false) Long offset , @RequestParam (value = "search" ,required = false) String search , @RequestParam ("size") int size, @NotBlank @RequestParam ("status") String status ){
+    public ListResult<MyChallengeResponseDto> getMyChallengeDetailList(HttpServletRequest request, @RequestParam (value = "offset", required = false) Long offset , @RequestParam (value = "search" ,required = false) String search , @RequestParam ("size") int size, @NotBlank @RequestParam ("status") String status ){
         Long userId= Long.parseLong(request.getHeader(USER_ID));
-        return responseService.getListResult(challengeService.getMyChallengeList(userId,status,offset,search,size));
+        return responseService.getListResult(basicChallengeService.getMyChallengeDetailList(userId,status,offset,search,size));
     }
 
-    /** 사진 인증 상세 조회 (Auth) 로그인이 반드시 필요함) api 변경필요합니다. **/
+    /** 사진 인증 상세 조회
+     * @param recordId : 사진 인증 기록 ID
+     * **/
     @GetMapping("photo-record/{recordId}/users")
     public SingleResult<PhotoRecordDetailResponseDto> getPhotoRecordDetail(@PathVariable("recordId") Long recordId , HttpServletRequest request){
-        Long userId=Long.parseLong(request.getHeader(USER_ID));
-        return responseService.getSingleResult(photoChallengeService.getPhotoRecordDetail(userId ,recordId));
+        return responseService.getSingleResult(photoChallengeService.getPhotoRecordDetail(Long.parseLong(request.getHeader(USER_ID)) ,recordId));
     }
 
-    /** 나의 인증 기록 불러오기 **/
+    /** 개인 인증 기록 불러오기
+     * @param challengeRoomId : 챌린지 방 ID
+     * @param viewType : PREVIEW | ALL
+     * **/
     @GetMapping("{challengeId}/record/users")
     public ListResult<?> getSelfChallengeRecord(@PathVariable("challengeId") Long challengeRoomId,@RequestParam("view") String viewType, HttpServletRequest request){
         Long userId=Long.parseLong(request.getHeader(USER_ID));
         return responseService.getListResult(photoChallengeService.getSelfPhotoRecord(challengeRoomId,userId,viewType));
     }
-    // 위에거
-    // 이걸로 바꿀 예정
-    /*
-    @GetMapping("{challengeId}/record/users/{userId}")
-    public ListResult<?> getSelfRecord(@PathVariable("challengeId") Long challengeRoomId ,@PathVariable("userId") Long userId,@RequestParam("view") String viewType, @RequestParam("category") String category){
-        return responseService.getListResult(challengeService.getSelfRecord(challengeRoomId,userId,viewType,category));
-    }
-     */
 
 
-    /** 사진 기록 신고하기(반드시 로그인이 되어있어야함) **/
+    /** 사진 기록 신고하기 **/
     @PostMapping ("report/record")
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public Result reportRecord ( HttpServletRequest request,  @RequestBody ReportRecordRequestDto reportRequestDto){
+    public Result reportRecord ( HttpServletRequest request, @RequestBody ReportRecordRequestDto reportRequestDto){
 
         Long userId=Long.parseLong(request.getHeader(USER_ID));
         photoChallengeService.reportRecord(userId ,reportRequestDto);
@@ -119,18 +115,15 @@ public class AuthController {
     /** 사진 인증 저장 **/
     @PostMapping("photo-record")
     public ResponseEntity<String> createChallengeRecord(HttpServletRequest request ,@ModelAttribute ChallengeRecordRequestDto requestDto) throws IOException{
-        Long userId = Long.parseLong(request.getHeader(USER_ID));
-        photoChallengeService.createPhotoRecord(userId,requestDto);
+        photoChallengeService.createPhotoRecord(Long.parseLong(request.getHeader(USER_ID)),requestDto);
         return ResponseEntity.status(HttpStatus.OK).body("인증기록 저장완료");
     }
 
     /** 팀원의 인증 기록 불러오기 **/
-    @GetMapping("{challengeId}/record")
-    public ListResult<?> getTeamChallengeRecord(HttpServletRequest request, @PathVariable("challengeId")Long challengeRoomId ,@RequestParam(value = "date") String date){
-
-        Long userId = Long.parseLong(request.getHeader(USER_ID));
+    @GetMapping("{challengeRoomdId}/record")
+    public ListResult<RecordResponseDto> getTeamChallengeRecord(HttpServletRequest request, @PathVariable("challengeRoomdId")Long challengeRoomId ,@RequestParam(value = "date") String date){
         if(!DateValidator.validateDateFormat(date)) throw new ApiException(ExceptionEnum.API_PARAMETER_EXCEPTION);
-        return responseService.getListResult(photoChallengeService.getTeamPhotoRecord(userId ,challengeRoomId,date));
+        return responseService.getListResult(basicChallengeService.getTeamRecord(Long.parseLong(request.getHeader(USER_ID)),challengeRoomId,date));
     }
 
     /**
@@ -166,6 +159,7 @@ public class AuthController {
         Long userId = Long.parseLong(request.getHeader(USER_ID));
         return challengeService.getProgressUserBaekjoon(userId, Long.parseLong(challengeId));
     }
+
 
 
 }

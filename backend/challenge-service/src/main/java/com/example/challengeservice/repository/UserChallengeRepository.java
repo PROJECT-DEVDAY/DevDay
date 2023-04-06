@@ -53,4 +53,5 @@ public interface UserChallengeRepository extends JpaRepository<UserChallenge,Lon
     boolean existsByChallengeRoomIdAndUserId(Long challengeRoomId , Long userId);
 
 
+
 }
