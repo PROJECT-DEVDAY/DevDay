@@ -7,7 +7,7 @@ import { MY_CHALLENGES_URL } from '@/constants';
 import { getStartWithEndDate } from '@/utils';
 
 const INITIAL_PARAMS = {
-  status: 'DONE',
+  status: 'ALL',
   size: 20,
   offset: '',
   search: '',
