@@ -72,6 +72,8 @@ const main = ({ initialList, ...props }) => {
 
   const selectType = value => {
     setType(value);
+
+    setChallengeList([]);
     updateSearchParams({
       category: NAV[value],
       offset: '',

@@ -18,9 +18,12 @@ export const ChallengeItem = ({
   onClick,
   ...props
 }) => {
+  const itemHref = props.isParticiting
+    ? `participation/${id}`
+    : `challenge/${id}`;
   return (
     <Link
-      href={`participation/${id}`}
+      href={itemHref}
       className={style.ChallengeItem}
       role="button"
       tabIndex={0}
@@ -33,14 +36,16 @@ export const ChallengeItem = ({
           src={imgUrl || require('../../image/default-user.png')}
           alt="temp"
         />
-        <div
-          className={classNames(
-            style.Participants,
-            `absolute rounded-md p-1 font-bold text-xs`,
-          )}
-        >
-          {participants}명
-        </div>
+        {participants >= 0 && (
+          <div
+            className={classNames(
+              style.Participants,
+              `absolute rounded-md p-1 font-bold text-xs`,
+            )}
+          >
+            {participants}명
+          </div>
+        )}
       </div>
       <div className={classNames(`flex flex-col ml-1 pt-1`)}>
         <div className={classNames(style.Leader, `font-medium text-xs`)}>
