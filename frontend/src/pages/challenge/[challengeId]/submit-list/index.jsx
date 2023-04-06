@@ -20,7 +20,33 @@ const SubmitList = ({ challengeInfo, today, range }) => {
   };
 
   useEffect(() => {
-    if (curDate && challengeInfo) {
+    if (curDate && challengeInfo.category === 'FREE') {
+      http
+        .get(CHALLENGE_SUBMIT_RECORD_URL(challengeInfo.id), {
+          params: {
+            date: curDate,
+          },
+        })
+        .then(({ data }) => {
+          setItem(data.data);
+        })
+        .catch(e => {
+          console.error(e);
+        });
+    } else if (curDate && challengeInfo.category === 'COMMIT') {
+      http
+        .get(CHALLENGE_SUBMIT_RECORD_URL(challengeInfo.id), {
+          params: {
+            date: curDate,
+          },
+        })
+        .then(({ data }) => {
+          setItem(data.data);
+        })
+        .catch(e => {
+          console.error(e);
+        });
+    } else if (curDate && challengeInfo.category === 'ALGO') {
       http
         .get(CHALLENGE_SUBMIT_RECORD_URL(challengeInfo.id), {
           params: {
