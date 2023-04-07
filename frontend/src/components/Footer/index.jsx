@@ -7,14 +7,14 @@ import { useRouter } from 'next/router';
 import style from './footer.module.scss';
 
 const FOOTER_ITEMS = [
-  { label: '홈', icon: <FiHome size={28} />, to: '/' },
+  { label: '홈', icon: <FiHome size={24} />, to: '/' },
   {
     label: '인증',
-    icon: <FiCamera size={36} />,
+    icon: <FiCamera size={32} />,
     roundBackground: true,
     to: '/auth',
   },
-  { label: '마이페이지', icon: <FiUser size={28} />, to: '/mypage' },
+  { label: '마이페이지', icon: <FiUser size={24} />, to: '/mypage' },
 ];
 
 export default function Footer() {
