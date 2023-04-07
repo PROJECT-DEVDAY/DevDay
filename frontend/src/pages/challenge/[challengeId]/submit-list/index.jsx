@@ -11,6 +11,7 @@ import http from '@/api/http';
 import Container from '@/components/Container';
 import { CHALLENGE_DETAIL_URL, CHALLENGES_URL } from '@/constants';
 import { getDatesStartToLast } from '@/utils';
+import PrivateRouter from '@/components/PrivateRouter/PrivateRouter';
 
 const SubmitList = ({ challengeInfo, today, range }) => {
   const [curDate, setDate] = useState(today);
@@ -159,7 +160,7 @@ export const getServerSideProps = async context => {
   };
 };
 
-export default SubmitList;
+export default PrivateRouter(SubmitList);
 
 // [
 //   {
