@@ -11,6 +11,10 @@ export const NICKNAME_URL = `${USER_SERVICE}/nickname`;
 export const CHANGE_NICKNAME_URL = `${USER_SERVICE}/auth/user/nickname`;
 export const MYPAGE_URL = `${USER_SERVICE}/auth`;
 export const PROFILE_URL = `${USER_SERVICE}/auth/user/detail`;
+
+export const FIND_ID_URL = `${USER_SERVICE}/username`;
+export const FIND_PW_URL = `${USER_SERVICE}/password`;
+
 export const GITHUBBAEKJOON_URL = `${USER_SERVICE}/auth/user/githubandbaekjoon`;
 export const PASSWORD_URL = `${USER_SERVICE}/auth/user/password`;
 export const DELETEUSER_URL = `${USER_SERVICE}/auth/user`;
