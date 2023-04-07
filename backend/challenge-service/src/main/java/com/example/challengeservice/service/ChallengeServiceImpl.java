@@ -483,7 +483,7 @@ public class ChallengeServiceImpl implements ChallengeService{
         }
         String progressRate= String.format("%.2f", (double)(successCount*100)/challengeLength);
         // 예치금 + 상금
-        Long curPrice=userChallenge.getDiffPrice();
+        Long curPrice=userChallenge.getDiffPrice() + (long)challengeRoom.getEntryFee();
         return new ProgressResponseDto(progressRate, curPrice, successCount, failCount);
     }
 
