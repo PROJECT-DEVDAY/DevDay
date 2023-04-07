@@ -364,7 +364,7 @@ public class ChallengeServiceImpl implements ChallengeService{
         Integer period = commonService.diffDay(challengeRoom.getStartDate(), challengeRoom.getEndDate()).intValue();
         int oneDayFee = (int)Math.ceil((double) challengeRoom.getEntryFee() / (period+1)); // 하루 가격
 
-        String beforeOneDay = commonService.getPastDay(1, commonService.getDate()); // 어제 날짜 조회
+        String beforeOneDay = commonService.getPastDay(0, commonService.getDate()); // 어제 날짜 조회
         // 만약 계산하는 날짜가 챌린지 기간이 아니라면
         if(commonService.diffDay(beforeOneDay, challengeRoom.getEndDate())<0 || commonService.diffDay(challengeRoom.getStartDate(), beforeOneDay) <0){
             return;
