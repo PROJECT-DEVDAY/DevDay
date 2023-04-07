@@ -36,11 +36,11 @@ const SubmitList = ({ challengeInfo, today, range }) => {
         .catch(e => {
           console.error(e);
         });
+      http.get(`${CHALLENGE_DETAIL_URL}/${challengeInfo.id}`).then(res => {
+        console.log(res.data);
+        setData(res.data);
+      });
     }
-    http.get(`${CHALLENGE_DETAIL_URL}/${challengeInfo.id}`).then(res => {
-      console.log(res.data);
-      setData(res.data);
-    });
   }, [curDate, challengeInfo]);
 
   const isEmpty = item.length === 0;
