@@ -37,6 +37,10 @@ const SubmitList = ({ challengeInfo, today, range }) => {
           console.error(e);
         });
     }
+    http.get(`${CHALLENGE_DETAIL_URL}/${challengeInfo.id}`).then(res => {
+      console.log(res.data);
+      setData(res.data);
+    });
   }, [curDate, challengeInfo]);
 
   const isEmpty = item.length === 0;
@@ -85,7 +89,12 @@ const SubmitList = ({ challengeInfo, today, range }) => {
                   className="relative w-full h-24 border-2"
                 >
                   {data.category === 'FREE' && (
-                    <Image fill src={d.photoUrl} alt="user-submit-record" />
+                    <Image
+                      fill
+                      src={d.photoUrl}
+                      alt="user-submit-record"
+                      loader={({ src }) => src}
+                    />
                   )}
                   {data.category != 'FREE' && (
                     <div className="p-3">
