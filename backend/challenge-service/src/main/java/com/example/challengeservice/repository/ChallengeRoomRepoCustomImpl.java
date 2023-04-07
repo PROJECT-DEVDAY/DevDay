@@ -82,10 +82,11 @@ public class ChallengeRoomRepoCustomImpl  implements ChallengeRoomRepoCustom {
                         ChallengeSettleInfo.class,
                         challengeRoom.id,
                         userChallenge.userId,
-                        userChallenge.diffPrice
+                        userChallenge.diffPrice.add(challengeRoom.entryFee)
                 )).from(userChallenge)
                 .join(userChallenge.challengeRoom, challengeRoom)
-                .where(challengeRoom.endDate.eq(date));
+                .where(challengeRoom.endDate.eq(date),userChallenge.challengeRoom.id.eq(challengeRoom.id))
+                .groupBy(challengeRoom.id,userChallenge.userId);
         return query.fetch();
     }
 
