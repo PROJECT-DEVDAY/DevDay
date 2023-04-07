@@ -78,15 +78,17 @@ public class ChallengeRoomRepoCustomImpl  implements ChallengeRoomRepoCustom {
     @Override
     public List<ChallengeSettleInfo> findClosedChallengeUser(String date) {
 
-        JPAQuery<ChallengeSettleInfo> query = jpaQueryFactory.select(Projections.constructor(
+        JPAQuery<ChallengeSettleInfo> query = jpaQueryFactory
+                .select(Projections.constructor(
                         ChallengeSettleInfo.class,
                         challengeRoom.id,
                         userChallenge.userId,
-                        userChallenge.diffPrice.add(challengeRoom.entryFee)
-                )).from(userChallenge)
+                        userChallenge.diffPrice.add(challengeRoom.entryFee).sum()
+                ))
+                .from(userChallenge)
                 .join(userChallenge.challengeRoom, challengeRoom)
-                .where(challengeRoom.endDate.eq(date),userChallenge.challengeRoom.id.eq(challengeRoom.id))
-                .groupBy(challengeRoom.id,userChallenge.userId);
+                .where(challengeRoom.endDate.eq(date))
+                .groupBy(challengeRoom.id, userChallenge.userId);
         return query.fetch();
     }
 
