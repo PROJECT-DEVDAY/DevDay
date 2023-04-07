@@ -34,7 +34,7 @@ public class ChallengeRoomRepoCustomImpl  implements ChallengeRoomRepoCustom {
                 .where(hasSearch(searchParam.getSearch()),
                         hasOffsetLt(searchParam.getOffset())
                         , isCategoryAll(searchParam.getCategory())
-                        , challengeRoom.startDate.goe(searchParam.getNowDate())
+                    //    , challengeRoom.startDate.goe(searchParam.getNowDate())
                 )
                 .orderBy(challengeRoom.id.desc()).
                 limit(searchParam.getSize()).
