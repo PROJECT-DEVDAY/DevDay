@@ -32,7 +32,7 @@
 - 스마트 컨트랙트 : Solidity 프로그래밍 언어를 사용하여 챌린지 기록 저장시 계약 자동 시행
 
 
-##기술 스택
+## 기술 스택
 
 <!-- ### FrontEnd
 ![Visual Studio Code](https://img.shields.io/badge/Visual%20Studio%20Code-007ACC?style=for-the-badge&logo=Visual%20Studio%20Code&logoColor=white)
@@ -113,7 +113,7 @@
 ### 유저 서비스 ERD
 ![PayERD](./image/페이.png)
 
-##  피그마
+## 피그마
 ![Figma](./image/Devday.png)
 
 ## 서비스 소개 (화면)
