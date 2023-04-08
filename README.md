@@ -39,6 +39,7 @@
 ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
 ![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=Next.js&logoColor=white)            
 
+
 ### BackEnd     
 ![SpringBoot](https://img.shields.io/badge/springboot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white)
 ![Java](https://img.shields.io/badge/java-007396?style=for-the-badge&logo=java&logoColor=white)
@@ -133,8 +134,8 @@
 
 ## 포트 포워딩 문서 
 
-1.Frontend
-2.Backend
-3.CI/CD
-4.ERD
+1. Frontend
+2. Backend
+3. CI/CD
+4. ERD
 
