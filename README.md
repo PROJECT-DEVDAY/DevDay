@@ -29,12 +29,12 @@
 - 결제/환불 : 토스 페이먼츠 API와 농협 오픈플랫폼 가상계좌를 사용하여 결제 시스템 구현
 - MSA : Spring Cloud 기반으로 넷플릭스에서 개발한 Eureka Server를 사용하여 MSA 구조로 프로젝트 개발, FeignClient를 사용하여 마이크로 서비스 내부통신 구현
 - Jenkins Pipeline : Docker와 Jenkins를 사용하여 CI-CD Pipeline 구축
-- 스마트 컨트랙트 : 
+- 스마트 컨트랙트 : Solidity 프로그래밍 언어를 사용하여 챌린지 기록 저장시 계약 자동 시행
 
 
 ##기술 스택
 
-### FrontEnd
+<!-- ### FrontEnd
 ![Visual Studio Code](https://img.shields.io/badge/Visual%20Studio%20Code-007ACC?style=for-the-badge&logo=Visual%20Studio%20Code&logoColor=white)
 ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
 ![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=Next.js&logoColor=white)            
@@ -53,7 +53,50 @@
 ### Communication
 ![Slack](https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&logo=Slack&logoColor=white)
 ![Notion](https://img.shields.io/badge/Notion-000000?style=for-the-badge&logo=Notion&logoColor=white)
-![GoogleMeet](https://img.shields.io/badge/GoogleMeet-00897B?style=for-the-badge&logo=Google%20Meet&logoColor=white)
+![GoogleMeet](https://img.shields.io/badge/GoogleMeet-00897B?style=for-the-badge&logo=Google%20Meet&logoColor=white) -->
+- **FrontEnd**
+    - Visual Studio Code
+    - Node.js : 9.4.1
+    - react : 18.2.0
+    - react-dom : 18.2.0
+    - react-chartjs-2 : ^5.2.0
+    - react-hook-form : ^7.43.8
+    - redux : ^4.2.1
+    - husky : ^8.0.3
+    - eslint : ^8.2.0
+    - prettier : 2.8.4
+    - tailwindcss : ^3.2.7
+    - axios : ^1.3.4
+- **BackEnd**
+    - IntelliJ
+    - OpenJDK 11
+    - Gradle : 7.6.1
+    - SpringBoot v2.7.9
+    - SpringCloud : 2021.0.6
+        - Netflix Eureka Service (Discovery Service)
+        - API Gateway
+    - Spring Security
+- **BlockChain** :
+    - Metamask
+    - Solidity
+    - Web3
+    - Remix IDE
+    - Sepolia
+- **CI/CD**
+    - AWS EC2
+    - Docker
+        - Bridge Network
+    - Jenkins
+        - Pipeline
+- **협업 툴**
+    - Git Lab
+    - Jira
+    - Mattermost
+    - Discord
+    - Notion
+- **DB**
+    - MySQL
+    - Redis
 
 
 ## 아키텍처
@@ -128,7 +171,7 @@
 | :----------------------------------------------------------: | :-------------------------------------------------------: | :-----------------------------------------------------: | :-----------------------------------------------------: | :-----------------------------------------------------: | :-----------------------------------------------------: |
 | <img src="https://github.com/pthwan27.png" width="200"/> | <img src="https://github.com/choihyoingwoon.png" width="200"/> | <img src="https://github.com/Djunnni.png" width="200"/> | <img src="https://github.com/keeeeeey.png" width="200"/> |<img src="https://github.com/daydeuk.png" width="200"/> |<img src="https://github.com/GeumBi-Hong.png" width="200"/> |
 |       [pthwan27](https://github.com/pthwan27)        |         [choihyoingwoon](https://github.com/choihyoingwoon)         |          [Djunnni](https://github.com/Djunnni)          |          [Keeeeeey](https://github.com/Keeeeeey)          |     [daydeuk](https://github.com/daydeuk)          |     [GeumBi-Hong](https://github.com/GeumBi-Hong)          |
-|                         Web FrontEnd                          |                       Web FrontEnd                        |                       Web FrontEnd & BackEnd                        |                      Web BackEnd                       |                 Web BackEnd                       |             Web BackEnd                       |
+|                         Web FrontEnd & CI-CD & UCC                          |                       Web FrontEnd & CI-CD & UI/UX                        |                       Web BackEnd & BackEnd & CI-CD                       |                      Web BackEnd & FrontEnd & CI-CD                       |                 Web BackEnd & CI-CD & Blockchain                       |             Web BackEnd & CI-CD & Blockchain                       |
 
 
 
