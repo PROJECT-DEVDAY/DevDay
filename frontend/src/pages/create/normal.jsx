@@ -197,7 +197,7 @@ const normal = props => {
       if (result.isConfirmed) {
         httpForm
           .post(CHALLENGES_URL, data)
-          .then(async () => {
+          .then(async res => {
             await Swal.fire({
               position: 'center',
               icon: 'success',
@@ -205,7 +205,7 @@ const normal = props => {
               showConfirmButton: false,
               timer: 1500,
             });
-            router.push(`/participation/${result.data.id}`);
+            router.push(`/participation/${res.data.id}`);
           })
           .catch(error => {
             Swal.fire({

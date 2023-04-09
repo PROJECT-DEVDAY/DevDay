@@ -88,7 +88,7 @@ const index = () => {
                 </div>
                 <p>예치금</p>
               </div>
-              <p>{myPageInfo.prize}원</p>
+              <p>{myPageInfo.deposit}원</p>
             </div>
             <div className="flex justify-between mb-4" onClick={goToReward}>
               <div className="flex items-center">
@@ -98,7 +98,7 @@ const index = () => {
                 />
                 <p>상금</p>
               </div>
-              <p>{myPageInfo.deposit}원</p>
+              <p>{myPageInfo.prize}원</p>
             </div>
           </div>
         </div>

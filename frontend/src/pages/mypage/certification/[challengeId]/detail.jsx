@@ -133,6 +133,10 @@ export const detail = () => {
   });
 
   const user = useSelector(state => state.user);
+  const period = getStartWithEndDate(
+    challengeDetail.startDate,
+    challengeDetail.endDate,
+  );
 
   const [account, setAccount] = useState('');
 
@@ -248,7 +252,7 @@ export const detail = () => {
         </div>
 
         <div className="w-full mt-10 text-right font-medium text-base">
-          챌린지 기간 : {challengeDetail.startDate} ~ {challengeDetail.endDate}
+          챌린지 기간 : {period}
         </div>
         <div className="w-full mt-4 text-right font-medium text-base">
           달성률 : {challengeDetail.progressRate} %{' '}
