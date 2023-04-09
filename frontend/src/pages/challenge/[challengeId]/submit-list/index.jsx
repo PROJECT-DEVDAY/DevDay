@@ -11,6 +11,7 @@ import http from '@/api/http';
 import Container from '@/components/Container';
 import { CHALLENGE_DETAIL_URL, CHALLENGES_URL } from '@/constants';
 import { getDatesStartToLast } from '@/utils';
+import PrivateRouter from '@/components/PrivateRouter/PrivateRouter';
 
 const SubmitList = ({ challengeInfo, today, range }) => {
   const [curDate, setDate] = useState(today);
@@ -35,6 +36,10 @@ const SubmitList = ({ challengeInfo, today, range }) => {
         .catch(e => {
           console.error(e);
         });
+      http.get(`${CHALLENGE_DETAIL_URL}/${challengeInfo.id}`).then(res => {
+        console.log(res.data);
+        setData(res.data);
+      });
     }
   }, [curDate, challengeInfo]);
 
@@ -84,7 +89,12 @@ const SubmitList = ({ challengeInfo, today, range }) => {
                   className="relative w-full h-24 border-2"
                 >
                   {data.category === 'FREE' && (
-                    <Image fill src={d.photoUrl} alt="user-submit-record" />
+                    <Image
+                      fill
+                      src={d.photoUrl}
+                      alt="user-submit-record"
+                      loader={({ src }) => src}
+                    />
                   )}
                   {data.category != 'FREE' && (
                     <div className="p-3">
@@ -159,7 +169,7 @@ export const getServerSideProps = async context => {
   };
 };
 
-export default SubmitList;
+export default PrivateRouter(SubmitList);
 
 // [
 //   {

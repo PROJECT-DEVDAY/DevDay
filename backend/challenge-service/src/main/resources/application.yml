@@ -7,10 +7,10 @@ cloud:
     region:
       static: ap-northeast-2
     s3:
-      bucket: devday-bucket
+      bucket: 
     credentials:
-      access-key: AKIAXEUXRPXD5YMMPF6T
-      secret-key: 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
+      access-key: 
+      secret-key: 
     stack:
       auto: false
 spring:
@@ -19,7 +19,7 @@ spring:
   datasource:
       url: jdbc:mysql://172.18.0.1:3307/devday?useSSL=false&serverTimezone=UTC
       username: root
-      password: devday1234
+      password: 
       driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:

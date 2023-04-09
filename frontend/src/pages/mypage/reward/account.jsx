@@ -71,9 +71,31 @@ const account = () => {
             onChange={onChangeBankInfo}
           >
             <option value="none">은행을 선택해주세요.</option>
-            <option value="1">농협</option>
-            <option value="2">신한</option>
-            <option value="3">국민</option>
+            <option value="039">경남은행</option>
+            <option value="034">광주은행</option>
+            <option value="012">단위농협(지역농축협)</option>
+            <option value="032">부산은행</option>
+            <option value="045">새마을금고</option>
+            <option value="064">산림조합</option>
+            <option value="088">신한은행</option>
+            <option value="048">신협</option>
+            <option value="027">씨티은행</option>
+            <option value="020">우리은행</option>
+            <option value="071">우체국예금보험</option>
+            <option value="037">전북은행</option>
+            <option value="035">제주은행</option>
+            <option value="090">카카오뱅크</option>
+            <option value="089">케이뱅크</option>
+            <option value="092">토스뱅크</option>
+            <option value="081">하나은행</option>
+            <option value="054">홍콩상하이은행</option>
+            <option value="031">대구은행</option>
+            <option value="003">IBK기업은행</option>
+            <option value="004">국민은행</option>
+            <option value="002">산업은행</option>
+            <option value="011">NH농협은행</option>
+            <option value="023">SC제일은행</option>
+            <option value="007">SH수협은행</option>
           </select>
         </div>
         <div className="mb-5">

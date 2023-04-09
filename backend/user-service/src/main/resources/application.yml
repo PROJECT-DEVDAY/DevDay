@@ -8,8 +8,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: sseioul@gmail.com
-    password: jgjqmluzyyhzetzy
+    username: 
+    password: 
     properties:
       mail:
         smtp:
@@ -32,7 +32,7 @@ spring:
     url: jdbc:mysql://j8c209.p.ssafy.io:3308/devday?useSSL=false&serverTimezone=UTC
 #    url: jdbc:mysql://localhost:3308/devday?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
     username: root
-    password: devday1234
+    password: 
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     database: mysql
@@ -86,9 +86,9 @@ cloud:
     region:
       static: ap-northeast-2
     s3:
-      bucket: devday-bucket
+      bucket: 
     credentials:
-      access-key: AKIAXEUXRPXD5YMMPF6T
-      secret-key: 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
+      access-key: 
+      secret-key: 
     stack:
       auto: false
