@@ -9,6 +9,10 @@ import style from './inquiry.module.scss';
 import { Button } from '@/components/Button';
 import { InputText } from '@/components/InputText';
 import { ReturnArrow } from '@/components/ReturnArrow';
+import { InputLabel } from '@/components/InputLabel';
+import { FIND_PW_URL } from '@/constants';
+import http from '@/api/http';
+import Swal from 'sweetalert2';
 
 const pwInquiry = () => {
   const [show, setShow] = useState(false);
@@ -20,6 +24,54 @@ const pwInquiry = () => {
   };
 
   const bottomSheetRef = useRef(null);
+
+  const [findPw, setFindPw] = useState();
+
+  const [inputs, setInputs] = useState({
+    name: '',
+    email: '',
+    nickname: '',
+  });
+
+  const { name, email, nickname } = inputs;
+
+  const onChangeFindPwINfo = e => {
+    const { value, name } = e.target;
+    setInputs({
+      ...inputs,
+      [name]: value,
+    });
+  };
+
+  const onClickeFindPw = () => {
+    http
+      .patch(FIND_PW_URL, {
+        name,
+        nickname,
+        email,
+      })
+      .then(async data => {
+        await Swal.fire({
+          position: 'center',
+          icon: 'success',
+          title: '성공!',
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        setFindPw(data.data.message);
+
+        showModal();
+      })
+      .catch(() => {
+        Swal.fire({
+          position: 'center',
+          icon: 'error',
+          title: '정보를 확인해주세요!',
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      });
+  };
 
   useEffect(() => {
     const handleClickOutside = event => {
@@ -48,11 +100,32 @@ const pwInquiry = () => {
           <ReturnArrow title="비밀번호 찾기" />
         </div>
         <div className="div-body p-6">
-          <InputText type="text" labelName="이름" content="홍길동" />
+          <InputLabel content="이름" />
+          <InputText
+            type="text"
+            labelName="이름"
+            content="홍길동"
+            name="name"
+            onChange={onChangeFindPwINfo}
+          />
+
+          <div className="mt-5"></div>
+          <InputLabel content="닉네임" />
+          <InputText
+            type="text"
+            labelName="닉네임"
+            content="닉네임을 입력해주세요"
+            onChange={onChangeFindPwINfo}
+            name="nickname"
+          />
+          <div className="mt-5"></div>
+          <InputLabel content="이메일" />
           <InputText
             type="email"
             labelName="이메일"
             content="welcome@devday.com"
+            name="email"
+            onChange={onChangeFindPwINfo}
           />
 
           <Button
@@ -60,7 +133,7 @@ const pwInquiry = () => {
             color="primary"
             fill
             label="비밀번호 찾기"
-            onClick={showModal}
+            onClick={onClickeFindPw}
           />
         </div>
       </div>
@@ -80,9 +153,17 @@ const pwInquiry = () => {
           >
             <AiOutlineCloseCircle />
           </button>
-          <p className={classNames(`mb-4 mt-2`)}>
-            회원님의 비밀번호는 ~ 입니다
-          </p>
+          {findPw == 'success' && (
+            <p className={classNames(`mb-2 text-center`)}>
+              회원님의 임시 비밀번호를
+              <br /> 이메일로 전송하였습니다.
+            </p>
+          )}
+          {findPw != 'success' && (
+            <p className={classNames(`mb-2 text-center`)}>
+              올바른 정보를 입력해주세요
+            </p>
+          )}
           <Button
             onClick={goToLogin}
             color="primary"

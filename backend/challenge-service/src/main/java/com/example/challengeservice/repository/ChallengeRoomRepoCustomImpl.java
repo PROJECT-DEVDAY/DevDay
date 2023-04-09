@@ -34,7 +34,7 @@ public class ChallengeRoomRepoCustomImpl  implements ChallengeRoomRepoCustom {
                 .where(hasSearch(searchParam.getSearch()),
                         hasOffsetLt(searchParam.getOffset())
                         , isCategoryAll(searchParam.getCategory())
-                        , challengeRoom.startDate.gt(searchParam.getNowDate())
+                    //    , challengeRoom.startDate.goe(searchParam.getNowDate())
                 )
                 .orderBy(challengeRoom.id.desc()).
                 limit(searchParam.getSize()).
@@ -78,14 +78,17 @@ public class ChallengeRoomRepoCustomImpl  implements ChallengeRoomRepoCustom {
     @Override
     public List<ChallengeSettleInfo> findClosedChallengeUser(String date) {
 
-        JPAQuery<ChallengeSettleInfo> query = jpaQueryFactory.select(Projections.constructor(
+        JPAQuery<ChallengeSettleInfo> query = jpaQueryFactory
+                .select(Projections.constructor(
                         ChallengeSettleInfo.class,
                         challengeRoom.id,
                         userChallenge.userId,
-                        userChallenge.diffPrice
-                )).from(userChallenge)
+                        userChallenge.diffPrice.add(challengeRoom.entryFee).sum()
+                ))
+                .from(userChallenge)
                 .join(userChallenge.challengeRoom, challengeRoom)
-                .where(challengeRoom.endDate.eq(date));
+                .where(challengeRoom.endDate.eq(date))
+                .groupBy(challengeRoom.id, userChallenge.userId);
         return query.fetch();
     }
 
