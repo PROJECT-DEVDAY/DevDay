@@ -15,7 +15,7 @@ spring:
   datasource:
     url: jdbc:mysql://j8c209.p.ssafy.io:3309/devday?useUnicode=true&serverTimezone=Asia/Seoul&characterEncoding=utf8
     username: root
-    password: devday1234
+    password: 
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     generate-ddl: true
@@ -39,20 +39,20 @@ eureka:
 
 payment:
   toss:
-    baseUrl: https://api.tosspayments.com
-    secret: 'Basic dGVzdF9za19qa1lHNTdFYmEzR1JCWGcxbUs2OHBXRE94bUExOg=='
+    baseUrl: 
+    secret: 
     path:
-      confirm: /v1/payments/confirm
-      cancel: /v1/payments/%s/cancel
+      confirm: 
+      cancel: 
 
 openapi:
   nonghyup:
-    baseUrl: https://developers.nonghyup.com
-    accessToken: 1bde7fbe896bd899b734984345141a21a4acb8e6b20fe3f22517d21bc5fdbda2
-    iscd: '001780'
-    fintechApsno: '001' # 테스트
-    apiSvcCd: ReceivedTransferA
-    otlt: Devday 상금
+    baseUrl: 
+    accessToken: 
+    iscd: 
+    fintechApsno: 
+    apiSvcCd: 
+    otlt: 
 
 
 logging:
