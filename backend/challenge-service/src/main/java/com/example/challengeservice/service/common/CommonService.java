@@ -1,4 +1,4 @@
-package com.example.challengeservice.service;
+package com.example.challengeservice.service.common;
 
 public interface CommonService {
 

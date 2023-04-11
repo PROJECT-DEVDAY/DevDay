@@ -11,6 +11,7 @@ import com.example.challengeservice.exception.ApiException;
 import com.example.challengeservice.exception.ExceptionEnum;
 import com.example.challengeservice.repository.*;
 import com.example.challengeservice.service.challenge.BasicChallengeService;
+import com.example.challengeservice.service.common.CommonServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Connection;

@@ -16,7 +16,7 @@ import com.example.challengeservice.repository.ChallengeRecordRepository;
 import com.example.challengeservice.repository.ChallengeRoomRepository;
 import com.example.challengeservice.repository.ReportRecordRepository;
 import com.example.challengeservice.repository.UserChallengeRepository;
-import com.example.challengeservice.service.CommonServiceImpl;
+import com.example.challengeservice.service.common.CommonServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
