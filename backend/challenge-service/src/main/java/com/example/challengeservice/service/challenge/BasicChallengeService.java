@@ -32,12 +32,8 @@ public interface BasicChallengeService {
     /** 유저가 참가한 챌린지 개수 조회 (참여중 , 완료 , 방장 개수)**/
     UserChallengeInfoResponseDto getMyChallengeCount(Long userId);
 
-
     /**  유저의 참여한 챌린지의 정보 상세 조회 **/
     List<MyChallengeResponseDto> getMyChallengeDetailList (Long userId , String status , Long offset , String search , int size);
-
-
-
 
     /** 챌린지방 Entity 가져오기*/
     ChallengeRoom getChallengeRoomEntity(Long challengeRoomId);
