@@ -19,8 +19,8 @@ public interface PhotoChallengeService {
 
     /** 챌린지 참여자 팀원 사진 인증 기록 가져오기 **/
     List<RecordResponseDto> getTeamPhotoRecord(Long userId , Long challengeRoomId , String date);
-    /** 사진 인증 상세 보기 **/
 
+    /** 사진 인증 상세 보기 **/
     PhotoRecordDetailResponseDto getPhotoRecordDetail(Long userId , Long challengeRecordId);
 
     /** 사진 기록 신고하기 **/
