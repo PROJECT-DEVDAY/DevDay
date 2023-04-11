@@ -39,9 +39,7 @@ public class ChallengeServiceImpl implements ChallengeService{
 
 
     /**
-     * 신대득
-     * githubId로 commit 정보들을 가져오는 메서드
-     * @param githubId
+     * githubId로 commit 정보가져오기
      */
     @Override
     public CommitCountResponseDto getGithubCommit(String githubId){
@@ -61,7 +59,7 @@ public class ChallengeServiceImpl implements ChallengeService{
             if(!commitString.equals("No")){
                 commitCount=Integer.parseInt(commitString);
             }
-            System.out.printf("총 %d개 커밋하셨습니다.\n", commitCount);
+
         } catch (IOException e) {
             e.printStackTrace();
         } catch (Exception e){
@@ -71,17 +69,17 @@ public class ChallengeServiceImpl implements ChallengeService{
     }
 
     /**
-     * 신대득
-     * baekjoonId를 받아서 그 사람이 푼 문제들을 클롤링하는 메서드
-     * @param baekjoonId
-     * @return
+     * explain : 회원이 푼 백준 문제 가져오기
+     * @param baekjoonId :백준 아이디
      */
     @Override
     public SolvedListResponseDto solvedProblemList(String baekjoonId) {
+
         String baekJoonUrl = "https://www.acmicpc.net/user/";
         baekJoonUrl+=baekjoonId;
         Connection conn = Jsoup.connect(baekJoonUrl);
         List<String> solvedList= new ArrayList<>();
+
         int count=0;
         try {
             Document document = conn.get();
@@ -99,20 +97,21 @@ public class ChallengeServiceImpl implements ChallengeService{
         return SolvedListResponseDto.from(solvedList, count);
     }
 
+    /** 챌린지 수정하기 **/
     public void updateChallengeRoom(Long challengeRoomId){
-        log.info("updateChallengeRoom 실행");
+
         ChallengeRoom challengeRoom = basicChallengeService.getChallengeRoomEntity(challengeRoomId);
         List<UserChallenge> userChallengeList = userChallengeRepository.findAllByChallengeRoomId(challengeRoom.getId());
         for(UserChallenge uc :userChallengeList){
             if(challengeRoom.getCategory().equals("ALGO")){
-                log.info("updateUserBaekjoon 실행");
+
                 updateUserBaekjoon(uc.getUserId());
-                log.info("createAlgoRecord 실행");
+
                 createAlgoRecord(ChallengeRecordRequestDto.from(uc.getUserId(),challengeRoomId));
             } else if(challengeRoom.getCategory().equals("COMMIT")){
-                log.info("updateUserCommit 실행");
+
                 updateUserCommit(uc.getUserId());
-                log.info("createCommitRecord 실행");
+
                 createCommitRecord(ChallengeRecordRequestDto.from(uc.getUserId(),challengeRoomId));
             }
         }
@@ -279,6 +278,7 @@ public class ChallengeServiceImpl implements ChallengeService{
     @Override
     @Transactional
     public void createAlgoRecord(ChallengeRecordRequestDto requestDto) {
+
         log.info("챌린지id " + requestDto.getChallengeRoomId() + "유저아이디id" + requestDto.getUserId());
         ChallengeRoom challengeRoom = basicChallengeService.getChallengeRoomEntity(requestDto.getChallengeRoomId());
 
@@ -287,18 +287,16 @@ public class ChallengeServiceImpl implements ChallengeService{
         // 오늘 날짜
         String date = commonService.getDate();
 
-        // user의 solved ac에서 오늘 푼 문제들만 조회하기!
+
         List<DateProblemResponseDto> todayProblemList = userServiceClient.getDateBaekjoonList(user.getUserId(), date, date).getData();
 
-        // challengeRoom에서 최소 알고리즘 개수 가져오기 미달이면 Exception 발생
+        //challengeRoom에서 최소 알고리즘 개수 가져오기 미달이면 Exception 발생
         if(todayProblemList.size()<challengeRoom.getAlgorithmCount()){
             return;
-//            throw new ApiException(ExceptionEnum.CONFIRM_FAILURE_ALGO_EXCEPTION);
         }
 
-        // UserChallenge 조회
         UserChallenge userChallenge = userChallengeRepository.findByChallengeRoomIdAndUserId(requestDto.getChallengeRoomId(), requestDto.getUserId()).orElseThrow(() -> new ApiException(ExceptionEnum.USER_CHALLENGE_NOT_EXIST_EXCEPTION));
-        log.info("[userChallenge id값]" + userChallenge.getId());
+
 
         // 기존에 이 날짜에 인증기록이 있는지 검사
         Optional<ChallengeRecord> algoRecordResponseDto = challengeRecordRepository.findByCreateAtAndUserChallenge(date, userChallenge);
@@ -307,7 +305,7 @@ public class ChallengeServiceImpl implements ChallengeService{
                 algoRecordResponseDto.get().setAlgorithmCount(todayProblemList.size());
                 challengeRecordRepository.save(algoRecordResponseDto.get());
             }
-//            throw new ApiException(ExceptionEnum.EXIST_CHALLENGE_RECORD);
+
         }else{
             ChallengeRecord challengeRecord = ChallengeRecord.fromAlgo(date, todayProblemList.size(), userChallenge);
             challengeRecordRepository.save(challengeRecord);
@@ -315,9 +313,7 @@ public class ChallengeServiceImpl implements ChallengeService{
     }
 
     /**
-     * 신대득
      * 커밋 인증 기록을 저장하는 메서드
-     * @param requestDto
      */
     @Override
     @Transactional
@@ -325,136 +321,96 @@ public class ChallengeServiceImpl implements ChallengeService{
         ChallengeRoom challengeRoom = basicChallengeService.getChallengeRoomEntity(requestDto.getChallengeRoomId());
         UserResponseDto user = userServiceClient.getUserInfo(requestDto.getUserId()).getData();
 
-        // 오늘 날짜
         String date = commonService.getDate();
 
-        // user의 해당 날짜의 커밋 수 조회하기!
+
         SingleResult<CommitResponseDto> commitResponseDto = userServiceClient.getCommitRecord(user.getUserId(), date);
-        // challengeRoom에서 최소 커밋 개수 가져오기 미달이면 Exception 발생
+
         if(commitResponseDto.getData().getCommitCount()<challengeRoom.getCommitCount()){
             return;
-//            throw new ApiException(ExceptionEnum.CONFIRM_FAILURE_ALGO_EXCEPTION);
         }
 
-        // UserChallenge 조회
+
         UserChallenge userChallenge = userChallengeRepository.findByChallengeRoomIdAndUserId(requestDto.getChallengeRoomId(), requestDto.getUserId())
                 .orElseThrow(() -> new ApiException(ExceptionEnum.USER_CHALLENGE_NOT_EXIST_EXCEPTION));
         log.info("[userChallenge id값]" + userChallenge.getId());
 
-        // 기존에 이 날짜에 인증기록이 있는지 검사
+
         Optional<ChallengeRecord> commitRecordResponseDto = challengeRecordRepository.findByCreateAtAndUserChallenge(date, userChallenge);
         if(commitRecordResponseDto.isPresent()){
-            // 개수가 다르다면 업데이트
+
             if(commitRecordResponseDto.get().getCommitCount()!=commitResponseDto.getData().getCommitCount()){
                 commitRecordResponseDto.get().setCommitCount(commitResponseDto.getData().getCommitCount());
                 challengeRecordRepository.save(commitRecordResponseDto.get());
             }
-//            throw new ApiException(ExceptionEnum.EXIST_CHALLENGE_RECORD);
+
         }else{
             ChallengeRecord challengeRecord = ChallengeRecord.fromCommit(date, commitResponseDto.getData().getCommitCount(), userChallenge);
             challengeRecordRepository.save(challengeRecord);
         }
     }
 
-    /** 하루 정산
+    /**
+     * 하루 정산
      * 일단 현재 진행중인 챌린지 방을 받아와야함 입력값으로!!
      * **/
     @Override
     @Transactional
     public void oneDayCulc(ChallengeRoom challengeRoom) {
         Integer period = commonService.diffDay(challengeRoom.getStartDate(), challengeRoom.getEndDate()).intValue();
-        int oneDayFee = (int)Math.ceil((double) challengeRoom.getEntryFee() / (period+1)); // 하루 가격
+        int oneDayFee = (int)Math.ceil((double) challengeRoom.getEntryFee() / (period+1));
+        String beforeOneDay = commonService.getPastDay(0, commonService.getDate());
 
-        String beforeOneDay = commonService.getPastDay(0, commonService.getDate()); // 어제 날짜 조회
-        // 만약 계산하는 날짜가 챌린지 기간이 아니라면
         if(commonService.diffDay(beforeOneDay, challengeRoom.getEndDate())<0 || commonService.diffDay(challengeRoom.getStartDate(), beforeOneDay) <0){
             return;
         }
 
-        // 방에 참여한 참여자들
         List<UserChallenge> userChallengeList = userChallengeRepository.findUserChallengesByChallengeRoomId(challengeRoom.getId());
         List<UserChallenge> successList=new ArrayList<>();
         List<UserChallenge> failList=new ArrayList<>();
         for (UserChallenge userChallenge : userChallengeList) {
-            /**
-             * 인증은 무조건 1개!
-             * 여러개 들어올 경우 에러처리 필요
-             */
+
             List<ChallengeRecordResponseDto> challengeRecord = challengeRecordRepository.findByUserChallengeIdAndCreateAt(userChallenge.getId(), beforeOneDay);
-            if(challengeRecord.size()==0){ // 기록이 없다면 => 무조건 실패
+            if(challengeRecord.size()==0){
                 failList.add(userChallenge);
-            }else{ // 기록이 있다면 (사진 인증인 경우 검사)
-                if (!(challengeRecord.get(0).isSuccess())) { // 인증이 인정되지 않았다면
+            }else{
+                if (!(challengeRecord.get(0).isSuccess())) {
                     failList.add(userChallenge);
                 } else{
                     successList.add(userChallenge);
                 }
             }
         }
-        // 실패자들 돈 뺐기
+
         Long sum=0L;
         for(UserChallenge userChallenge: failList){
-            log.info("실패한 사람은 {}", userChallenge.getId());
-            log.info("onedayFee is : {}",oneDayFee);
+
             userChallenge.setDiffPrice(userChallenge.getDiffPrice()-oneDayFee);
             userChallengeRepository.save(userChallenge);
             sum+=oneDayFee;
         }
 
-        // 성공자들 돈 나눠 갖기
         Long todayMoney=Long.valueOf((long)Math.ceil((double)sum/successList.size()));
         for(UserChallenge userChallenge: successList){
-            log.info("성공한 사람은 {}", userChallenge.getId());
             userChallenge.setDiffPrice(userChallenge.getDiffPrice()+todayMoney);
             userChallengeRepository.save(userChallenge);
         }
 
     }
 
-
     /**
-     * 신대득
-     * category에 따라 record를 만드는 메서드
-     * 제작중!!
-     * @param challengeRoomId :
-     * @param userId
-     * @param viewType
-     * @param category
-     * @return
-     */
-/*    public List<?> getSelfRecord(Long challengeRoomId, Long userId, String viewType, String category) {
-        List<?> selfRecord=new ArrayList<>();
-        switch(category){
-            case "ALGO":
-                break;
-            case "COMMIT":
-                break;
-            case "FREE":
-                //userChallenge 값을 찾아야함
-                selfRecord = getSelfPhotoRecord(challengeRoomId,userId,viewType);
-                break;
-            default:
-                break;
-        }
-        return selfRecord;
-    }*/
-
-
-
-    /**
-     * 신대득
      * 알고리즘
      * 나의 인증현황
      * 진행률, 예치금 + 상금, 성공 / 실패 횟수
      */
     @Override
     public ProgressResponseDto getProgressUserBaekjoon(Long userId, Long challengeId){
-        log.info("getProgressUserBaekjoon 실행");
+
         ChallengeRoomResponseDto challengeRoom=basicChallengeService.readChallenge(challengeId);
 
         UserChallenge userChallenge = userChallengeRepository.findByChallengeRoomIdAndUserId(challengeRoom.getId(), userId)
                 .orElseThrow(()-> new ApiException(ExceptionEnum.USER_CHALLENGE_LIST_NOT_EXIST));
-        // 진행률 계산
+
         Long challengeLength = commonService.diffDay(challengeRoom.getStartDate(), commonService.getDate());
         if(challengeLength<0){
             challengeLength=-1L;
@@ -483,18 +439,14 @@ public class ChallengeServiceImpl implements ChallengeService{
             challengeLength++;
         }
         String progressRate= String.format("%.2f", (double)(successCount*100)/challengeLength);
-        // 예치금 + 상금
+
         Long curPrice=userChallenge.getDiffPrice() + (long)challengeRoom.getEntryFee();
         return new ProgressResponseDto(progressRate, curPrice, successCount, failCount);
     }
 
 
     /**
-     * 신대득
-     * 현재 챌린지 방의
-     * 탑 랭크 리스트 조회
-     * @param challengeId
-     * @return
+     * 현재 챌린지 방의 탑 랭크 리스트 조회
      */
     @Override
     public List<RankResponseDto> getTopRank(Long challengeId) {
@@ -527,23 +479,18 @@ public class ChallengeServiceImpl implements ChallengeService{
     }
 
     /**
-     * @Author 신대득
-     * 현재 유저가 들어온 방에서 자신의
-     * 진행율을 계산하는 메서드
-     * @param userChallengeId
-     * @param challengeRoom
-     * @return
+      현재 유저가 들어온 방에서 자신의 진행율을 계산하는 메서드
      */
     public String getProgressRate(Long userChallengeId, ChallengeRoomResponseDto challengeRoom){
-        // 진행률 계산
+
         Long challengeLength = commonService.diffDay(challengeRoom.getStartDate(), challengeRoom.getEndDate());
-        if(challengeLength<0){
-            challengeLength=-1L;
+        if(challengeLength < 0){
+            challengeLength = -1L;
         }
         challengeLength++;
-        Long successCount=0L;
+        Long successCount = 0L;
         List<ChallengeRecord> challengeRecordList = challengeRecordRepository.findAllByUserChallengeIdAndStartDateAndEndDate(userChallengeId, challengeRoom.getStartDate(), challengeRoom.getEndDate(), true);
-        if(challengeRecordList.size()==0){
+        if(challengeRecordList.size() == 0){
             return "0";
         }
         for(ChallengeRecord cr:challengeRecordList){
@@ -570,10 +517,6 @@ public class ChallengeServiceImpl implements ChallengeService{
 
     /**
      * 유저가 선택한 챌린지의 인증서 정보를 조회하는 메서드
-     * @author 신대득
-     * @param userId : 헤더에 담긴 유저id
-     * @param challengeRoomId : 선택한 챌린지의 번호
-     * @return
      */
     public CertificationResponseDto getCertification(Long userId, Long challengeRoomId){
         ChallengeRoomResponseDto challengeRoom = basicChallengeService.readChallenge(challengeRoomId);

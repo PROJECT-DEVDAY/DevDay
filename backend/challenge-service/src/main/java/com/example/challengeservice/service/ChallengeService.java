@@ -34,8 +34,6 @@ public interface ChallengeService {
     /** 알고리즘 인증 기록 생성하기 **/
     void createAlgoRecord(ChallengeRecordRequestDto requestDto) throws IOException;
 
-
-
     void oneDayCulc(ChallengeRoom challengeRoom);
     void culcDailyPayment();
     void updateUserCommit(Long userId);
