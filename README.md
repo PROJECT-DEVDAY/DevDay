@@ -110,7 +110,7 @@
 ### 챌린지 서비스 ERD
 ![ChallengeERD](./image/챌린지.png)
 
-### 유저 서비스 ERD
+### 결제 서비스 ERD
 ![PayERD](./image/페이.png)
 
 ## 💻 피그마
