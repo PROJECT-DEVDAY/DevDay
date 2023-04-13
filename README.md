@@ -149,13 +149,13 @@
 ![FindPassword](./gif/비밀번호찾기.gif)
 
 ### 챌린지 참여하기
-![JoinChallenge](./gif/챌린지 참여하기.gif)
+![JoinChallenge](./gif/챌린지참여하기.gif)
 
 ### 참가챌린지 조회
 ![FindChallenge](./gif/참가챌린지조회.gif)
 
 ### 자신이 참여한 챌린지
-![MyChallenge](./gif/자신이 참여한 챌린지.gif)
+![MyChallenge](./gif/자신이참여한챌린지.gif)
 
 ### 챌린지저장 과정
 ![Algo](./gif/챌린지저장과정+알고.gif)
