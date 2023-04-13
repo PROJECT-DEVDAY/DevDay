@@ -18,12 +18,23 @@ public class ChallengeController {
 
 	private final DepositService depositService;
 
+	/**
+	 * 챌린지 방장에 의해 방이 제거되었을 때, 호출됩니다.
+	 * @param challengeId
+	 * @return
+	 */
 	@DeleteMapping("/{challengeId}")
 	public ResponseEntity<InternalResponse<Boolean>> refundChallengeByManager(@PathVariable Long challengeId) {
 		depositService.refund(challengeId);
 		return ResponseEntity.ok(new InternalResponse<Boolean>(true));
 	}
 
+	/**
+	 * 챌린지 참가자가 방에서 이탈할 때, 호출합니다.
+	 * @param challengeId
+	 * @param request
+	 * @return
+	 */
 	@DeleteMapping("/{challengeId}/users")
 	public ResponseEntity<InternalResponse<Boolean>> refundChallengeByUser(
 			@PathVariable Long challengeId, HttpServletRequest request
@@ -35,6 +46,12 @@ public class ChallengeController {
 
 	}
 
+	/**
+	 * 특정 챌린지 방만 정산합니다.
+	 * @param challengeId
+	 * @param request
+	 * @return
+	 */
 	@PostMapping("/{challengeId}/settle")
 	public ResponseEntity<Void> settleChallenge(
 			@PathVariable Long challengeId, @RequestBody ChallengeSettleRequest request
@@ -43,6 +60,11 @@ public class ChallengeController {
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 
+	/**
+	 * 챌린지 전체 정산일괄처리를 담당합니다.
+	 * @param request
+	 * @return
+	 */
 	@PostMapping("/settle")
 	public ResponseEntity<Void> settleChallenge(
 		@RequestBody ChallengeSettleRequest request

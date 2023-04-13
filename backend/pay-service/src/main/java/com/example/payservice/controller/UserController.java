@@ -115,6 +115,11 @@ public class UserController {
 		return ResponseEntity.ok(response);
 	}
 
+	/**
+	 * 상금에 대해 요약정보를 얻을 수 있습니다.
+	 * @param servletRequest
+	 * @return
+	 */
 	@GetMapping("/prize/summary")
 	public ResponseEntity<InternalResponse<PrizeSummaryDto>> getPrizeSummary(HttpServletRequest servletRequest) {
 		Long userId = Utils.parseAuthorizedUserId(servletRequest);
@@ -160,6 +165,11 @@ public class UserController {
 		return ResponseEntity.ok(response);
 	}
 
+	/**
+	 * 예치금에 대한 요약을 얻을 수 있습니다.
+	 * @param request
+	 * @return
+	 */
 	@GetMapping("/deposit/summary")
 	public ResponseEntity<InternalResponse<DepositSummaryDto>> getDepositSummary(HttpServletRequest request) {
 		Long userId = Utils.parseAuthorizedUserId(request);

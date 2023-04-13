@@ -35,6 +35,11 @@ public class ExceptionAdviceController {
                 e.getError().getStatus()
         );
     }
+
+    /**
+     * TOSS등 외부 모듈에 의해 발생했을 경우 기본 처리입니다.
+     * @return
+     */
     @ExceptionHandler({PaymentsConfirmException.class})
     public ResponseEntity<ApiExceptionEntity> paymentsConfirmException() {
         return apiExceptionHandler(new ApiException(ExceptionEnum.DEPOSIT_CHARGE_CONFIRM_EXCEPTION));
