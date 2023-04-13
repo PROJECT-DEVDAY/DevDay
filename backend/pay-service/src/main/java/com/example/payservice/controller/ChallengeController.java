@@ -36,7 +36,7 @@ public class ChallengeController {
 	}
 
 	@PostMapping("/{challengeId}/settle")
-	public ResponseEntity<ResponseEntity.BodyBuilder> settleChallenge(
+	public ResponseEntity<Void> settleChallenge(
 			@PathVariable Long challengeId, @RequestBody ChallengeSettleRequest request
 	) {
 		depositService.settleChallenge(challengeId, request.getResultList());
@@ -44,7 +44,7 @@ public class ChallengeController {
 	}
 
 	@PostMapping("/settle")
-	public ResponseEntity<ResponseEntity.BodyBuilder> settleChallenge(
+	public ResponseEntity<Void> settleChallenge(
 		@RequestBody ChallengeSettleRequest request
 	) {
 		depositService.settleChallengeV2(request.getResultList());
