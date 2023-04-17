@@ -38,5 +38,12 @@ public interface BasicChallengeService {
     /** 챌린지방 Entity 가져오기*/
     ChallengeRoom getChallengeRoomEntity(Long challengeRoomId);
 
-
+    /** 챌린지내에서 1등부터 차례대로 랭킹을 반환 **/
+    List<RankResponseDto> getTopRank(Long challengeId);
+    /** 해당 방의 하루 정산 **/
+    void oneDayCulc(ChallengeRoom challengeRoom);
+    /** 유저가 선택한 챌린지에 대한 증명서 정보를 반환하는 메서드 **/
+    CertificationResponseDto getCertification(Long userId, Long challengeRoomId);
+    /** 방의 모든 유저의 백준 리스트 업데이트 **/
+    void updateChallengeRoom(Long challengeRoomId);
 }

@@ -1,4 +1,4 @@
-package com.example.challengeservice.dto.response;
+package com.example.challengeservice.client.dto;
 
 
 import lombok.AllArgsConstructor;

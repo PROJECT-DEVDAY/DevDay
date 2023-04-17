@@ -1,6 +1,5 @@
 package com.example.challengeservice.controller;
 
-import com.example.challengeservice.client.PayServiceClient;
 import com.example.challengeservice.common.response.ResponseService;
 import com.example.challengeservice.common.result.ListResult;
 import com.example.challengeservice.common.result.Result;
@@ -8,9 +7,7 @@ import com.example.challengeservice.common.result.SingleResult;
 import com.example.challengeservice.dto.response.ChallengeRoomResponseDto;
 import com.example.challengeservice.dto.response.SimpleChallengeResponseDto;
 import com.example.challengeservice.dto.response.*;
-import com.example.challengeservice.dto.response.SolvedListResponseDto;
 import com.example.challengeservice.infra.amazons3.service.AmazonS3Service;
-import com.example.challengeservice.service.ChallengeService;
 import com.example.challengeservice.service.SchedulerService;
 import com.example.challengeservice.service.challenge.BasicChallengeService;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +27,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ChallengeController {
     private final ResponseService responseService;
-    private final ChallengeService challengeService;
     private final AmazonS3Service s3Service;
 
     private final SchedulerService schedulerService;
@@ -68,40 +64,6 @@ public class ChallengeController {
     }
 
 
-    /** 신대득
-     * 유저 백준 아이디를 통해 해당 유저의 푼 문제 리스트 찾기 (크롤링)
-     * 나온 결과를 계산해서 user에 넣어줘야한다.
-     * Todo : userId로 baekjoonId 가져오는걸로 바꾸기
-     */
-    @GetMapping("/baekjoon/{baekjoonId}")
-    public SingleResult<SolvedListResponseDto> solvedProblemList(@PathVariable("baekjoonId") String baekjoonId){
-        return responseService.getSingleResult(challengeService.solvedProblemList(baekjoonId));
-    }
-
-    /**
-     * 신대득
-     * 선택한 유저가
-     * 해당 날짜에 푼 문제를 조회하는 API
-     * @param userId // 조회 할 유저의 id
-     * @param selectDate // 조회 할 날짜
-     * @return
-     */
-    @GetMapping("/baekjoon/users/date")
-    public SingleResult<SolvedListResponseDto> checkDateUserBaekjoon(@RequestParam Long userId, @RequestParam String selectDate){
-        return responseService.getSingleResult(challengeService.checkDateUserBaekjoon(userId, selectDate));
-    }
-
-    /**
-     * 유저의 커밋 정보 조회
-     * @param userId
-     * @param selectDate
-     * @return
-     */
-    @GetMapping("/commit/users/date")
-    public SingleResult<CommitResponseDto> checkDateUserCommit(@RequestParam Long userId, @RequestParam String selectDate){
-        return responseService.getSingleResult(challengeService.checkDateUserCommit(userId, selectDate));
-    }
-
     /**
      * @author 신대득
      * 현재 user가 참가중인 챌린지 개수 반환
@@ -112,34 +74,21 @@ public class ChallengeController {
 
     }
 
-    /**
-     * @author 신대득
-     * 스케줄러로 실행되는 일일 기록 저장의 테스트 API
-     * @return
-     */
-    @GetMapping("/test/record")
-    public Result testRecord (){
-        challengeService.createDailyRecord();
-        return responseService.getSuccessResult();
-    }
-
-    /**
-     * @author 신대득
-     * 스케줄러로 실행되는 일일 정산의 테스트 API
-     * @return
-     */
-    @GetMapping("/test/payment")
-    public Result testPayment (){
-        challengeService.culcDailyPayment();
-        return responseService.getSuccessResult();
-    }
-
-
     /** 기본 사진 업로드 **/
     @PostMapping("upload/image")
     public String updateDefaultImage(@RequestParam("file") MultipartFile multipartFile , @RequestParam("dir") String dir) throws IOException{
 
         return  s3Service.upload(multipartFile,dir);
+    }
+
+    /**
+     * 해당 챌린지 방
+     * 모든 유저의 정보 갱신
+     */
+    @PostMapping("/update/room/{challengeId}")
+    public Result updateChallengeRoom(@PathVariable Long challengeId){
+        basicChallengeService.updateChallengeRoom(challengeId);
+        return responseService.getSuccessResult();
     }
 
     /**
@@ -150,26 +99,28 @@ public class ChallengeController {
      */
     @GetMapping("baekjoon/rank/{challengeId}")
     public ListResult<RankResponseDto> getTopRank(@PathVariable String challengeId){
-        return responseService.getListResult(challengeService.getTopRank(Long.parseLong(challengeId)));
+        return responseService.getListResult(basicChallengeService.getTopRank(Long.parseLong(challengeId)));
     }
 
     /**
-     * 신대득
-     * 유저가 푼 문제 리스트 갱신
+     * @author 신대득
+     * 스케줄러로 실행되는 일일 기록 저장의 테스트 API
+     * @return
      */
-    @PostMapping("/baekjoon/update/users/{userId}")
-    public Result updateUserBaekjoon(@PathVariable String userId){
-        challengeService.updateUserBaekjoon(Long.parseLong(userId));
+    @GetMapping("/test/record")
+    public Result testRecord (){
+        schedulerService.createDailyRecord();
         return responseService.getSuccessResult();
     }
 
     /**
-     * 해당 챌린지 방
-     * 모든 유저의 푼 문제 리스트 갱신
+     * @author 신대득
+     * 스케줄러로 실행되는 일일 정산의 테스트 API
+     * @return
      */
-    @PostMapping("/baekjoon/update/room/{challengeId}")
-    public Result updateChallengeRoom(@PathVariable Long challengeId){
-        challengeService.updateChallengeRoom(challengeId);
+    @GetMapping("/test/payment")
+    public Result testPayment (){
+        schedulerService.culcDailyPayment();
         return responseService.getSuccessResult();
     }
 

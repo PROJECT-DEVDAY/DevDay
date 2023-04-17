@@ -44,6 +44,7 @@ public class CommonServiceImpl implements CommonService {
         return formatter.format(cal.getTime());
     }
 
+    /** startDate~ endDate의 기간 얻기 **/
     @Override
     public Long diffDay(String startDate, String endDate){
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");

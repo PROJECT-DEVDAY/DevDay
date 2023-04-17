@@ -1,9 +1,12 @@
 package com.example.challengeservice.service.challenge;
 
 import com.example.challengeservice.client.UserServiceClient;
+import com.example.challengeservice.client.dto.UserResponseDto;
 import com.example.challengeservice.dto.request.ChallengeJoinRequestDto;
+import com.example.challengeservice.dto.request.ChallengeRecordRequestDto;
 import com.example.challengeservice.dto.request.ChallengeRoomRequestDto;
 import com.example.challengeservice.dto.response.*;
+import com.example.challengeservice.entity.ChallengeRecord;
 import com.example.challengeservice.entity.ChallengeRoom;
 import com.example.challengeservice.entity.UserChallenge;
 import com.example.challengeservice.exception.ApiException;
@@ -13,6 +16,8 @@ import com.example.challengeservice.infra.querydsl.SearchParam;
 import com.example.challengeservice.repository.ChallengeRecordRepository;
 import com.example.challengeservice.repository.ChallengeRoomRepository;
 import com.example.challengeservice.repository.UserChallengeRepository;
+import com.example.challengeservice.service.algo.AlgoChallengeService;
+import com.example.challengeservice.service.commit.CommitChallengeService;
 import com.example.challengeservice.service.common.CommonServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,9 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -42,6 +45,8 @@ public class BasicChallengeServicelmpl implements  BasicChallengeService{
     private final UserChallengeRepository userChallengeRepository;
 
     private final ChallengeRecordRepository recordRepository;
+    private final CommitChallengeService commitChallengeService;
+    private final AlgoChallengeService algoChallengeService;
 
     /**
      * author : 홍금비
@@ -272,5 +277,152 @@ public class BasicChallengeServicelmpl implements  BasicChallengeService{
         }
     }
 
+    /**
+     * 현재 챌린지 방의 탑 랭크 리스트 조회
+     */
+    @Override
+    public List<RankResponseDto> getTopRank(Long challengeId) {
+        ChallengeRoom challengeRoom = getChallengeRoomEntity(challengeId);
+        List<UserChallenge> userChallengesByChallengeRoomId = userChallengeRepository.findAllByChallengeRoomId(challengeRoom.getId());
+        List<RankResponseDto> rankResponseDtoList = new ArrayList<>();
+        Long period = commonService.diffDay(challengeRoom.getStartDate(), challengeRoom.getEndDate()) + 1;
+        for (UserChallenge uc : userChallengesByChallengeRoomId) {
+            // 현재 uc 중 챌린지 기간 동안의 레코드 조회
+            switch (challengeRoom.getCategory()) {
+                case "ALGO":
+                    List<ChallengeRecord> challengeAlgoRecordList = recordRepository.findAllByUserChallengeIdAndStartDateAndEndDateAlgo(uc.getId(), challengeRoom.getStartDate(), challengeRoom.getEndDate(), true, challengeRoom.getAlgorithmCount());
+                    rankResponseDtoList.add(new RankResponseDto(0L, uc.getUserId(), uc.getNickname(), (long) challengeAlgoRecordList.size(), period - (long) challengeAlgoRecordList.size()));
+                    break;
+                case "COMMIT":
+                    List<ChallengeRecord> challengeCommitRecordList = recordRepository.findAllByUserChallengeIdAndStartDateAndEndDateCommit(uc.getId(), challengeRoom.getStartDate(), challengeRoom.getEndDate(), true, challengeRoom.getCommitCount());
+                    rankResponseDtoList.add(new RankResponseDto(0L, uc.getUserId(), uc.getNickname(), (long) challengeCommitRecordList.size(), period - (long) challengeCommitRecordList.size()));
+                    break;
+                case "FREE":
+                    List<ChallengeRecord> challengeFreeRecordList = recordRepository.findAllByUserChallengeIdAndStartDateAndEndDateFree(uc.getId(), challengeRoom.getStartDate(), challengeRoom.getEndDate(), true);
+                    rankResponseDtoList.add(new RankResponseDto(0L, uc.getUserId(), uc.getNickname(), (long) challengeFreeRecordList.size(), period-(long)challengeFreeRecordList.size()));
+                    break;
+            }
+            Collections.sort(rankResponseDtoList);
+            for (int i = 0; i < rankResponseDtoList.size(); i++) {
+                rankResponseDtoList.get(i).setRank((long) i + 1);
+            }
+        }
+        return rankResponseDtoList;
+    }
+
+    /**
+     * 하루 정산
+     * 일단 현재 진행중인 챌린지 방을 받아와야함 입력값으로!!
+     * **/
+    @Override
+    @Transactional
+    public void oneDayCulc(ChallengeRoom challengeRoom) {
+        Integer period = commonService.diffDay(challengeRoom.getStartDate(), challengeRoom.getEndDate()).intValue();
+        int oneDayFee = (int)Math.ceil((double) challengeRoom.getEntryFee() / (period+1));
+        String beforeOneDay = commonService.getPastDay(0, commonService.getDate());
+
+        if(commonService.diffDay(beforeOneDay, challengeRoom.getEndDate())<0 || commonService.diffDay(challengeRoom.getStartDate(), beforeOneDay) <0){
+            return;
+        }
+
+        List<UserChallenge> userChallengeList = userChallengeRepository.findUserChallengesByChallengeRoomId(challengeRoom.getId());
+        List<UserChallenge> successList=new ArrayList<>();
+        List<UserChallenge> failList=new ArrayList<>();
+        for (UserChallenge userChallenge : userChallengeList) {
+
+            List<ChallengeRecordResponseDto> challengeRecord = recordRepository.findByUserChallengeIdAndCreateAt(userChallenge.getId(), beforeOneDay);
+            if(challengeRecord.size()==0){
+                failList.add(userChallenge);
+            }else{
+                if (!(challengeRecord.get(0).isSuccess())) {
+                    failList.add(userChallenge);
+                } else{
+                    successList.add(userChallenge);
+                }
+            }
+        }
+
+        Long sum=0L;
+        for(UserChallenge userChallenge: failList){
+
+            userChallenge.setDiffPrice(userChallenge.getDiffPrice()-oneDayFee);
+            userChallengeRepository.save(userChallenge);
+            sum+=oneDayFee;
+        }
+
+        Long todayMoney=Long.valueOf((long)Math.ceil((double)sum/successList.size()));
+        for(UserChallenge userChallenge: successList){
+            userChallenge.setDiffPrice(userChallenge.getDiffPrice()+todayMoney);
+            userChallengeRepository.save(userChallenge);
+        }
+
+    }
+
+
+    /**
+     현재 유저가 들어온 방에서 자신의 진행율을 계산하는 메서드
+     */
+    public String getProgressRate(Long userChallengeId, ChallengeRoomResponseDto challengeRoom){
+
+        Long challengeLength = commonService.diffDay(challengeRoom.getStartDate(), challengeRoom.getEndDate());
+        if(challengeLength < 0){
+            challengeLength = -1L;
+        }
+        challengeLength++;
+        Long successCount = 0L;
+        List<ChallengeRecord> challengeRecordList = recordRepository.findAllByUserChallengeIdAndStartDateAndEndDate(userChallengeId, challengeRoom.getStartDate(), challengeRoom.getEndDate(), true);
+        if(challengeRecordList.size() == 0){
+            return "0";
+        }
+        for(ChallengeRecord cr:challengeRecordList){
+            switch(challengeRoom.getCategory()){
+                case "ALGO":
+                    if(cr.getAlgorithmCount()>=challengeRoom.getAlgorithmCount())
+                        successCount++;
+                    break;
+                case "COMMIT":
+                    if(cr.getCommitCount()>=challengeRoom.getCommitCount())
+                        successCount++;
+                    break;
+                case "FREE":
+                    if(cr.isSuccess())
+                        successCount++;
+                    break;
+            }
+        }
+        if(challengeLength==0){
+            challengeLength++;
+        }
+        return String.format("%.2f", (double)(successCount*100)/challengeLength);
+    }
+
+    /**
+     * 유저가 선택한 챌린지의 인증서 정보를 조회하는 메서드
+     */
+    public CertificationResponseDto getCertification(Long userId, Long challengeRoomId){
+        ChallengeRoomResponseDto challengeRoom = readChallenge(challengeRoomId);
+        UserChallenge userChallenge = userChallengeRepository.findByChallengeRoomIdAndUserId(challengeRoomId, userId)
+                .orElseThrow(() -> new ApiException(ExceptionEnum.USER_CHALLENGE_NOT_EXIST_EXCEPTION));
+        UserResponseDto userResponseDto= userServiceClient.getUserInfo(userId).getData();
+        String progressRate= getProgressRate(userChallenge.getId(), challengeRoom);
+
+        return new CertificationResponseDto(userResponseDto.getName(), userChallenge.getChallengeRoom().getTitle(), userChallenge.getChallengeRoom().getStartDate(),
+                userChallenge.getChallengeRoom().getEndDate(), progressRate, userChallenge.getId());
+    }
+
+    /** 챌린지 방 업데이트 하기 **/
+    public void updateChallengeRoom(Long challengeRoomId){
+        ChallengeRoom challengeRoom = getChallengeRoomEntity(challengeRoomId);
+        List<UserChallenge> userChallengeList = userChallengeRepository.findAllByChallengeRoomId(challengeRoom.getId());
+        for(UserChallenge uc :userChallengeList){
+            if(challengeRoom.getCategory().equals("ALGO")){
+                algoChallengeService.updateUserBaekjoon(uc.getUserId());
+                algoChallengeService.createAlgoRecord(ChallengeRecordRequestDto.from(uc.getUserId(),challengeRoomId));
+            } else if(challengeRoom.getCategory().equals("COMMIT")){
+                commitChallengeService.updateUserCommit(uc.getUserId());
+                commitChallengeService.createCommitRecord(ChallengeRecordRequestDto.from(uc.getUserId(),challengeRoomId));
+            }
+        }
+    }
 
 }

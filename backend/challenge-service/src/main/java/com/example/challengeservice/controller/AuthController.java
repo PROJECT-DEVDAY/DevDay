@@ -11,8 +11,9 @@ import com.example.challengeservice.dto.request.ReportRecordRequestDto;
 import com.example.challengeservice.dto.response.*;
 import com.example.challengeservice.exception.ApiException;
 import com.example.challengeservice.exception.ExceptionEnum;
-import com.example.challengeservice.service.ChallengeService;
+import com.example.challengeservice.service.algo.AlgoChallengeService;
 import com.example.challengeservice.service.challenge.BasicChallengeService;
+import com.example.challengeservice.service.commit.CommitChallengeService;
 import com.example.challengeservice.service.photo.PhotoChallengeService;
 import com.example.challengeservice.validator.DateValidator;
 import lombok.RequiredArgsConstructor;
@@ -32,11 +33,12 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class AuthController {
     private final ResponseService responseService;
-    private final ChallengeService challengeService;
     private static final String USER_ID = "userId";
     private final PhotoChallengeService photoChallengeService;
 
     private final BasicChallengeService basicChallengeService;
+    private final AlgoChallengeService algoChallengeService;
+    private final CommitChallengeService commitChallengeService;
 
     /**
      * 챌린지방 생성
@@ -134,7 +136,7 @@ public class AuthController {
     @GetMapping("/baekjoon/users/recent")
     public SingleResult<SolvedMapResponseDto> getRecentUserBaekjoon(HttpServletRequest request){
         Long userId = Long.parseLong(request.getHeader(USER_ID));
-        return responseService.getSingleResult(challengeService.getRecentUserBaekjoon(userId));
+        return responseService.getSingleResult(algoChallengeService.getRecentUserBaekjoon(userId));
     }
 
     /**
@@ -145,7 +147,7 @@ public class AuthController {
     @GetMapping("/commit/users/recent")
     public SingleResult<SolvedMapResponseDto> getRecentUserCommit(HttpServletRequest request){
         Long userId = Long.parseLong(request.getHeader(USER_ID));
-        return responseService.getSingleResult(challengeService.getRecentUserCommit(userId));
+        return responseService.getSingleResult(commitChallengeService.getRecentUserCommit(userId));
     }
 
     /**
@@ -157,7 +159,7 @@ public class AuthController {
     @GetMapping("/baekjoon/users/progress/{challengeId}")
     public ProgressResponseDto getProgressUserBaekjoon(HttpServletRequest request, @PathVariable String challengeId){
         Long userId = Long.parseLong(request.getHeader(USER_ID));
-        return challengeService.getProgressUserBaekjoon(userId, Long.parseLong(challengeId));
+        return algoChallengeService.getProgressUserBaekjoon(userId, Long.parseLong(challengeId));
     }
 
     /**
@@ -167,7 +169,7 @@ public class AuthController {
     @PostMapping("/certification/users/{challengeId}")
     public CertificationResponseDto getCertification(HttpServletRequest request, @PathVariable String challengeId){
         Long userId= Long.parseLong(request.getHeader(USER_ID));
-        return challengeService.getCertification(userId, Long.parseLong(challengeId));
+        return basicChallengeService.getCertification(userId, Long.parseLong(challengeId));
     }
 
 
