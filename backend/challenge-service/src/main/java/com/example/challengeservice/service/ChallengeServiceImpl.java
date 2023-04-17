@@ -90,7 +90,6 @@ public class ChallengeServiceImpl implements ChallengeService{
                 solvedList.add(problem.text());
                 count++;
             }
-            log.info("총 %d 문제 풀이하셨습니다\n", count);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -118,11 +117,9 @@ public class ChallengeServiceImpl implements ChallengeService{
     }
 
     /** 유저의 백준리스트 업데이트
-     * Todo : 예외처리 추가
      * **/
     public void updateUserBaekjoon(Long userId){
         SingleResult<UserResponseDto> userResponseDtoTemp = userServiceClient.getUserInfo(userId);
-        log.info("userResponseDto is : {}",userResponseDtoTemp);
         UserResponseDto userResponseDto=userResponseDtoTemp.getData();
         SingleResult<BaekjoonListResponseDto> baekjoonListResponseDto = userServiceClient.getUserBaekjoonList(userResponseDto.getUserId());
 
@@ -146,9 +143,7 @@ public class ChallengeServiceImpl implements ChallengeService{
         userServiceClient.createProblem(userId, ProblemRequestDto.from(diffSolvedList));
     }
 
-    /** 유저의 커밋리스트 업데이트
-     * Todo : 예외처리 추가
-     * **/
+    /** 유저의 커밋리스트 업데이트 **/
     public void updateUserCommit(Long userId) {
         SingleResult<UserResponseDto> userResponseDtoTemp = userServiceClient.getUserInfo(userId);
         UserResponseDto userResponseDto = userResponseDtoTemp.getData();
@@ -156,11 +151,9 @@ public class ChallengeServiceImpl implements ChallengeService{
         String today = commonService.getDate();
         // 오늘 날짜의 유저의 커밋 수 조회
         CommitCountResponseDto commitCountResponseDto=getGithubCommit(userResponseDto.getGithub());
-        log.info("commitCountResponseDto is : {}", commitCountResponseDto);
-
-//        if(commitCountResponseDto.getCommitCount()==0){
-//            return;
-//        }
+        if(commitCountResponseDto.getCommitCount()==0){
+            return;
+        }
         userServiceClient.updateCommitCount(userResponseDto.getUserId(), new CommitRequestDto(today, commitCountResponseDto.getCommitCount()));
     }
 
@@ -217,7 +210,6 @@ public class ChallengeServiceImpl implements ChallengeService{
     public SolvedMapResponseDto getRecentUserCommit(Long userId) {
         String today=commonService.getDate();
         String pastDay=commonService.getPastDay(5, today);
-        log.info("today is {} , pastDay is {}", today, pastDay);
         List<CommitResponseDto> dateCommitList = userServiceClient.getDateCommitList(userId, pastDay, today).getData();
 
         Map<String, Integer> myMap = new HashMap<>();
@@ -234,9 +226,6 @@ public class ChallengeServiceImpl implements ChallengeService{
      *  **/
     @Scheduled(cron = "0 50 23 * * ?") // 매일 오후 11시 50분
     public void createDailyRecord(){
-        log.info("createDailyRecord 시작");
-        // 현재 진행중인 UserChallenge 중에 Category가 ALGO인 것들을 조회해서 저장시킨다.
-
         String today=commonService.getDate();
 
         // 현재 진행중인 알고리즘 챌린지 리스트 조회
@@ -259,11 +248,9 @@ public class ChallengeServiceImpl implements ChallengeService{
     /**
      * 신대득
      * 하루정산 시키기 (1일전 인증기록을 통해서)
-     *
      */
     @Scheduled(cron = "0 1 0 * * ?") // 매일 오후 0시 1분
     public void culcDailyPayment(){
-        log.info("culcDailyPayment 시작");
         List<ChallengeRoom> challengingRoomList = challengeRoomRepository.findChallengingRoomByDate(commonService.getPastDay(0,commonService.getDate()));
         for(ChallengeRoom challengeRoom: challengingRoomList){
             oneDayCulc(challengeRoom);
@@ -278,8 +265,6 @@ public class ChallengeServiceImpl implements ChallengeService{
     @Override
     @Transactional
     public void createAlgoRecord(ChallengeRecordRequestDto requestDto) {
-
-        log.info("챌린지id " + requestDto.getChallengeRoomId() + "유저아이디id" + requestDto.getUserId());
         ChallengeRoom challengeRoom = basicChallengeService.getChallengeRoomEntity(requestDto.getChallengeRoomId());
 
         UserResponseDto user = userServiceClient.getUserInfo(requestDto.getUserId()).getData();
@@ -333,7 +318,6 @@ public class ChallengeServiceImpl implements ChallengeService{
 
         UserChallenge userChallenge = userChallengeRepository.findByChallengeRoomIdAndUserId(requestDto.getChallengeRoomId(), requestDto.getUserId())
                 .orElseThrow(() -> new ApiException(ExceptionEnum.USER_CHALLENGE_NOT_EXIST_EXCEPTION));
-        log.info("[userChallenge id값]" + userChallenge.getId());
 
 
         Optional<ChallengeRecord> commitRecordResponseDto = challengeRecordRepository.findByCreateAtAndUserChallenge(date, userChallenge);

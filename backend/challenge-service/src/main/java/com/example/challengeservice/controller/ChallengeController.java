@@ -102,7 +102,8 @@ public class ChallengeController {
         return responseService.getSingleResult(challengeService.checkDateUserCommit(userId, selectDate));
     }
 
-    /** 신대득
+    /**
+     * @author 신대득
      * 현재 user가 참가중인 챌린지 개수 반환
      */
     @GetMapping("/challengeInfo/users/{userId}")
@@ -112,7 +113,8 @@ public class ChallengeController {
     }
 
     /**
-     * 스케줄링으로 실행되는 메서드의 테스트
+     * @author 신대득
+     * 스케줄러로 실행되는 일일 기록 저장의 테스트 API
      * @return
      */
     @GetMapping("/test/record")
@@ -121,6 +123,11 @@ public class ChallengeController {
         return responseService.getSuccessResult();
     }
 
+    /**
+     * @author 신대득
+     * 스케줄러로 실행되는 일일 정산의 테스트 API
+     * @return
+     */
     @GetMapping("/test/payment")
     public Result testPayment (){
         challengeService.culcDailyPayment();
@@ -135,6 +142,12 @@ public class ChallengeController {
         return  s3Service.upload(multipartFile,dir);
     }
 
+    /**
+     * @author 신대득
+     * 챌린지내에서 1등부터 차례대로 랭킹을 반환하는 API
+     * @param challengeId : 검색할 챌린지의 방 id
+     * @return
+     */
     @GetMapping("baekjoon/rank/{challengeId}")
     public ListResult<RankResponseDto> getTopRank(@PathVariable String challengeId){
         return responseService.getListResult(challengeService.getTopRank(Long.parseLong(challengeId)));

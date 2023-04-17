@@ -20,8 +20,6 @@ public class SchedulerServiceImpl implements SchedulerService{
     private final CommonService commonService;
     @Override
     public void endChallengeCalculate() {
-
-
       payServiceClient.requestChallengeSettlement(new ChallengeSettlementRequest(challengeRoomRepository.findClosedChallengeUser(commonService.getPastDay(0,commonService.getDate()))));
     }
 }
