@@ -1,0 +1,195 @@
+pipeline {
+    agent any
+    
+        tools {
+           gradle 'Gradle7.6'
+      }
+    
+      
+    environment {
+      BUILD_COMMAND = ' ./gradlew clean build -x test'
+      CHALLENGE_PROJECT='challenge-service'
+      USER_PROJECT='user-service'
+      PAY_PROJECT='pay-service'
+      EUREKA_PROJECT='eureka-service'
+      GATEWAY_PROJECT='api-gateway-service'
+    }
+    
+    stages {
+        stage('github clone') {
+            steps {
+                git branch: 'develop',
+                    credentialsId: 'id',
+                    url: '프로젝트 주소'
+            }
+        }
+        
+
+        stage('Build') {
+            parallel{
+                stage('build-challenge-service'){
+                    when {
+                        changeset "backend/challenge-service/**"
+                    }
+                    steps{
+                        dir('backend/challenge-service') {
+                            sh "$BUILD_COMMAND"
+                        }
+                    }
+                }
+                stage('build-user-service'){
+                    when {
+                        changeset "backend/user-service/**"
+                    }
+                    steps{
+                        dir('backend/user-service') {
+                            sh "$BUILD_COMMAND"
+                        }
+                    }
+                }
+                stage('build-pay-service'){
+                    when {
+                        changeset "backend/pay-service/**"
+                    }
+                    steps{
+                        dir('backend/pay-service') {
+                            sh "$BUILD_COMMAND"
+                        }
+                    }
+                }
+                stage('build-eureka-service'){
+                    when {
+                        changeset "backend/eureka-service/**"
+                    }
+                    steps{
+                        dir('backend/eureka-service') {
+                            sh "$BUILD_COMMAND"
+                        }
+                    }
+                }
+                stage('build-api-gateway-service'){
+                    when {
+                        changeset "backend/apigateway-service/**"
+                    }
+                    steps{
+                        dir('backend/apigateway-service') {
+                            sh "$BUILD_COMMAND"
+                        }
+                    }
+                }
+
+            }
+        }
+        
+        stage('Backup & Copy'){
+            parallel{
+                stage('backup-copy-challenge-service'){
+                    when{
+                        changeset "backend/challenge-service/**"
+                    }
+                    steps{
+                        dir('backend/challenge-service') {
+                            sh 'docker build -t devday/${CHALLENGE_PROJECT} .'
+                            sh 'docker push devday/${CHALLENGE_PROJECT}'
+                        }
+                    }
+                }
+                stage('backup-copy-user-service'){
+                    when{
+                        changeset "backend/user-service/**"
+                    }
+                    steps{
+                        dir('backend/user-service') {
+                            sh 'docker build -t devday/${USER_PROJECT} .'
+                            sh 'docker push devday/${USER_PROJECT}'
+                        }
+                    }
+                }
+                stage('backup-copy-pay-service'){
+                    when{
+                        changeset "backend/pay-service/**"
+                    }
+                    steps{
+                        dir('backend/pay-service') {
+                            sh 'docker build -t devday/${PAY_PROJECT} .'
+                            sh 'docker push devday/${PAY_PROJECT}'
+                        }
+                    }
+                }
+                stage('backup-copy-eureka-service'){
+                    when{
+                        changeset "backend/eureka-service/**"
+                    }
+                    steps{
+                        dir('backend/eureka-service') {
+                            sh 'docker build -t devday/${EUREKA_PROJECT} .'
+                            sh 'docker push devday/${EUREKA_PROJECT}'
+                        }
+                    }
+                }
+                stage('backup-copy-api-gateway-service'){
+                    when{
+                        changeset "backend/apigateway-service/**"
+                    }
+                    steps{
+                        dir('backend/apigateway-service') {
+                            sh 'docker build -t devday/${GATEWAY_PROJECT} .'
+                            sh 'docker push devday/${GATEWAY_PROJECT}'
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Deploy'){
+            parallel{
+                stage('deploy-challenge-service'){
+                    when{
+                        changeset "backend/challenge-service/**"
+                    }
+                    steps{
+                        sh 'docker stop ${CHALLENGE_PROJECT} || true && docker rm ${CHALLENGE_PROJECT} || true'
+                        sh 'docker run -d --network devday-network --name ${CHALLENGE_PROJECT} -e "eureka.client.serviceUrl.defaultZone=http://eureka-service:8761/eureka/" devday/${CHALLENGE_PROJECT}'
+                    }
+                }
+                stage('deploy-user-service'){
+                    when{
+                        changeset "backend/user-service/**"
+                    }
+                    steps{
+                        sh 'docker stop ${USER_PROJECT} || true && docker rm ${USER_PROJECT} || true'
+                        sh 'docker run -d --network devday-network --name ${USER_PROJECT} -e "eureka.client.serviceUrl.defaultZone=http://eureka-service:8761/eureka/" devday/${USER_PROJECT}'
+                    }
+                }
+                stage('deploy-pay-service'){
+                    when{
+                        changeset "backend/pay-service/**"
+                    }
+                    steps{
+                        sh 'docker stop ${PAY_PROJECT} || true && docker rm ${PAY_PROJECT} || true'
+                        sh 'docker run -d --network devday-network --name ${PAY_PROJECT} -e "eureka.client.serviceUrl.defaultZone=http://eureka-service:8761/eureka/" devday/${PAY_PROJECT}'
+                    }
+                }
+                stage('deploy-eureka-service'){
+                    when{
+                        changeset "backend/eureka-service/**"
+                    }
+                    steps{
+                        sh 'docker stop ${EUREKA_PROJECT} || true && docker rm ${EUREKA_PROJECT} || true'
+                        sh 'docker run -d -p 8761:8761 --network devday-network --name ${EUREKA_PROJECT} devday/${EUREKA_PROJECT}'
+                    }
+                }
+                stage('deploy-api-gateway-service'){
+                    when{
+                        changeset "backend/apigateway-service/**"
+                    }
+                    steps{
+                        sh 'docker stop ${GATEWAY_PROJECT} || true && docker rm ${GATEWAY_PROJECT} || true'
+                        sh 'docker run -d -p 8000:8000 --network devday-network --name ${GATEWAY_PROJECT} -e "eureka.client.serviceUrl.defaultZone=http://eureka-service:8761/eureka/" devday/${GATEWAY_PROJECT}'
+                    }
+                }
+            }
+        }
+   
+     }
+  }
